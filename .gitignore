@@ -1,0 +1,11 @@
+# Planning docs live in their own upstream clone (github.com/bobcatchris15-eng/Rauken-Archipelago).
+# Read-only input to this repo; not vendored, not modified here.
+Rauken-Archipelago/
+
+var/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+.statefulclanker/
