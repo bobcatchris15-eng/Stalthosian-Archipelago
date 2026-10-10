@@ -1,0 +1,277 @@
+# Crinkleweed -- broadleaf_rosette morphology profile, Crinkled rosette herb (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: heavily crinkled rosette herb whose surface relief reads even in silhouette
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.crinkleweed.cw2
+version: 1
+common_names:
+  primary: Crinkleweed
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Crinkled rosette herb (analogy only)
+generator: broadleaf_rosette
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 1
+    branch_angle_deg:
+    - 48
+    - 76
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: rosette
+    divergence_deg: 360
+  foliage:
+    organ: leaf
+    overall_shape: ovate
+    margin: lobed
+    apex: acute
+    length:
+      value: 0.12
+      unit: m
+    width:
+      value: 0.08
+      unit: m
+    aspect_ratio: 1.5
+    venation:
+      pattern: pinnate
+      relief: raised
+      secondary_per_primary: 6
+    surface:
+      waxy_cuticle: 0.2
+      hairs: sparse
+      underside: pale
+      translucency: 0.55
+      flexibility_deg: 65
+  stem:
+    type: herbaceous
+    growth_direction: prostrate
+    segmented: false
+    diameter_at_base:
+      value: 0.011
+      unit: m
+  root:
+    system: taproot
+    depth:
+      value: 0.3
+      unit: m
+    spread:
+      value: 0.6
+      unit: m
+    exposed: false
+growth_stages:
+- id: cotyledon
+  age_label: cotyledon
+  age_years:
+  - 0.0
+  - 0.2
+  height:
+    value: 0.016
+    unit: m
+  crown_spread:
+    value: 0.038
+    unit: m
+  proportions:
+    leaf_share: 0.25
+    petiole_share: 1.0
+    flower_share: 0.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 0.2
+  - 1.0
+  height:
+    value: 0.057
+    unit: m
+  crown_spread:
+    value: 0.144
+    unit: m
+  proportions:
+    leaf_share: 0.65
+    petiole_share: 1.0
+    flower_share: 0.3
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 1.0
+  - 3.0
+  height:
+    value: 0.091
+    unit: m
+  crown_spread:
+    value: 0.32
+    unit: m
+  proportions:
+    leaf_share: 1.0
+    petiole_share: 1.0
+    flower_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - strong_leaf_crinkle
+  - low_prostrate_rosette
+  - high_relief_normals
+materials:
+- id: structural_stem
+  applies_to: stem
+  surface_type: herbaceous
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: flexible
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#4a7f45'
+  color_range:
+  - '#3c6838'
+  - '#4a7f45'
+  - '#5f9a52'
+  roughness:
+  - 0.35
+  - 0.7
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: flexible
+variation:
+  seed_labels:
+  - rosette_radius
+  - leaf_count
+  - leaf_size
+  - flower_stem_count
+  - hair_density
+  ranges:
+    rosette_radius:
+    - 0.7
+    - 1.35
+    leaf_count:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.7
+    - 1.35
+    flower_stem_count:
+    - 0.5
+    - 1.5
+    hair_density:
+    - 0.5
+    - 1.5
+  variants:
+  - id: open_sun
+    label: open sunny form
+    weight: 0.4
+    habitat_tags:
+    - clearing_edge
+    - sandy_lowland
+    overrides:
+      leaf_size: 1.2
+      leaf_count: 1.25
+  - id: damp_hollow
+    label: damp hollow form
+    weight: 0.3
+    habitat_tags:
+    - wet_hollow
+    - riparian
+    overrides:
+      leaf_size: 1.3
+      hair_density: 1.2
+  - id: browsed_flat
+    label: browsed flat rosette
+    weight: 0.3
+    habitat_tags:
+    - browsed_patch
+    - woodland_floor
+    overrides:
+      leaf_count: 0.7
+      rosette_radius: 0.8
+affordances:
+  structural_role: groundcover
+  forage_tags:
+  - part: leaf
+    palatability: 0.55
+    water_content: 0.75
+    nutrition: 0.34
+  - part: shoot
+    palatability: 0.6
+    water_content: 0.77
+    nutrition: 0.37
+    seasonal: true
+  contact_bounds:
+    min_browse_height_m: 0.05
+    max_browse_height_m: 0.25
+    pushable: true
+    collision_proxy: capsule
+    trunk_diameter_m:
+      value: 0.011
+      unit: m
+    footprint_radius_m: 0.16
+habitat_tags:
+- clearing_edge
+- woodland_floor
+- woodland_edge
+- browsed_patch
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: crinkleweed.cw2-reference-image
+  kind: local_image
+  locator: species/plants/plant.crinkleweed.cw2/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: heavily crinkled rosette herb whose surface relief reads even in silhouette

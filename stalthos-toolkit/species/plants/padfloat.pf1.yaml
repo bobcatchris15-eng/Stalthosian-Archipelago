@@ -1,0 +1,284 @@
+# Padfloat -- fibrous_monocot morphology profile, Floating pad plant (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: overlapping floating pads forming a continuous surface cover
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.padfloat.pf1
+version: 1
+common_names:
+  primary: Padfloat
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Floating pad plant (analogy only)
+generator: fibrous_monocot
+anatomy:
+  branching_pattern:
+    architecture: encrusting_sheet
+    order_max: 1
+    branch_angle_deg:
+    - 8
+    - 26
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+    notes: Overlapping floating pads on slack chains and backwaters.
+  phyllotaxy:
+    pattern: alternate
+    divergence_deg: 137.5
+  foliage:
+    organ: leaf
+    overall_shape: orbicular
+    margin: entire
+    apex: acute
+    length:
+      value: 0.28
+      unit: m
+    width:
+      value: 0.26
+      unit: m
+    aspect_ratio: 1.08
+    venation:
+      pattern: radial
+      relief: raised
+      secondary_per_primary: 9
+    surface:
+      waxy_cuticle: 0.85
+      hairs: none
+      underside: pale
+      translucency: 0.15
+      flexibility_deg: 80
+  stem:
+    type: fibrous
+    growth_direction: prostrate
+    segmented: false
+    diameter_at_base:
+      value: 0.01
+      unit: m
+  root:
+    system: fibrous
+    depth:
+      value: 0.3
+      unit: m
+    spread:
+      value: 0.4
+      unit: m
+    exposed: false
+  substrate:
+    attachment: aquatic
+    host: still water surface
+    height_on_substrate_m: 0.0
+growth_stages:
+- id: tiller
+  age_label: tiller
+  age_years:
+  - 0.0
+  - 0.2
+  height:
+    value: 0.003
+    unit: m
+  crown_spread:
+    value: 0.144
+    unit: m
+  proportions:
+    blade_share: 0.2
+    sheath_share: 1.0
+    seed_share: 0.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 0.2
+  - 1.4
+  height:
+    value: 0.011
+    unit: m
+  crown_spread:
+    value: 0.54
+    unit: m
+  proportions:
+    blade_share: 0.65
+    sheath_share: 1.0
+    seed_share: 0.2
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 1.4
+  - 4.0
+  height:
+    value: 0.017
+    unit: m
+  crown_spread:
+    value: 1.2
+    unit: m
+  proportions:
+    blade_share: 1.0
+    sheath_share: 1.0
+    seed_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - overlapping_round_pads
+  - waxy_float_leaf
+  - slack_water_only
+materials:
+- id: structural_stem
+  applies_to: stem
+  surface_type: herbaceous
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: whip
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#4f8f4c'
+  color_range:
+  - '#40773f'
+  - '#4f8f4c'
+  - '#66a861'
+  roughness:
+  - 0.4
+  - 0.75
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: whip
+variation:
+  seed_labels:
+  - blade_count
+  - blade_length
+  - blade_width
+  - tuft_radius
+  - seed_head_count
+  ranges:
+    blade_count:
+    - 0.6
+    - 1.5
+    blade_length:
+    - 0.7
+    - 1.4
+    blade_width:
+    - 0.7
+    - 1.35
+    tuft_radius:
+    - 0.7
+    - 1.35
+    seed_head_count:
+    - 0.4
+    - 1.6
+  variants:
+  - id: moist_form
+    label: moist-ground form
+    weight: 0.4
+    habitat_tags:
+    - wetland
+    - wet_hollow
+    overrides:
+      blade_length: 1.35
+      blade_count: 1.3
+  - id: dry_tuft
+    label: dry tuft form
+    weight: 0.35
+    habitat_tags:
+    - sandy_lowland
+    - stone_island_scrub
+    overrides:
+      blade_length: 0.75
+      tuft_radius: 0.8
+  - id: aquatic_form
+    label: aquatic form
+    weight: 0.25
+    habitat_tags:
+    - wetland_margin
+    - pond
+    overrides:
+      blade_width: 1.3
+      blade_length: 1.2
+affordances:
+  structural_role: epiphyte
+  forage_tags:
+  - part: leaf
+    palatability: 0.45
+    water_content: 0.88
+    nutrition: 0.28
+  - part: shoot
+    palatability: 0.4
+    water_content: 0.9
+    nutrition: 0.26
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 0.06
+    pushable: true
+    collision_proxy: capsule
+    trunk_diameter_m:
+      value: 0.01
+      unit: m
+    footprint_radius_m: 0.6
+habitat_tags:
+- clearing_edge
+- sandy_lowland
+- woodland_edge
+- wetland_margin
+- wetland
+- creek_terrace
+- deadwood
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: padfloat.pf1-reference-image
+  kind: local_image
+  locator: species/plants/plant.padfloat.pf1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: overlapping floating pads forming a continuous surface cover

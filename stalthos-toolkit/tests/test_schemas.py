@@ -113,12 +113,15 @@ def test_every_checked_in_definition_validates(path):
 
 def test_six_reference_plants_are_present():
     """docs/flora.md initial production set: Splitcrown, Softbough, Jointreed,
-    Royal frond, Basketfern, bracket fungus."""
-    plants = [load_definition(p)["id"] for p in load_definition_file_list(REPO_ROOT / "species" / "plants")]
-    assert len(plants) == 6
+    Royal frond, Basketfern, bracket fungus.
+
+    The roster has since grown past the initial six (see tests/test_roster.py),
+    so this asserts the six are still PRESENT, not that they are the only ones.
+    """
     names = {load_definition(p)["common_names"]["primary"].lower() for p in
              load_definition_file_list(REPO_ROOT / "species" / "plants")}
-    assert names == {"splitcrown", "softbough", "jointreed", "royal frond", "basketfern", "bracketpolypore"}
+    assert {"splitcrown", "softbough", "jointreed", "royal frond",
+            "basketfern", "bracketpolypore"} <= names
 
 
 def test_creature_set_covers_flagship_plus_lineage_stubs():

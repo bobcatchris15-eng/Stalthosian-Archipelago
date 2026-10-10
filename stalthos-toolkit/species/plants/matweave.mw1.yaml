@@ -1,0 +1,281 @@
+# Matweave -- arching_shrub morphology profile, Ground-cover tangle mat (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: continuous interwoven ground mat, a distinct low structural layer
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.matweave.mw1
+version: 1
+common_names:
+  primary: Matweave
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Ground-cover tangle mat (analogy only)
+generator: arching_shrub
+anatomy:
+  branching_pattern:
+    architecture: tangled_mat
+    order_max: 3
+    branch_angle_deg:
+    - 10
+    - 30
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+    notes: Interwoven woody runners form a continuous low mat over the ground surface.
+  phyllotaxy:
+    pattern: alternate
+    divergence_deg: 137.5
+  foliage:
+    organ: leaf
+    overall_shape: obovate
+    margin: entire
+    apex: acute
+    length:
+      value: 0.035
+      unit: m
+    width:
+      value: 0.02
+      unit: m
+    aspect_ratio: 1.75
+    venation:
+      pattern: pinnate
+      relief: flat
+      secondary_per_primary: 3
+    surface:
+      waxy_cuticle: 0.35
+      hairs: none
+      underside: pale
+      translucency: 0.4
+      flexibility_deg: 70
+  stem:
+    type: woody
+    growth_direction: creeping
+    segmented: false
+    diameter_at_base:
+      value: 0.012
+      unit: m
+    bark:
+      pattern: ridged
+  root:
+    system: rhizomatous
+    depth:
+      value: 0.15
+      unit: m
+    spread:
+      value: 0.9
+      unit: m
+    exposed: false
+growth_stages:
+- id: sprout
+  age_label: sprout
+  age_years:
+  - 0.0
+  - 1.5
+  height:
+    value: 0.021
+    unit: m
+  crown_spread:
+    value: 0.288
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 0.25
+    tip_share: 0.1
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 1.5
+  - 8.8
+  height:
+    value: 0.077
+    unit: m
+  crown_spread:
+    value: 1.08
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 0.65
+    tip_share: 0.3
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 8.8
+  - 25.0
+  height:
+    value: 0.122
+    unit: m
+  crown_spread:
+    value: 2.4
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 1.0
+    tip_share: 0.5
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - interwoven_runners
+  - continuous_mat
+  - low_layer_cover
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#82705a'
+  color_range:
+  - '#63533f'
+  - '#82705a'
+  - '#9d8a72'
+  roughness:
+  - 0.55
+  - 0.9
+  normal_strength: 1.0
+  wind_response: whip
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#42764a'
+  color_range:
+  - '#335e3b'
+  - '#42764a'
+  - '#56915a'
+  roughness:
+  - 0.4
+  - 0.75
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: whip
+variation:
+  seed_labels:
+  - stem_count
+  - arch_depth
+  - leaf_size
+  - twig_density
+  - climber_reach
+  ranges:
+    stem_count:
+    - 0.7
+    - 1.4
+    arch_depth:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.7
+    - 1.35
+    twig_density:
+    - 0.7
+    - 1.4
+    climber_reach:
+    - 0.6
+    - 1.4
+  variants:
+  - id: arched_open
+    label: arched open form
+    weight: 0.4
+    habitat_tags:
+    - woodland_edge
+    - clearing_edge
+    overrides:
+      arch_depth: 1.3
+  - id: thicket_dense
+    label: dense thicket form
+    weight: 0.3
+    habitat_tags:
+    - main_island_woodland
+    - thicket
+    overrides:
+      twig_density: 1.4
+      stem_count: 1.3
+  - id: climber_form
+    label: climbing form
+    weight: 0.3
+    habitat_tags:
+    - deadwood
+    - rainridge_rockface
+    overrides:
+      climber_reach: 1.4
+      arch_depth: 0.7
+affordances:
+  structural_role: groundcover
+  forage_tags:
+  - part: leaf
+    palatability: 0.4
+    water_content: 0.65
+    nutrition: 0.26
+  - part: shoot
+    palatability: 0.4
+    water_content: 0.7
+    nutrition: 0.28
+  - part: litter
+    palatability: 0.15
+    water_content: 0.4
+    nutrition: 0.07
+  contact_bounds:
+    min_browse_height_m: 0.02
+    max_browse_height_m: 0.4
+    pushable: true
+    collision_proxy: convex_hull
+    trunk_diameter_m:
+      value: 0.012
+      unit: m
+    footprint_radius_m: 1.2
+habitat_tags:
+- woodland_edge
+- clearing_edge
+- thicket
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: matweave.mw1-reference-image
+  kind: local_image
+  locator: species/plants/plant.matweave.mw1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: continuous interwoven ground mat, a distinct low structural layer

@@ -1,0 +1,575 @@
+# Broadmuzzle -- non-hero fauna actor profile (quadruped_sauropod).
+#
+# FICTIONAL form for the Stalthosian Archipelago, Late Cretaceous inspired.
+# This is NOT a real taxon. No specimen, accession, citation, DOI or museum
+# record is asserted anywhere in this file: references[] holds only the
+# internal planning documents plus one unfilled placeholder slot whose
+# usage_rights are unknown. Every invented character is declared in the
+# `evidence` list and summarised by `uncertainty: speculative`.
+#
+# Morphological inspiration: heavy middle-height woodland-edge browser (sauropod-analogous build)
+# Observable signature routines: works steadily along a woodland edge, clearing shrubs as it goes; scratches its neck and shoulder against a stem after feeding; stops with its head high whenever herd movement crosses its sightline; returns to the same browse gap it created on previous visits
+#
+# Size is a working hypothesis (mass_estimate.measured: false).
+schema: creature-definition
+kind: creature
+id: creature.broadmuzzle.bm2
+version: 1
+common_names:
+  primary: Broadmuzzle
+  working: true
+  aka: []
+uncertainty: speculative
+morphology_family: heavy middle-height woodland-edge browser (sauropod-analogous build)
+generator: quadruped_sauropod
+evidence:
+- feature: heavy quadrupedal herbivore skeleton with a long neck and four weight-bearing limbs
+  tier: documented
+  note: broad body plan only; every regional detail below is a working design
+- feature: non-uniform ontogenetic proportions (head/neck/limbs/trunk/tail scale separately)
+  tier: biomechanical_plausibility
+- feature: integument zone map and colour distribution
+  tier: comparative_inference
+  note: region map is invented for this taxon; no skin fossil is asserted
+- feature: observable signature routines, activity rhythm and abundance class
+  tier: speculative
+  note: display/life-history design, no fossil behaviour asserted
+- feature: side-scratching routine
+  tier: speculative
+  note: invented routine
+- feature: reuse of a previously created browse gap
+  tier: speculative
+  note: memory/territory behaviour is invented
+body_plan:
+  posture: quadrupedal
+  spine_profile: sloped
+  neck_length_share: 0.188
+  tail_length_share: 0.394
+  center_of_mass_m:
+    value: 1.672
+    unit: m
+  mass_estimate:
+    value: 760
+    unit: kg
+    measured: false
+    range:
+    - 570.0
+    - 988.0
+    note: Working hypothesis only; recompute from the volumetric anatomy.
+  axial:
+    cervical_count: 10
+    dorsal_count: 13
+    caudal_count: 20
+    ribcage_depth_share: 0.3
+    skull_profile: small_relative
+  skeleton:
+  - id: skull
+    region: skull
+    length_share: 0.09
+    mass_share: 0.05
+    joint_limit_deg:
+      flex: 20
+      extend: 25
+      twist: 15
+    driven_by: skeleton
+  - id: mandible
+    region: mandible
+    length_share: 0.08
+    mass_share: 0.035
+    joint_limit_deg:
+      flex: 24
+      extend: 30
+      twist: 5
+    driven_by: skeleton
+  - id: cervical
+    region: cervical
+    length_share: 0.192
+    mass_share: 0.09
+    joint_limit_deg:
+      flex: 32
+      extend: 34
+      twist: 20
+    driven_by: skeleton
+  - id: dorsal
+    region: dorsal
+    length_share: 0.264
+    mass_share: 0.352
+    joint_limit_deg:
+      flex: 14
+      extend: 12
+      twist: 8
+    driven_by: skeleton
+  - id: sacral
+    region: sacral
+    length_share: 0.05
+    mass_share: 0.09
+    joint_limit_deg:
+      flex: 10
+      extend: 10
+      twist: 6
+    driven_by: skeleton
+  - id: caudal
+    region: caudal
+    length_share: 0.22
+    mass_share: 0.121
+    joint_limit_deg:
+      flex: 26
+      extend: 24
+      twist: 14
+    driven_by: soft_tissue
+  - id: humerus
+    region: forelimb_humerus
+    length_share: 0.066
+    mass_share: 0.055
+    joint_limit_deg:
+      flex: 34
+      extend: 40
+      twist: 22
+    driven_by: skeleton
+  - id: radius
+    region: forelimb_radius
+    length_share: 0.055
+    mass_share: 0.033
+    joint_limit_deg:
+      flex: 38
+      extend: 36
+      twist: 20
+    driven_by: skeleton
+  - id: femur
+    region: hindlimb_femur
+    length_share: 0.099
+    mass_share: 0.077
+    joint_limit_deg:
+      flex: 34
+      extend: 44
+      twist: 18
+    driven_by: skeleton
+  - id: tibia
+    region: hindlimb_tibia
+    length_share: 0.088
+    mass_share: 0.044
+    joint_limit_deg:
+      flex: 26
+      extend: 32
+      twist: 14
+    driven_by: skeleton
+  - id: pes
+    region: hindlimb_pes
+    length_share: 0.055
+    mass_share: 0.022
+    joint_limit_deg:
+      flex: 18
+      extend: 20
+      twist: 8
+    driven_by: skeleton
+  locomotion:
+    gaits:
+    - walk
+    - amble
+    - trot
+    duty_factor: 0.6
+    footfall: lateral sequence walk
+    reach:
+      value: 1.32
+      unit: m
+  hydration:
+    drink_reach_m: 0.53
+    requires_kneel: false
+life_stages:
+- id: hatchling
+  label: Hatchling
+  age_label: hatchling
+  age_years:
+  - 0
+  - 0.8
+  total_length:
+    value: 1.32
+    unit: m
+  height_at_shoulder:
+    value: 0.422
+    unit: m
+  proportions:
+    skull: 0.09
+    mandible: 0.08
+    cervical: 0.192
+    dorsal: 0.24
+    sacral: 0.05
+    caudal: 0.2
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.08
+    pes: 0.05
+  girth_scale: 0.75
+  head_scale: 1.35
+  skin:
+    thickness_mm: 3.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - down_covering
+  - disproportionately_large_eyes
+  - short_limbs
+- id: juvenile
+  label: Juvenile
+  age_label: juvenile
+  age_years:
+  - 0.8
+  - 7
+  total_length:
+    value: 2.728
+    unit: m
+  height_at_shoulder:
+    value: 0.873
+    unit: m
+  proportions:
+    skull: 0.09
+    mandible: 0.08
+    cervical: 0.192
+    dorsal: 0.24
+    sacral: 0.05
+    caudal: 0.2
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.08
+    pes: 0.05
+  girth_scale: 0.92
+  head_scale: 1.12
+  skin:
+    thickness_mm: 3.68
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - smooth_skin
+  - shorter_snout
+  - rapid_alert_motion
+- id: adult
+  label: Adult
+  age_label: adult
+  age_years:
+  - 7
+  - 45
+  total_length:
+    value: 4.4
+    unit: m
+  height_at_shoulder:
+    value: 1.408
+    unit: m
+  proportions:
+    skull: 0.09
+    mandible: 0.08
+    cervical: 0.192
+    dorsal: 0.24
+    sacral: 0.05
+    caudal: 0.2
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.08
+    pes: 0.05
+  girth_scale: 1.0
+  head_scale: 1.0
+  skin:
+    thickness_mm: 4.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - broad_muzzle
+  - high_reach_without_standing
+  - side_scratch_routine
+rig:
+  skeleton:
+    bone_count_range:
+    - 176
+    - 396
+    hierarchical: true
+    root: root
+    bone_naming: region_index
+  ik:
+  - id: head_look
+    type: head_look
+    chain:
+    - skull
+  - id: jaw_open
+    type: jaw
+    chain:
+    - mandible
+  - id: neck_chain
+    type: neck
+    chain:
+    - cervical
+    - dorsal
+    reach_limit_m: 3.1
+  - id: tail_chain
+    type: tail
+    chain:
+    - caudal
+  - id: leg_fore_l
+    type: leg
+    chain:
+    - humerus
+    - radius
+    reach_limit_m: 0.88
+  - id: leg_fore_r
+    type: leg
+    chain:
+    - humerus
+    - radius
+    reach_limit_m: 0.88
+  - id: leg_hind_l
+    type: leg
+    chain:
+    - femur
+    - tibia
+    - pes
+    pole_target: root
+    reach_limit_m: 1.32
+  - id: leg_hind_r
+    type: leg
+    chain:
+    - femur
+    - tibia
+    - pes
+    pole_target: root
+    reach_limit_m: 1.32
+  skin:
+    method: voxel_geodesic
+    max_influences_per_vertex: 4
+    preserve_volume: true
+    pin_regions:
+    - tail_base
+  morph_targets:
+  - id: alert_raise
+    region: cervical
+    driver: pose
+    range:
+    - 0
+    - 1
+  - id: juvenile_scaling
+    region: body
+    driver: life_stage
+    range:
+    - 0
+    - 1
+  - id: forage_lean
+    region: cervical
+    driver: browse_depletion
+    range:
+    - 0
+    - 1
+animation_contacts:
+- id: gait_cycle
+  kind: gait
+  targets:
+  - selector: bone:pes_foot_l
+    tolerance_m: 0.01
+    surface: ground
+  - selector: bone:pes_foot_r
+    tolerance_m: 0.01
+    surface: ground
+- id: forage_take
+  kind: browse
+  targets:
+  - selector: brush:zone/available
+    tolerance_m: 0.06
+    surface: plant
+  - selector: bone:jaw_tip
+    tolerance_m: 0.05
+    surface: self
+- id: alert_hold
+  kind: alert
+  targets:
+  - selector: bone:head_tip
+    tolerance_m: 0.0
+    surface: none
+- id: rest_settle
+  kind: rest
+  targets:
+  - selector: bone:pelvis
+    tolerance_m: 0.04
+    surface: ground
+integument:
+  scale_zones:
+  - id: zone_dorsal
+    region: dorsal
+    pattern: pebbled
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 900
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_flank
+    region: flank
+    pattern: granular
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 720
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_ventral
+    region: ventral
+    pattern: smooth
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 1260
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_limb_or_tail
+    region: tail
+    pattern: creased
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 630
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  pigmentation:
+    pattern: banded
+    age_change: juvenile patterning lost as the adult cover thickens
+    wear: moderate
+material_masks:
+- id: cover
+  applies_to: body
+  surface_type: hide
+  vertex_group: body_skin
+  base_color: '#7b6f57'
+  color_range:
+  - '#655b47'
+  - '#7b6f57'
+  - '#94866a'
+  roughness:
+  - 0.5
+  - 0.8
+  normal_strength: 1.0
+  sss: 0.1
+  mask_uv: mask_cover
+- id: foot_pad
+  applies_to: foot_pad
+  surface_type: foot_pad
+  base_color: '#5c5142'
+  roughness:
+  - 0.7
+  - 0.95
+  normal_strength: 1.6
+- id: eye
+  applies_to: eye
+  surface_type: eye
+  base_color: '#2a1d14'
+  roughness:
+  - 0.05
+  - 0.2
+affordances:
+  diet_tags:
+  - resource: tender_foliage
+    preference: 0.8
+    plant_selectors:
+    - plant.softbough.sh1|tip:soft
+    - plant.willowarch.wr1|shoot
+  - resource: shoot
+    preference: 0.7
+    plant_selectors:
+    - plant.spearleaf.sl2|shoot
+    - plant.ribbonherb.rh1|leaf
+  - resource: fruit
+    preference: 0.45
+    plant_selectors:
+    - plant.knuckleberry.kn1|fruit
+  interaction_envelope:
+    reach_height_m:
+      value: 3.1
+      unit: m
+    reach_radius_m: 1.54
+    mouth_tip_selector: bone:jaw_tip
+    clearance_width_m: 1.1
+  terrain_preference:
+  - woodland_edge
+  - clearing_edge
+  - main_island_woodland
+  - browsed_patch
+  abundance: common
+  activity_rhythm: diurnal
+  signature_routines:
+  - works steadily along a woodland edge, clearing shrubs as it goes
+  - scratches its neck and shoulder against a stem after feeding
+  - stops with its head high whenever herd movement crosses its sightline
+  - returns to the same browse gap it created on previous visits
+habitat_tags:
+- main_island_woodland
+- woodland_edge
+- browsed_patch
+- clearing_edge
+references:
+- id: fauna-actor-catalog
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/fauna-actor-catalog.md
+  title: Fauna actor catalog and display-first food web
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: ecology-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/ecology-and-hydrology.md
+  title: Ecology and hydrology -- food web and placement principles
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: broadmuzzle.bm2-reference-image
+  kind: local_image
+  locator: species/creatures/creature.broadmuzzle.bm2/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/creatures/*/reference/
+    may ship until cleared.
+notes: Middle-height woodland-edge browser; the read is the slow gap-to-gap progress along a forest
+  margin, not a single shrub.

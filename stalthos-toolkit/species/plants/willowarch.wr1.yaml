@@ -1,0 +1,302 @@
+# Willowarch -- arching_shrub morphology profile, Riparian arching willow-like shrub (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: multi-stem riparian shrub arching to the ground, the classic browse hedge
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.willowarch.wr1
+version: 1
+common_names:
+  primary: Willowarch
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Riparian arching willow-like shrub (analogy only)
+generator: arching_shrub
+anatomy:
+  branching_pattern:
+    architecture: arching_multi_stem
+    order_max: 4
+    branch_angle_deg:
+    - 16
+    - 34
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+    notes: Many slender stems springing from one base, arching to the ground at the tips.
+  phyllotaxy:
+    pattern: alternate
+    divergence_deg: 137.5
+  foliage:
+    organ: leaf
+    overall_shape: lanceolate
+    margin: serrate
+    apex: acute
+    length:
+      value: 0.14
+      unit: m
+    width:
+      value: 0.016
+      unit: m
+    aspect_ratio: 8.75
+    venation:
+      pattern: pinnate
+      relief: raised
+      secondary_per_primary: 7
+    surface:
+      waxy_cuticle: 0.35
+      hairs: none
+      underside: pale
+      translucency: 0.4
+      flexibility_deg: 70
+  stem:
+    type: woody
+    growth_direction: arching
+    segmented: false
+    diameter_at_base:
+      value: 0.05
+      unit: m
+    bark:
+      pattern: ridged
+  root:
+    system: taproot
+    depth:
+      value: 0.7
+      unit: m
+    spread:
+      value: 1.6
+      unit: m
+    exposed: false
+  reproductive:
+    structure: flower
+    placement: axillary
+    size:
+      value: 0.05
+      unit: m
+    seasonal: true
+growth_stages:
+- id: sprout
+  age_label: sprout
+  age_years:
+  - 0.0
+  - 1.5
+  height:
+    value: 0.192
+    unit: m
+  crown_spread:
+    value: 0.48
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 0.25
+    tip_share: 0.1
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 1.5
+  - 8.8
+  height:
+    value: 0.704
+    unit: m
+  crown_spread:
+    value: 1.8
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 0.65
+    tip_share: 0.3
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 8.8
+  - 25.0
+  height:
+    value: 1.12
+    unit: m
+  crown_spread:
+    value: 4.0
+    unit: m
+  proportions:
+    stem_share: 1.0
+    leaf_share: 1.0
+    tip_share: 0.5
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - ground_touching_arches
+  - very_narrow_serrate_leaves
+  - multi_stem_base
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#82705a'
+  color_range:
+  - '#63533f'
+  - '#82705a'
+  - '#9d8a72'
+  roughness:
+  - 0.55
+  - 0.9
+  normal_strength: 1.0
+  wind_response: whip
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#6a9448'
+  color_range:
+  - '#557a38'
+  - '#6a9448'
+  - '#7fae5a'
+  roughness:
+  - 0.4
+  - 0.75
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: whip
+- id: reproductive_structure
+  applies_to: whole
+  surface_type: herbaceous
+  base_color: '#8a7a3a'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - stem_count
+  - arch_depth
+  - leaf_size
+  - twig_density
+  - climber_reach
+  ranges:
+    stem_count:
+    - 0.7
+    - 1.4
+    arch_depth:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.7
+    - 1.35
+    twig_density:
+    - 0.7
+    - 1.4
+    climber_reach:
+    - 0.6
+    - 1.4
+  variants:
+  - id: arched_open
+    label: arched open form
+    weight: 0.4
+    habitat_tags:
+    - woodland_edge
+    - clearing_edge
+    overrides:
+      arch_depth: 1.3
+  - id: thicket_dense
+    label: dense thicket form
+    weight: 0.3
+    habitat_tags:
+    - main_island_woodland
+    - thicket
+    overrides:
+      twig_density: 1.4
+      stem_count: 1.3
+  - id: climber_form
+    label: climbing form
+    weight: 0.3
+    habitat_tags:
+    - deadwood
+    - rainridge_rockface
+    overrides:
+      climber_reach: 1.4
+      arch_depth: 0.7
+affordances:
+  structural_role: understory
+  forage_tags:
+  - part: shoot
+    palatability: 0.6
+    water_content: 0.8
+    nutrition: 0.38
+    seasonal: true
+  - part: leaf
+    palatability: 0.4
+    water_content: 0.7
+    nutrition: 0.25
+  - part: twig
+    palatability: 0.45
+    water_content: 0.7
+    nutrition: 0.3
+  contact_bounds:
+    min_browse_height_m: 0.2
+    max_browse_height_m: 2.2
+    pushable: true
+    collision_proxy: convex_hull
+    trunk_diameter_m:
+      value: 0.05
+      unit: m
+    footprint_radius_m: 2.0
+  edible_foliage_targets:
+  - selector: branch:tip_soft
+    part: shoot
+    mass_share: 0.65
+habitat_tags:
+- riparian
+- creek_terrace
+- floodplain
+- wet_hollow
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: willowarch.wr1-reference-image
+  kind: local_image
+  locator: species/plants/plant.willowarch.wr1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: multi-stem riparian shrub arching to the ground, the classic browse hedge

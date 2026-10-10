@@ -1,0 +1,296 @@
+# Sunfern -- compound_frond morphology profile, Sun- and drought-tolerant fern (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: small exposed fern with tomentose undersides, one of the dry-ground specialists
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.sunfern.su2
+version: 1
+common_names:
+  primary: Sunfern
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Sun- and drought-tolerant fern (analogy only)
+generator: compound_frond
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 2
+    branch_angle_deg:
+    - 45
+    - 75
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: basal_sheathing
+    divergence_deg: 360
+  foliage:
+    organ: frond
+    overall_shape: pinnate
+    margin: serrate
+    apex: acute
+    length:
+      value: 0.4
+      unit: m
+    width:
+      value: 0.11
+      unit: m
+    aspect_ratio: 3.64
+    pinnation:
+      pinnae_per_side: 20
+      pinnae_series: 1
+      pinna_length_ratio: 0.32
+      petiole_ratio: 0.22
+      rachis_arc_deg: -30
+    venation:
+      pattern: dichotomous
+      relief: impressed
+    surface:
+      waxy_cuticle: 0.5
+      hairs: tomentose
+      underside: pale
+      translucency: 0.4
+      flexibility_deg: 85
+  stem:
+    type: herbaceous
+    growth_direction: prostrate
+    segmented: false
+    diameter_at_base:
+      value: 0.012
+      unit: m
+  root:
+    system: fibrous
+    depth:
+      value: 0.2
+      unit: m
+    spread:
+      value: 0.5
+      unit: m
+    exposed: false
+  reproductive:
+    structure: sporangia_sorus
+    placement: underside
+    size:
+      value: 0.03
+      unit: m
+    seasonal: false
+growth_stages:
+- id: crozier
+  age_label: crozier
+  age_years:
+  - 0.0
+  - 0.9
+  height:
+    value: 0.021
+    unit: m
+  crown_spread:
+    value: 0.06
+    unit: m
+  proportions:
+    frond_share: 1.0
+    pinna_share: 0.0
+    rachis_share: 1.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 0.9
+  - 5.2
+  height:
+    value: 0.077
+    unit: m
+  crown_spread:
+    value: 0.225
+    unit: m
+  proportions:
+    frond_share: 1.0
+    pinna_share: 0.55
+    rachis_share: 1.0
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 5.2
+  - 15.0
+  height:
+    value: 0.122
+    unit: m
+  crown_spread:
+    value: 0.5
+    unit: m
+  proportions:
+    frond_share: 1.0
+    pinna_share: 1.0
+    rachis_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - tomentose_undersides
+  - sun_scorched_habit
+  - small_rosette
+materials:
+- id: structural_stem
+  applies_to: stem
+  surface_type: herbaceous
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: flexible
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#6f8a4a'
+  color_range:
+  - '#5c7440'
+  - '#6f8a4a'
+  - '#88a35c'
+  roughness:
+  - 0.35
+  - 0.65
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: flexible
+- id: reproductive_structure
+  applies_to: sorus
+  surface_type: herbaceous
+  base_color: '#8a7a3a'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - frond_count
+  - frond_length
+  - frond_arch
+  - pinna_size
+  - crozier_share
+  ranges:
+    frond_count:
+    - 0.6
+    - 1.4
+    frond_length:
+    - 0.7
+    - 1.35
+    frond_arch:
+    - 0.3
+    - 1.0
+    pinna_size:
+    - 0.6
+    - 1.4
+    crozier_share:
+    - 0.0
+    - 0.3
+  variants:
+  - id: shade_form
+    label: deep shade form
+    weight: 0.4
+    habitat_tags:
+    - woodland_floor
+    - humid_woodland
+    overrides:
+      frond_length: 1.3
+      frond_arch: 0.8
+  - id: sun_scoured
+    label: sun and scour form
+    weight: 0.3
+    habitat_tags:
+    - clearing_edge
+    - ridge_exposed
+    overrides:
+      frond_length: 0.75
+      frond_count: 1.3
+  - id: crevice_form
+    label: crevice and wall form
+    weight: 0.3
+    habitat_tags:
+    - rock_face
+    - rainridge_rockface
+    overrides:
+      frond_arch: 1.0
+      frond_count: 0.8
+affordances:
+  structural_role: groundcover
+  forage_tags:
+  - part: frond
+    palatability: 0.2
+    water_content: 0.5
+    nutrition: 0.14
+  - part: young_frond
+    palatability: 0.35
+    water_content: 0.7
+    nutrition: 0.24
+    seasonal: true
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 0.35
+    pushable: true
+    collision_proxy: capsule
+    trunk_diameter_m:
+      value: 0.012
+      unit: m
+    footprint_radius_m: 0.25
+habitat_tags:
+- woodland_floor
+- humid_woodland
+- wet_hollow
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: sunfern.su2-reference-image
+  kind: local_image
+  locator: species/plants/plant.sunfern.su2/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: small exposed fern with tomentose undersides, one of the dry-ground specialists

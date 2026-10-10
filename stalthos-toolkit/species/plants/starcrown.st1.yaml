@@ -1,0 +1,278 @@
+# Starcrown -- woody_rosette morphology profile, Star-leaf rosette shrub (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: Working profile: Star-leaf rosette shrub (analogy only).
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.starcrown.st1
+version: 1
+common_names:
+  primary: Starcrown
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Star-leaf rosette shrub (analogy only)
+generator: woody_rosette
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 3
+    branch_angle_deg:
+    - 60
+    - 90
+    branch_length_ratio: 0.55
+    taper: 0.3
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: rosette
+    divergence_deg: 360
+  foliage:
+    organ: leaf
+    overall_shape: spathulate
+    margin: crenate
+    apex: acute
+    length:
+      value: 0.3
+      unit: m
+    width:
+      value: 0.14
+      unit: m
+    aspect_ratio: 2.14
+    venation:
+      pattern: reticulate
+      relief: raised
+      secondary_per_primary: 4
+    surface:
+      waxy_cuticle: 0.6
+      hairs: none
+      underside: pale
+      translucency: 0.2
+      flexibility_deg: 30
+  stem:
+    type: woody
+    growth_direction: ascending
+    segmented: false
+    diameter_at_base:
+      value: 0.12
+      unit: m
+    bark:
+      pattern: smooth
+  root:
+    system: buttress
+    depth:
+      value: 1.6
+      unit: m
+    spread:
+      value: 2.6
+      unit: m
+    exposed: true
+growth_stages:
+- id: seedling
+  age_label: seedling
+  age_years:
+  - 0.0
+  - 3.6
+  height:
+    value: 0.084
+    unit: m
+  crown_spread:
+    value: 0.192
+    unit: m
+  proportions:
+    trunk_share: 0.2
+    crown_share: 1.0
+    cone_share: 0.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 3.6
+  - 21.0
+  height:
+    value: 0.308
+    unit: m
+  crown_spread:
+    value: 0.72
+    unit: m
+  proportions:
+    trunk_share: 0.5
+    crown_share: 1.0
+    cone_share: 0.1
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 21.0
+  - 60.0
+  height:
+    value: 0.49
+    unit: m
+  crown_spread:
+    value: 1.6
+    unit: m
+  proportions:
+    trunk_share: 0.75
+    crown_share: 1.0
+    cone_share: 0.35
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - star_arranged_leaf_rosettes
+  - spatulate_thick_leaves
+  - bright_emergent_crown
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#6f5c46'
+  color_range:
+  - '#51422f'
+  - '#6f5c46'
+  - '#8b7660'
+  roughness:
+  - 0.6
+  - 0.9
+  normal_strength: 1.0
+  wind_response: stiff
+- id: foliage
+  applies_to: leaf
+  surface_type: cuticle
+  base_color: '#56933f'
+  color_range:
+  - '#447a32'
+  - '#56933f'
+  - '#6dab50'
+  roughness:
+  - 0.3
+  - 0.6
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: stiff
+variation:
+  seed_labels:
+  - crown_radius
+  - leaf_count
+  - leaf_rigidity
+  - trunk_height
+  - cone_count
+  ranges:
+    crown_radius:
+    - 0.75
+    - 1.3
+    leaf_count:
+    - 0.7
+    - 1.3
+    leaf_rigidity:
+    - 0.8
+    - 1.25
+    trunk_height:
+    - 0.7
+    - 1.35
+    cone_count:
+    - 0.4
+    - 1.6
+  variants:
+  - id: open_slope
+    label: open rocky slope form
+    weight: 0.45
+    habitat_tags:
+    - stone_island_scrub
+    - ridge_exposed
+    overrides:
+      leaf_rigidity: 1.2
+      crown_radius: 0.85
+  - id: hollow_refuge
+    label: sheltered hollow form
+    weight: 0.3
+    habitat_tags:
+    - karst_hollow
+    - wet_hollow
+    overrides:
+      leaf_count: 1.3
+      trunk_height: 1.25
+  - id: sprout_ring
+    label: low offset-sprout form
+    weight: 0.25
+    habitat_tags:
+    - browsed_patch
+    - caprock
+    overrides:
+      crown_radius: 0.7
+      trunk_height: 0.7
+affordances:
+  structural_role: understory
+  forage_tags:
+  - part: leaf
+    palatability: 0.5
+    water_content: 0.7
+    nutrition: 0.32
+  - part: shoot
+    palatability: 0.55
+    water_content: 0.72
+    nutrition: 0.36
+    seasonal: true
+  contact_bounds:
+    min_browse_height_m: 0.2
+    max_browse_height_m: 1.2
+    pushable: false
+    collision_proxy: cylinder
+    trunk_diameter_m:
+      value: 0.12
+      unit: m
+    footprint_radius_m: 0.8
+habitat_tags:
+- rocky_upland
+- stone_island_scrub
+- sparse_woodland
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: starcrown.st1-reference-image
+  kind: local_image
+  locator: species/plants/plant.starcrown.st1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: 'Working profile: Star-leaf rosette shrub (analogy only).'

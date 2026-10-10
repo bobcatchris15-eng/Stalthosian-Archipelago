@@ -1,0 +1,287 @@
+# Ashshelf -- bracket_fungus morphology profile, Pale ash-grey shelf bracket (polypore analogy).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: many small pale ash-grey shelves stacked along one dead limb
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: fungus
+id: plant.ashshelf.as3
+version: 1
+common_names:
+  primary: Ashshelf
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Pale ash-grey shelf bracket (polypore analogy)
+generator: bracket_fungus
+anatomy:
+  branching_pattern:
+    architecture: encrusting_sheet
+    order_max: 1
+    branch_angle_deg:
+    - 0
+    - 0
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+    notes: Many small pale shelves covering one dead limb, thin enough to stack.
+  phyllotaxy:
+    pattern: fascicled
+    divergence_deg: 360
+  foliage:
+    organ: bracket_lamina
+    overall_shape: flabellate
+    margin: entire
+    apex: acute
+    length:
+      value: 0.18
+      unit: m
+    width:
+      value: 0.12
+      unit: m
+    aspect_ratio: 1.5
+    surface:
+      waxy_cuticle: 0.0
+      hairs: tomentose
+      underside: same_as_top
+      translucency: 0.1
+      flexibility_deg: 5
+  stem:
+    type: fleshy
+    growth_direction: prostrate
+    segmented: false
+    diameter_at_base:
+      value: 0.015
+      unit: m
+  root:
+    system: substrate_bound
+    depth:
+      value: 0.0
+      unit: m
+    spread:
+      value: 0.12
+      unit: m
+    exposed: false
+  reproductive:
+    structure: fruit_cluster
+    placement: substrate
+    size:
+      value: 0.18
+      unit: m
+    seasonal: true
+  substrate:
+    attachment: decomposing_wood
+    host: dead branch
+    height_on_substrate_m: 0.5
+growth_stages:
+- id: pinhead
+  age_label: pinhead
+  age_years:
+  - 0.0
+  - 0.0
+  height:
+    value: 0.06
+    unit: m
+  crown_spread:
+    value: 0.06
+    unit: m
+  proportions:
+    lamina_share: 0.15
+    pore_share: 0.1
+    attachment_share: 1.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: young
+  age_label: young
+  age_years:
+  - 0.0
+  - 0.2
+  height:
+    value: 0.22
+    unit: m
+  crown_spread:
+    value: 0.225
+    unit: m
+  proportions:
+    lamina_share: 0.6
+    pore_share: 0.5
+    attachment_share: 1.0
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 0.2
+  - 0.5
+  height:
+    value: 0.35
+    unit: m
+  crown_spread:
+    value: 0.5
+    unit: m
+  proportions:
+    lamina_share: 1.0
+    pore_share: 1.0
+    attachment_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - many_small_shelves
+  - pale_grey_tone
+  - limb_coverage
+materials:
+- id: structural_stem
+  applies_to: rhizome
+  surface_type: fungus_flesh
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: none
+- id: foliage
+  applies_to: lamina
+  surface_type: fungus_top
+  base_color: '#b3aa9a'
+  color_range:
+  - '#98917f'
+  - '#b3aa9a'
+  - '#cdc6b8'
+  roughness:
+  - 0.55
+  - 0.9
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: none
+- id: reproductive_structure
+  applies_to: whole
+  surface_type: herbaceous
+  base_color: '#8a7a3a'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - shelf_count
+  - shelf_radius
+  - zone_count
+  - pore_density
+  - bracket_thickness
+  ranges:
+    shelf_count:
+    - 0.6
+    - 1.5
+    shelf_radius:
+    - 0.7
+    - 1.4
+    zone_count:
+    - 0.4
+    - 1.6
+    pore_density:
+    - 0.6
+    - 1.4
+    bracket_thickness:
+    - 0.7
+    - 1.35
+  variants:
+  - id: damp_hollow_form
+    label: damp hollow form
+    weight: 0.4
+    habitat_tags:
+    - wet_hollow
+    - humid_woodland
+    overrides:
+      shelf_radius: 1.3
+      shelf_count: 1.25
+  - id: sun_log_form
+    label: sun-exposed log form
+    weight: 0.35
+    habitat_tags:
+    - deadwood
+    - clearing_edge
+    overrides:
+      zone_count: 1.5
+      shelf_radius: 0.85
+  - id: old_wood_form
+    label: rotten old wood form
+    weight: 0.25
+    habitat_tags:
+    - deadwood
+    - woodland_floor
+    overrides:
+      shelf_count: 0.7
+      bracket_thickness: 0.75
+affordances:
+  structural_role: deadwood
+  forage_tags:
+  - part: lamina
+    palatability: 0.28
+    water_content: 0.55
+    nutrition: 0.14
+  - part: litter
+    palatability: 0.12
+    water_content: 0.35
+    nutrition: 0.06
+  contact_bounds:
+    min_browse_height_m: 0.2
+    max_browse_height_m: 1.0
+    pushable: false
+    collision_proxy: none
+habitat_tags:
+- deadwood
+- woodland_floor
+- humid_woodland
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: ashshelf.as3-reference-image
+  kind: local_image
+  locator: species/plants/plant.ashshelf.as3/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: many small pale ash-grey shelves stacked along one dead limb
