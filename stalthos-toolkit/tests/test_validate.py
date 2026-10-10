@@ -419,14 +419,26 @@ def test_validate_asset_strict_turns_warnings_into_failure(tmp_path, capsys):
     json.loads(capsys.readouterr().out)
 
 
-@pytest.mark.parametrize("command_name", ["generate_plant", "bake_materials", "render_turntable"])
-def test_unimplemented_commands_still_exit_5(tmp_path, command_name, capsys):
-    """Honest reporting: unimplemented stages must not fake success.
+def test_unimplemented_commands_still_exit_5(tmp_path, capsys):
+    """Honest reporting: a declared command with no handler must exit 5.
 
-    Stage 6/8/9 (generate_lods, benchmark_asset, publish_asset) are implemented
-    now, so the sample here is a stage that is genuinely still a stub.
+    Every stage command now carries a handler, so the invariant is asserted
+    against a deliberately handler-less registration rather than against a
+    particular command name -- otherwise the test would have to be rewritten
+    (and silently weakened) every time a stage is implemented.
     """
-    exit_code = main(["-w", str(tmp_path / "var"), command_name, "--asset-id", "plant.softbough.sh1.lod0"])
+    from stalthos_toolkit.core.contract import REGISTRY
+
+    spec = REGISTRY.get("generate_lods")
+    original = spec.handler
+    spec.handler = None
+    try:
+        exit_code = main(["-w", str(tmp_path / "var"), "generate_lods",
+                          "--asset-id", "plant.softbough.sh1.lod0"])
+    finally:
+        spec.handler = original
     assert exit_code == 5
     envelope = json.loads(capsys.readouterr().out)
+    assert envelope["ok"] is False
+    assert envelope["exit_code"] == 5
     assert envelope["errors"][0]["kind"] == "NotImplementedStage"

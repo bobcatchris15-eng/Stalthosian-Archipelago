@@ -337,6 +337,36 @@ def test_lod_chain_without_optimizer_is_degraded_and_unmeasured(tmp_path: Path):
     assert metrics["collision_convex"]["measured"] is False
 
 
+def test_lod0_is_never_claimed_to_have_been_optimized(tmp_path: Path):
+    """LOD0 is a verbatim re-encode of the source; no optimizer ever touches it.
+
+    Claiming `simplifier='gltfpack'` on a file gltfpack never opened is exactly
+    the dishonesty AGENTS.md forbids, so the record must say `source_copy`.
+    """
+    source = build_test_glb(tmp_path / "src.glb", grid=10)
+    result = build_lod_chain(source, tmp_path / "lod", asset_id="plant.synthetic",
+                             policy=policy_for("plant"), allow_degraded=True)
+    assert result.records[0].simplifier == "source_copy"
+    assert result.records[0].degraded is True
+    for record in result.records[1:]:
+        assert record.simplifier in ("gltfpack", "python")
+    metrics = {m["name"]: m for m in chain_metrics(result)}
+    assert metrics["lod_optimizer_applied.lod0"]["measured"] is False
+
+
+def test_degraded_texture_keeps_its_real_container_suffix(tmp_path: Path):
+    """An uncompressed PNG must never be written out under a .ktx2 name."""
+    png = tmp_path / "albedo.png"
+    png.write_bytes(_png())
+    report = compress_textures([(str(png), "color")], tmp_path / "out", allow_degraded=True)
+    outcome = report.outcomes[0]
+    assert outcome.compressed is False
+    assert outcome.degraded is True
+    assert Path(outcome.path).suffix == ".png"
+    assert not list((tmp_path / "out").glob("*.ktx2"))
+    assert report.metrics()[-1]["measured"] is False
+
+
 def test_lod_chain_reports_collision_and_impostor_stub(tmp_path: Path):
     source = build_test_glb(tmp_path / "src.glb", grid=10)
     result = build_lod_chain(source, tmp_path / "lod", asset_id="plant.synthetic",
@@ -589,8 +619,13 @@ def test_benchmark_asset_reports_unmeasured_frame_time(workspace: Path):
 def test_benchmark_asset_exit_2_without_geometry(workspace: Path):
     manifest = write_manifest(workspace)
     code, envelope = run_cli("benchmark_asset", "--workspace", str(workspace), "--asset-id", ASSET_ID)
+    # Assert the envelope, not human-readable log/error wording
+    # (AGENTS.md: tests assert on status envelope and exit codes).
     assert code == EXIT_USAGE
-    assert "no glTF/GLB artifact" in envelope["errors"][0]["message"]
+    assert envelope["ok"] is False
+    assert envelope["exit_code"] == EXIT_USAGE
+    assert envelope["errors"][0]["kind"] == "UsageError"
+    assert envelope["artifacts"] == []
 
 
 def test_tool_discovery_reports_absence(monkeypatch):

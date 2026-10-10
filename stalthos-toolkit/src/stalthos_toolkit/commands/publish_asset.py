@@ -105,6 +105,29 @@ def publish_asset(ctx: Context) -> Status:
 
     runtime_dir = ctx.workspace.runtime / asset_id
     promotions = _plan_promotions(manifest, ctx.workspace.root, runtime_dir)
+    collisions = _promotion_collisions(promotions)
+    if collisions:
+        blockers += collisions
+        for entry in collisions:
+            status.warn(f"publish blocked: {entry['message']}")
+        status.partial = True
+        status.metrics = {
+            "published": False,
+            "blockers": blockers,
+            "warnings": warnings,
+            "content_hash": semantic_content_hash(manifest),
+        }
+        status.ok = False
+        status.exit_code = EXIT_VALIDATION
+        status.errors.append({
+            "kind": "PublishBlocked",
+            "message": f"{len(blockers)} structural problem(s) block publication of {asset_id}",
+            "detail": {"blockers": blockers, "warnings": warnings},
+            "hint": "two manifest artifacts would overwrite each other in var/runtime/; "
+                    "rename or re-register one of them in the manifest",
+        })
+        status.provenance = _provenance(ctx, warnings)
+        return status
 
     status.metrics = {
         "published": False,
@@ -112,7 +135,7 @@ def publish_asset(ctx: Context) -> Status:
         "promotions": [str(entry["target"]) for entry in promotions],
         "content_hash": semantic_content_hash(manifest),
         "warnings": warnings,
-        "licensing": artifact_report.get("licensing", {}),
+        "licensing": _licensing_summary(manifest),
     }
 
     if ctx.options.get("dry_run"):
@@ -240,11 +263,34 @@ def _check_artifacts(manifest: dict[str, Any], root: Path) -> dict[str, Any]:
     return {"blockers": blockers, "checked": checked}
 
 
+def _licensing_summary(manifest: dict[str, Any]) -> dict[str, Any]:
+    """Machine-readable licensing record. Never a gate -- see i-0002."""
+    provenance = manifest.get("provenance") or {}
+    unverified: list[str] = []
+    for reference in provenance.get("references") or []:
+        if not isinstance(reference, dict):
+            continue
+        if str(reference.get("usage_rights", "unknown")).lower() in UNVERIFIED_RIGHTS:
+            unverified.append(str(reference.get("id", "<unnamed>")))
+    return {
+        "licenses": provenance.get("licenses", []),
+        "references": provenance.get("references", []),
+        "unverified_usage_rights": sorted(unverified),
+        "usage_rights_block_publication": False,
+        "policy": "unverified usage_rights warn and are recorded; they do not block "
+                  "publication of this personal, non-commercial project (intent i-0002)",
+    }
+
+
 def _licensing_warnings(manifest: dict[str, Any]) -> list[str]:
-    """Unestablished usage rights warn and are carried into the receipt."""
+    """Unestablished usage rights warn and are carried into the receipt.
+
+    Per intent i-0002 this NEVER blocks: a personal, non-commercial project
+    records provenance and ships. Only structural failures block.
+    """
     warnings: list[str] = []
     provenance = manifest.get("provenance") or {}
-    unverified = []
+    unverified: list[str] = []
     for reference in provenance.get("references") or []:
         if not isinstance(reference, dict):
             continue
@@ -299,6 +345,24 @@ def _plan_promotions(manifest: dict[str, Any], root: Path, runtime_dir: Path) ->
             "name": source.name,
         })
     return plans
+
+
+def _promotion_collisions(plans: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Two sources that flatten onto one runtime path.
+
+    Copying them would silently overwrite: the receipt would then list more
+    artifacts than files exist in var/runtime/. That is a structural problem,
+    not a cosmetic one, so it blocks.
+    """
+    by_target: dict[str, list[str]] = {}
+    for plan in plans:
+        by_target.setdefault(str(plan["target"]), []).append(str(plan["source"]))
+    return [
+        {"kind": "PromotionCollision",
+         "message": f"{len(sources)} source artifacts flatten onto the same runtime path {target}",
+         "detail": {"target": target, "sources": sorted(sources)}}
+        for target, sources in sorted(by_target.items()) if len(sources) > 1
+    ]
 
 
 def asset_id_in(parts: list[str]) -> str | None:
@@ -379,11 +443,8 @@ def _receipt(manifest: dict[str, Any], published: list[dict[str, Any]], ctx: Con
             for entry in published
         ],
         "licensing": {
-            "licenses": provenance.get("licenses", []),
-            "references": provenance.get("references", []),
+            **_licensing_summary(manifest),
             "warnings": [w for w in warnings if "usage rights" in w or "license" in w],
-            "policy": "unverified usage_rights warn and are recorded; they do not block "
-                      "publication of this personal, non-commercial project",
         },
         "degradation": {
             "allow_degraded": allow_degraded(ctx)[0],

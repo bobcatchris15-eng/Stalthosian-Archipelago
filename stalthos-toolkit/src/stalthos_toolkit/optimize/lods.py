@@ -436,9 +436,17 @@ def build_lod_chain(source_path: str | Path, out_dir: str | Path, *, asset_id: s
                 else (source.copy(), [])
             doc.write(target_path)
 
+        # Per-level simplifier truth. LOD0 is a verbatim re-encode of the source
+        # geometry -- no optimizer ever touches it -- so it must never be
+        # reported as having been produced by gltfpack.
+        if index == 0:
+            level_simplifier = "source_copy"
+        else:
+            level_simplifier = "gltfpack" if use_gltfpack else "python"
+
         record = _record(index, name, target_path, doc, target_ratio=ratio,
-                         base_triangles=base_triangles, simplifier=result.simplifier,
-                         degraded=result.degraded)
+                         base_triangles=base_triangles, simplifier=level_simplifier,
+                         degraded=result.degraded or level_simplifier != "gltfpack")
         result.records.append(record)
         previous_triangles = record.triangles
 
@@ -560,7 +568,9 @@ def chain_metrics(result: ChainResult) -> list[dict[str, Any]]:
         add(f"lod_simplification_ratio.{record.name}", record.simplification_ratio, "ratio", True)
         # Quality of the simplification is never measured by this stage.
         add(f"lod_silhouette_drift.{record.name}", 0.0, "percent", False)
-        if record.degraded:
+        # Whether an optimizer actually ran on this level: not measured as a
+        # boolean by any downstream tool, and False for a source copy.
+        if record.simplifier != "gltfpack":
             add(f"lod_optimizer_applied.{record.name}", 0.0, "boolean", False)
 
     add("lod_count", len(result.records), "levels", True)

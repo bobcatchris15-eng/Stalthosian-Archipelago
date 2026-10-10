@@ -99,6 +99,43 @@ def test_unverified_usage_rights_warn_but_do_not_block(workspace: Path, publishe
     assert (workspace / "runtime" / ASSET_ID / "lod0.glb").exists()
 
 
+def test_unverified_usage_rights_are_machine_readable_in_the_receipt(
+        workspace: Path, published_asset: Path):
+    """i-0002: the receipt must record *which* rights were unestablished, not
+    only that some were -- and it must say explicitly that they do not block."""
+    _edit(published_asset, lambda m: m["provenance"]["references"].append(
+        {"id": "ref-2", "kind": "photo", "locator": "example.invalid/2",
+         "usage_rights": "unverified"}))
+    code, envelope = run_cli("publish_asset", "--workspace", str(workspace), "--asset-id", ASSET_ID)
+    assert code == EXIT_OK, envelope
+
+    receipt = json.loads((workspace / "reports" / "receipts" / f"{ASSET_ID}.json").read_text("utf-8"))
+    licensing = receipt["licensing"]
+    assert licensing["unverified_usage_rights"] == ["ref-1", "ref-2"]
+    assert licensing["usage_rights_block_publication"] is False
+    assert envelope["metrics"]["licensing"]["unverified_usage_rights"] == ["ref-1", "ref-2"]
+
+
+def test_publish_blocks_when_two_artifacts_would_overwrite_each_other(
+        workspace: Path, published_asset: Path):
+    """Two sources flattening onto one runtime path would silently overwrite;
+    the receipt would list more artifacts than files exist. Structural block."""
+    shadow = workspace / "intermediate" / ASSET_ID / "lod1.glb"
+    shadow.parent.mkdir(parents=True, exist_ok=True)
+    original = workspace / "intermediate" / "plants" / ASSET_ID / "lod1.glb"
+    shadow.write_bytes(original.read_bytes())
+    _edit(published_asset, lambda m: m["artifacts"].append({
+        "path": str(shadow), "role": "runtime", "sha256": sha256_file(shadow),
+        "bytes": shadow.stat().st_size}))
+
+    code, envelope = run_cli("publish_asset", "--workspace", str(workspace), "--asset-id", ASSET_ID)
+    assert code == EXIT_VALIDATION, envelope
+    assert envelope["metrics"]["published"] is False
+    kinds = {b["kind"] for b in envelope["metrics"]["blockers"]}
+    assert "PromotionCollision" in kinds
+    assert not (workspace / "runtime" / ASSET_ID / "lod0.glb").exists()
+
+
 # --- structural blocks ------------------------------------------------------
 def test_publish_blocks_when_validation_not_passed(workspace: Path, published_asset: Path):
     _edit(published_asset, lambda m: m["validation"].update({"outcome": "not_run"}))

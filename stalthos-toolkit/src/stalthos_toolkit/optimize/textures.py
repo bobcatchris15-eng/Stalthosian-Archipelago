@@ -269,9 +269,16 @@ def compress_textures(slots: Iterable[tuple[str | Path, str]], out_dir: str | Pa
         info = sniff_texture(source)
         bytes_before = source.stat().st_size
         stem = source.stem
-        target = out_dir / (f"{stem}.ktx2" if not keep_extension else f"{stem}{source.suffix}")
+        if report.degraded:
+            # keep the real container suffix; only a verified BC/KTX2 write gets .ktx2
+            target = out_dir / (f"{stem}{source.suffix}" if source.suffix else f"{stem}.raw")
+        else:
+            target = out_dir / (f"{stem}.ktx2" if not keep_extension else f"{stem}{source.suffix}")
 
         if report.degraded:
+            # A passthrough copy MUST NOT be given the .ktx2 name: an uncompressed
+            # PNG called albedo.ktx2 is a lie to every downstream consumer, even
+            # though validate/checks.py sniffs the content. Keep the real suffix.
             shutil.copyfile(source, target)
             outcome = CompressionOutcome(
                 source=str(source), path=str(target), kind=kind, format=policy.format,
