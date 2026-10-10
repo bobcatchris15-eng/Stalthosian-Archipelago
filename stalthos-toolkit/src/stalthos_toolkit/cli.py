@@ -62,13 +62,28 @@ def register_declared() -> None:
             REGISTRY.add(name, summary, None, stage=stage)
 
 
+def _seed_arg(value: str) -> int | str:
+    """Parse `--seed` as an integer when it looks like one, else keep the label.
+
+    argparse hands us every value as a string. Without this, `--seed 0` reached
+    `normalize_seed` as the *string* "0" and was sha256-hashed into an unrelated
+    63-bit seed, so the seed recorded in the status envelope was never the
+    integer the operator asked for. docs/toolkit-architecture.md section 2.1
+    specifies `--seed N|LABEL`, so both forms must survive distinctly.
+    """
+    try:
+        return int(value, 10)
+    except ValueError:
+        return value
+
+
 def _global_options(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """Global options. Attached to the root parser AND every subcommand, so both
     `stalthos -w var generate_plant ...` and `stalthos generate_plant -w var ...`
     work. Agents should not have to remember argument order."""
     parser.add_argument("--workspace", "-w", default=argparse.SUPPRESS,
                         help="workspace root (default: $STEALTHOS_HOME or ./var)")
-    parser.add_argument("--seed", "-s", default=argparse.SUPPRESS,
+    parser.add_argument("--seed", "-s", type=_seed_arg, default=argparse.SUPPRESS,
                         help="root seed (int or stable string label)")
     parser.add_argument("--quiet", "-q", action="store_true", default=argparse.SUPPRESS,
                         help="suppress stderr logs")

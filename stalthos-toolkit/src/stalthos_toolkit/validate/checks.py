@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 from ..core.seeding import canonical_json, sha256_file, sha256_bytes
+from ..schemas.formats import rfc3339
 from ..schemas.registry import format_issues, validate_against
 from .ktx import COLOR_FORMATS, NORMAL_FORMATS, TextureFormatInfo, sniff_texture
 
@@ -415,6 +416,25 @@ def check_textures(manifest: dict[str, Any], workspace_root: Path | None) -> lis
 def check_provenance(manifest: dict[str, Any]) -> list[Check]:
     provenance = manifest.get("provenance") or {}
     checks: list[Check] = []
+
+    # `created_at` carries "format": "date-time" in asset-manifest.schema.json,
+    # but the hand-rolled validator treats `format` as annotation-only (correct
+    # for draft 2020-12, where assertion format is a separate opt-in). schemas/
+    # validator.py documents that the semantic formats are layered on here
+    # instead — this is that layer, and until it existed the check it advertises
+    # was dead code and `created_at: "banana"` passed validation.
+    created_at = manifest.get("created_at")
+    if isinstance(created_at, str) and created_at.strip():
+        if rfc3339(created_at):
+            checks.append(Check("provenance.created_at", OUTCOME_PASS,
+                                f"created_at={created_at}", data={"created_at": created_at}))
+        else:
+            checks.append(Check("provenance.created_at", OUTCOME_FAIL,
+                                f"created_at is not RFC 3339: {created_at!r}",
+                                data={"created_at": created_at}))
+    else:
+        checks.append(Check("provenance.created_at", OUTCOME_FAIL,
+                            "provenance.created_at missing or not a string"))
 
     seed = provenance.get("seed")
     if isinstance(seed, int) and not isinstance(seed, bool):
