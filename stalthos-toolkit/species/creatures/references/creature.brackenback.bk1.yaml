@@ -1,0 +1,43 @@
+# Sidecar references for creature.brackenback.bk1 (Brackenback)
+# Merge procedure: worker zero appends these entries to the species YAML's references[] array
+# Schema matches contracts/species-definition.schema.json#/$defs/reference
+
+references:
+  - id: pdb-ankylosaurus
+    kind: web
+    locator: https://paleobiodb.org/data1.2/taxa/single.json?name=Ankylosaurus
+    title: "Paleobiology Database: Ankylosaurus (ankylosaurid genus)"
+    usage_rights: cc0
+    usage_rights_note: "Paleobiology Database terms - data explicitly CC0-1.0"
+    redistributable: true
+    confidence: high
+    supports:
+      - morphology_family
+      - taxonomy_validation
+      - body_plan
+      - integument.osteoderm_zones
+  - id: polyhaven-cc0-general
+    kind: web
+    locator: https://polyhaven.com/license
+    title: "Poly Haven License - all assets CC0"
+    usage_rights: cc0
+    usage_rights_note: "General CC0 asset library for lighting/material calibration reference"
+    redistributable: true
+    confidence: high
+    supports:
+      - materials
+      - lighting_reference
+  - id: creatures-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/creatures.md
+    title: "Creature design -- Brackenback section"
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports:
+      - body_plan
+      - integument
+      - affordances
+
+species_id: creature.brackenback.bk1
+generated_at: "2026-10-10T22:16:03.704Z"

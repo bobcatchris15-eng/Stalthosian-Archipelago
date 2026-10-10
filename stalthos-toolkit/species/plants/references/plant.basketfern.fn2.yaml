@@ -1,0 +1,53 @@
+# Sidecar references for plant.basketfern.fn2 (Basketfern)
+# Merge procedure: worker zero appends these entries to the species YAML's references[] array
+# Schema matches contracts/species-definition.schema.json#/$defs/reference
+
+references:
+  - id: gbif-maratt-doug
+    kind: web
+    locator: https://api.gbif.org/v1/species/match?name=Marattia%20douglasii
+    title: "GBIF Backbone Taxonomy: Marattia douglasii (C.Presl) Baker"
+    usage_rights: cc0
+    usage_rights_note: "GBIF.org terms of use - data explicitly CC0-1.0"
+    redistributable: true
+    confidence: high
+    supports:
+      - morphology_family
+      - taxonomy_validation
+  - id: wikimedia-marattia-douglasii-starr
+    kind: web
+    locator: https://commons.wikimedia.org/wiki/File:Starr-110929-0072-Marattia_douglasii-habit-Hanaula-Maui_(24485041734).jpg
+    title: "Marattia douglasii habit at Hanaula, Maui - Forest & Kim Starr"
+    usage_rights: cc-by
+    usage_rights_note: "CC BY 3.0 US per Wikimedia Commons extmetadata; attribution required"
+    redistributable: true
+    confidence: high
+    supports:
+      - anatomy.branching_pattern
+      - anatomy.foliage
+      - silhouette
+  - id: polyhaven-cc0-general
+    kind: web
+    locator: https://polyhaven.com/license
+    title: "Poly Haven License - all assets CC0"
+    usage_rights: cc0
+    usage_rights_note: "General CC0 asset library for lighting/material calibration reference"
+    redistributable: true
+    confidence: high
+    supports:
+      - materials
+      - lighting_reference
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: "Flora and fungal life -- Giant marattioid-like fern row"
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports:
+      - common_names
+      - habitat
+      - recovery_rate
+
+species_id: plant.basketfern.fn2
+generated_at: "2026-10-10T22:16:03.704Z"
