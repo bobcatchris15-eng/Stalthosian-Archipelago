@@ -401,8 +401,8 @@ def build_lod_chain(source_path: str | Path, out_dir: str | Path, *, asset_id: s
                 f"({toolbox.INSTALL_HINTS['gltfpack']})")
         if not allow_degraded:
             result.warnings.append(
-                "degraded LOD chain was produced without --allow-degraded; see "
-                "generate_lods.allow_degraded for the exit-code policy")
+                "degraded LOD chain was accepted without an explicit opt-in; quality metrics "
+                "for this chain stay marked measured=False. No optimizer ran on this geometry.")
 
     result.tool_versions = {"gltfpack": gltfpack.version or ("present" if gltfpack.available else "not-available"),
                             "simplifier": result.simplifier}

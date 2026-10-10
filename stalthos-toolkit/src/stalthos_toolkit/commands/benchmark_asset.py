@@ -62,10 +62,11 @@ def benchmark_asset(ctx: Context) -> Status:
     root = ctx.workspace.root
 
     entries = [a for a in artifacts(manifest)
-               if str(a.get("path", "")).lower().endswith(GEOMETRY_SUFFIXES)]
+               if str(a.get("path", "")).lower().endswith(GEOMETRY_SUFFIXES)
+               and str(a.get("role", "")) != "source"]
     if not entries:
         raise UsageError(
-            f"manifest {manifest_path.name} declares no glTF/GLB artifact to measure",
+            f"manifest {manifest_path.name} declares no optimized glTF/GLB artifact to measure",
             hint="run generate_lods (stage 6) first")
 
     report = BenchmarkReport(asset_id=asset_id)
@@ -79,6 +80,9 @@ def benchmark_asset(ctx: Context) -> Status:
         except GlbError as exc:
             raise ValidationFailed(f"cannot measure {path}: {exc.message}") from exc
         name = _level_name(path)
+        if str(entry.get("role", "")) == "collision":
+            report.extras.append(measurement)      # measured, but not a LOD
+            continue
         report.lods.append(measurement)
         per_lod_bytes[name] = measurement["file_bytes"]
         per_lod_resident[name] = measurement["resident_bytes"]

@@ -149,6 +149,17 @@ def generate_lods(ctx: Context) -> Status:
                                          "generated_by": "generate_lods"}))
 
     metrics = chain_metrics(chain)
+    # Geometry memory floor per LOD. It is a byte count of real buffer views, but
+    # GPU residency is not what a driver allocates, so it is never "measured".
+    from ..benchmark.measure import resident_bytes
+
+    for record in chain.records:
+        metrics.append({
+            "name": f"gpu_resident_bytes.{record.name}",
+            "value": float(resident_bytes(record.path)),
+            "unit": "bytes",
+            "measured": False,
+        })
 
     # --- textures ---------------------------------------------------------
     texture_report = None

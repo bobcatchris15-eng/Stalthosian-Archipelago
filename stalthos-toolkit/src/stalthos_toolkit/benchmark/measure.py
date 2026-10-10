@@ -104,6 +104,16 @@ def _primitive_accessor_indices(doc: GlbDocument) -> set[int]:
     return used
 
 
+def resident_bytes(path: str | Path) -> int:
+    """Bytes of buffer views that actually feed this file's primitives.
+
+    This is the geometry floor of what a runtime must hold resident. Driver-side
+    allocation is larger; report this number as `measured=False` for VRAM.
+    """
+    doc = GlbDocument.read(path)
+    return _live_buffer_bytes(doc, _primitive_accessor_indices(doc))
+
+
 def measure_glb(path: str | Path) -> dict[str, Any]:
     """Counts and byte sizes read out of one GLB. All measured=True."""
     path = Path(path)
@@ -281,6 +291,7 @@ __all__ = [
     "compare_before_after",
     "frame_time_measurement",
     "measure_glb",
+    "resident_bytes",
     "streaming_cost",
     "vram_estimate",
 ]
