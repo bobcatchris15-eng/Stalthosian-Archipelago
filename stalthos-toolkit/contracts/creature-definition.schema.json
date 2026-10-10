@@ -1,0 +1,495 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stalthosian-archipelago.invalid/contracts/creature-definition.schema.json",
+  "title": "Stalthos creature definition",
+  "description": "Authoring input for the creature anatomical-proxy generator (build_creature + rig_creature). Extends the species contract with body plan, per-life-stage skeletal proportions, rig spec, animation contacts, integument zones (osteoderm/bristle/scale) and material masks.",
+  "type": "object",
+  "required": [
+    "schema",
+    "kind",
+    "id",
+    "common_names",
+    "generator",
+    "morphology_family",
+    "body_plan",
+    "life_stages",
+    "rig",
+    "animation_contacts",
+    "integument",
+    "material_masks",
+    "affordances",
+    "habitat_tags",
+    "references",
+    "licenses"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "enum": ["creature-definition"] },
+    "kind": { "enum": ["creature"] },
+    "id": { "$ref": "#/$defs/slug" },
+    "version": { "type": "integer", "minimum": 1, "default": 1 },
+    "common_names": {
+      "type": "object",
+      "required": ["primary"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "type": "string", "minLength": 1 },
+        "working": { "type": "boolean", "default": true },
+        "aka": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "uncertainty": {
+      "description": "Overall evidence tier. Use 'speculative' wherever a feature is deliberate fiction (e.g. keratinous bristles on a titanosaur proxy).",
+      "enum": ["documented", "comparative_inference", "biomechanical_plausibility", "speculative"]
+    },
+    "generator": {
+      "enum": ["quadruped_sauropod", "low_slung_quadruped", "biped_theropod", "biped_paravian", "semibiped_ornithopod", "serpentine"]
+    },
+    "morphology_family": {
+      "description": "Anatomical inspiration, stated as analogy. Not a taxonomic claim.",
+      "type": "string",
+      "minLength": 2
+    },
+    "evidence": {
+      "description": "Per-feature evidence tier (docs/creatures.md scientific approach).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["feature", "tier"],
+        "additionalProperties": false,
+        "properties": {
+          "feature": { "type": "string", "minLength": 1 },
+          "tier": { "enum": ["documented", "comparative_inference", "biomechanical_plausibility", "speculative"] },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "body_plan": {
+      "type": "object",
+      "required": ["posture", "mass_estimate", "axial", "skeleton"],
+      "additionalProperties": false,
+      "properties": {
+        "posture": {
+          "enum": ["quadrupedal", "semi_bipedal", "bipedal", "cursorial_quadruped"]
+        },
+        "spine_profile": { "enum": ["arched", "horizontal", "sloped", "opisthotonus"] },
+        "neck_length_share": { "type": "number", "minimum": 0, "maximum": 1, "description": "Share of total body length taken by skull + cervical series." },
+        "tail_length_share": { "type": "number", "minimum": 0, "maximum": 1 },
+        "center_of_mass_m": { "$ref": "#/$defs/unit" },
+        "mass_estimate": {
+          "description": "Working hypothesis only; recompute from volumetric anatomy. measured=false means unverified.",
+          "type": "object",
+          "required": ["value", "unit", "measured"],
+          "additionalProperties": false,
+          "properties": {
+            "value": { "type": "number", "exclusiveMinimum": 0 },
+            "unit": { "type": "string" },
+            "measured": { "type": "boolean" },
+            "range": { "$ref": "#/$defs/range" },
+            "note": { "type": "string" }
+          }
+        },
+        "axial": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cervical_count": { "type": "integer", "minimum": 1, "maximum": 25 },
+            "dorsal_count": { "type": "integer", "minimum": 1, "maximum": 40 },
+            "caudal_count": { "type": "integer", "minimum": 3, "maximum": 100 },
+            "ribcage_depth_share": { "type": "number", "minimum": 0, "maximum": 1 },
+            "skull_profile": { "enum": ["small_relative", "large_relative", "box_like", "beaked", "hooked", "broad_flanged"] }
+          }
+        },
+        "skeleton": {
+          "description": "Region segments with their own development curves; explicit that scaling is not uniform.",
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["id", "region"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": {
+                "enum": ["skull", "mandible", "cervical", "dorsal", "sacral", "caudal", "pectoral_girdle", "pelvic_girdle", "forelimb_humerus", "forelimb_radius", "forelimb_manus", "hindlimb_femur", "hindlimb_tibia", "hindlimb_pes", "tail_tip"]
+              },
+              "length_share": { "type": "number", "minimum": 0, "maximum": 1 },
+              "mass_share": { "type": "number", "minimum": 0, "maximum": 1 },
+              "joint_limit_deg": {
+                "description": "Articulation envelope per primary axis.",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "flex": { "type": "number", "minimum": 0, "maximum": 180 },
+                  "extend": { "type": "number", "minimum": 0, "maximum": 180 },
+                  "twist": { "type": "number", "minimum": 0, "maximum": 180 }
+                }
+              },
+              "driven_by": { "enum": ["skeleton", "soft_tissue", "hybrid"] }
+            }
+          }
+        },
+        "locomotion": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "gaits": { "type": "array", "items": { "enum": ["walk", "amble", "trot", "canter", "gallop", "power_stroke", "hop", "run", "wade"] } },
+            "duty_factor": { "type": "number", "minimum": 0, "maximum": 1 },
+            "footfall": { "type": "string", "description": "e.g. 'lateral sequence walk'." },
+            "reach": { "$ref": "#/$defs/unit" }
+          }
+        },
+        "hydration": {
+          "description": "Drinking posture/reach constraint.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "drink_reach_m": { "type": "number", "minimum": 0 },
+            "requires_kneel": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "life_stages": {
+      "description": "Per-stage anatomical state. Each stage overrides segment proportions and the integument/mask state.",
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "total_length", "proportions"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "type": "string", "minLength": 1, "description": "e.g. 'independent_juvenile', 'adult'." },
+          "age_label": { "type": "string" },
+          "age_years": { "$ref": "#/$defs/range" },
+          "total_length": { "$ref": "#/$defs/unit" },
+          "height_at_shoulder": { "$ref": "#/$defs/unit" },
+          "proportions": {
+            "description": "Normalized share of total length per skeleton segment id. Non-uniform by construction.",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "girth_scale": { "type": "number", "minimum": 0.1, "maximum": 2 },
+          "head_scale": { "type": "number", "minimum": 0.1, "maximum": 2 },
+          "skin": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "thickness_mm": { "type": "number", "minimum": 0 },
+              "wrinkle_regions": { "type": "array", "items": { "type": "string" } },
+              "callus_regions": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "visible_traits": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "rig": {
+      "description": "Rig specification. Bone naming is generated deterministically from the skeleton segment list.",
+      "type": "object",
+      "required": ["skeleton", "ik", "skin"],
+      "additionalProperties": false,
+      "properties": {
+        "skeleton": {
+          "type": "object",
+          "required": ["bone_count_range", "hierarchical", "root"],
+          "additionalProperties": false,
+          "properties": {
+            "bone_count_range": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 1 } },
+            "hierarchical": { "type": "boolean", "default": true },
+            "root": { "type": "string", "minLength": 1, "description": "e.g. 'root' or 'pelvis'." },
+            "bone_naming": { "enum": ["region_index", "region_only", "hierarchical_path"] }
+          }
+        },
+        "ik": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "chain"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "type": { "enum": ["leg", "foot", "neck", "tail", "spine", "arm", "jaw", "head_look"] },
+              "chain": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "pole_target": { "type": "string" },
+              "reach_limit_m": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "skin": {
+          "type": "object",
+          "required": ["method"],
+          "additionalProperties": false,
+          "properties": {
+            "method": { "enum": ["automatic_bones", "heat_weighted", "voxel_geodesic", "manual_authored"] },
+            "max_influences_per_vertex": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "preserve_volume": { "type": "boolean" },
+            "pin_regions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "morph_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "region"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": { "type": "string", "minLength": 1 },
+              "driver": { "enum": ["life_stage", "pose", "damage", "browse_depletion"] },
+              "range": { "$ref": "#/$defs/range" }
+            }
+          }
+        }
+      }
+    },
+    "animation_contacts": {
+      "description": "Poses that must make physical contact with the world or with foliage. Feeds the feeding/contact acceptance checks.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "targets"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "kind": { "enum": ["browse", "drink", "gait", "rest", "turn", "alert", "defensive", "nest"] },
+          "targets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["selector"],
+              "additionalProperties": false,
+              "properties": {
+                "selector": { "type": "string", "minLength": 1, "description": "Generator-side selector, e.g. 'bone:jaw_tip' or 'brush:zone/tender'." },
+                "tolerance_m": { "type": "number", "minimum": 0 },
+                "surface": { "enum": ["plant", "ground", "water", "self", "none"] }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "integument": {
+      "description": "Skin covering zones. Scale/rosette/osteoderm/bristle placement is skeleton-attached so it follows pose.",
+      "type": "object",
+      "required": ["scale_zones"],
+      "additionalProperties": false,
+      "properties": {
+        "scale_zones": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "region", "pattern", "size_mm"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": { "enum": ["dorsal", "ventral", "flank", "limb", "neck", "tail", "head", "throat"] },
+              "pattern": { "enum": ["pebbled", "rosette", "mottled_banded", "creased", "granular", "pustulose", "smooth", "shaggy"] },
+              "size_mm": { "$ref": "#/$defs/range" },
+              "density_per_m2": { "type": "number", "minimum": 0 },
+              "roughness": { "$ref": "#/$defs/range" },
+              "age_dependence": { "enum": ["none", "juvenile_only", "grows_with_age", "shrinks_with_age"] }
+            }
+          }
+        },
+        "osteoderm_zones": {
+          "description": "Spaced subdermal plates/nodules. count/placement/growth are working values.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "region", "shape"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": { "enum": ["nape", "upper_back", "shoulder", "flank", "hip", "tail_base", "cervical"] },
+              "shape": { "enum": ["round", "oval", "keeled", "subrectangular", "nodular"] },
+              "count_range": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0 } },
+              "size_mm": { "$ref": "#/$defs/range" },
+              "spacing_m": { "type": "number", "minimum": 0 },
+              "coverage_share": { "type": "number", "minimum": 0, "maximum": 1, "description": "0 = spaced nodules (not continuous armor), 1 = continuous." },
+              "age_dependence": { "enum": ["juvenile_only", "emerges_with_age", "grows_with_age", "none"] },
+              "uncertainty": { "$ref": "#/$defs/uncertainty" }
+            }
+          }
+        },
+        "bristle_zones": {
+          "description": "Keratinous filaments. Fictional on sauropods; marked speculative.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "region"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": { "enum": ["nape", "shoulder", "dorsum", "flank", "tail", "cheek"] },
+              "length_mm": { "$ref": "#/$defs/range" },
+              "density_per_m2": { "type": "number", "minimum": 0 },
+              "stiffness": { "type": "number", "minimum": 0, "maximum": 1 },
+              "asymmetry": { "type": "number", "minimum": 0, "maximum": 1, "description": "0 = radially symmetric, 1 = strongly swept." },
+              "wind_response": { "enum": ["none", "stiff", "flexible", "whip"] },
+              "age_dependence": { "enum": ["juvenile_only", "sheds_with_age", "retained_reduced", "grows_with_age"] },
+              "uncertainty": { "$ref": "#/$defs/uncertainty" },
+              "hypothesized_function": { "enum": ["communication", "concealment", "thermoregulation", "defense", "ornament", "unknown"] }
+            }
+          }
+        },
+        "fold_zones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "region"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "region": { "enum": ["neck_lateral", "throat", "axilla", "groin", "shoulder", "hip", "tail_base", "ankle"] },
+              "depth_mm": { "type": "number", "minimum": 0 },
+              "pose_driven": { "type": "boolean" }
+            }
+          }
+        },
+        "pigmentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pattern": { "enum": ["plain", "mottled", "banded", "countershading", "blotched", "rosette"] },
+            "age_change": { "type": "string" },
+            "wear": { "enum": ["none", "light", "moderate", "heavy"] }
+          }
+        }
+      }
+    },
+    "material_masks": {
+      "description": "Which vertex group / region carries which material. Drives albedo/roughness/normal mask bakes.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "applies_to", "surface_type"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "applies_to": {
+            "enum": ["body", "osteoderm", "bristle", "claw", "beak", "mouth", "eye", "foot_pad", "belly", "head", "tail", "whole"]
+          },
+          "surface_type": { "enum": ["hide", "armor", "horn", "beak", "claw", "mouth_membrane", "eye", "foot_pad", "bristle", "shell"] },
+          "vertex_group": { "type": "string" },
+          "base_color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "color_range": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" } },
+          "roughness": { "$ref": "#/$defs/range" },
+          "normal_strength": { "type": "number", "minimum": 0, "maximum": 2 },
+          "sss": { "type": "number", "minimum": 0, "maximum": 1 },
+          "mask_uv": { "type": "string", "description": "Mask texture set name used for this group." }
+        }
+      }
+    },
+    "affordances": {
+      "description": "Diet/role/terrain affordance metadata for creature placement and interaction.",
+      "type": "object",
+      "required": ["diet_tags", "interaction_envelope"],
+      "additionalProperties": false,
+      "properties": {
+        "diet_tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["resource", "preference"],
+            "additionalProperties": false,
+            "properties": {
+              "resource": { "enum": ["tender_foliage", "tough_foliage", "shoot", "frond", "jointed_stem", "fruit", "seed", "litter", "insect", "small_prey", "carrion", "water"] },
+              "preference": { "type": "number", "minimum": 0, "maximum": 1 },
+              "plant_selectors": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "interaction_envelope": {
+          "type": "object",
+          "required": ["reach_height_m"],
+          "additionalProperties": false,
+          "properties": {
+            "reach_height_m": { "$ref": "#/$defs/unit" },
+            "reach_radius_m": { "type": "number", "minimum": 0 },
+            "mouth_tip_selector": { "type": "string" },
+            "clearance_width_m": { "type": "number", "minimum": 0 }
+          }
+        },
+        "terrain_preference": { "type": "array", "items": { "type": "string" } },
+        "abundance": { "enum": ["common", "occasional", "rare", "uncommon"] },
+        "activity_rhythm": { "enum": ["diurnal", "nocturnal", "crepuscular", "cathemeral"] },
+        "signature_routines": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "habitat_tags": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" } },
+    "variation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seed_labels": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "ranges": { "type": "object", "additionalProperties": { "$ref": "#/$defs/range" } },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "label": { "type": "string", "minLength": 1 },
+              "overrides": { "type": "object" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "references": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reference" } },
+    "licenses": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/license" } },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "minLength": 3, "maxLength": 96 },
+    "uncertainty": { "enum": ["documented", "comparative_inference", "biomechanical_plausibility", "speculative"] },
+    "range": { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "number" } },
+    "unit": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "additionalProperties": false,
+      "properties": { "value": { "type": "number" }, "unit": { "type": "string", "minLength": 1 } }
+    },
+    "reference": {
+      "type": "object",
+      "required": ["id", "locator", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "kind": { "enum": ["local_image", "local_model", "local_scan", "book", "journal", "web", "doi", "museum_record", "field_note", "living_comparator", "planning_doc"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "usage_rights": { "enum": ["cc0", "cc-by", "cc-by-sa", "public_domain", "own_work", "permission_granted", "internal_reference", "unknown"] },
+        "usage_rights_note": { "type": "string" },
+        "redistributable": { "type": "boolean" },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "supports": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": ["id", "applies_to", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "applies_to": { "enum": ["definition", "generated_geometry", "textures", "reference_images", "code", "whole_asset"] },
+        "license": { "type": "string", "minLength": 1 },
+        "holder": { "type": "string" },
+        "url": { "type": "string" },
+        "redistribution_notes": { "type": "string" }
+      }
+    }
+  }
+}

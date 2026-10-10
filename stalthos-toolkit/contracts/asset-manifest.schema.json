@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stalthosian-archipelago.invalid/contracts/asset-manifest.schema.json",
+  "title": "Stalthos asset manifest",
+  "description": "The provenance record for one produced asset. Shape is dictated by stalthos_toolkit.core.manifest.Manifest.to_dict() and is consumed by validate_asset and publish_asset.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "asset_id",
+    "kind",
+    "created_at",
+    "provenance",
+    "artifacts",
+    "metrics",
+    "affordances",
+    "validation",
+    "previews"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "asset_id": { "type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "minLength": 3 },
+    "kind": { "enum": ["plant", "creature", "prop", "texture_set", "scene", "fungus"] },
+    "species_id": { "type": ["string", "null"] },
+    "morphology_id": { "type": ["string", "null"] },
+    "stage": { "type": ["string", "null"] },
+    "variant": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time", "minLength": 4 },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "metrics": { "type": "array", "items": { "$ref": "#/$defs/metric" } },
+    "affordances": { "type": "object" },
+    "validation": { "$ref": "#/$defs/validation" },
+    "previews": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "provenance": {
+      "type": "object",
+      "required": ["generator", "toolkit_version", "tool_versions", "command", "seed", "input_hashes"],
+      "additionalProperties": false,
+      "properties": {
+        "generator": { "type": "string", "minLength": 1 },
+        "toolkit_version": { "type": "string", "minLength": 1 },
+        "tool_versions": { "type": "object", "additionalProperties": { "type": "string" } },
+        "command": { "type": "string", "minLength": 1 },
+        "command_args": { "type": "object" },
+        "seed": { "type": "integer" },
+        "input_hashes": { "type": "object", "additionalProperties": { "$ref": "#/$defs/sha256" } },
+        "parent_asset_id": { "type": ["string", "null"] },
+        "licenses": { "type": "array", "items": { "$ref": "#/$defs/license" } },
+        "references": { "type": "array", "items": { "$ref": "#/$defs/reference" } }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": ["id", "applies_to", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "applies_to": { "enum": ["definition", "generated_geometry", "textures", "reference_images", "code", "whole_asset"] },
+        "license": { "type": "string", "minLength": 1 },
+        "holder": { "type": "string" },
+        "url": { "type": "string" },
+        "redistribution_notes": { "type": "string" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "required": ["id", "locator", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "locator": { "type": "string", "minLength": 1 },
+        "title": { "type": "string" },
+        "usage_rights": { "type": "string", "minLength": 1 },
+        "usage_rights_note": { "type": "string" },
+        "redistributable": { "type": "boolean" },
+        "confidence": { "type": "string" },
+        "supports": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["path", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["source", "intermediate", "runtime", "preview", "report", "texture", "rig", "animation", "collision"] },
+        "sha256": { "type": ["string", "null"], "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "importer_settings": {
+          "description": "Importer/compression settings. bake_materials records the expected texture format here so validate_asset can check it.",
+          "type": "object"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["name", "value", "measured"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "measured": { "type": "boolean", "description": "False marks an estimate. Never silently infer." }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": { "enum": ["pass", "fail", "not_run"] },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+        "report_path": { "type": ["string", "null"] }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": ["id", "outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "outcome": { "enum": ["pass", "fail", "warn", "skip"] },
+        "detail": { "type": "string" },
+        "severity": { "enum": ["error", "warning", "info"] },
+        "data": { "type": "object" }
+      }
+    }
+  }
+}

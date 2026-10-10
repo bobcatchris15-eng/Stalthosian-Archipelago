@@ -1,0 +1,375 @@
+# Thistletail -- small flightless feathered omnivore (lineage stub).
+#
+# Source of record: Rauken-Archipelago/docs/creatures.md, "Thistletail" section.
+# Purpose: prove the creature contract generalizes beyond a quadruped hero -- a
+# small biped with plumage instead of scales, no armour, and a different rig.
+# All numbers are invented working values for a fictional taxon; no citation is
+# asserted.
+schema: creature-definition
+kind: creature
+id: creature.thistletail.tt1
+version: 1
+
+common_names:
+  primary: Thistletail
+  working: true
+  aka: [thistle tail, taily]
+
+uncertainty: speculative
+morphology_family: birdlike paravian-inspired animal (inspiration, not settled ancestry)
+generator: biped_paravian
+
+evidence:
+  - feature: feathered covering with region-specific tracts
+    tier: comparative_inference
+  - feature: bipedal digitigrade stance with reduced forelimbs
+    tier: documented
+  - feature: quick-start/stop locomotion and display postures
+    tier: biomechanical_plausibility
+  - feature: plumage display shape and density change with age
+    tier: speculative
+    note: Invented display design; not a claim about any fossil bird.
+  - feature: parental nesting behaviour
+    tier: speculative
+    note: Broad ground-fowl analogy only; no fossil behaviour is asserted.
+
+body_plan:
+  posture: bipedal
+  spine_profile: horizontal
+  neck_length_share: 0.14
+  tail_length_share: 0.38
+  center_of_mass_m: { value: 0.16, unit: m }
+  mass_estimate:
+    value: 1.2
+    unit: kg
+    measured: false
+    range: [0.8, 1.8]
+    note: Working hypothesis only; recompute from volumetric anatomy.
+  axial:
+    cervical_count: 8
+    dorsal_count: 9
+    caudal_count: 12
+    ribcage_depth_share: 0.28
+    skull_profile: beaked
+  skeleton:
+    - id: skull
+      region: skull
+      length_share: 0.09
+      mass_share: 0.06
+      joint_limit_deg: { flex: 30, extend: 30, twist: 40 }
+      driven_by: skeleton
+    - id: mandible
+      region: mandible
+      length_share: 0.08
+      mass_share: 0.04
+      joint_limit_deg: { flex: 34, extend: 40, twist: 4 }
+      driven_by: hybrid
+    - id: cervical
+      region: cervical
+      length_share: 0.12
+      mass_share: 0.05
+      joint_limit_deg: { flex: 50, extend: 45, twist: 35 }
+      driven_by: hybrid
+    - id: dorsal
+      region: dorsal
+      length_share: 0.3
+      mass_share: 0.22
+      joint_limit_deg: { flex: 22, extend: 20, twist: 12 }
+      driven_by: skeleton
+    - id: caudal
+      region: caudal
+      length_share: 0.34
+      mass_share: 0.12
+      joint_limit_deg: { flex: 45, extend: 55, twist: 30 }
+      driven_by: soft_tissue
+    - id: femur
+      region: hindlimb_femur
+      length_share: 0.11
+      mass_share: 0.09
+      joint_limit_deg: { flex: 60, extend: 95, twist: 30 }
+      driven_by: skeleton
+    - id: tibia
+      region: hindlimb_tibia
+      length_share: 0.11
+      mass_share: 0.05
+      joint_limit_deg: { flex: 70, extend: 80, twist: 25 }
+      driven_by: skeleton
+    - id: pes
+      region: hindlimb_pes
+      length_share: 0.09
+      mass_share: 0.02
+      joint_limit_deg: { flex: 45, extend: 55, twist: 15 }
+      driven_by: soft_tissue
+    - id: pectoral_girdle
+      region: pectoral_girdle
+      length_share: 0.05
+      mass_share: 0.04
+      joint_limit_deg: { flex: 35, extend: 40, twist: 25 }
+      driven_by: skeleton
+  locomotion:
+    gaits: [walk, hop, run]
+    duty_factor: 0.35
+    footfall: alternating biped with a hop burst
+    reach: { value: 0.55, unit: m }
+  hydration:
+    drink_reach_m: 0.12
+    requires_kneel: true
+
+life_stages:
+  - id: hatchling
+    label: Hatchling
+    age_years: [0, 0.05]
+    total_length: { value: 0.18, unit: m }
+    height_at_shoulder: { value: 0.1, unit: m }
+    proportions: { skull: 0.12, dorsal: 0.32, caudal: 0.26, femur: 0.09 }
+    girth_scale: 0.8
+    head_scale: 1.4
+    skin: { thickness_mm: 1.5, wrinkle_regions: [], callus_regions: [] }
+    visible_traits: [down_only, unfledged_wings, disproportionately_large_eyes]
+  - id: juvenile
+    label: Juvenile
+    age_years: [0.05, 0.6]
+    total_length: { value: 0.32, unit: m }
+    height_at_shoulder: { value: 0.18, unit: m }
+    proportions: { skull: 0.1, dorsal: 0.31, caudal: 0.32, femur: 0.1 }
+    girth_scale: 0.9
+    head_scale: 1.15
+    skin: { thickness_mm: 2, wrinkle_regions: [], callus_regions: [] }
+    visible_traits: [mottled_down, short_primaries, rapid_alert_head_motion]
+  - id: adult
+    label: Adult
+    age_years: [0.6, 8]
+    total_length: { value: 0.46, unit: m }
+    height_at_shoulder: { value: 0.24, unit: m }
+    proportions: { skull: 0.09, dorsal: 0.3, caudal: 0.34, femur: 0.11 }
+    girth_scale: 1.0
+    head_scale: 1.0
+    skin: { thickness_mm: 3, wrinkle_regions: [ankle], callus_regions: [] }
+    visible_traits: [full_plumage, tail_display, opportunist_foraging]
+
+rig:
+  skeleton:
+    bone_count_range: [48, 72]
+    hierarchical: true
+    root: pelvis
+    bone_naming: region_index
+  ik:
+    - id: leg_hind_l
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 0.4
+    - id: leg_hind_r
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 0.4
+    - id: neck_chain
+      type: neck
+      chain: [cervical, dorsal]
+      reach_limit_m: 0.4
+    - id: tail_chain
+      type: tail
+      chain: [caudal]
+    - id: head_look
+      type: head_look
+      chain: [skull]
+    - id: beak_snap
+      type: jaw
+      chain: [mandible]
+  skin:
+    method: automatic_bones
+    max_influences_per_vertex: 3
+    preserve_volume: false
+    pin_regions: [tail_base]
+  morph_targets:
+    - id: tail_fan_display
+      region: caudal
+      driver: pose
+      range: [0, 1]
+    - id: plumage_ruffle
+      region: dorsal
+      driver: pose
+      range: [0, 1]
+    - id: juvenile_down
+      region: body
+      driver: life_stage
+      range: [0, 1]
+
+animation_contacts:
+  - id: walk_cycle
+    kind: gait
+    targets:
+      - selector: "bone:pes_toe_l"
+        tolerance_m: 0.01
+        surface: ground
+      - selector: "bone:pes_toe_r"
+        tolerance_m: 0.01
+        surface: ground
+  - id: snap_forage
+    kind: browse
+    targets:
+      - selector: "bone:beak_tip"
+        tolerance_m: 0.03
+        surface: ground
+  - id: display
+    kind: alert
+    targets:
+      - selector: "bone:tail_tip"
+        tolerance_m: 0.0
+        surface: none
+  - id: dust_bathe
+    kind: rest
+    targets:
+      - selector: "bone:pelvis"
+        tolerance_m: 0.05
+        surface: ground
+
+integument:
+  scale_zones:
+    - id: body_plumage
+      region: dorsal
+      pattern: mottled_banded
+      size_mm: [12, 34]
+      density_per_m2: 6000
+      roughness: [0.45, 0.75]
+      age_dependence: grows_with_age
+    - id: belly_down
+      region: ventral
+      pattern: smooth
+      size_mm: [6, 16]
+      density_per_m2: 9000
+      roughness: [0.4, 0.7]
+    - id: bare_leg_skin
+      region: limb
+      pattern: granular
+      size_mm: [2, 5]
+      density_per_m2: 2500
+      roughness: [0.6, 0.85]
+    - id: crest_tract
+      region: head
+      pattern: shaggy
+      size_mm: [20, 55]
+      density_per_m2: 3000
+      roughness: [0.4, 0.65]
+      age_dependence: grows_with_age
+  bristle_zones:
+    - id: flank_feather_tips
+      region: flank
+      length_mm: [12, 30]
+      density_per_m2: 3000
+      stiffness: 0.25
+      asymmetry: 0.2
+      wind_response: whip
+      age_dependence: grows_with_age
+      uncertainty: speculative
+      hypothesized_function: ornament
+    - id: crest_plumes
+      region: cheek
+      length_mm: [18, 40]
+      density_per_m2: 800
+      stiffness: 0.35
+      asymmetry: 0.3
+      wind_response: flexible
+      age_dependence: grows_with_age
+      uncertainty: speculative
+      hypothesized_function: communication
+  fold_zones:
+    - id: fold_ankle
+      region: ankle
+      depth_mm: 3
+      pose_driven: true
+  pigmentation:
+    pattern: mottled
+    age_change: down pattern breaks into adult streaking
+    wear: light
+
+material_masks:
+  - id: plumage_body
+    applies_to: body
+    surface_type: hide
+    vertex_group: body_plumage
+    base_color: "#6b5334"
+    color_range: ["#4e3c26", "#6b5334", "#87693f", "#2f261a"]
+    roughness: [0.4, 0.7]
+    sss: 0.35
+    mask_uv: mask_plumage
+  - id: bare_skin
+    applies_to: foot_pad
+    surface_type: foot_pad
+    roughness: [0.6, 0.9]
+    normal_strength: 1.4
+  - id: beak_horn
+    applies_to: beak
+    surface_type: beak
+    base_color: "#8a7a4e"
+    roughness: [0.3, 0.55]
+  - id: eye
+    applies_to: eye
+    surface_type: eye
+    base_color: "#241a10"
+    roughness: [0.05, 0.2]
+
+affordances:
+  diet_tags:
+    - resource: insect
+      preference: 0.9
+    - resource: litter
+      preference: 0.7
+    - resource: fruit
+      preference: 0.6
+    - resource: seed
+      preference: 0.55
+    - resource: small_prey
+      preference: 0.35
+    - resource: carrion
+      preference: 0.4
+  interaction_envelope:
+    reach_height_m: { value: 0.5, unit: m }
+    reach_radius_m: 0.25
+    mouth_tip_selector: "bone:beak_tip"
+    clearance_width_m: 0.2
+  terrain_preference: [woodland_floor, clearing_edge, deadwood, wetland]
+  abundance: common
+  activity_rhythm: diurnal
+  signature_routines:
+    - quick starts and stops with an alert freeze
+    - snap feeding on disturbed insects in litter
+    - tail-display and crest-raising quarrels over food
+    - brief nest tending, then foraging independently
+
+habitat_tags: [woodland_floor, clearing_edge, deadwood, wetland, forest_margin]
+
+references:
+  - id: creatures-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/creatures.md
+    title: Creature design -- Thistletail section
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [body_plan, integument, affordances]
+  - id: thistletail-plumage
+    kind: local_image
+    locator: species/creatures/creature.thistletail.tt1/reference/plumage_tracts.png
+    usage_rights: unknown
+    confidence: low
+    supports: [integument.scale_zones, material_masks]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Lineage stub, not a production asset. Exists to prove the creature contract
+  covers a small biped with plumage, no armour and a different gait/IK set.

@@ -1,0 +1,250 @@
+# Softbough -- interactive edible shrub (pipeline verification).
+# Source of record: Rauken-Archipelago/docs/flora.md, "Riparian flexible shrub |
+# Softbough": dense 1-3 m, thin leaves, arching branches, key juvenile daily
+# browse with deflection and local regrowth.
+schema: species-definition
+kind: plant
+id: plant.softbough.sh1
+version: 1
+
+common_names:
+  primary: Softbough
+  working: true
+  aka: [softbough willow-scrub, bough willow]
+
+uncertainty: biomechanical_plausibility
+morphology_family: Salix-like riparian shrub (silhouette analogy only)
+generator: arching_shrub
+
+anatomy:
+  branching_pattern:
+    architecture: arching_multi_stem
+    order_max: 3
+    branch_angle_deg: [40, 70]
+    branch_length_ratio: 0.7
+    taper: 0.6
+    root_flare: 0.15
+    notes: Multiple basal stems that arc outward and down; tips thin enough to deflect visibly when browsed.
+  phyllotaxy:
+    pattern: alternate
+    divergence_deg: 90
+  foliage:
+    organ: leaf
+    overall_shape: lanceolate
+    margin: serrate
+    apex: acuminate
+    length: { value: 9.0, unit: cm }
+    width: { value: 1.8, unit: cm }
+    aspect_ratio: 5.0
+    venation:
+      pattern: pinnate
+      relief: impressed
+      secondary_per_primary: 9
+    surface:
+      waxy_cuticle: 0.25
+      hairs: sparse
+      underside: pale
+      translucency: 0.55
+      flexibility_deg: 110
+  stem:
+    type: woody
+    diameter_at_base: { value: 0.09, unit: m }
+    growth_direction: arching
+    segmented: false
+    bark:
+      pattern: ridged
+      plate_scale_m: 0.03
+  root:
+    system: fibrous
+    depth: { value: 0.8, unit: m }
+    spread: { value: 1.6, unit: m }
+    exposed: false
+  reproductive:
+    structure: flower
+    placement: axillary
+    size: { value: 0.02, unit: m }
+    seasonal: true
+
+growth_stages:
+  - id: seedling
+    age_label: seedling
+    age_years: [0, 1]
+    height: { value: 0.25, unit: m }
+    crown_spread: { value: 0.2, unit: m }
+    proportions: { stem_share: 1.0, foliage_share: 0.25, arch_share: 0.15 }
+    foliage_density: 0.9
+    wind_stiffness: 0.05
+  - id: young_shrub
+    age_label: young shrub
+    age_years: [1, 3]
+    height: { value: 0.9, unit: m }
+    crown_spread: { value: 1.0, unit: m }
+    proportions: { stem_share: 1.0, foliage_share: 0.4, arch_share: 0.35 }
+    foliage_density: 1.0
+    wind_stiffness: 0.1
+    visible_traits: [multiple_basal_stems, tender_tips]
+  - id: mature
+    age_label: mature riparian shrub
+    age_years: [4, 25]
+    height: { value: 2.6, unit: m }
+    crown_spread: { value: 3.2, unit: m }
+    proportions: { stem_share: 1.0, foliage_share: 0.55, arch_share: 0.6 }
+    foliage_density: 0.9
+    wind_stiffness: 0.2
+    visible_traits: [arching_silhouette, deflectable_tips, low_browse_band]
+
+materials:
+  - id: bark_smooth
+    applies_to: stem
+    surface_type: bark
+    base_color: "#6b5a4a"
+    color_range: ["#5a4a3c", "#6b5a4a", "#7d6b58", "#46392e"]
+    roughness: [0.6, 0.85]
+    normal_strength: 0.9
+    bump_scale_m: 0.02
+  - id: leaf_tender
+    applies_to: leaf
+    surface_type: herbaceous_translucent
+    base_color: "#5c7f3e"
+    color_range: ["#4a6b34", "#5c7f3e", "#6f9249", "#3d5a2c"]
+    roughness: [0.35, 0.6]
+    sss: 0.55
+    wind_response: flexible
+  - id: leaf_underside
+    applies_to: underside
+    surface_type: herbaceous
+    base_color: "#93a578"
+    roughness: [0.6, 0.8]
+    wind_response: flexible
+
+variation:
+  seed_labels: [arch_drop, leaf_size, stem_count, tip_density, bicolour_share]
+  ranges:
+    arch_drop: [0.4, 0.95]
+    leaf_size: [0.7, 1.35]
+    stem_count: [3, 11]
+    tip_density: [0.7, 1.3]
+    bicolour_share: [0.0, 0.45]
+  variants:
+    - id: waterside_lush
+      label: waterside lush form
+      weight: 0.45
+      habitat_tags: [riparian, stream_terrace]
+      overrides: { leaf_size: 1.2, tip_density: 1.25 }
+    - id: scrub_dry
+      label: drier terrace form, greyer and sparser
+      weight: 0.3
+      habitat_tags: [clearing_edge, sandy_lowland]
+      overrides: { leaf_size: 0.8, waxy_cuticle: 0.45 }
+    - id: browsed_patch
+      label: repeatedly browsed, low and dense
+      weight: 0.25
+      habitat_tags: [browsed_patch]
+      overrides: { arch_drop: 0.75, stem_count: 9, tip_density: 0.9 }
+
+affordances:
+  structural_role: understory
+  forage_tags:
+    - part: shoot
+      palatability: 0.9
+      water_content: 0.75
+      nutrition: 0.7
+      seasonal: true
+    - part: leaf
+      palatability: 0.75
+      water_content: 0.7
+      nutrition: 0.55
+      seasonal: true
+    - part: stem
+      palatability: 0.45
+      water_content: 0.6
+      nutrition: 0.3
+  edible_foliage_targets:
+    - selector: "tip:soft"
+      part: shoot
+      mass_share: 0.45
+    - selector: "branch:order<=3"
+      part: leaf
+      mass_share: 0.4
+    - selector: "foliage:dense"
+      part: leaf
+      mass_share: 0.15
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 2.8
+    trunk_diameter_m: { value: 0.09, unit: m }
+    pushable: true
+    collision_proxy: capsule
+    footprint_radius_m: 1.6
+  browse_zones:
+    - id: tender_tips
+      min_m: 0.2
+      max_m: 1.2
+      selector: "tip:soft"
+      forage: preferred
+      season: growing
+    - id: mid_foliage
+      min_m: 0.5
+      max_m: 2.6
+      selector: "branch:order<=3"
+      forage: available
+    - id: old_wood
+      min_m: 0.3
+      max_m: 2.8
+      selector: "stem:woody"
+      forage: structural
+
+habitat_tags: [riparian, stream_terrace, clearing_edge, browsed_patch]
+
+phenology:
+  states:
+    - id: leaf_out
+      foliage_scale: 1.0
+    - id: late_season
+      foliage_scale: 0.8
+      color_shift: yellowing, thinner canopy
+  browsing:
+    regrowth_days: 45
+    nipped_variant: browsed_patch
+
+references:
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: Flora and fungal life -- Softbough row
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [common_names, habitat, sauropod_role]
+  - id: plant-visual-catalog
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/plant-visual-catalog.md
+    title: Plant visual catalog -- production profile fields
+    usage_rights: internal_reference
+    confidence: high
+    supports: [anatomy, materials]
+  - id: softbough-twig-photo
+    kind: local_image
+    locator: species/plants/plant.softbough.sh1/reference/twig_arc.jpg
+    usage_rights: unknown
+    confidence: low
+    supports: [anatomy.branching_pattern, animation.deflection]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+    redistribution_notes: Reference photos are NOT redistributable until rights are established.
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  The interactive browse asset: feeding animation aims at tip:soft, visible shoot
+  depletion is driven by the browsed_patch variant, regrowth is lazy/batched.

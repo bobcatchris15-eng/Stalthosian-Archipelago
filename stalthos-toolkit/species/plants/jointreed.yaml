@@ -1,0 +1,243 @@
+# Jointreed -- segmented horsetail thicket (pipeline verification).
+# Source of record: Rauken-Archipelago/docs/flora.md, "Horsetail | Jointreed":
+# segmented vertical thickets in wet soil; important forage candidate, silica
+# and age matter.
+schema: species-definition
+kind: plant
+id: plant.jointreed.eq1
+version: 1
+
+common_names:
+  primary: Jointreed
+  working: true
+  aka: [joint reed, silica reed]
+
+uncertainty: biomechanical_plausibility
+morphology_family: Equisetum-like horsetail (structural analogy only)
+generator: jointed_rush
+
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 2
+    branch_angle_deg: [35, 55]
+    branch_length_ratio: 0.35
+    taper: 0.35
+    root_flare: 0.1
+    notes: >-
+      Dense clonal thicket of unbranched vertical culms; whorled fine branchlets
+      in the upper third only, so the silhouette stays a hard vertical curtain.
+  phyllotaxy:
+    pattern: whorled
+    divergence_deg: 360
+    leaves_per_node: 6
+  foliage:
+    organ: scale_spray
+    overall_shape: linear
+    margin: entire
+    apex: acute
+    length: { value: 4.0, unit: cm }
+    width: { value: 0.2, unit: cm }
+    aspect_ratio: 20.0
+    venation:
+      pattern: none
+    surface:
+      waxy_cuticle: 0.5
+      hairs: none
+      underside: same_as_top
+      translucency: 0.3
+      flexibility_deg: 45
+  stem:
+    type: jointed
+    diameter_at_base: { value: 0.02, unit: m }
+    growth_direction: erect
+    segmented: true
+    segments_per_m: 14
+    sheaths: true
+  root:
+    system: rhizomatous
+    depth: { value: 0.4, unit: m }
+    spread: { value: 1.2, unit: m }
+    exposed: false
+  reproductive:
+    structure: sporangia_sorus
+    placement: terminal
+    size: { value: 0.03, unit: m }
+    seasonal: true
+
+growth_stages:
+  - id: shoot
+    age_label: spring shoot
+    age_years: [0, 0.2]
+    height: { value: 0.35, unit: m }
+    crown_spread: { value: 0.2, unit: m }
+    proportions: { culm_share: 1.0, branchlet_share: 0.05, sheath_share: 0.4 }
+    foliage_density: 0.5
+    wind_stiffness: 0.05
+    visible_traits: [pale_shoot, no_cone]
+  - id: summer
+    age_label: summer thicket
+    age_years: [0.2, 1]
+    height: { value: 1.3, unit: m }
+    crown_spread: { value: 0.9, unit: m }
+    proportions: { culm_share: 1.0, branchlet_share: 0.35, sheath_share: 0.6 }
+    foliage_density: 1.0
+    wind_stiffness: 0.25
+    visible_traits: [whorled_branchlets, segmented_nodes]
+  - id: senescent
+    age_label: senescent stand
+    age_years: [1, 3]
+    height: { value: 1.5, unit: m }
+    crown_spread: { value: 1.1, unit: m }
+    proportions: { culm_share: 1.0, branchlet_share: 0.45, sheath_share: 0.65 }
+    foliage_density: 0.7
+    wind_stiffness: 0.3
+    visible_traits: [brittle_copper_cuims, retained_segment_rings]
+
+materials:
+  - id: culm_green
+    applies_to: stem
+    surface_type: herbaceous
+    base_color: "#4e7a3a"
+    color_range: ["#3f6a30", "#4e7a3a", "#5d8c44", "#8d9a52"]
+    roughness: [0.4, 0.7]
+    sss: 0.35
+    wind_response: segmented
+  - id: node_ring
+    applies_to: sheath
+    surface_type: cuticle
+    base_color: "#8c9a58"
+    roughness: [0.45, 0.75]
+    sss: 0.25
+    wind_response: segmented
+  - id: senescent_straw
+    applies_to: whole
+    surface_type: herbaceous
+    base_color: "#a98a4f"
+    color_range: ["#8f7440", "#a98a4f", "#bd9d5f"]
+    roughness: [0.6, 0.9]
+    wind_response: segmented
+
+variation:
+  seed_labels: [culm_height, culm_count, segment_spacing, silica_content, tint]
+  ranges:
+    culm_height: [0.7, 1.8]
+    culm_count: [24, 90]
+    segment_spacing: [0.05, 0.11]
+    silica_content: [0.3, 0.9]
+    tint: [0.0, 0.4]
+  variants:
+    - id: wet_thicket
+      label: dense wet-ground thicket, tall pale culms
+      weight: 0.5
+      habitat_tags: [wet_hollow, stream_terrace, wetland]
+      overrides: { culm_height: 1.6, culm_count: 80 }
+    - id: shallow_edge
+      label: shorter, tougher edge stand
+      weight: 0.3
+      habitat_tags: [sandy_lowland, pool_margin]
+      overrides: { culm_height: 0.9, silica_content: 0.85 }
+    - id: senescent_stand
+      label: brittle old straw stand
+      weight: 0.2
+      habitat_tags: [wet_hollow]
+      overrides: { tint: 0.9 }
+
+affordances:
+  structural_role: sedge
+  forage_tags:
+    - part: stem
+      palatability: 0.5
+      water_content: 0.8
+      nutrition: 0.3
+      defense: { silica: 0.7 }
+      seasonal: true
+    - part: shoot
+      palatability: 0.65
+      water_content: 0.85
+      nutrition: 0.4
+      defense: { silica: 0.35 }
+      seasonal: true
+  edible_foliage_targets:
+    - selector: "culm:tender"
+      part: shoot
+      mass_share: 0.6
+    - selector: "culm:all"
+      part: stem
+      mass_share: 0.4
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 1.6
+    trunk_diameter_m: { value: 0.02, unit: m }
+    pushable: true
+    collision_proxy: capsule
+    footprint_radius_m: 0.8
+  browse_zones:
+    - id: tender_shoots
+      min_m: 0.05
+      max_m: 0.6
+      selector: "culm:tender"
+      forage: preferred
+      season: spring_shoot
+    - id: standing_culms
+      min_m: 0.1
+      max_m: 1.6
+      selector: "culm:all"
+      forage: available
+    - id: old_straw
+      min_m: 0.1
+      max_m: 1.6
+      selector: "culm:senescent"
+      forage: avoid
+      season: late
+
+habitat_tags: [wet_hollow, stream_terrace, wetland, pool_margin]
+
+phenology:
+  states:
+    - id: shoot_stage
+      foliage_scale: 0.6
+      note: pale edible shoots before silica hardens
+    - id: summer_green
+      foliage_scale: 1.0
+    - id: senescent
+      foliage_scale: 0.8
+      color_shift: copper straw
+  browsing:
+    regrowth_days: 30
+    nipped_variant: grazed_stand
+
+references:
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: Flora and fungal life -- Horsetail / Jointreed row
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [common_names, habitat, forage_silica]
+  - id: jointreed-stem-photo
+    kind: local_image
+    locator: species/plants/plant.jointreed.eq1/reference/node_detail.jpg
+    usage_rights: unknown
+    confidence: low
+    supports: [anatomy.stem, materials.node_ring]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Exercises the jointed_rush generator: segmentation, sheath rings, whorled
+  branchlets and a silica/tag-gated forage profile that is deliberately worse
+  food than Softbough.

@@ -1,0 +1,397 @@
+# Reedcrest -- basal hadrosauroid with bonded childhood peers (lineage stub).
+#
+# Source of record: Rauken-Archipelago/docs/creatures.md, "Reedcrest" section.
+# Purpose: prove the contract covers a semi-bipedal ornithopod with cranial
+# ornamentation and a variable foraging stance -- neither pure biped (Thistletail)
+# nor quadruped (Smalltrotter/Brackenback). Numbers are invented working values;
+# no citation is asserted.
+schema: creature-definition
+kind: creature
+id: creature.reedcrest.rc1
+version: 1
+
+common_names:
+  primary: Reedcrest
+  working: true
+  aka: [reed crest, crestling]
+
+uncertainty: speculative
+morphology_family: insular basal hadrosauroid (inspiration; not automatically a derived hadrosaurid)
+generator: semibiped_ornithopod
+
+evidence:
+  - feature: beaked skull and quadrupedal-to-bipedal progression
+    tier: documented
+  - feature: variable foraging/upright stance
+    tier: biomechanical_plausibility
+  - feature: modest cranial ornament in adults
+    tier: comparative_inference
+    note: Ornament must respect the chosen anatomy; shape is invented here.
+  - feature: synchronised neighbouring nests and durable peer bonds
+    tier: speculative
+    note: Social/life-history design, no fossil behaviour asserted.
+
+body_plan:
+  posture: semi_bipedal
+  spine_profile: arched
+  neck_length_share: 0.18
+  tail_length_share: 0.4
+  center_of_mass_m: { value: 0.75, unit: m }
+  mass_estimate:
+    value: 320
+    unit: kg
+    measured: false
+    range: [240, 480]
+    note: Provisional; docs/creatures.md calls the adult size provisional.
+  axial:
+    cervical_count: 12
+    dorsal_count: 14
+    caudal_count: 28
+    ribcage_depth_share: 0.32
+    skull_profile: box_like
+  skeleton:
+    - id: skull
+      region: skull
+      length_share: 0.1
+      mass_share: 0.07
+      joint_limit_deg: { flex: 18, extend: 22, twist: 12 }
+      driven_by: skeleton
+    - id: mandible
+      region: mandible
+      length_share: 0.09
+      mass_share: 0.05
+      joint_limit_deg: { flex: 24, extend: 30, twist: 5 }
+      driven_by: hybrid
+    - id: cervical
+      region: cervical
+      length_share: 0.16
+      mass_share: 0.09
+      joint_limit_deg: { flex: 36, extend: 34, twist: 22 }
+      driven_by: hybrid
+    - id: dorsal
+      region: dorsal
+      length_share: 0.28
+      mass_share: 0.24
+      joint_limit_deg: { flex: 18, extend: 16, twist: 10 }
+      driven_by: skeleton
+    - id: sacral
+      region: sacral
+      length_share: 0.05
+      mass_share: 0.08
+      joint_limit_deg: { flex: 12, extend: 12, twist: 8 }
+      driven_by: skeleton
+    - id: caudal
+      region: caudal
+      length_share: 0.34
+      mass_share: 0.13
+      joint_limit_deg: { flex: 32, extend: 30, twist: 16 }
+      driven_by: soft_tissue
+    - id: humerus
+      region: forelimb_humerus
+      length_share: 0.07
+      mass_share: 0.045
+      joint_limit_deg: { flex: 34, extend: 40, twist: 18 }
+      driven_by: skeleton
+    - id: radius
+      region: forelimb_radius
+      length_share: 0.06
+      mass_share: 0.025
+      joint_limit_deg: { flex: 42, extend: 38, twist: 16 }
+      driven_by: skeleton
+    - id: femur
+      region: hindlimb_femur
+      length_share: 0.1
+      mass_share: 0.07
+      joint_limit_deg: { flex: 44, extend: 60, twist: 20 }
+      driven_by: skeleton
+    - id: tibia
+      region: hindlimb_tibia
+      length_share: 0.1
+      mass_share: 0.04
+      joint_limit_deg: { flex: 40, extend: 55, twist: 18 }
+      driven_by: skeleton
+    - id: pes
+      region: hindlimb_pes
+      length_share: 0.07
+      mass_share: 0.02
+      joint_limit_deg: { flex: 26, extend: 32, twist: 10 }
+      driven_by: soft_tissue
+  locomotion:
+    gaits: [walk, trot, wade]
+    duty_factor: 0.55
+    footfall: quadrupedal walk rising to bipedal amble
+    reach: { value: 1.5, unit: m }
+  hydration:
+    drink_reach_m: 0.25
+    requires_kneel: false
+
+life_stages:
+  - id: hatchling_cohort
+    label: Hatchling (cohort)
+    age_years: [0, 0.3]
+    total_length: { value: 0.6, unit: m }
+    height_at_shoulder: { value: 0.28, unit: m }
+    proportions: { skull: 0.13, cervical: 0.14, dorsal: 0.3, caudal: 0.26, femur: 0.1 }
+    girth_scale: 0.9
+    head_scale: 1.3
+    skin: { thickness_mm: 3, wrinkle_regions: [], callus_regions: [] }
+    visible_traits: [no_crest, down_covering, disproportionately_large_eyes]
+  - id: juvenile
+    label: Juvenile
+    age_years: [0.3, 4]
+    total_length: { value: 1.8, unit: m }
+    height_at_shoulder: { value: 0.72, unit: m }
+    proportions: { skull: 0.115, cervical: 0.15, dorsal: 0.29, caudal: 0.3, femur: 0.1 }
+    girth_scale: 1.0
+    head_scale: 1.1
+    skin: { thickness_mm: 6, wrinkle_regions: [ankle], callus_regions: [hip] }
+    visible_traits: [low_crest_bud, fast_nestling_movement, banded_juvenile_pattern]
+  - id: adult
+    label: Adult
+    age_years: [4, 30]
+    total_length: { value: 3.8, unit: m }
+    height_at_shoulder: { value: 1.45, unit: m }
+    proportions: { skull: 0.1, cervical: 0.16, dorsal: 0.28, caudal: 0.34, femur: 0.1 }
+    girth_scale: 1.0
+    head_scale: 1.0
+    skin: { thickness_mm: 12, wrinkle_regions: [neck_lateral, hip, ankle], callus_regions: [hip] }
+    visible_traits:
+      - developed cranial crest
+      - upright alertness posture
+      - worn, nonuniform dorsal banding
+
+rig:
+  skeleton:
+    bone_count_range: [78, 116]
+    hierarchical: true
+    root: pelvis
+    bone_naming: region_index
+  ik:
+    - id: leg_hind_l
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 0.7
+    - id: leg_hind_r
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 0.7
+    - id: leg_fore_l
+      type: leg
+      chain: [humerus, radius]
+      reach_limit_m: 0.4
+    - id: leg_fore_r
+      type: leg
+      chain: [humerus, radius]
+      reach_limit_m: 0.4
+    - id: neck_chain
+      type: neck
+      chain: [cervical, dorsal]
+      reach_limit_m: 1.5
+    - id: tail_chain
+      type: tail
+      chain: [caudal]
+    - id: head_look
+      type: head_look
+      chain: [skull]
+  skin:
+    method: heat_weighted
+    max_influences_per_vertex: 4
+    preserve_volume: true
+    pin_regions: [tail_base]
+  morph_targets:
+    - id: upright_alert
+      region: dorsal
+      driver: pose
+      range: [0, 1]
+    - id: forage_low
+      region: cervical
+      driver: pose
+      range: [0, 1]
+    - id: crest_growth
+      region: head
+      driver: life_stage
+      range: [0, 1]
+
+animation_contacts:
+  - id: graze_low
+    kind: browse
+    targets:
+      - selector: "brush:zone/available"
+        tolerance_m: 0.12
+        surface: plant
+      - selector: "bone:beak_tip"
+        tolerance_m: 0.08
+        surface: self
+  - id: drink
+    kind: drink
+    targets:
+      - selector: "water:surface"
+        tolerance_m: 0.08
+        surface: water
+  - id: wade_step
+    kind: gait
+    targets:
+      - selector: "bone:pes_foot_l"
+        tolerance_m: 0.02
+        surface: water
+  - id: peer_call
+    kind: alert
+    targets:
+      - selector: "bone:crest_tip"
+        tolerance_m: 0.0
+        surface: none
+  - id: nest_attend
+    kind: nest
+    targets:
+      - selector: "selector:nest_cup"
+        tolerance_m: 0.1
+        surface: ground
+
+integument:
+  scale_zones:
+    - id: dorsal_pebble
+      region: dorsal
+      pattern: pebbled
+      size_mm: [3, 9]
+      density_per_m2: 1400
+      roughness: [0.5, 0.8]
+      age_dependence: grows_with_age
+    - id: flank_rosette
+      region: flank
+      pattern: rosette
+      size_mm: [8, 22]
+      density_per_m2: 300
+      roughness: [0.5, 0.78]
+    - id: throat_patch
+      region: throat
+      pattern: mottled_banded
+      size_mm: [4, 10]
+      density_per_m2: 1000
+      roughness: [0.45, 0.7]
+    - id: limb_fold
+      region: limb
+      pattern: creased
+      size_mm: [6, 14]
+      density_per_m2: 800
+      roughness: [0.6, 0.85]
+  osteoderm_zones:
+    - id: sparse_crest_plates
+      region: cervical
+      shape: oval
+      count_range: [4, 14]
+      size_mm: [4, 12]
+      spacing_m: 0.06
+      coverage_share: 0.05
+      age_dependence: emerges_with_age
+      uncertainty: speculative
+  fold_zones:
+    - id: fold_neck_lateral
+      region: neck_lateral
+      depth_mm: 9
+      pose_driven: true
+    - id: fold_shoulder
+      region: shoulder
+      depth_mm: 8
+      pose_driven: true
+    - id: fold_ankle
+      region: ankle
+      depth_mm: 4
+      pose_driven: true
+  pigmentation:
+    pattern: banded
+    age_change: juvenile banding softens into adult dorsal banding
+    wear: moderate
+
+material_masks:
+  - id: hide_base
+    applies_to: body
+    surface_type: hide
+    vertex_group: body_skin
+    base_color: "#93805f"
+    color_range: ["#77663f", "#93805f", "#a8926b", "#5f5233"]
+    roughness: [0.5, 0.8]
+    normal_strength: 1.0
+    sss: 0.15
+    mask_uv: mask_hide_base
+  - id: crest_colour
+    applies_to: head
+    surface_type: hide
+    vertex_group: crest_zone
+    base_color: "#b4553c"
+    roughness: [0.45, 0.75]
+    sss: 0.2
+  - id: beak_horn
+    applies_to: beak
+    surface_type: beak
+    base_color: "#8a7a5c"
+    roughness: [0.3, 0.6]
+  - id: eye
+    applies_to: eye
+    surface_type: eye
+    base_color: "#271d13"
+    roughness: [0.05, 0.2]
+
+affordances:
+  diet_tags:
+    - resource: tender_foliage
+      preference: 0.8
+      plant_selectors: ["plant.softbough.sh1|tip:soft", "plant.softbough.sh1|branch:order<=3"]
+    - resource: frond
+      preference: 0.6
+      plant_selectors: ["plant.royalfrond.fn1|frond:young"]
+    - resource: jointed_stem
+      preference: 0.5
+      plant_selectors: ["plant.jointreed.eq1|culm:tender"]
+    - resource: water
+      preference: 0.65
+  interaction_envelope:
+    reach_height_m: { value: 1.6, unit: m }
+    reach_radius_m: 0.9
+    mouth_tip_selector: "bone:beak_tip"
+    clearance_width_m: 1.0
+  terrain_preference: [riparian, wet_hollow, wetland, clearing_edge]
+  abundance: common
+  activity_rhythm: diurnal
+  signature_routines:
+    - graze low, then rise to an upright alert stance
+    - answer peer calls and regroup when separated
+    - wade shallow margins for tender shoots
+    - settle into a squat while resting
+
+habitat_tags: [riparian, wet_hollow, wetland, clearing_edge, humid_lower_forest]
+
+references:
+  - id: creatures-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/creatures.md
+    title: Creature design -- Reedcrest section
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [body_plan, life_stages, affordances]
+  - id: reedcrest-crest
+    kind: local_image
+    locator: species/creatures/creature.reedcrest.rc1/reference/crest_profile.png
+    usage_rights: unknown
+    confidence: low
+    supports: [life_stages.adult, material_masks.crest_colour]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Lineage stub. Marked provisional on size, as docs/creatures.md requires; it is
+  not a committed bestiary member and its cranial ornament is invented.

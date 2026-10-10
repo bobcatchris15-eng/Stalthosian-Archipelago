@@ -1,0 +1,563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stalthosian-archipelago.invalid/contracts/species-definition.schema.json",
+  "title": "Stalthos species definition",
+  "description": "Authoring input for the botanical generator family (stage 2 parameterization). One file per visual morphotype. Compact, honest, and explicit about what is inferred.",
+  "type": "object",
+  "required": [
+    "schema",
+    "kind",
+    "id",
+    "common_names",
+    "generator",
+    "morphology_family",
+    "anatomy",
+    "growth_stages",
+    "materials",
+    "variation",
+    "affordances",
+    "habitat_tags",
+    "references",
+    "licenses"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "description": "Which contract this document claims to satisfy.",
+      "enum": ["species-definition"]
+    },
+    "kind": {
+      "description": "Organism class. 'plant' and 'fungus' share the botanical generator contract; 'creature' uses creature-definition.schema.json.",
+      "enum": ["plant", "fungus"]
+    },
+    "id": {
+      "$ref": "#/$defs/slug",
+      "description": "Stable logical id, e.g. 'plant.splitcrown.ar1'. Used for asset ids and report filenames."
+    },
+    "version": { "type": "integer", "minimum": 1, "default": 1 },
+    "common_names": {
+      "description": "Human-facing names. 'working' marks a provisional fictional name.",
+      "type": "object",
+      "required": ["primary"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": { "type": "string", "minLength": 1 },
+        "working": { "type": "boolean", "default": true },
+        "aka": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "uncertainty": {
+      "$ref": "#/$defs/uncertainty",
+      "description": "Highest tier of speculation anywhere in this file. 'speculative' means invented anatomy is declared."
+    },
+    "generator": {
+      "description": "Botanical generator family from the branch/fern/reed/rosette machinery.",
+      "enum": [
+        "branching_tree",
+        "layered_shrub",
+        "arching_shrub",
+        "woody_rosette",
+        "compound_frond",
+        "tree_frond_crown",
+        "jointed_rush",
+        "broadleaf_rosette",
+        "fibrous_monocot",
+        "bracket_fungus",
+        "moss_lichen_crust"
+      ]
+    },
+    "morphology_family": {
+      "description": "Broad botanical comparison group the silhouette is designed after. Honest analogy, not a taxonomic claim.",
+      "type": "string",
+      "minLength": 2
+    },
+    "anatomy": { "$ref": "#/$defs/anatomy" },
+    "growth_stages": {
+      "description": "Ordered development stages. The last entry is the reference mature form; proportions are normalized against it.",
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/growth_stage" }
+    },
+    "materials": {
+      "description": "Surface intent per material group. The generator/baker turn these into albedo/roughness/normal/thickness.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/material" }
+    },
+    "variation": {
+      "description": "Seeded morphological variation ranges. Every range is [min, max]; the generator derives sub-seeds from these labels.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seed_labels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Named stochastic axes; the seed path is (root seed, id, label)."
+        },
+        "ranges": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/range" }
+        },
+        "variants": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/variant" }
+        },
+        "correlations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["a", "b"],
+            "additionalProperties": false,
+            "properties": {
+              "a": { "type": "string" },
+              "b": { "type": "string" },
+              "strength": { "type": "number", "minimum": -1, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "affordances": { "$ref": "#/$defs/affordances" },
+    "habitat_tags": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" }
+    },
+    "phenology": {
+      "description": "Optional seasonal appearance switches; values are display parameters, not climate reconstruction.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "foliage_scale": { "type": "number", "minimum": 0, "maximum": 2 },
+              "color_shift": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "browsing": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "regrowth_days": { "type": "number", "minimum": 0 },
+            "nipped_variant": { "type": "string" }
+          }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/reference" }
+    },
+    "licenses": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/license" }
+    },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 96
+    },
+    "uncertainty": {
+      "description": "Evidence tier for the anatomy in this file, mirroring docs/creatures.md's evidence discipline.",
+      "enum": [
+        "documented",
+        "comparative_inference",
+        "biomechanical_plausibility",
+        "speculative"
+      ]
+    },
+    "range": {
+      "description": "Inclusive [min, max] pair, optionally with a preferred middle value.",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "unit": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "anatomy": {
+      "type": "object",
+      "required": ["branching_pattern", "phyllotaxy", "foliage", "stem", "root"],
+      "additionalProperties": false,
+      "properties": {
+        "branching_pattern": {
+          "description": "Whole-plant architecture, plus the whorl/layer counts the generator needs.",
+          "type": "object",
+          "required": ["architecture", "order_max"],
+          "additionalProperties": false,
+          "properties": {
+            "architecture": {
+              "enum": [
+                "excurrent_single_leader",
+                "decurrent_multi_leader",
+                "tiered_whorl",
+                "irregular_tiered",
+                "drooping_rivulet",
+                "arching_multi_stem",
+                "spherical_thicket",
+                "rosette_crown",
+                "fan_rosette",
+                "tangled_mat",
+                "encrusting_sheet"
+              ]
+            },
+            "order_max": { "type": "integer", "minimum": 1, "maximum": 6 },
+            "whorls_per_year": { "type": "integer", "minimum": 0 },
+            "branch_angle_deg": { "$ref": "#/$defs/range" },
+            "branch_length_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+            "taper": { "type": "number", "minimum": 0, "maximum": 1 },
+            "root_flare": { "type": "number", "minimum": 0, "maximum": 1 },
+            "notes": { "type": "string" }
+          }
+        },
+        "phyllotaxy": {
+          "description": "Leaf/frond arrangement on the supporting organ.",
+          "type": "object",
+          "required": ["pattern", "divergence_deg"],
+          "additionalProperties": false,
+          "properties": {
+            "pattern": {
+              "enum": [
+                "spiral",
+                "alternate",
+                "opposite_decussate",
+                "whorled",
+                "distichous",
+                "rosette",
+                "fascicled",
+                "basal_sheathing",
+                "scattered_cauline"
+              ]
+            },
+            "divergence_deg": { "type": "number", "minimum": 0, "maximum": 360 },
+            "phyllotaxis_fraction": {
+              "description": "Golden-angle style fraction of the divergence circle (137.5 deg = 0.382).",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "leaves_per_node": { "type": "integer", "minimum": 1, "maximum": 12 }
+          }
+        },
+        "foliage": {
+          "description": "Leaf/frond architecture. Enough for a generator to build the blade, not just a card.",
+          "type": "object",
+          "required": ["organ", "overall_shape", "margin", "length", "width"],
+          "additionalProperties": false,
+          "properties": {
+            "organ": {
+              "description": "What the visible foliage organ is.",
+              "enum": ["leaf", "leaflet", "frond", "pinna", "scale_spray", "fan_leaf", "frondlet", "bracket_lamina"]
+            },
+            "overall_shape": {
+              "enum": [
+                "linear",
+                "lanceolate",
+                "ovate",
+                "obovate",
+                "elliptic",
+                "cordate",
+                "palmate_fan",
+                "pinnate",
+                "bipinnate",
+                "tripinnate",
+                "dichotomous",
+                "flabellate",
+                "spathulate",
+                "orbicular",
+                "needled",
+                "scalelike"
+              ]
+            },
+            "margin": {
+              "enum": ["entire", "serrate", "crenate", "lobed", "pinnatifid", "toothed", "spiny", "dissected"]
+            },
+            "apex": { "enum": ["acute", "acuminate", "obtuse", "notched", "cuspidate", "retuse"] },
+            "length": { "$ref": "#/$defs/unit" },
+            "width": { "$ref": "#/$defs/unit" },
+            "aspect_ratio": { "type": "number", "minimum": 0.05, "maximum": 40 },
+            "pinnation": {
+              "description": "Pinnate/frond subdivision counts. Present for compound foliage.",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "pinnae_per_side": { "type": "integer", "minimum": 1, "maximum": 120 },
+                "pinnae_series": { "type": "integer", "minimum": 1, "maximum": 4 },
+                "pinna_length_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+                "petiole_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+                "rachis_arc_deg": { "type": "number", "minimum": -180, "maximum": 180 }
+              }
+            },
+            "venation": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "pattern": { "enum": ["pinnate", "palmate", "parallel", "dichotomous", "reticulate", "radial", "none"] },
+                "relief": { "enum": ["impressed", "flat", "raised"] },
+                "secondary_per_primary": { "type": "integer", "minimum": 1, "maximum": 40 }
+              }
+            },
+            "surface": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "waxy_cuticle": { "type": "number", "minimum": 0, "maximum": 1 },
+                "hairs": { "enum": ["none", "sparse", "tomentose", "silky", "stiff_bristle"] },
+                "underside": { "enum": ["pale", "tomentose", "same_as_top", "glossy"] },
+                "translucency": { "type": "number", "minimum": 0, "maximum": 1 },
+                "flexibility_deg": { "type": "number", "minimum": 0, "maximum": 180 }
+              }
+            }
+          }
+        },
+        "stem": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": { "enum": ["woody", "herbaceous", "fibrous", "jointed", "fleshy", "rhizomatous"] },
+            "diameter_at_base": { "$ref": "#/$defs/unit" },
+            "growth_direction": { "enum": ["erect", "ascending", "arching", "pendulous", "creeping", "prostrate"] },
+            "segmented": { "type": "boolean" },
+            "segments_per_m": { "type": "number", "minimum": 0 },
+            "sheaths": { "type": "boolean" },
+            "bark": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "pattern": { "enum": ["smooth", "fissured", "scaly", "fibrous", "flaky", "ridged", "none"] },
+                "plate_scale_m": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        },
+        "root": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "system": { "enum": ["taproot", "fibrous", "clumping", "rhizomatous", "buttress", "adventitious_cling", "substrate_bound"] },
+            "depth": { "$ref": "#/$defs/unit" },
+            "spread": { "$ref": "#/$defs/unit" },
+            "exposed": { "type": "boolean" }
+          }
+        },
+        "reproductive": {
+          "description": "Optional display structures: cones, sporangia, fruit clusters.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "structure": { "enum": ["cone", "sporangia_sorus", "sorophore", "fruit_cluster", "flower", "none"] },
+            "placement": { "enum": ["terminal", "axillary", "underside", "substrate", "crown", "basal"] },
+            "size": { "$ref": "#/$defs/unit" },
+            "seasonal": { "type": "boolean" }
+          }
+        },
+        "substrate": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "attachment": { "enum": ["soil", "decomposing_wood", "rock_face", "litter", "other_symbiont", "aquatic"] },
+            "host": { "type": "string" },
+            "height_on_substrate_m": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "growth_stage": {
+      "type": "object",
+      "required": ["id", "age_label", "height", "proportions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "age_label": { "type": "string", "minLength": 1, "description": "e.g. 'seedling', 'juvenile', 'mature'." },
+        "age_years": { "$ref": "#/$defs/range" },
+        "height": { "$ref": "#/$defs/unit" },
+        "crown_spread": { "$ref": "#/$defs/unit" },
+        "proportions": {
+          "description": "Non-uniform development: each key is a normalized 0..1 length share. Explicitly not a uniform scale of the adult.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "foliage_density": { "type": "number", "minimum": 0, "maximum": 1 },
+        "wind_stiffness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "visible_traits": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "material": {
+      "type": "object",
+      "required": ["id", "applies_to", "surface_type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "applies_to": {
+          "description": "Which generated geometry group carries this material.",
+          "enum": ["bark", "stem", "leaf", "leaflet", "frond", "pinna", "sheath", "rhizome", "root", "lamina", "underside", "sorus", "whole"]
+        },
+        "surface_type": {
+          "enum": ["bark", "wood", "cuticle", "herbaceous", "herbaceous_translucent", "rhizome", "fungus_flesh", "fungus_top", "lichen"]
+        },
+        "base_color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "color_range": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "description": "Nonuniform pigmentation stops (>=3 reads as patterning, not a recolor)."
+        },
+        "roughness": { "$ref": "#/$defs/range" },
+        "normal_strength": { "type": "number", "minimum": 0, "maximum": 2 },
+        "bump_scale_m": { "type": "number", "minimum": 0 },
+        "sss": { "type": "number", "minimum": 0, "maximum": 1 },
+        "alpha": { "$ref": "#/$defs/range" },
+        "wind_response": { "enum": ["none", "stiff", "flexible", "whip", "segmented"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "variant": {
+      "description": "A named recognizable morphotype inside the lineage (never a texture swap).",
+      "type": "object",
+      "required": ["id", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "label": { "type": "string", "minLength": 1 },
+        "overrides": { "type": "object" },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "habitat_tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "affordances": {
+      "description": "Ecological affordance metadata (docs/flora.md 'simple forage tags' + browsing envelope). Display/simulation parameters, not nutrient chemistry.",
+      "type": "object",
+      "required": ["forage_tags", "contact_bounds"],
+      "additionalProperties": false,
+      "properties": {
+        "forage_tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["part", "palatability", "water_content"],
+            "additionalProperties": false,
+            "properties": {
+              "part": {
+                "enum": ["leaf", "shoot", "twig", "frond", "young_frond", "frondlet", "stem", "fruit", "seed", "cone", "resin", "lamina", "litter"]
+              },
+              "palatability": { "type": "number", "minimum": 0, "maximum": 1, "description": "0 = inedible/structural, 1 = preferred forage." },
+              "water_content": { "type": "number", "minimum": 0, "maximum": 1 },
+              "nutrition": { "type": "number", "minimum": 0, "maximum": 1, "description": "Experimental display parameter, not a fossil measurement." },
+              "defense": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "silica": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "toxin": { "type": "string" },
+                  "structural_only": { "type": "boolean" },
+                  "thorns": { "type": "boolean" }
+                }
+              },
+              "seasonal": { "type": "boolean" }
+            }
+          }
+        },
+        "edible_foliage_targets": {
+          "description": "Named geometry selectors the feeding system aims at (branch ids / frond regions).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["selector", "part"],
+            "additionalProperties": false,
+            "properties": {
+              "selector": { "type": "string", "minLength": 1, "description": "Generator-side selector, e.g. 'frond:tier>=2' or 'branch:order<=3'." },
+              "part": { "enum": ["leaf", "shoot", "twig", "frond", "young_frond", "frondlet", "stem", "fruit", "seed", "lamina"] },
+              "mass_share": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "contact_bounds": {
+          "description": "Physical interaction envelope for the hero animal and for pushable vegetation.",
+          "type": "object",
+          "required": ["min_browse_height_m", "max_browse_height_m"],
+          "additionalProperties": false,
+          "properties": {
+            "min_browse_height_m": { "type": "number", "minimum": 0 },
+            "max_browse_height_m": { "type": "number", "minimum": 0 },
+            "trunk_diameter_m": { "$ref": "#/$defs/unit" },
+            "pushable": { "type": "boolean", "default": false },
+            "collision_proxy": { "enum": ["none", "capsule", "box", "cylinder", "convex_hull", "point_cloud"] },
+            "footprint_radius_m": { "type": "number", "minimum": 0 }
+          }
+        },
+        "browse_zones": {
+          "description": "Height bands of the asset that a browser can reach, in metres above ground.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "min_m", "max_m", "selector"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "min_m": { "type": "number", "minimum": 0 },
+              "max_m": { "type": "number", "minimum": 0 },
+              "selector": { "type": "string", "minLength": 1 },
+              "forage": { "enum": ["preferred", "available", "structural", "avoid"] },
+              "season": { "type": "string" }
+            }
+          }
+        },
+        "structural_role": { "enum": ["canopy", "understory", "groundcover", "sedge", "climber", "epiphyte", "deadwood", "none"] }
+      }
+    },
+    "reference": {
+      "description": "A source consulted for this definition. research_species normalizes these into the research record. usage_rights absent => uncertainty tier 'unverified' + warning.",
+      "type": "object",
+      "required": ["id", "locator", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "kind": { "enum": ["local_image", "local_model", "local_scan", "book", "journal", "web", "doi", "museum_record", "field_note", "living_comparator", "planning_doc"] },
+        "locator": { "type": "string", "minLength": 1, "description": "Relative path, URL or DOI. Never invented." },
+        "title": { "type": "string" },
+        "usage_rights": { "enum": ["cc0", "cc-by", "cc-by-sa", "public_domain", "own_work", "permission_granted", "internal_reference", "unknown"] },
+        "usage_rights_note": { "type": "string" },
+        "redistributable": { "type": "boolean" },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "supports": { "type": "array", "items": { "type": "string" }, "description": "Which definition fields this reference backs." }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": ["id", "applies_to", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "applies_to": { "enum": ["definition", "generated_geometry", "textures", "reference_images", "code", "whole_asset"] },
+        "license": { "type": "string", "minLength": 1, "description": "SPDX id where one applies." },
+        "holder": { "type": "string" },
+        "url": { "type": "string" },
+        "redistribution_notes": { "type": "string" }
+      }
+    }
+  }
+}

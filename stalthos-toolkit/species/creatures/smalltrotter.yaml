@@ -1,0 +1,630 @@
+# Smalltrotter -- flagship dwarf titanosaur anatomical proxy.
+#
+# Source of record: Rauken-Archipelago/docs/creatures.md, "Smalltrotter" section.
+# Every number here is a *working design value* for an invented taxon:
+#   - total length / mass envelopes come from that document and are explicitly
+#     not verified measurements;
+#   - osteoderm distribution, and especially the keratinous bristles, have no
+#     fossil support and are marked `uncertainty: speculative`;
+#   - no citation is asserted anywhere in this file, because none has been
+#     verified yet. Collecting real references is exactly what stage 1
+#     (research_species) is for.
+schema: creature-definition
+kind: creature
+id: creature.smalltrotter.st1
+version: 1
+
+common_names:
+  primary: Smalltrotter
+  working: true
+  aka: [st, the small trotter]
+
+uncertainty: speculative
+morphology_family: titanosauriform sauropod (anatomical inspiration, not a claim)
+generator: quadruped_sauropod
+
+evidence:
+  - feature: quadrupedal weight-bearing skeleton, long neck, four limbs
+    tier: documented
+    note: Broad sauropod body plan; regional detail still to be researched.
+  - feature: non-uniform ontogenetic proportions (head/neck/limbs/trunk/tail)
+    tier: biomechanical_plausibility
+  - feature: pebbled skin with regional rosettes, folds at compressive areas
+    tier: comparative_inference
+    note: Skin inference in the sauropod literature is debated; region map is invented.
+  - feature: spaced subdermal osteoderm nodules on upper back/shoulders/hips
+    tier: speculative
+    note: Count, placement and growth are fictional, not a titanosaur claim.
+  - feature: keratinous bristles on nape/shoulders/dorsum
+    tier: speculative
+    note: >-
+      Deliberate fiction. No sauropod bristle/quill has confirmed fossil
+      evidence; these are invented filaments, not a feathered-titanosaur claim.
+  - feature: life-stage skin covering transformation
+    tier: speculative
+    note: Chosen creative feature; ontogenetic covering changes have living analogues.
+
+body_plan:
+  posture: quadrupedal
+  spine_profile: sloped
+  neck_length_share: 0.36
+  tail_length_share: 0.34
+  center_of_mass_m: { value: 0.95, unit: m }
+  mass_estimate:
+    value: 950
+    unit: kg
+    measured: false
+    range: [700, 1200]
+    note: Working hypothesis from docs/creatures.md; recompute from volumetric anatomy.
+  axial:
+    cervical_count: 15
+    dorsal_count: 13
+    caudal_count: 32
+    ribcage_depth_share: 0.34
+    skull_profile: small_relative
+  skeleton:
+    - id: skull
+      region: skull
+      length_share: 0.032
+      mass_share: 0.012
+      joint_limit_deg: { flex: 22, extend: 32, twist: 18 }
+      driven_by: skeleton
+    - id: mandible
+      region: mandible
+      length_share: 0.028
+      mass_share: 0.009
+      joint_limit_deg: { flex: 26, extend: 34, twist: 6 }
+      driven_by: hybrid
+    - id: cervical
+      region: cervical
+      length_share: 0.3
+      mass_share: 0.14
+      joint_limit_deg: { flex: 45, extend: 40, twist: 30 }
+      driven_by: hybrid
+    - id: dorsal
+      region: dorsal
+      length_share: 0.22
+      mass_share: 0.31
+      joint_limit_deg: { flex: 18, extend: 16, twist: 8 }
+      driven_by: skeleton
+    - id: sacral
+      region: sacral
+      length_share: 0.05
+      mass_share: 0.09
+      joint_limit_deg: { flex: 12, extend: 12, twist: 8 }
+      driven_by: skeleton
+    - id: caudal
+      region: caudal
+      length_share: 0.28
+      mass_share: 0.1
+      joint_limit_deg: { flex: 34, extend: 30, twist: 18 }
+      driven_by: soft_tissue
+    - id: pectoral_girdle
+      region: pectoral_girdle
+      length_share: 0.03
+      mass_share: 0.06
+      joint_limit_deg: { flex: 20, extend: 24, twist: 12 }
+      driven_by: skeleton
+    - id: humerus
+      region: forelimb_humerus
+      length_share: 0.055
+      mass_share: 0.05
+      joint_limit_deg: { flex: 48, extend: 62, twist: 40 }
+      driven_by: skeleton
+    - id: radius
+      region: forelimb_radius
+      length_share: 0.05
+      mass_share: 0.028
+      joint_limit_deg: { flex: 60, extend: 55, twist: 30 }
+      driven_by: skeleton
+    - id: manus
+      region: forelimb_manus
+      length_share: 0.035
+      mass_share: 0.012
+      joint_limit_deg: { flex: 40, extend: 45, twist: 20 }
+      driven_by: soft_tissue
+    - id: femur
+      region: hindlimb_femur
+      length_share: 0.075
+      mass_share: 0.072
+      joint_limit_deg: { flex: 46, extend: 70, twist: 25 }
+      driven_by: skeleton
+    - id: tibia
+      region: hindlimb_tibia
+      length_share: 0.07
+      mass_share: 0.04
+      joint_limit_deg: { flex: 40, extend: 62, twist: 20 }
+      driven_by: skeleton
+    - id: pes
+      region: hindlimb_pes
+      length_share: 0.045
+      mass_share: 0.02
+      joint_limit_deg: { flex: 28, extend: 34, twist: 10 }
+      driven_by: soft_tissue
+  locomotion:
+    gaits: [walk, amble]
+    duty_factor: 0.62
+    footfall: lateral sequence walk
+    reach: { value: 3.4, unit: m }
+  hydration:
+    drink_reach_m: 0.35
+    requires_kneel: false
+
+life_stages:
+  - id: independent_juvenile
+    label: Independent juvenile
+    age_label: independent juvenile (not a literal hatchling)
+    age_years: [0.5, 3]
+    total_length: { value: 1.8, unit: m }
+    height_at_shoulder: { value: 0.95, unit: m }
+    proportions:
+      skull: 0.052
+      cervical: 0.26
+      dorsal: 0.24
+      caudal: 0.24
+      humerus: 0.062
+      femur: 0.09
+      pes: 0.052
+    girth_scale: 0.62
+    head_scale: 1.3
+    skin:
+      thickness_mm: 6
+      wrinkle_regions: [ankle, groin]
+      callus_regions: [hip]
+    visible_traits:
+      - proportionally large expressive head and eyes
+      - dense short bristles on nape and upper back
+      - fine pebbled skin, modest early armor nodules
+      - slight juvenile banding
+  - id: subadult
+    label: Subadult
+    age_label: subadult
+    age_years: [3, 9]
+    total_length: { value: 3.6, unit: m }
+    height_at_shoulder: { value: 1.7, unit: m }
+    proportions:
+      skull: 0.04
+      cervical: 0.28
+      dorsal: 0.23
+      caudal: 0.27
+      humerus: 0.057
+      femur: 0.081
+      pes: 0.047
+    girth_scale: 0.85
+    head_scale: 1.1
+    skin:
+      thickness_mm: 12
+      wrinkle_regions: [neck_lateral, shoulder, hip, ankle]
+      callus_regions: [hip, shoulder]
+    visible_traits:
+      - thicker torso, stronger limbs
+      - conspicuous embedded osteoderms
+      - bristles thinning, retained in clumps
+  - id: adult
+    label: Adult
+    age_label: adult
+    age_years: [9, 60]
+    total_length: { value: 5.6, unit: m }
+    height_at_shoulder: { value: 2.4, unit: m }
+    proportions:
+      skull: 0.032
+      cervical: 0.3
+      dorsal: 0.22
+      caudal: 0.28
+      humerus: 0.055
+      femur: 0.075
+      pes: 0.045
+    girth_scale: 1.0
+    head_scale: 1.0
+    skin:
+      thickness_mm: 22
+      wrinkle_regions: [neck_lateral, throat, shoulder, hip, groin, tail_base, ankle]
+      callus_regions: [hip, shoulder, tail_base]
+    visible_traits:
+      - deeply wrinkled, thick skin over shoulders and hips
+      - sparse residual bristles
+      - larger, denser embedded osteoderm nodules
+      - nonuniform pigmentation with wear and healing scars
+
+rig:
+  skeleton:
+    bone_count_range: [96, 140]
+    hierarchical: true
+    root: root
+    bone_naming: region_index
+  ik:
+    - id: leg_fore_l
+      type: leg
+      chain: [humerus, radius, manus]
+      reach_limit_m: 1.1
+    - id: leg_fore_r
+      type: leg
+      chain: [humerus, radius, manus]
+      reach_limit_m: 1.1
+    - id: leg_hind_l
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 1.3
+    - id: leg_hind_r
+      type: leg
+      chain: [femur, tibia, pes]
+      pole_target: pelvis
+      reach_limit_m: 1.3
+    - id: neck_chain
+      type: neck
+      chain: [cervical, dorsal]
+      reach_limit_m: 3.4
+    - id: tail_chain
+      type: tail
+      chain: [caudal]
+    - id: jaw_open
+      type: jaw
+      chain: [mandible]
+    - id: head_look
+      type: head_look
+      chain: [skull]
+  skin:
+    method: heat_weighted
+    max_influences_per_vertex: 4
+    preserve_volume: true
+    pin_regions: [neck_base, tail_base]
+  morph_targets:
+    - id: juvenile_fluff
+      region: nape
+      driver: life_stage
+      range: [0, 1]
+    - id: mature_skin_wrinkle
+      region: neck_lateral
+      driver: life_stage
+      range: [0, 1]
+    - id: browse_depletion
+      region: jaw_contact
+      driver: browse_depletion
+      range: [0, 1]
+
+animation_contacts:
+  - id: browse_low_shrub
+    kind: browse
+    targets:
+      - selector: "brush:zone/tender"
+        tolerance_m: 0.12
+        surface: plant
+      - selector: "bone:jaw_tip"
+        tolerance_m: 0.1
+        surface: self
+    notes: Head and neck must actually meet the targeted foliage for a browse to read.
+  - id: browse_high_shoot
+    kind: browse
+    targets:
+      - selector: "plant.splitcrown.ar1|selector:sapling_tips"
+        tolerance_m: 0.15
+        surface: plant
+  - id: drink
+    kind: drink
+    targets:
+      - selector: "water:surface"
+        tolerance_m: 0.08
+        surface: water
+  - id: walk_cycle
+    kind: gait
+    targets:
+      - selector: "bone:pes_foot_l"
+        tolerance_m: 0.02
+        surface: ground
+      - selector: "bone:pes_foot_r"
+        tolerance_m: 0.02
+        surface: ground
+  - id: rest_stand
+    kind: rest
+    targets:
+      - selector: "bone:manus_front_l"
+        tolerance_m: 0.05
+        surface: ground
+  - id: startle_alert
+    kind: alert
+    targets:
+      - selector: "bone:head_tip"
+        tolerance_m: 0.0
+        surface: none
+
+integument:
+  scale_zones:
+    - id: dorsal_pebble
+      region: dorsal
+      pattern: pebbled
+      size_mm: [4, 9]
+      density_per_m2: 900
+      roughness: [0.55, 0.8]
+      age_dependence: grows_with_age
+    - id: flank_rosette
+      region: flank
+      pattern: rosette
+      size_mm: [10, 26]
+      density_per_m2: 180
+      roughness: [0.5, 0.75]
+      age_dependence: grows_with_age
+    - id: limb_crease
+      region: limb
+      pattern: creased
+      size_mm: [6, 14]
+      density_per_m2: 500
+      roughness: [0.6, 0.85]
+    - id: neck_small_pebble
+      region: neck
+      pattern: pebbled
+      size_mm: [3, 7]
+      density_per_m2: 1200
+      roughness: [0.5, 0.75]
+    - id: ventral_soft
+      region: ventral
+      pattern: smooth
+      size_mm: [2, 5]
+      density_per_m2: 1600
+      roughness: [0.45, 0.7]
+    - id: tail_band
+      region: tail
+      pattern: mottled_banded
+      size_mm: [5, 11]
+      density_per_m2: 700
+      roughness: [0.55, 0.8]
+  osteoderm_zones:
+    - id: upper_back_plates
+      region: upper_back
+      shape: oval
+      count_range: [40, 90]
+      size_mm: [6, 26]
+      spacing_m: 0.07
+      coverage_share: 0.12
+      age_dependence: emerges_with_age
+      uncertainty: speculative
+    - id: shoulder_nodules
+      region: shoulder
+      shape: nodular
+      count_range: [10, 26]
+      size_mm: [8, 30]
+      spacing_m: 0.05
+      coverage_share: 0.1
+      age_dependence: grows_with_age
+      uncertainty: speculative
+    - id: hip_nodules
+      region: hip
+      shape: round
+      count_range: [12, 30]
+      size_mm: [8, 34]
+      spacing_m: 0.05
+      coverage_share: 0.09
+      age_dependence: grows_with_age
+      uncertainty: speculative
+    - id: tail_base_plates
+      region: tail_base
+      shape: keeled
+      count_range: [6, 18]
+      size_mm: [5, 16]
+      spacing_m: 0.08
+      coverage_share: 0.07
+      age_dependence: juvenile_only
+      uncertainty: speculative
+  bristle_zones:
+    - id: nape_bristles
+      region: nape
+      length_mm: [25, 70]
+      density_per_m2: 2200
+      stiffness: 0.75
+      asymmetry: 0.6
+      wind_response: flexible
+      age_dependence: sheds_with_age
+      uncertainty: speculative
+      hypothesized_function: concealment
+    - id: shoulder_bristles
+      region: shoulder
+      length_mm: [30, 80]
+      density_per_m2: 1400
+      stiffness: 0.7
+      asymmetry: 0.5
+      wind_response: flexible
+      age_dependence: retained_reduced
+      uncertainty: speculative
+      hypothesized_function: communication
+    - id: dorsum_bristles
+      region: dorsum
+      length_mm: [15, 45]
+      density_per_m2: 700
+      stiffness: 0.6
+      asymmetry: 0.4
+      wind_response: whip
+      age_dependence: juvenile_only
+      uncertainty: speculative
+      hypothesized_function: thermoregulation
+  fold_zones:
+    - id: fold_neck_lateral
+      region: neck_lateral
+      depth_mm: 12
+      pose_driven: true
+    - id: fold_throat
+      region: throat
+      depth_mm: 8
+      pose_driven: true
+    - id: fold_shoulder
+      region: shoulder
+      depth_mm: 16
+      pose_driven: true
+    - id: fold_hip
+      region: hip
+      depth_mm: 18
+      pose_driven: true
+    - id: fold_ankle
+      region: ankle
+      depth_mm: 6
+      pose_driven: true
+  pigmentation:
+    pattern: mottled
+    age_change: subtle juvenile banding softens and spreads with age
+    wear: moderate
+
+material_masks:
+  - id: hide_base
+    applies_to: body
+    surface_type: hide
+    vertex_group: body_skin
+    base_color: "#8a7a63"
+    color_range: ["#6e604b", "#8a7a63", "#9d8c72", "#5c5142"]
+    roughness: [0.55, 0.85]
+    normal_strength: 1.0
+    sss: 0.12
+    mask_uv: mask_hide_base
+  - id: armor_bone
+    applies_to: osteoderm
+    surface_type: armor
+    vertex_group: armor_zone
+    base_color: "#6d6154"
+    roughness: [0.4, 0.7]
+    normal_strength: 1.3
+    sss: 0.0
+    mask_uv: mask_armor
+  - id: bristle_fibre
+    applies_to: bristle
+    surface_type: bristle
+    vertex_group: bristle_zone
+    base_color: "#4a3a2a"
+    roughness: [0.5, 0.8]
+    sss: 0.3
+    mask_uv: mask_bristle
+  - id: beak_horn
+    applies_to: beak
+    surface_type: horn
+    base_color: "#7a6a52"
+    roughness: [0.35, 0.6]
+    normal_strength: 0.8
+  - id: eye
+    applies_to: eye
+    surface_type: eye
+    base_color: "#2a1d14"
+    roughness: [0.05, 0.2]
+  - id: foot_pad
+    applies_to: foot_pad
+    surface_type: foot_pad
+    base_color: "#5c5142"
+    roughness: [0.7, 0.95]
+    normal_strength: 1.6
+  - id: belly_soft
+    applies_to: belly
+    surface_type: hide
+    vertex_group: belly_skin
+    base_color: "#a2917a"
+    roughness: [0.5, 0.75]
+    sss: 0.18
+    mask_uv: mask_belly
+
+affordances:
+  diet_tags:
+    - resource: tender_foliage
+      preference: 0.85
+      plant_selectors: ["plant.softbough.sh1|tip:soft"]
+    - resource: shoot
+      preference: 0.8
+      plant_selectors: ["plant.softbough.sh1", "plant.splitcrown.ar1|selector:sapling_tips"]
+    - resource: frond
+      preference: 0.4
+      plant_selectors: ["plant.royalfrond.fn1|frond:young"]
+    - resource: jointed_stem
+      preference: 0.35
+      plant_selectors: ["plant.jointreed.eq1|culm:tender"]
+    - resource: fruit
+      preference: 0.5
+    - resource: water
+      preference: 0.7
+  interaction_envelope:
+    reach_height_m: { value: 3.4, unit: m }
+    reach_radius_m: 2.2
+    mouth_tip_selector: "bone:jaw_tip"
+    clearance_width_m: 1.1
+  terrain_preference: [riparian, clearing_edge, main_island_woodland_edge, browsed_patch]
+  abundance: common
+  activity_rhythm: diurnal
+  signature_routines:
+    - browse reachable shrubs with visible shoot depletion
+    - drink from pool margins and creek terraces
+    - slow lateral-sequence walking, pause and look up
+    - settle and rest standing or lying with legs folded under
+
+habitat_tags: [main_island_woodland, riparian, clearing_edge, browsed_patch]
+
+variation:
+  seed_labels: [body_girth, neck_length, osteoderm_density, bristle_density, rosette_size]
+  ranges:
+    body_girth: [0.85, 1.2]
+    neck_length: [0.9, 1.1]
+    osteoderm_density: [0.6, 1.4]
+    bristle_density: [0.5, 1.5]
+    rosette_size: [0.7, 1.35]
+  variants:
+    - id: woodland_giant
+      label: heavier-bodied woodland form
+      weight: 0.4
+      overrides: { body_girth: 1.2, neck_length: 0.95 }
+    - id: longreach
+      label: longer-necked, rangier individual
+      weight: 0.3
+      overrides: { neck_length: 1.1, body_girth: 0.85 }
+    - id: sparse_armor
+      label: lightly armored individual
+      weight: 0.3
+      overrides: { osteoderm_density: 0.6 }
+
+references:
+  - id: creatures-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/creatures.md
+    title: Creature design -- Smalltrotter section
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [body_plan, life_stages, integument, affordances]
+  - id: fauna-actor-catalog
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/fauna-actor-catalog.md
+    title: Fauna actor catalog and food web
+    usage_rights: internal_reference
+    confidence: high
+    supports: [affordances, interaction_envelope]
+  - id: sauropod-skeleton-plate
+    kind: local_image
+    locator: species/creatures/creature.smalltrotter.st1/reference/skeletal_plate.png
+    usage_rights: unknown
+    usage_rights_note: placeholder slot; no plate collected or rights cleared yet
+    confidence: low
+    supports: [body_plan.skeleton, rig]
+  - id: skin-texture-closeup
+    kind: local_image
+    locator: species/creatures/creature.smalltrotter.st1/reference/skin_pebble.png
+    usage_rights: unknown
+    confidence: low
+    supports: [integument.scale_zones, material_masks]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: references-restricted
+    applies_to: reference_images
+    license: unknown
+    holder: unknown
+    redistribution_notes: >-
+      No reference image rights are established. Nothing from
+      species/creatures/*/reference/ may ship with the asset until cleared.
+
+notes: >-
+  Flagship anatomical proxy for the initial tool-building experiment
+  (docs/asset-toolkit.md). Mass and length envelopes are unverified working
+  hypotheses and must be recomputed from the volumetric anatomy; the bristles
+  and osteoderm placement are deliberate fiction and are labelled as such.

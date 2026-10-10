@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stalthosian-archipelago.invalid/contracts/status-envelope.schema.json",
+  "title": "Stalthos status envelope",
+  "description": "The single JSON object every `stalthos` command writes to stdout. Shape dictated by stalthos_toolkit.core.status.Status.to_dict().",
+  "type": "object",
+  "required": ["command", "ok", "exit_code", "artifacts", "metrics", "provenance", "warnings", "errors", "logs"],
+  "additionalProperties": false,
+  "properties": {
+    "command": { "type": "string", "minLength": 1 },
+    "ok": { "type": "boolean" },
+    "exit_code": { "type": "integer", "minimum": 0, "maximum": 7 },
+    "seed": { "type": ["integer", "null"] },
+    "asset_id": { "type": ["string", "null"] },
+    "started_at": { "type": "number", "minimum": 0 },
+    "duration_s": { "type": "number", "minimum": 0 },
+    "partial": { "type": "boolean" },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "metrics": { "type": "object" },
+    "provenance": { "type": "object" },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "type": "string", "minLength": 1 },
+          "message": { "type": "string" },
+          "detail": {},
+          "hint": { "type": "string" }
+        }
+      }
+    },
+    "logs": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "artifact": {
+      "type": "object",
+      "required": ["path", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

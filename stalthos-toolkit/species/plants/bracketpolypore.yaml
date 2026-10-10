@@ -1,0 +1,231 @@
+# Bracket fungus on decomposing wood -- substrate integration asset.
+# Source of record: Rauken-Archipelago/docs/flora.md, initial production set item
+# six ("bracket fungus on decomposing wood (substrate integration)") and the
+# fungi row of the community table.
+schema: species-definition
+kind: fungus
+id: plant.bracketpolypore.fg1
+version: 1
+
+common_names:
+  primary: Bracketpolypore
+  working: true
+  aka: [bracket fungus, shelf polypore]
+
+uncertainty: speculative
+morphology_family: Polyporales-like bracket polypore (growth-form analogy only)
+generator: bracket_fungus
+
+anatomy:
+  branching_pattern:
+    architecture: encrusting_sheet
+    order_max: 1
+    branch_angle_deg: [0, 15]
+    branch_length_ratio: 1.0
+    taper: 0.2
+    root_flare: 0.0
+    notes: >-
+      Non-branching tiered shelves attached laterally to a fallen log; the log
+      itself is a separate substrate asset, not part of this definition.
+  phyllotaxy:
+    pattern: scattered_cauline
+    divergence_deg: 0
+  foliage:
+    organ: bracket_lamina
+    overall_shape: flabellate
+    margin: lobed
+    apex: obtuse
+    length: { value: 0.28, unit: m }
+    width: { value: 0.2, unit: m }
+    aspect_ratio: 1.4
+    venation:
+      pattern: radial
+      relief: raised
+    surface:
+      waxy_cuticle: 0.05
+      hairs: tomentose
+      underside: pale
+      translucency: 0.0
+      flexibility_deg: 8
+  stem:
+    type: fleshy
+    diameter_at_base: { value: 0.05, unit: m }
+    growth_direction: prostrate
+    segmented: false
+  root:
+    system: substrate_bound
+    depth: { value: 0.0, unit: m }
+    spread: { value: 0.0, unit: m }
+    exposed: false
+  reproductive:
+    structure: sporangia_sorus
+    placement: underside
+    size: { value: 0.2, unit: m }
+    seasonal: false
+  substrate:
+    attachment: decomposing_wood
+    host: species/plants/plant.bracketpolypore.fg1/substrate/log_dead_wood.blend
+    height_on_substrate_m: 0.4
+
+growth_stages:
+  - id: pin_head
+    age_label: pin head primordium
+    age_years: [0, 0.05]
+    height: { value: 0.02, unit: m }
+    crown_spread: { value: 0.03, unit: m }
+    proportions: { cap_share: 1.0, stipe_share: 0.2, pore_share: 0.0 }
+    foliage_density: 1.0
+    wind_stiffness: 0.0
+    visible_traits: [round_knob, no_pores]
+  - id: young_shelf
+    age_label: young shelf
+    age_years: [0.05, 0.5]
+    height: { value: 0.09, unit: m }
+    crown_spread: { value: 0.12, unit: m }
+    proportions: { cap_share: 1.0, stipe_share: 0.4, pore_share: 0.6 }
+    foliage_density: 1.0
+    wind_stiffness: 0.0
+    visible_traits: [zoned_cap, pale_pores]
+  - id: mature
+    age_label: mature fan cluster
+    age_years: [0.5, 3]
+    height: { value: 0.22, unit: m }
+    crown_spread: { value: 0.45, unit: m }
+    proportions: { cap_share: 1.0, stipe_share: 0.55, pore_share: 1.0 }
+    foliage_density: 1.0
+    wind_stiffness: 0.0
+    visible_traits: [tiered_fans, concentric_zones, dry_edges, host_rot]
+
+materials:
+  - id: cap_top
+    applies_to: lamina
+    surface_type: fungus_top
+    base_color: "#8a5a34"
+    color_range: ["#5f3a20", "#8a5a34", "#a8764a", "#c39a6b", "#3d2716"]
+    roughness: [0.55, 0.85]
+    normal_strength: 1.1
+    bump_scale_m: 0.004
+  - id: pore_surface
+    applies_to: underside
+    surface_type: fungus_flesh
+    base_color: "#e0d6bf"
+    color_range: ["#c9bda2", "#e0d6bf", "#efe7d4"]
+    roughness: [0.75, 0.95]
+    normal_strength: 1.8
+    bump_scale_m: 0.0015
+  - id: attachment_base
+    applies_to: whole
+    surface_type: fungus_flesh
+    base_color: "#b09668"
+    roughness: [0.7, 0.95]
+
+variation:
+  seed_labels: [shelf_count, cap_diameter, tier_gap, zone_count, pale_share]
+  ranges:
+    shelf_count: [3, 14]
+    cap_diameter: [0.35, 1.6]
+    tier_gap: [0.02, 0.14]
+    zone_count: [3, 9]
+    pale_share: [0.0, 0.5]
+  variants:
+    - id: wet_hollow_cluster
+      label: dense pale cluster on damp rotten wood
+      weight: 0.45
+      habitat_tags: [humid_hollow, wet_hollow]
+      overrides: { pale_share: 0.4, shelf_count: 12 }
+    - id: dry_log_pair
+      label: two or three big dry fans on sun-bleached wood
+      weight: 0.3
+      habitat_tags: [clearing_edge, sandy_lowland]
+      overrides: { shelf_count: 3, cap_diameter: 1.5, pale_share: 0.05 }
+    - id: resupinate
+      label: resupinate crust form hugging the underside of a log
+      weight: 0.25
+      habitat_tags: [rainridge_forest]
+      overrides: { form: encrusting, shelf_count: 1 }
+
+affordances:
+  structural_role: deadwood
+  forage_tags:
+    - part: lamina
+      palatability: 0.05
+      water_content: 0.5
+      nutrition: 0.05
+      seasonal: true
+    - part: litter
+      palatability: 0.02
+      water_content: 0.3
+      nutrition: 0.02
+      defense: { structural_only: true }
+  edible_foliage_targets:
+    - selector: "cap:young_margin"
+      part: lamina
+      mass_share: 0.5
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 1.4
+    pushable: false
+    collision_proxy: none
+    footprint_radius_m: 0.35
+  browse_zones:
+    - id: soft_margin
+      min_m: 0.1
+      max_m: 1.2
+      selector: "cap:young_margin"
+      forage: avoid
+    - id: hard_fan
+      min_m: 0.1
+      max_m: 1.4
+      selector: "cap:old"
+      forage: structural
+
+habitat_tags: [deadwood, humid_hollow, wet_hollow, clearing_edge, rainridge_forest]
+
+phenology:
+  states:
+    - id: flush
+      foliage_scale: 0.4
+    - id: flush_full
+      foliage_scale: 1.0
+    - id: dry_dormant
+      foliage_scale: 0.9
+      color_shift: bleached grey-brown
+  browsing:
+    regrowth_days: 120
+    nipped_variant: nibbled_margins
+
+references:
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: Flora and fungal life -- bracket fungi row and initial production set
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [common_names, substrate_integration, decomposition]
+  - id: bracket-cap-photo
+    kind: local_image
+    locator: species/plants/plant.bracketpolypore.fg1/reference/cap_zones.jpg
+    usage_rights: unknown
+    confidence: low
+    supports: [materials.cap_top, growth_stages.mature]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Substrate-integration asset: proves the fungus generator attaches to a separate
+  deadwood master and that its rotation/material set is unlike every plant above.
+  `uncertainty: speculative` -- zonation, tiering and host choice are invented
+  display traits, and no species is asserted.

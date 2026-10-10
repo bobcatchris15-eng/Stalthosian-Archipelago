@@ -1,0 +1,254 @@
+# Basketfern -- giant marattioid-like architectural fern (pipeline verification).
+# Source of record: Rauken-Archipelago/docs/flora.md, "Giant marattioid-like fern
+# | Basketfern": tall, architectural, humid hollows; distinct large leaves, slower
+# recovery.
+schema: species-definition
+kind: plant
+id: plant.basketfern.fn2
+version: 1
+
+common_names:
+  primary: Basketfern
+  working: true
+  aka: [basket fern, giant marattioid]
+
+uncertainty: biomechanical_plausibility
+morphology_family: Marattia-like giant fern (structural analogy only)
+generator: tree_frond_crown
+
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 2
+    branch_angle_deg: [50, 75]
+    branch_length_ratio: 0.45
+    taper: 0.4
+    root_flare: 0.55
+    notes: >-
+      Short stout trunk carrying a vase-shaped crown of huge once-pinnate fronds
+      that arch outward; the crozier volume is part of the readable silhouette.
+  phyllotaxy:
+    pattern: rosette
+    divergence_deg: 360
+  foliage:
+    organ: frond
+    overall_shape: pinnate
+    margin: entire
+    apex: acuminate
+    length: { value: 3.2, unit: m }
+    width: { value: 1.5, unit: m }
+    aspect_ratio: 2.1
+    pinnation:
+      pinnae_per_side: 34
+      pinnae_series: 1
+      pinna_length_ratio: 0.42
+      petiole_ratio: 0.4
+      rachis_arc_deg: -45
+    venation:
+      pattern: dichotomous
+      relief: raised
+      secondary_per_primary: 6
+    surface:
+      waxy_cuticle: 0.35
+      hairs: none
+      underside: same_as_top
+      translucency: 0.45
+      flexibility_deg: 55
+  stem:
+    type: rhizomatous
+    diameter_at_base: { value: 0.55, unit: m }
+    growth_direction: erect
+    segmented: false
+    sheaths: true
+  root:
+    system: clumping
+    depth: { value: 0.6, unit: m }
+    spread: { value: 1.4, unit: m }
+    exposed: false
+  reproductive:
+    structure: sorophore
+    placement: basal
+    size: { value: 0.2, unit: m }
+    seasonal: false
+
+growth_stages:
+  - id: crozier
+    age_label: crozier
+    age_years: [0, 0.3]
+    height: { value: 0.6, unit: m }
+    crown_spread: { value: 0.9, unit: m }
+    proportions: { trunk_share: 0.3, frond_share: 1.0, pinna_share: 0.0 }
+    foliage_density: 0.15
+    wind_stiffness: 0.05
+    visible_traits: [fiddlehead_cluster, scaly_petiole]
+  - id: juvenile
+    age_label: juvenile
+    age_years: [0.3, 3]
+    height: { value: 1.4, unit: m }
+    crown_spread: { value: 1.8, unit: m }
+    proportions: { trunk_share: 0.45, frond_share: 1.0, pinna_share: 0.6 }
+    foliage_density: 0.75
+    wind_stiffness: 0.2
+  - id: mature
+    age_label: mature architectural crown
+    age_years: [3, 40]
+    height: { value: 3.6, unit: m }
+    crown_spread: { value: 4.4, unit: m }
+    proportions: { trunk_share: 0.55, frond_share: 1.0, pinna_share: 1.0 }
+    foliage_density: 1.0
+    wind_stiffness: 0.35
+    visible_traits: [vase_crown, big_arching_fronds, trunk_scale_pattern]
+
+materials:
+  - id: trunk_scale
+    applies_to: rhizome
+    surface_type: rhizome
+    base_color: "#6a563c"
+    color_range: ["#54432f", "#6a563c", "#7d6849", "#3f3325"]
+    roughness: [0.65, 0.9]
+    normal_strength: 1.4
+    bump_scale_m: 0.09
+  - id: frond_green
+    applies_to: frond
+    surface_type: herbaceous_translucent
+    base_color: "#3f6f36"
+    color_range: ["#315a2c", "#3f6f36", "#518a42", "#6ba055"]
+    roughness: [0.3, 0.55]
+    sss: 0.65
+    wind_response: flexible
+  - id: petiole_ochre
+    applies_to: stem
+    surface_type: herbaceous
+    base_color: "#8a6c3a"
+    color_range: ["#6f552c", "#8a6c3a", "#a1854c"]
+    roughness: [0.5, 0.8]
+    sss: 0.2
+    wind_response: stiff
+
+variation:
+  seed_labels: [crown_frond_count, frond_length, trunk_height, arch, scale_plate]
+  ranges:
+    crown_frond_count: [5, 12]
+    frond_length: [0.65, 1.4]
+    trunk_height: [0.25, 0.75]
+    arch: [0.45, 0.95]
+    scale_plate: [0.06, 0.14]
+  variants:
+    - id: hollow_giant
+      label: humid hollow giant with a tall trunk
+      weight: 0.4
+      habitat_tags: [humid_hollow, rainridge_forest]
+      overrides: { trunk_height: 0.7, crown_frond_count: 11 }
+    - id: cliff_sheltered
+      label: sheltered rock-face form
+      weight: 0.25
+      habitat_tags: [rainridge_rockface]
+      overrides: { arch: 0.9, trunk_height: 0.3 }
+    - id: broken_crown
+      label: frond-loss form after storm damage
+      weight: 0.2
+      habitat_tags: [storm_damage]
+      overrides: { missing_frond_share: 0.3 }
+    - id: low_fiddlehead
+      label: low juvenile clump
+      weight: 0.15
+      habitat_tags: [wet_hollow]
+      overrides: { frond_length: 0.7, crown_frond_count: 6 }
+
+affordances:
+  structural_role: understory
+  forage_tags:
+    - part: young_frond
+      palatability: 0.3
+      water_content: 0.75
+      nutrition: 0.2
+      seasonal: true
+    - part: frond
+      palatability: 0.08
+      water_content: 0.55
+      nutrition: 0.05
+      defense: { structural_only: true }
+    - part: stem
+      palatability: 0.15
+      water_content: 0.6
+      nutrition: 0.1
+      defense: { silica: 0.3 }
+  edible_foliage_targets:
+    - selector: "frond:young"
+      part: young_frond
+      mass_share: 0.4
+    - selector: "pinna:inner"
+      part: frond
+      mass_share: 0.2
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 2.6
+    trunk_diameter_m: { value: 0.55, unit: m }
+    pushable: false
+    collision_proxy: cylinder
+    footprint_radius_m: 1.1
+  browse_zones:
+    - id: fiddlehead
+      min_m: 0.2
+      max_m: 1.1
+      selector: "frond:young"
+      forage: available
+    - id: low_pinnae
+      min_m: 0.5
+      max_m: 2.2
+      selector: "pinna:inner"
+      forage: available
+    - id: high_crown
+      min_m: 2.2
+      max_m: 3.6
+      selector: "frond:all"
+      forage: structural
+
+habitat_tags: [humid_hollow, rainridge_forest, rainridge_rockface, storm_damage]
+
+phenology:
+  states:
+    - id: crozier_flush
+      foliage_scale: 0.3
+    - id: full_crown
+      foliage_scale: 1.0
+    - id: damaged_crown
+      foliage_scale: 0.75
+      note: after storm frond loss; slow recovery
+  browsing:
+    regrowth_days: 240
+    nipped_variant: broken_crown
+
+references:
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: Flora and fungal life -- Giant marattioid-like fern row
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [common_names, habitat, recovery_rate]
+  - id: basketfern-crown-photo
+    kind: local_image
+    locator: species/plants/plant.basketfern.fn2/reference/crown_habit.jpg
+    usage_rights: unknown
+    confidence: low
+    supports: [anatomy.branching_pattern, silhouette]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Exercises the tree_frond_crown generator (trunk + vase crown) and deliberately
+  carries a poor forage profile so the six-plant set spans the quality range.

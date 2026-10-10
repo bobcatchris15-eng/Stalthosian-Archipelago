@@ -1,0 +1,257 @@
+# Splitcrown -- flagship large conifer reference asset (pipeline verification).
+#
+# Source of record: Rauken-Archipelago/docs/flora.md, "Plant community" table row
+# "Araucarian-like large conifer | Splitcrown". Everything below is a visual/
+# structural design statement for a fictional taxon; nothing here is a taxonomic
+# claim about any real plant, and no citation is asserted (there is none yet).
+schema: species-definition
+kind: plant
+id: plant.splitcrown.ar1
+version: 1
+
+common_names:
+  primary: Splitcrown
+  working: true
+  aka: [splitcrown conifer, crown-splitter araucarian]
+
+uncertainty: biomechanical_plausibility
+morphology_family: Araucaria-like conifer (silhouette analogy only)
+generator: branching_tree
+
+anatomy:
+  branching_pattern:
+    architecture: irregular_tiered
+    order_max: 4
+    branch_angle_deg: [55, 78]
+    branch_length_ratio: 0.62
+    taper: 0.55
+    root_flare: 0.85
+    notes: >-
+      One dominant leader that forks late (the "split"), irregular horizontal
+      whorl tiers, dead lower branch stubs retained for silhouette honesty.
+  phyllotaxy:
+    pattern: spiral
+    divergence_deg: 137.5
+    phyllotaxis_fraction: 0.382
+  foliage:
+    organ: scale_spray
+    overall_shape: needled
+    margin: entire
+    apex: acute
+    length: { value: 3.5, unit: cm }
+    width: { value: 0.9, unit: cm }
+    aspect_ratio: 3.9
+    venation:
+      pattern: parallel
+      relief: raised
+    surface:
+      waxy_cuticle: 0.6
+      hairs: none
+      underside: pale
+      translucency: 0.1
+      flexibility_deg: 25
+  stem:
+    type: woody
+    diameter_at_base: { value: 2.4, unit: m }
+    growth_direction: erect
+    segmented: false
+    bark:
+      pattern: fissured
+      plate_scale_m: 0.45
+  root:
+    system: buttress
+    depth: { value: 2.5, unit: m }
+    spread: { value: 6.0, unit: m }
+    exposed: false
+  reproductive:
+    structure: cone
+    placement: terminal
+    size: { value: 0.22, unit: m }
+    seasonal: false
+
+growth_stages:
+  - id: seedling
+    age_label: seedling
+    age_years: [0, 2]
+    height: { value: 0.45, unit: m }
+    crown_spread: { value: 0.3, unit: m }
+    proportions: { leader_share: 1.0, foliage_share: 0.12, root_flare_share: 0.05 }
+    foliage_density: 0.95
+    wind_stiffness: 0.1
+    visible_traits: [single_stem, no_lower_whorls]
+  - id: sapling
+    age_label: sapling
+    age_years: [3, 12]
+    height: { value: 4.2, unit: m }
+    crown_spread: { value: 2.4, unit: m }
+    proportions: { leader_share: 0.94, foliage_share: 0.22, root_flare_share: 0.12 }
+    foliage_density: 0.85
+    wind_stiffness: 0.35
+    visible_traits: [first_branch_tier, browsable_low_shoots]
+  - id: young_adult
+    age_label: young adult
+    age_years: [15, 40]
+    height: { value: 14.0, unit: m }
+    crown_spread: { value: 6.5, unit: m }
+    proportions: { leader_share: 0.9, foliage_share: 0.3, root_flare_share: 0.2 }
+    foliage_density: 0.7
+    wind_stiffness: 0.6
+  - id: mature
+    age_label: mature woodland tree
+    age_years: [60, 400]
+    height: { value: 26.0, unit: m }
+    crown_spread: { value: 12.0, unit: m }
+    proportions: { leader_share: 0.86, foliage_share: 0.38, root_flare_share: 0.3 }
+    foliage_density: 0.55
+    wind_stiffness: 0.85
+    visible_traits: [leader_fork, retained_dead_branch_stubs, heavy_root_flare]
+
+materials:
+  - id: bark_rough
+    applies_to: bark
+    surface_type: bark
+    base_color: "#5b4a3c"
+    color_range: ["#4a3b30", "#5b4a3c", "#6b5a49", "#3f332a"]
+    roughness: [0.72, 0.92]
+    normal_strength: 1.2
+    bump_scale_m: 0.12
+  - id: foliage_spray
+    applies_to: leaf
+    surface_type: cuticle
+    base_color: "#2f4a2c"
+    color_range: ["#24391f", "#2f4a2c", "#3b5c34", "#4d6b38"]
+    roughness: [0.45, 0.68]
+    sss: 0.15
+    wind_response: stiff
+
+variation:
+  seed_labels: [branch_angle, whorl_spacing, tier_sag, foliage_density, leader_fork_height, bark_plate_scale]
+  ranges:
+    branch_angle: [50, 82]
+    whorl_spacing: [0.55, 0.95]
+    tier_sag: [0.0, 0.25]
+    foliage_density: [0.45, 0.7]
+    leader_fork_height: [0.55, 0.85]
+    bark_plate_scale: [0.3, 0.6]
+  variants:
+    - id: old_woodland
+      label: old woodland giant with root flare and dead stubs
+      weight: 0.35
+      habitat_tags: [main_island_woodland, ravine]
+      overrides: { root_flare: 0.95, tier_sag: 0.1, dead_branch_share: 0.18 }
+    - id: upland_ridge
+      label: wind-pressed upland form
+      weight: 0.25
+      habitat_tags: [rocky_upland, butte_crown]
+      overrides: { wind_stiffness: 0.95, tier_sag: 0.22, foliage_density: 0.45 }
+    - id: sapling_stand
+      label: low browse-relevant sapling form
+      weight: 0.4
+      habitat_tags: [clearing_edge, riparian]
+      overrides: { crown_spread_ratio: 0.75 }
+
+affordances:
+  structural_role: canopy
+  forage_tags:
+    - part: shoot
+      palatability: 0.35
+      water_content: 0.55
+      nutrition: 0.3
+      seasonal: true
+    - part: leaf
+      palatability: 0.12
+      water_content: 0.4
+      nutrition: 0.15
+      seasonal: true
+    - part: cone
+      palatability: 0.25
+      water_content: 0.3
+      nutrition: 0.35
+      seasonal: true
+  edible_foliage_targets:
+    - selector: "branch:order<=3"
+      part: shoot
+      mass_share: 0.55
+    - selector: "tip:leader"
+      part: leaf
+      mass_share: 0.15
+  contact_bounds:
+    min_browse_height_m: 0.4
+    max_browse_height_m: 4.5
+    trunk_diameter_m: { value: 1.1, unit: m }
+    pushable: false
+    collision_proxy: cylinder
+    footprint_radius_m: 3.2
+  browse_zones:
+    - id: low_shoots
+      min_m: 0.3
+      max_m: 2.5
+      selector: "branch:order<=2"
+      forage: available
+    - id: sapling_tips
+      min_m: 0.3
+      max_m: 1.6
+      selector: "growth_stage:sapling|tip"
+      forage: preferred
+      season: tender_growth
+    - id: canopy_foliage
+      min_m: 8.0
+      max_m: 26.0
+      selector: "whorl:all"
+      forage: structural
+
+habitat_tags: [main_island_woodland, rocky_upland, ravine, clearing_edge]
+
+phenology:
+  states:
+    - id: growing
+      foliage_scale: 1.0
+    - id: seasonal_dormant
+      foliage_scale: 0.85
+      color_shift: duller bronze-green
+  browsing:
+    regrowth_days: 420
+    nipped_variant: nipped_sapling
+
+references:
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: Flora and fungal life -- Splitcrown row
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports: [common_names, habitat, sauropod_role]
+  - id: splitcrown-trunk-photo
+    kind: local_image
+    locator: species/plants/plant.splitcrown.ar1/reference/trunk_plate.jpg
+    usage_rights: unknown
+    usage_rights_note: placeholder slot; no image collected yet, rights not established
+    confidence: low
+    supports: [anatomy.bark, growth_stages.mature]
+  - id: splitcrown-crown-photo
+    kind: local_image
+    locator: species/plants/plant.splitcrown.ar1/reference/crown_silhouette.jpg
+    usage_rights: unknown
+    confidence: low
+    supports: [anatomy.branching_pattern, silhouette]
+
+licenses:
+  - id: definition-cc0
+    applies_to: definition
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+  - id: geometry-cc0
+    applies_to: generated_geometry
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+    redistribution_notes: Generated geometry inherits the definition license; reference images keep their own terms.
+  - id: textures-cc0
+    applies_to: textures
+    license: CC0-1.0
+    holder: The Stalthosian Archipelago project
+
+notes: >-
+  Pipeline-verification asset only (docs/asset-toolkit.md). Compact on purpose:
+  the goal is to exercise the branching-tree generator, tiered silhouette,
+  bark baking and the browsing envelope end to end.
