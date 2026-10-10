@@ -419,10 +419,14 @@ def test_validate_asset_strict_turns_warnings_into_failure(tmp_path, capsys):
     json.loads(capsys.readouterr().out)
 
 
-@pytest.mark.parametrize("asset_id", ["plant.softbough.sh1.lod0"])
-def test_unimplemented_commands_still_exit_5(tmp_path, asset_id, capsys):
-    """Honest reporting: unimplemented stages must not fake success."""
-    exit_code = main(["-w", str(tmp_path / "var"), "generate_lods", "--asset-id", asset_id])
+@pytest.mark.parametrize("command_name", ["generate_plant", "bake_materials", "render_turntable"])
+def test_unimplemented_commands_still_exit_5(tmp_path, command_name, capsys):
+    """Honest reporting: unimplemented stages must not fake success.
+
+    Stage 6/8/9 (generate_lods, benchmark_asset, publish_asset) are implemented
+    now, so the sample here is a stage that is genuinely still a stub.
+    """
+    exit_code = main(["-w", str(tmp_path / "var"), command_name, "--asset-id", "plant.softbough.sh1.lod0"])
     assert exit_code == 5
     envelope = json.loads(capsys.readouterr().out)
     assert envelope["errors"][0]["kind"] == "NotImplementedStage"
