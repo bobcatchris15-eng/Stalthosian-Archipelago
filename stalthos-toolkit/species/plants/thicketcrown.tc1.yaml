@@ -1,0 +1,299 @@
+# Thicketcrown -- branching_tree morphology profile, Low thicket-forming broadleaf (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: dense coppiced thicket tree, spherical mass with no dominant leader
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.thicketcrown.tc1
+version: 1
+common_names:
+  primary: Thicketcrown
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Low thicket-forming broadleaf (analogy only)
+generator: branching_tree
+anatomy:
+  branching_pattern:
+    architecture: spherical_thicket
+    order_max: 3
+    branch_angle_deg:
+    - 30
+    - 60
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.4
+    notes: Many coppiced stems forming a dense spherical mass with no clear bole.
+  phyllotaxy:
+    pattern: opposite_decussate
+    divergence_deg: 180
+    leaves_per_node: 2
+  foliage:
+    organ: leaf
+    overall_shape: ovate
+    margin: toothed
+    apex: acute
+    length:
+      value: 0.07
+      unit: m
+    width:
+      value: 0.045
+      unit: m
+    aspect_ratio: 1.56
+    venation:
+      pattern: pinnate
+      relief: flat
+      secondary_per_primary: 4
+    surface:
+      waxy_cuticle: 0.5
+      hairs: sparse
+      underside: pale
+      translucency: 0.25
+      flexibility_deg: 25
+  stem:
+    type: woody
+    growth_direction: ascending
+    segmented: false
+    diameter_at_base:
+      value: 0.1
+      unit: m
+    bark:
+      pattern: ridged
+  root:
+    system: taproot
+    depth:
+      value: 3.0
+      unit: m
+    spread:
+      value: 6.0
+      unit: m
+    exposed: false
+  reproductive:
+    structure: fruit_cluster
+    placement: axillary
+    size:
+      value: 0.04
+      unit: m
+    seasonal: true
+growth_stages:
+- id: seedling
+  age_label: seedling
+  age_years:
+  - 0.0
+  - 2.4
+  height:
+    value: 0.27
+    unit: m
+  crown_spread:
+    value: 0.54
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.05
+    foliage_share: 0.15
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: sapling
+  age_label: sapling
+  age_years:
+  - 2.4
+  - 14.0
+  height:
+    value: 0.99
+    unit: m
+  crown_spread:
+    value: 2.025
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.35
+    foliage_share: 0.6
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 14.0
+  - 40.0
+  height:
+    value: 1.575
+    unit: m
+  crown_spread:
+    value: 4.5
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.55
+    foliage_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - coppiced_multi_stem
+  - spherical_thicket_mass
+  - dense_twig_interior
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#6b5540'
+  color_range:
+  - '#4e3d2c'
+  - '#6b5540'
+  - '#86705a'
+  roughness:
+  - 0.7
+  - 0.95
+  normal_strength: 1.0
+  wind_response: stiff
+- id: foliage
+  applies_to: leaf
+  surface_type: cuticle
+  base_color: '#4c7a38'
+  color_range:
+  - '#3c6230'
+  - '#4c7a38'
+  - '#649444'
+  roughness:
+  - 0.35
+  - 0.65
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: stiff
+- id: reproductive_structure
+  applies_to: whole
+  surface_type: herbaceous
+  base_color: '#8a7a3a'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - trunk_height
+  - crown_depth
+  - branch_angle
+  - leaf_cluster_count
+  - leaf_size
+  ranges:
+    trunk_height:
+    - 0.82
+    - 1.2
+    crown_depth:
+    - 0.7
+    - 1.15
+    branch_angle:
+    - 0.85
+    - 1.2
+    leaf_cluster_count:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.75
+    - 1.3
+  variants:
+  - id: open_shade
+    label: open woodland form
+    weight: 0.35
+    habitat_tags:
+    - main_island_woodland
+    - woodland_floor
+    overrides:
+      crown_depth: 1.15
+      leaf_cluster_count: 0.8
+  - id: ridge_exposed
+    label: wind-exposed ridge form
+    weight: 0.25
+    habitat_tags:
+    - ridge_exposed
+    - outer_reach
+    overrides:
+      trunk_height: 0.85
+      branch_angle: 0.85
+  - id: grazed_lean
+    label: leaning, browsed-gap form
+    weight: 0.2
+    habitat_tags:
+    - browsed_patch
+    - clearing_edge
+    overrides:
+      trunk_height: 0.9
+      leaf_cluster_count: 0.65
+affordances:
+  structural_role: canopy
+  forage_tags:
+  - part: shoot
+    palatability: 0.55
+    water_content: 0.75
+    nutrition: 0.4
+    seasonal: true
+  - part: twig
+    palatability: 0.5
+    water_content: 0.7
+    nutrition: 0.35
+  - part: leaf
+    palatability: 0.4
+    water_content: 0.6
+    nutrition: 0.25
+  contact_bounds:
+    min_browse_height_m: 0.2
+    max_browse_height_m: 1.8
+    pushable: false
+    collision_proxy: cylinder
+    trunk_diameter_m:
+      value: 0.1
+      unit: m
+    footprint_radius_m: 2.25
+habitat_tags:
+- thicket
+- woodland_edge
+- browsed_patch
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: thicketcrown.tc1-reference-image
+  kind: local_image
+  locator: species/plants/plant.thicketcrown.tc1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: dense coppiced thicket tree, spherical mass with no dominant leader

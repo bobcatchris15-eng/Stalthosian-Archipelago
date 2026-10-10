@@ -1,0 +1,278 @@
+# Fanpalm -- tree_frond_crown morphology profile, Low palm-like fan monocot (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: low palm-like fan plant, several trunks from one base, coastal scrub form
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.fanpalm.fp2
+version: 1
+common_names:
+  primary: Fanpalm
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Low palm-like fan monocot (analogy only)
+generator: tree_frond_crown
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 3
+    branch_angle_deg:
+    - 45
+    - 78
+    branch_length_ratio: 0.55
+    taper: 0.25
+    root_flare: 0.55
+  phyllotaxy:
+    pattern: rosette
+    divergence_deg: 360
+  foliage:
+    organ: fan_leaf
+    overall_shape: flabellate
+    margin: lobed
+    apex: acute
+    length:
+      value: 1.2
+      unit: m
+    width:
+      value: 1.1
+      unit: m
+    aspect_ratio: 1.09
+    venation:
+      pattern: palmate
+      relief: raised
+      secondary_per_primary: 9
+    surface:
+      waxy_cuticle: 0.65
+      hairs: none
+      underside: pale
+      translucency: 0.35
+      flexibility_deg: 40
+  stem:
+    type: fibrous
+    growth_direction: ascending
+    segmented: false
+    diameter_at_base:
+      value: 0.24
+      unit: m
+    bark:
+      pattern: fibrous
+  root:
+    system: fibrous
+    depth:
+      value: 0.9
+      unit: m
+    spread:
+      value: 1.6
+      unit: m
+    exposed: false
+growth_stages:
+- id: seedling
+  age_label: seedling
+  age_years:
+  - 0.0
+  - 1.5
+  height:
+    value: 0.18
+    unit: m
+  crown_spread:
+    value: 0.36
+    unit: m
+  proportions:
+    trunk_share: 0.15
+    crown_share: 1.0
+    frond_share: 0.35
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 1.5
+  - 8.8
+  height:
+    value: 0.66
+    unit: m
+  crown_spread:
+    value: 1.35
+    unit: m
+  proportions:
+    trunk_share: 0.4
+    crown_share: 1.0
+    frond_share: 0.7
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 8.8
+  - 25.0
+  height:
+    value: 1.05
+    unit: m
+  crown_spread:
+    value: 3.0
+    unit: m
+  proportions:
+    trunk_share: 0.6
+    crown_share: 1.0
+    frond_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - multi_stem_palm_clump
+  - flabellate_fan_leaves
+  - coastal_scrub_setting
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#6a5741'
+  color_range:
+  - '#4c3d2c'
+  - '#6a5741'
+  - '#84705a'
+  roughness:
+  - 0.65
+  - 0.95
+  normal_strength: 1.0
+  wind_response: flexible
+- id: foliage
+  applies_to: leaf
+  surface_type: cuticle
+  base_color: '#568f42'
+  color_range:
+  - '#447434'
+  - '#568f42'
+  - '#6bab55'
+  roughness:
+  - 0.35
+  - 0.7
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: flexible
+variation:
+  seed_labels:
+  - crown_radius
+  - frond_count
+  - frond_droop
+  - trunk_height
+  - leaf_size
+  ranges:
+    crown_radius:
+    - 0.75
+    - 1.3
+    frond_count:
+    - 0.7
+    - 1.35
+    frond_droop:
+    - 0.3
+    - 1.0
+    trunk_height:
+    - 0.75
+    - 1.3
+    leaf_size:
+    - 0.7
+    - 1.35
+  variants:
+  - id: low_crown
+    label: low broad crown form
+    weight: 0.4
+    habitat_tags:
+    - woodland_floor
+    - humid_woodland
+    overrides:
+      crown_radius: 1.3
+      trunk_height: 0.8
+  - id: cliff_hugger
+    label: cliff-ledge form
+    weight: 0.3
+    habitat_tags:
+    - rock_face
+    - ridge_exposed
+    overrides:
+      frond_droop: 1.0
+      trunk_height: 0.75
+  - id: epiphyte_clump
+    label: perched epiphyte clump
+    weight: 0.3
+    habitat_tags:
+    - deadwood
+    - humid_woodland
+    overrides:
+      trunk_height: 0.6
+      crown_radius: 1.1
+affordances:
+  structural_role: understory
+  forage_tags:
+  - part: leaf
+    palatability: 0.3
+    water_content: 0.68
+    nutrition: 0.2
+  - part: fruit
+    palatability: 0.45
+    water_content: 0.55
+    nutrition: 0.3
+    seasonal: true
+  contact_bounds:
+    min_browse_height_m: 0.5
+    max_browse_height_m: 2.4
+    pushable: false
+    collision_proxy: cylinder
+    trunk_diameter_m:
+      value: 0.24
+      unit: m
+    footprint_radius_m: 1.5
+habitat_tags:
+- woodland_floor
+- humid_woodland
+- rock_face
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: fanpalm.fp2-reference-image
+  kind: local_image
+  locator: species/plants/plant.fanpalm.fp2/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: low palm-like fan plant, several trunks from one base, coastal scrub form

@@ -1,0 +1,273 @@
+# Greylichen -- moss_lichen_crust morphology profile, Foliose grey lichen (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: loose ruffled grey foliose lichen with lifted lobe margins on bark
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: fungus
+id: plant.greylichen.gl2
+version: 1
+common_names:
+  primary: Greylichen
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Foliose grey lichen (analogy only)
+generator: moss_lichen_crust
+anatomy:
+  branching_pattern:
+    architecture: encrusting_sheet
+    order_max: 1
+    branch_angle_deg:
+    - 0
+    - 0
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+    notes: Lobed thallus with lifted, ruffled margins; loosely attached to bark.
+  phyllotaxy:
+    pattern: fascicled
+    divergence_deg: 360
+  foliage:
+    organ: scale_spray
+    overall_shape: flabellate
+    margin: lobed
+    apex: acute
+    length:
+      value: 0.06
+      unit: m
+    width:
+      value: 0.05
+      unit: m
+    aspect_ratio: 1.2
+    surface:
+      waxy_cuticle: 0.0
+      hairs: tomentose
+      underside: same_as_top
+      translucency: 0.15
+      flexibility_deg: 3
+  stem:
+    type: herbaceous
+    growth_direction: prostrate
+    segmented: false
+    diameter_at_base:
+      value: 0.006
+      unit: m
+  root:
+    system: adventitious_cling
+    depth:
+      value: 0.0
+      unit: m
+    spread:
+      value: 0.15
+      unit: m
+    exposed: true
+  substrate:
+    attachment: other_symbiont
+    host: bark of standing trees
+    height_on_substrate_m: 0.8
+growth_stages:
+- id: colonising
+  age_label: colonising
+  age_years:
+  - 0.0
+  - 0.0
+  height:
+    value: 0.002
+    unit: m
+  crown_spread:
+    value: 0.048
+    unit: m
+  proportions:
+    thallus_share: 0.15
+    rhizine_share: 0.4
+    lobe_share: 0.2
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: established
+  age_label: established
+  age_years:
+  - 0.0
+  - 0.2
+  height:
+    value: 0.007
+    unit: m
+  crown_spread:
+    value: 0.18
+    unit: m
+  proportions:
+    thallus_share: 0.6
+    rhizine_share: 0.8
+    lobe_share: 0.6
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 0.2
+  - 0.5
+  height:
+    value: 0.01
+    unit: m
+  crown_spread:
+    value: 0.4
+    unit: m
+  proportions:
+    thallus_share: 1.0
+    rhizine_share: 1.0
+    lobe_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - lifted_rufled_lobes
+  - loose_bark_attachment
+  - grey_green_palette
+materials:
+- id: structural_stem
+  applies_to: rhizome
+  surface_type: lichen
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: none
+- id: foliage
+  applies_to: leaf
+  surface_type: lichen
+  base_color: '#adb2a0'
+  color_range:
+  - '#969c8a'
+  - '#adb2a0'
+  - '#c3c7b6'
+  roughness:
+  - 0.7
+  - 0.95
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: none
+variation:
+  seed_labels:
+  - patch_radius
+  - thallus_lobe_size
+  - growth_density
+  - hydration_swelling
+  - colour_drift
+  ranges:
+    patch_radius:
+    - 0.7
+    - 1.4
+    thallus_lobe_size:
+    - 0.6
+    - 1.4
+    growth_density:
+    - 0.7
+    - 1.35
+    hydration_swelling:
+    - 0.7
+    - 1.3
+    colour_drift:
+    - 0.6
+    - 1.4
+  variants:
+  - id: damp_seep
+    label: damp seep form
+    weight: 0.4
+    habitat_tags:
+    - rock_face
+    - wet_hollow
+    overrides:
+      hydration_swelling: 1.3
+      growth_density: 1.25
+  - id: dry_sun
+    label: dry sun-exposed form
+    weight: 0.35
+    habitat_tags:
+    - stone_island_scrub
+    - ridge_exposed
+    overrides:
+      hydration_swelling: 0.7
+      colour_drift: 1.3
+  - id: shaded_wood
+    label: shaded wood form
+    weight: 0.25
+    habitat_tags:
+    - woodland_floor
+    - deadwood
+    overrides:
+      growth_density: 1.2
+      patch_radius: 0.85
+affordances:
+  structural_role: epiphyte
+  forage_tags:
+  - part: lamina
+    palatability: 0.0
+    water_content: 0.5
+    nutrition: 0.02
+  - part: litter
+    palatability: 0.0
+    water_content: 0.4
+    nutrition: 0.01
+  contact_bounds:
+    min_browse_height_m: 0.0
+    max_browse_height_m: 0.05
+    pushable: false
+    collision_proxy: none
+habitat_tags:
+- rock_face
+- deadwood
+- woodland_floor
+- wet_hollow
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: greylichen.gl2-reference-image
+  kind: local_image
+  locator: species/plants/plant.greylichen.gl2/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: loose ruffled grey foliose lichen with lifted lobe margins on bark

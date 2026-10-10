@@ -1,0 +1,292 @@
+# Slipperleaf -- broadleaf_rosette morphology profile, Pouch-leaved rosette herb (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: pouch-shaped cordate rosette herb with a tall solitary flower
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.slipperleaf.sk5
+version: 1
+common_names:
+  primary: Slipperleaf
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Pouch-leaved rosette herb (analogy only)
+generator: broadleaf_rosette
+anatomy:
+  branching_pattern:
+    architecture: rosette_crown
+    order_max: 1
+    branch_angle_deg:
+    - 48
+    - 76
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: rosette
+    divergence_deg: 360
+  foliage:
+    organ: leaf
+    overall_shape: cordate
+    margin: entire
+    apex: acute
+    length:
+      value: 0.14
+      unit: m
+    width:
+      value: 0.12
+      unit: m
+    aspect_ratio: 1.17
+    venation:
+      pattern: palmate
+      relief: raised
+      secondary_per_primary: 6
+    surface:
+      waxy_cuticle: 0.3
+      hairs: sparse
+      underside: pale
+      translucency: 0.55
+      flexibility_deg: 65
+  stem:
+    type: herbaceous
+    growth_direction: ascending
+    segmented: false
+    diameter_at_base:
+      value: 0.012
+      unit: m
+  root:
+    system: taproot
+    depth:
+      value: 0.3
+      unit: m
+    spread:
+      value: 0.6
+      unit: m
+    exposed: false
+  reproductive:
+    structure: flower
+    placement: terminal
+    size:
+      value: 0.05
+      unit: m
+    seasonal: true
+growth_stages:
+- id: cotyledon
+  age_label: cotyledon
+  age_years:
+  - 0.0
+  - 0.2
+  height:
+    value: 0.018
+    unit: m
+  crown_spread:
+    value: 0.041
+    unit: m
+  proportions:
+    leaf_share: 0.25
+    petiole_share: 1.0
+    flower_share: 0.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 0.2
+  - 1.0
+  height:
+    value: 0.066
+    unit: m
+  crown_spread:
+    value: 0.153
+    unit: m
+  proportions:
+    leaf_share: 0.65
+    petiole_share: 1.0
+    flower_share: 0.3
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 1.0
+  - 3.0
+  height:
+    value: 0.105
+    unit: m
+  crown_spread:
+    value: 0.34
+    unit: m
+  proportions:
+    leaf_share: 1.0
+    petiole_share: 1.0
+    flower_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - pouch_leaf_shape
+  - solitary_tall_flower
+  - shade_margins
+materials:
+- id: structural_stem
+  applies_to: stem
+  surface_type: herbaceous
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: flexible
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous_translucent
+  base_color: '#50804c'
+  color_range:
+  - '#40683e'
+  - '#50804c'
+  - '#669a5d'
+  roughness:
+  - 0.35
+  - 0.7
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: flexible
+- id: reproductive_structure
+  applies_to: whole
+  surface_type: herbaceous
+  base_color: '#c8a0b0'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - rosette_radius
+  - leaf_count
+  - leaf_size
+  - flower_stem_count
+  - hair_density
+  ranges:
+    rosette_radius:
+    - 0.7
+    - 1.35
+    leaf_count:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.7
+    - 1.35
+    flower_stem_count:
+    - 0.5
+    - 1.5
+    hair_density:
+    - 0.5
+    - 1.5
+  variants:
+  - id: open_sun
+    label: open sunny form
+    weight: 0.4
+    habitat_tags:
+    - clearing_edge
+    - sandy_lowland
+    overrides:
+      leaf_size: 1.2
+      leaf_count: 1.25
+  - id: damp_hollow
+    label: damp hollow form
+    weight: 0.3
+    habitat_tags:
+    - wet_hollow
+    - riparian
+    overrides:
+      leaf_size: 1.3
+      hair_density: 1.2
+  - id: browsed_flat
+    label: browsed flat rosette
+    weight: 0.3
+    habitat_tags:
+    - browsed_patch
+    - woodland_floor
+    overrides:
+      leaf_count: 0.7
+      rosette_radius: 0.8
+affordances:
+  structural_role: groundcover
+  forage_tags:
+  - part: leaf
+    palatability: 0.5
+    water_content: 0.78
+    nutrition: 0.32
+  - part: shoot
+    palatability: 0.55
+    water_content: 0.8
+    nutrition: 0.35
+    seasonal: true
+  contact_bounds:
+    min_browse_height_m: 0.05
+    max_browse_height_m: 0.3
+    pushable: true
+    collision_proxy: capsule
+    trunk_diameter_m:
+      value: 0.012
+      unit: m
+    footprint_radius_m: 0.17
+habitat_tags:
+- clearing_edge
+- woodland_floor
+- woodland_edge
+- browsed_patch
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: slipperleaf.sk5-reference-image
+  kind: local_image
+  locator: species/plants/plant.slipperleaf.sk5/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: pouch-shaped cordate rosette herb with a tall solitary flower

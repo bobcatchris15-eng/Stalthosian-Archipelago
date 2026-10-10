@@ -1,0 +1,296 @@
+# Hollowspire -- branching_tree morphology profile, Ravine conifer with a very tall clean bole (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: tall clean-boled ravine conifer, mossy shaded bole
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.hollowspire.hs1
+version: 1
+common_names:
+  primary: Hollowspire
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Ravine conifer with a very tall clean bole (analogy only)
+generator: branching_tree
+anatomy:
+  branching_pattern:
+    architecture: excurrent_single_leader
+    order_max: 3
+    branch_angle_deg:
+    - 40
+    - 62
+    branch_length_ratio: 0.55
+    taper: 0.45
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: spiral
+    divergence_deg: 137.5
+    phyllotaxis_fraction: 0.382
+  foliage:
+    organ: leaf
+    overall_shape: needled
+    margin: entire
+    apex: acute
+    length:
+      value: 0.075
+      unit: m
+    width:
+      value: 0.0045
+      unit: m
+    aspect_ratio: 16.0
+    venation:
+      pattern: dichotomous
+      relief: impressed
+    surface:
+      waxy_cuticle: 0.5
+      hairs: sparse
+      underside: pale
+      translucency: 0.25
+      flexibility_deg: 25
+  stem:
+    type: woody
+    growth_direction: erect
+    segmented: false
+    diameter_at_base:
+      value: 0.7
+      unit: m
+    bark:
+      pattern: fissured
+  root:
+    system: taproot
+    depth:
+      value: 3.0
+      unit: m
+    spread:
+      value: 6.0
+      unit: m
+    exposed: false
+  reproductive:
+    structure: cone
+    placement: terminal
+    size:
+      value: 0.16
+      unit: m
+    seasonal: true
+growth_stages:
+- id: seedling
+  age_label: seedling
+  age_years:
+  - 0.0
+  - 2.4
+  height:
+    value: 1.56
+    unit: m
+  crown_spread:
+    value: 0.78
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.05
+    foliage_share: 0.15
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: sapling
+  age_label: sapling
+  age_years:
+  - 2.4
+  - 14.0
+  height:
+    value: 5.72
+    unit: m
+  crown_spread:
+    value: 2.925
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.35
+    foliage_share: 0.6
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 14.0
+  - 40.0
+  height:
+    value: 9.1
+    unit: m
+  crown_spread:
+    value: 6.5
+    unit: m
+  proportions:
+    stem_share: 1.0
+    crown_share: 0.55
+    foliage_share: 1.0
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - very_tall_clean_bole
+  - mossy_lower_trunk
+  - high_narrow_crown
+materials:
+- id: structural_stem
+  applies_to: bark
+  surface_type: bark
+  base_color: '#6b5540'
+  color_range:
+  - '#4e3d2c'
+  - '#6b5540'
+  - '#86705a'
+  roughness:
+  - 0.7
+  - 0.95
+  normal_strength: 1.0
+  wind_response: stiff
+- id: foliage
+  applies_to: leaf
+  surface_type: cuticle
+  base_color: '#33633f'
+  color_range:
+  - '#254b31'
+  - '#33633f'
+  - '#457f4e'
+  roughness:
+  - 0.35
+  - 0.65
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: stiff
+- id: reproductive_structure
+  applies_to: whole
+  surface_type: bark
+  base_color: '#8a7a3a'
+  roughness:
+  - 0.55
+  - 0.9
+  wind_response: none
+variation:
+  seed_labels:
+  - trunk_height
+  - crown_depth
+  - branch_angle
+  - leaf_cluster_count
+  - leaf_size
+  ranges:
+    trunk_height:
+    - 0.82
+    - 1.2
+    crown_depth:
+    - 0.7
+    - 1.15
+    branch_angle:
+    - 0.85
+    - 1.2
+    leaf_cluster_count:
+    - 0.6
+    - 1.4
+    leaf_size:
+    - 0.75
+    - 1.3
+  variants:
+  - id: open_shade
+    label: open woodland form
+    weight: 0.35
+    habitat_tags:
+    - main_island_woodland
+    - woodland_floor
+    overrides:
+      crown_depth: 1.15
+      leaf_cluster_count: 0.8
+  - id: ridge_exposed
+    label: wind-exposed ridge form
+    weight: 0.25
+    habitat_tags:
+    - ridge_exposed
+    - outer_reach
+    overrides:
+      trunk_height: 0.85
+      branch_angle: 0.85
+  - id: grazed_lean
+    label: leaning, browsed-gap form
+    weight: 0.2
+    habitat_tags:
+    - browsed_patch
+    - clearing_edge
+    overrides:
+      trunk_height: 0.9
+      leaf_cluster_count: 0.65
+affordances:
+  structural_role: canopy
+  forage_tags:
+  - part: shoot
+    palatability: 0.45
+    water_content: 0.55
+    nutrition: 0.3
+  - part: leaf
+    palatability: 0.18
+    water_content: 0.4
+    nutrition: 0.1
+  - part: litter
+    palatability: 0.2
+    water_content: 0.35
+    nutrition: 0.1
+  contact_bounds:
+    min_browse_height_m: 1.0
+    max_browse_height_m: 4.0
+    pushable: false
+    collision_proxy: cylinder
+    trunk_diameter_m:
+      value: 0.7
+      unit: m
+    footprint_radius_m: 3.25
+habitat_tags:
+- ravine_floor
+- mossy_ravine
+- humid_woodland
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: hollowspire.hs1-reference-image
+  kind: local_image
+  locator: species/plants/plant.hollowspire.hs1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: tall clean-boled ravine conifer, mossy shaded bole

@@ -1,0 +1,286 @@
+# Brookjoint -- jointed_rush morphology profile, Creek-margin rush (analogy only).
+#
+# Fictional Late Cretaceous-inspired form for the Stalthosian Archipelago.
+# This is NOT a real taxon: the name is a working label for an invented
+# morphology profile and must not be presented as a scientific or taxonomic
+# claim. Anatomy is an honest analogy to the named botanical group; every
+# invented claim is declared at the file's `uncertainty: comparative_inference`.
+#
+# Structural intent: creek-margin rush whose arching culms bend into the current
+#
+# No citation is asserted. references[] holds only an internal planning doc
+# plus one unfilled placeholder slot with usage_rights: unknown.
+schema: species-definition
+kind: plant
+id: plant.brookjoint.bk3
+version: 1
+common_names:
+  primary: Brookjoint
+  working: true
+  aka: []
+uncertainty: comparative_inference
+morphology_family: Creek-margin rush (analogy only)
+generator: jointed_rush
+anatomy:
+  branching_pattern:
+    architecture: tiered_whorl
+    order_max: 2
+    branch_angle_deg:
+    - 40
+    - 70
+    branch_length_ratio: 0.55
+    taper: 0.5
+    root_flare: 0.3
+  phyllotaxy:
+    pattern: whorled
+    divergence_deg: 60
+    leaves_per_node: 6
+  foliage:
+    organ: leaf
+    overall_shape: linear
+    margin: entire
+    apex: acute
+    length:
+      value: 0.06
+      unit: m
+    width:
+      value: 0.003
+      unit: m
+    aspect_ratio: 20.0
+    venation:
+      pattern: parallel
+      relief: flat
+      secondary_per_primary: 1
+    surface:
+      waxy_cuticle: 0.4
+      hairs: none
+      underside: pale
+      translucency: 0.3
+      flexibility_deg: 30
+  stem:
+    type: jointed
+    growth_direction: arching
+    segmented: true
+    diameter_at_base:
+      value: 0.01
+      unit: m
+    segments_per_m: 20.0
+    sheaths: true
+  root:
+    system: rhizomatous
+    depth:
+      value: 0.4
+      unit: m
+    spread:
+      value: 0.9
+      unit: m
+    exposed: false
+growth_stages:
+- id: germination
+  age_label: germination
+  age_years:
+  - 0.0
+  - 0.7
+  height:
+    value: 0.1
+    unit: m
+  crown_spread:
+    value: 0.084
+    unit: m
+  proportions:
+    culm_share: 1.0
+    node_share: 0.1
+    whorl_share: 0.0
+  foliage_density: 0.25
+  wind_stiffness: 0.05
+- id: juvenile
+  age_label: juvenile
+  age_years:
+  - 0.7
+  - 4.2
+  height:
+    value: 0.45
+    unit: m
+  crown_spread:
+    value: 0.315
+    unit: m
+  proportions:
+    culm_share: 1.0
+    node_share: 0.6
+    whorl_share: 0.4
+  foliage_density: 0.7
+  wind_stiffness: 0.35
+- id: mature
+  age_label: mature
+  age_years:
+  - 4.2
+  - 12.0
+  height:
+    value: 1.0
+    unit: m
+  crown_spread:
+    value: 0.7
+    unit: m
+  proportions:
+    culm_share: 1.0
+    node_share: 1.0
+    whorl_share: 0.8
+  foliage_density: 1.0
+  wind_stiffness: 0.7
+  visible_traits:
+  - arching_current_lean
+  - whorled_fine_branches
+  - riparian_tuft
+materials:
+- id: structural_stem
+  applies_to: stem
+  surface_type: herbaceous
+  base_color: '#8a9a5a'
+  color_range:
+  - '#6f7f45'
+  - '#8a9a5a'
+  - '#a3b06c'
+  roughness:
+  - 0.5
+  - 0.85
+  normal_strength: 1.0
+  wind_response: segmented
+- id: foliage
+  applies_to: leaf
+  surface_type: herbaceous
+  base_color: '#5f9048'
+  color_range:
+  - '#4d7739'
+  - '#5f9048'
+  - '#76a95a'
+  roughness:
+  - 0.45
+  - 0.8
+  normal_strength: 0.8
+  sss: 0.4
+  wind_response: segmented
+variation:
+  seed_labels:
+  - culm_count
+  - culm_height
+  - whorl_count
+  - sheath_presence
+  - segment_rate
+  ranges:
+    culm_count:
+    - 0.6
+    - 1.5
+    culm_height:
+    - 0.7
+    - 1.35
+    whorl_count:
+    - 0.5
+    - 1.4
+    sheath_presence:
+    - 0.8
+    - 1.2
+    segment_rate:
+    - 0.8
+    - 1.25
+  variants:
+  - id: wet_thicket
+    label: wet thicket form
+    weight: 0.45
+    habitat_tags:
+    - wetland
+    - riparian
+    overrides:
+      culm_count: 1.45
+      culm_height: 1.25
+  - id: sandy_tuft
+    label: dry sandy tuft
+    weight: 0.3
+    habitat_tags:
+    - sandy_lowland
+    - stone_island_scrub
+    overrides:
+      culm_count: 0.65
+      culm_height: 0.8
+  - id: marginal_tuft
+    label: water-margin tuft
+    weight: 0.25
+    habitat_tags:
+    - wetland_margin
+    - creek_terrace
+    overrides:
+      culm_count: 1.0
+      culm_height: 1.05
+affordances:
+  structural_role: sedge
+  forage_tags:
+  - part: shoot
+    palatability: 0.55
+    water_content: 0.85
+    nutrition: 0.32
+    seasonal: true
+  - part: stem
+    palatability: 0.5
+    water_content: 0.8
+    nutrition: 0.3
+  - part: leaf
+    palatability: 0.4
+    water_content: 0.75
+    nutrition: 0.24
+    defense:
+      silica: 0.4
+  contact_bounds:
+    min_browse_height_m: 0.1
+    max_browse_height_m: 0.9
+    pushable: true
+    collision_proxy: capsule
+    trunk_diameter_m:
+      value: 0.01
+      unit: m
+    footprint_radius_m: 0.35
+habitat_tags:
+- wetland
+- riparian
+- creek_terrace
+- wet_hollow
+references:
+- id: flora-design-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/flora.md
+  title: Flora and fungal life -- community table
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+- id: brookjoint.bk3-reference-image
+  kind: local_image
+  locator: species/plants/plant.brookjoint.bk3/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - anatomy
+  - growth_stages
+  - affordances
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/plants/*/reference/
+    may ship until cleared.
+notes: creek-margin rush whose arching culms bend into the current
