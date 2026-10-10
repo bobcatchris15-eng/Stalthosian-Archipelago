@@ -87,7 +87,18 @@ def _as_dict(data: Any, path: Path) -> dict[str, Any]:
 
 
 def load_definition_file_list(root: str | Path, pattern: str = "**/*.y*ml") -> list[Path]:
-    return sorted(Path(root).glob(pattern))
+    """List DEFINITION files under `root`.
+
+    Sidecar reference files (`**/references/*.yaml`) carry verified citation
+    metadata for a profile rather than being profiles themselves -- they are a
+    different document type with a different schema. They are excluded here so
+    callers globbing a species directory get definitions, not reference sidecars.
+    Merge them with the procedure in docs/reference-policy.md.
+    """
+    return sorted(
+        p for p in Path(root).glob(pattern)
+        if "references" not in p.parts and not p.name.startswith("_")
+    )
 
 
 def validate_definition(definition: dict[str, Any], *, source: str | None = None) -> list[ValidationIssue]:

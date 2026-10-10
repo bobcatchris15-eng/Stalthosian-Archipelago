@@ -394,3 +394,48 @@ class TestCoverageSummary:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+class TestLicenceHonesty:
+    """Regression guard for the operator's integration correction.
+
+    A source may only claim redistributability if its licence was actually
+    verified. Eleven GBIF/PBDF entries were downgraded from a blanket CC0 claim
+    to license=unverified, redistributable=false: the endpoints resolve (HTTP
+    200) but the licence text was never retrieved, and both publishers use
+    per-dataset licences that can include CC-BY-NC.
+    """
+
+    @staticmethod
+    def _sources():
+        import json
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parents[1]
+        return json.loads((root / "research" / "source-registry.json").read_text(encoding="utf-8"))["sources"]
+
+    def test_no_unverified_source_claims_redistributable(self):
+        for s in self._sources():
+            if s.get("license") == "unverified":
+                assert s.get("redistributable") is False, (
+                    f"{s['id']}: licence unverified but claims redistributable"
+                )
+
+    def test_database_kinds_are_not_blindly_licenced(self):
+        """Taxonomic/paleontological databases must not carry a blanket licence."""
+        for s in self._sources():
+            if s.get("kind") in ("taxonomic_database", "paleontological_database"):
+                assert s.get("license") == "unverified", (
+                    f"{s['id']}: {s['kind']} asserts licence {s.get('license')!r} without retrieved licence text"
+                )
+
+    def test_verified_sources_record_a_verification_method(self):
+        for s in self._sources():
+            if s.get("license") != "unverified":
+                assert s.get("license_verification_method"), f"{s['id']} has no verification method"
+                assert s.get("date_checked"), f"{s['id']} has no date_checked"
+
+    def test_downgraded_entries_flag_operator_action(self):
+        flagged = [s for s in self._sources() if s.get("operator_action_required")]
+        assert len(flagged) >= 11, "expected the 11 downgraded database entries to be flagged"
+        for s in flagged:
+            assert s.get("redistributable") is False

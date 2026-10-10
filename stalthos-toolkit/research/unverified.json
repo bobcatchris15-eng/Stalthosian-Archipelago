@@ -174,5 +174,63 @@
       "local_missing": 11,
       "internal_only": 6
     }
-  }
+  },
+  "entries": [
+    {
+      "id": "gbif-araucar-ara",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "gbif-osmun-reg",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "gbif-equist-hym",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "gbif-maratt-doug",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "gbif-fomito-pin",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "gbif-salix-alb",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "pdb-saltasaurus",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "pdb-ankylosaurus",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "pdb-parasaurolophus",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "pdb-velociraptor",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    },
+    {
+      "id": "pdb-opisthocoelicaudia",
+      "reason": "licence asserted but never verified; endpoint resolves, licence text not retrievable non-interactively",
+      "action": "verify in a browser before any redistribution claim"
+    }
+  ],
+  "note": "Extended by operator during integration review."
 }

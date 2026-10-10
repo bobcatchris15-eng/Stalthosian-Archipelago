@@ -8,177 +8,188 @@
       "url": "https://api.gbif.org/v1/species/match?name=Araucaria%20araucana",
       "resolved_title": "GBIF Backbone Taxonomy: Araucaria araucana (Molina) K.Koch",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.splitcrown.ar1 morphology_family Araucaria analogy",
         "taxonomic validation of comparator species"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "taxonomic_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "taxonomic_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "gbif-osmun-reg",
       "url": "https://api.gbif.org/v1/species/match?name=Osmunda%20regalis",
       "resolved_title": "GBIF Backbone Taxonomy: Osmunda regalis L.",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.royalfrond.fn1 morphology_family Osmunda analogy",
         "taxonomic validation of comparator species"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "taxonomic_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "taxonomic_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "gbif-equist-hym",
       "url": "https://api.gbif.org/v1/species/match?name=Equisetum%20hyemale",
       "resolved_title": "GBIF Backbone Taxonomy: Equisetum hyemale L.",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.jointreed.eq1 morphology_family Equisetum analogy",
         "taxonomic validation of comparator species"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "taxonomic_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "taxonomic_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "gbif-maratt-doug",
       "url": "https://api.gbif.org/v1/species/match?name=Marattia%20douglasii",
       "resolved_title": "GBIF Backbone Taxonomy: Marattia douglasii (C.Presl) Baker",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.basketfern.fn2 morphology_family Marattia analogy",
         "taxonomic validation of comparator species"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "taxonomic_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "taxonomic_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "gbif-fomito-pin",
       "url": "https://api.gbif.org/v1/species/match?name=Fomitopsis%20pinicola",
       "resolved_title": "GBIF Backbone Taxonomy: Fomitopsis pinicola (Sw.) P.Karst.",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.bracketpolypore.fg1 morphology_family Polyporales analogy",
         "taxonomic validation of comparator species"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "taxonomic_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "taxonomic_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "gbif-salix-alb",
       "url": "https://api.gbif.org/v1/species/match?name=Salix%20alba",
       "resolved_title": "GBIF Backbone Taxonomy: Salix alba L. (multiple matches noted)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "GBIF.org terms of use - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "plant.softbough.sh1 morphology_family Salix analogy",
         "taxonomic validation of comparator genus"
       ],
-      "confidence_tier": "medium",
-      "redistributable": true,
+      "confidence_tier": "low",
+      "redistributable": false,
       "kind": "taxonomic_database",
-      "notes": "Multiple equal matches for Salix alba; genus-level analogy only"
+      "notes": "Multiple equal matches for Salix alba; genus-level analogy only",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "pdb-saltasaurus",
       "url": "https://paleobiodb.org/data1.2/taxa/single.json?name=Saltasaurus",
       "resolved_title": "Paleobiology Database: Saltasaurus (titanosaur genus)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "Paleobiology Database terms - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "creature.smalltrotter.st1 morphology_family titanosauriform analogy",
         "taxonomic validation of comparator clade"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "paleontological_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "paleontological_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "pdb-ankylosaurus",
       "url": "https://paleobiodb.org/data1.2/taxa/single.json?name=Ankylosaurus",
       "resolved_title": "Paleobiology Database: Ankylosaurus (ankylosaurid genus)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "Paleobiology Database terms - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "creature.brackenback.bk1 morphology_family ankylosaurid analogy",
         "taxonomic validation of comparator clade"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "paleontological_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "paleontological_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "pdb-parasaurolophus",
       "url": "https://paleobiodb.org/data1.2/taxa/single.json?name=Parasaurolophus",
       "resolved_title": "Paleobiology Database: Parasaurolophus (hadrosaurid genus)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "Paleobiology Database terms - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "creature.reedcrest.rc1 morphology_family basal hadrosauroid analogy",
         "taxonomic validation of comparator clade"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "paleontological_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "paleontological_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "pdb-velociraptor",
       "url": "https://paleobiodb.org/data1.2/taxa/single.json?name=Velociraptor",
       "resolved_title": "Paleobiology Database: Velociraptor (dromaeosaurid genus)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "Paleobiology Database terms - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "creature.thistletail.tt1 morphology_family paravian analogy",
         "taxonomic validation of comparator clade"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "paleontological_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "paleontological_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "pdb-opisthocoelicaudia",
       "url": "https://paleobiodb.org/data1.2/taxa/single.json?name=Opisthocoelicaudia",
       "resolved_title": "Paleobiology Database: Opisthocoelicaudia (titanosaur genus)",
       "http_status": 200,
-      "license": "CC0-1.0",
-      "license_verification_method": "Paleobiology Database terms - data explicitly CC0",
+      "license": "unverified",
+      "license_verification_method": "DOWNGRADED by operator: the endpoint resolved (HTTP 200) but the licence TEXT was never retrieved. GBIF terms page returns HTTP 403 to non-browser clients; the PBDF site is JS-rendered and serves no machine-readable licence statement. The original claim \"data explicitly CC0\" was asserted, not verified. Both GBIF and PBDF publish per-dataset licences that may include CC-BY-NC (non-commercial), which would conflict with redistribution.",
       "date_checked": "2026-10-10",
       "supports": [
         "creature.smalltrotter.st1 additional titanosaur comparator",
         "taxonomic validation of comparator clade"
       ],
-      "confidence_tier": "high",
-      "redistributable": true,
-      "kind": "paleontological_database"
+      "confidence_tier": "low",
+      "redistributable": false,
+      "kind": "paleontological_database",
+      "operator_action_required": "Retrieve the licence text in a browser (GBIF dataset page / PBDF data-use statement) and set license, license_verification_method and redistributable accordingly. Until then treat as non-redistributable."
     },
     {
       "id": "wikimedia-marattia-douglasii-starr",
@@ -196,7 +207,8 @@
       "redistributable": true,
       "kind": "reference_image",
       "attribution": "Forest & Kim Starr, CC BY 3.0 US",
-      "attribution_url": "https://www.flickr.com/photos/starr-environmental/24485041734/"
+      "attribution_url": "https://www.flickr.com/photos/starr-environmental/24485041734/",
+      "operator_reverification": "Re-verified independently by operator 2026-10-10 via Commons API extmetadata: License=cc-by-3.0-us, LicenseShortName=\"CC BY 3.0 us\", Artist=\"Forest and Kim Starr\". Matches the recorded claim exactly."
     },
     {
       "id": "polyhaven-cc0-general",
@@ -214,23 +226,26 @@
       "confidence_tier": "high",
       "redistributable": true,
       "kind": "asset_library",
-      "notes": "Not species-specific; general production reference library with confirmed CC0 license"
+      "notes": "Not species-specific; general production reference library with confirmed CC0 license",
+      "operator_reverification": "Re-verified independently by operator 2026-10-10: polyhaven.com/license states \"Our assets are all licensed as CC0\". Matches the recorded claim."
     }
   ],
   "summary": {
     "total_sources": 13,
-    "verified_sources": 13,
-    "redistributable_sources": 13,
+    "verified_sources": 2,
+    "unverified_licence": 11,
+    "redistributable_sources": 2,
     "by_license": {
-      "CC0-1.0": 11,
+      "unverified": 11,
       "CC BY 3.0 US": 1,
-      "CC0-1.0 (general)": 1
+      "CC0-1.0": 1
     },
     "by_kind": {
       "taxonomic_database": 6,
       "paleontological_database": 5,
       "reference_image": 1,
       "asset_library": 1
-    }
+    },
+    "note": "Operator correction: 11 taxonomic/paleontological database entries were downgraded from a blanket CC0 claim to license=unverified, redistributable=false. The endpoints resolve but the licence text was never actually retrieved. 2 sources (1 Wikimedia CC BY 3.0 US image, Poly Haven CC0) are genuinely verified. This is a personal non-commercial project, so non-redistributable data may still be referenceable; it must not be marked redistributable until verified."
   }
 }

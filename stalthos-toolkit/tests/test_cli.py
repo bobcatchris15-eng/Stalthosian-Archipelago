@@ -61,6 +61,14 @@ def _pick(implemented: bool) -> str | None:
     return None
 
 
+def _definition_files() -> list[Path]:
+    """Species/creature PROFILES only -- not reference sidecars."""
+    return sorted(
+        p for p in (REPO_ROOT / "species").rglob("*.yaml")
+        if "references" not in p.parts
+    )
+
+
 class TestCLIExitCodes:
     """Test that exit codes match the contract."""
 
@@ -431,10 +439,15 @@ class TestDefinitionLoading:
         assert data["id"] == "test"
 
     def test_shipped_definitions_validate(self):
-        """Every checked-in species/creature profile satisfies its published schema."""
+        """Every checked-in species/creature profile satisfies its published schema.
+
+        Sidecar reference files live under `references/` subdirectories and are a
+        different document type (they are merged into profiles by the reference
+        merge procedure, see docs/reference-policy.md), so they are excluded here.
+        """
         from stalthos_toolkit.schemas.loader import load_definition
 
-        files = sorted((REPO_ROOT / "species").rglob("*.yaml"))
+        files = _definition_files()
         assert files, "no species definitions found"
         for path in files:
             data = load_definition(path)  # validate=True by default
@@ -444,7 +457,7 @@ class TestDefinitionLoading:
         """Guard against definitions drifting outside the published contracts."""
         from stalthos_toolkit.schemas.loader import load_definition
 
-        for path in sorted((REPO_ROOT / "species").rglob("*.yaml")):
+        for path in _definition_files():
             load_definition(path)
 
     def test_empty_file_raises_usage_error(self):

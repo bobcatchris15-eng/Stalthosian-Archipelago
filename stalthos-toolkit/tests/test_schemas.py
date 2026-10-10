@@ -96,8 +96,15 @@ def test_unknown_contract_name_raises():
 
 
 # --- definitions ------------------------------------------------------------
-@pytest.mark.parametrize("path", sorted(
-    p for p in (REPO_ROOT / "species").rglob("*.yaml")), ids=lambda p: p.name)
+# Sidecar reference files (species/**/references/*.yaml) are a different document
+# type -- they carry verified citation metadata and are merged into profiles by
+# the procedure in docs/reference-policy.md -- so they are not definitions.
+def _definition_files():
+    return sorted(p for p in (REPO_ROOT / "species").rglob("*.yaml")
+                  if "references" not in p.parts)
+
+
+@pytest.mark.parametrize("path", _definition_files(), ids=lambda p: p.name)
 def test_every_checked_in_definition_validates(path):
     definition = load_definition(path)
     assert definition["id"]
@@ -142,7 +149,7 @@ def test_smalltrotter_marks_invented_anatomy_speculative():
 
 def test_definitions_never_fabricate_citations():
     """No DOI/URL may be asserted until a real reference has been collected."""
-    for path in sorted((REPO_ROOT / "species").rglob("*.yaml")):
+    for path in _definition_files():
         for reference in load_definition(path)["references"]:
             assert reference["kind"] in ("planning_doc", "local_image", "local_model", "local_scan")
             assert not reference["locator"].startswith(("http://", "https://", "doi:"))
