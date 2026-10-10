@@ -1,0 +1,572 @@
+# Bristlebeak -- non-hero fauna actor profile (semibiped_ornithopod).
+#
+# FICTIONAL form for the Stalthosian Archipelago, Late Cretaceous inspired.
+# This is NOT a real taxon. No specimen, accession, citation, DOI or museum
+# record is asserted anywhere in this file: references[] holds only the
+# internal planning documents plus one unfilled placeholder slot whose
+# usage_rights are unknown. Every invented character is declared in the
+# `evidence` list and summarised by `uncertainty: speculative`.
+#
+# Morphological inspiration: low broad-beaked seed-and-shoot browser (basal ornithopod analogy)
+# Observable signature routines: crops low herb shoots with a sideways head-sweep, leaving a clipped stubble; gives soft warning calls from the top of a low rise; rakes seed heads into bare scrapes and returns to them; sits down to rest in a scraped hollow, facing the open ground
+#
+# Size is a working hypothesis (mass_estimate.measured: false).
+schema: creature-definition
+kind: creature
+id: creature.bristlebeak.bb1
+version: 1
+common_names:
+  primary: Bristlebeak
+  working: true
+  aka: []
+uncertainty: speculative
+morphology_family: low broad-beaked seed-and-shoot browser (basal ornithopod analogy)
+generator: semibiped_ornithopod
+evidence:
+- feature: broad body plan only
+  tier: documented
+  note: broad body plan only; every regional detail below is a working design
+- feature: non-uniform ontogenetic proportions across head/neck/limbs/trunk/tail
+  tier: biomechanical_plausibility
+- feature: integument zone map and colour distribution
+  tier: comparative_inference
+  note: region map is invented for this taxon; no skin fossil is asserted
+- feature: observable signature routines, activity rhythm and abundance class
+  tier: speculative
+  note: display/life-history design, no fossil behaviour asserted
+body_plan:
+  posture: semi_bipedal
+  spine_profile: arched
+  neck_length_share: 0.118
+  tail_length_share: 0.343
+  center_of_mass_m:
+    value: 0.988
+    unit: m
+  mass_estimate:
+    value: 210
+    unit: kg
+    measured: false
+    range:
+    - 157.5
+    - 273.0
+    note: Working hypothesis only; recompute from the volumetric anatomy.
+  axial:
+    cervical_count: 12
+    dorsal_count: 14
+    caudal_count: 24
+    ribcage_depth_share: 0.3
+    skull_profile: box_like
+  skeleton:
+  - id: skull
+    region: skull
+    length_share: 0.08
+    mass_share: 0.05
+    joint_limit_deg:
+      flex: 18
+      extend: 22
+      twist: 12
+    driven_by: skeleton
+  - id: mandible
+    region: mandible
+    length_share: 0.07
+    mass_share: 0.04
+    joint_limit_deg:
+      flex: 24
+      extend: 30
+      twist: 5
+    driven_by: skeleton
+  - id: cervical
+    region: cervical
+    length_share: 0.119
+    mass_share: 0.09
+    joint_limit_deg:
+      flex: 36
+      extend: 34
+      twist: 22
+    driven_by: skeleton
+  - id: dorsal
+    region: dorsal
+    length_share: 0.247
+    mass_share: 0.285
+    joint_limit_deg:
+      flex: 18
+      extend: 16
+      twist: 10
+    driven_by: skeleton
+  - id: sacral
+    region: sacral
+    length_share: 0.05
+    mass_share: 0.09
+    joint_limit_deg:
+      flex: 12
+      extend: 12
+      twist: 8
+    driven_by: skeleton
+  - id: caudal
+    region: caudal
+    length_share: 0.209
+    mass_share: 0.114
+    joint_limit_deg:
+      flex: 32
+      extend: 30
+      twist: 16
+    driven_by: soft_tissue
+  - id: pectoral
+    region: pectoral_girdle
+    length_share: 0.04
+    mass_share: 0.04
+    joint_limit_deg:
+      flex: 30
+      extend: 34
+      twist: 18
+    driven_by: skeleton
+  - id: humerus
+    region: forelimb_humerus
+    length_share: 0.06
+    mass_share: 0.04
+    joint_limit_deg:
+      flex: 34
+      extend: 40
+      twist: 18
+    driven_by: skeleton
+  - id: radius
+    region: forelimb_radius
+    length_share: 0.05
+    mass_share: 0.025
+    joint_limit_deg:
+      flex: 42
+      extend: 38
+      twist: 16
+    driven_by: skeleton
+  - id: femur
+    region: hindlimb_femur
+    length_share: 0.09
+    mass_share: 0.07
+    joint_limit_deg:
+      flex: 44
+      extend: 60
+      twist: 20
+    driven_by: skeleton
+  - id: tibia
+    region: hindlimb_tibia
+    length_share: 0.09
+    mass_share: 0.04
+    joint_limit_deg:
+      flex: 40
+      extend: 55
+      twist: 18
+    driven_by: skeleton
+  - id: pes
+    region: hindlimb_pes
+    length_share: 0.06
+    mass_share: 0.02
+    joint_limit_deg:
+      flex: 26
+      extend: 32
+      twist: 10
+    driven_by: skeleton
+  locomotion:
+    gaits:
+    - walk
+    - amble
+    - trot
+    - wade
+    duty_factor: 0.55
+    footfall: quadrupedal walk rising to bipedal amble
+    reach:
+      value: 0.78
+      unit: m
+  hydration:
+    drink_reach_m: 0.31
+    requires_kneel: false
+life_stages:
+- id: hatchling
+  label: Hatchling
+  age_label: hatchling
+  age_years:
+  - 0
+  - 0.6
+  total_length:
+    value: 0.78
+    unit: m
+  height_at_shoulder:
+    value: 0.25
+    unit: m
+  proportions:
+    skull: 0.08
+    mandible: 0.07
+    cervical: 0.119
+    dorsal: 0.26
+    sacral: 0.05
+    caudal: 0.22
+    pectoral: 0.04
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.09
+    pes: 0.06
+  girth_scale: 0.75
+  head_scale: 1.35
+  skin:
+    thickness_mm: 3.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - down_covering
+  - disproportionately_large_eyes
+  - short_limbs
+- id: juvenile
+  label: Juvenile
+  age_label: juvenile
+  age_years:
+  - 0.6
+  - 4
+  total_length:
+    value: 1.612
+    unit: m
+  height_at_shoulder:
+    value: 0.516
+    unit: m
+  proportions:
+    skull: 0.08
+    mandible: 0.07
+    cervical: 0.119
+    dorsal: 0.26
+    sacral: 0.05
+    caudal: 0.22
+    pectoral: 0.04
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.09
+    pes: 0.06
+  girth_scale: 0.92
+  head_scale: 1.12
+  skin:
+    thickness_mm: 3.68
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - smooth_skin
+  - shorter_snout
+  - rapid_alert_motion
+- id: adult
+  label: Adult
+  age_label: adult
+  age_years:
+  - 4
+  - 25
+  total_length:
+    value: 2.6
+    unit: m
+  height_at_shoulder:
+    value: 0.832
+    unit: m
+  proportions:
+    skull: 0.08
+    mandible: 0.07
+    cervical: 0.119
+    dorsal: 0.26
+    sacral: 0.05
+    caudal: 0.22
+    pectoral: 0.04
+    humerus: 0.06
+    radius: 0.05
+    femur: 0.09
+    tibia: 0.09
+    pes: 0.06
+  girth_scale: 1.0
+  head_scale: 1.0
+  skin:
+    thickness_mm: 4.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - broad_low_beak
+  - short_neck
+  - seed_shovel_scallops
+rig:
+  skeleton:
+    bone_count_range:
+    - 104
+    - 234
+    hierarchical: true
+    root: pelvis
+    bone_naming: region_index
+  ik:
+  - id: head_look
+    type: head_look
+    chain:
+    - skull
+  - id: jaw_open
+    type: jaw
+    chain:
+    - mandible
+  - id: neck_chain
+    type: neck
+    chain:
+    - cervical
+    - dorsal
+    reach_limit_m: 1.56
+  - id: tail_chain
+    type: tail
+    chain:
+    - caudal
+  - id: leg_hind_l
+    type: leg
+    chain:
+    - femur
+    - tibia
+    - pes
+    pole_target: pelvis
+    reach_limit_m: 0.78
+  - id: leg_hind_r
+    type: leg
+    chain:
+    - femur
+    - tibia
+    - pes
+    pole_target: pelvis
+    reach_limit_m: 0.78
+  - id: forelimb_chain
+    type: arm
+    chain:
+    - pectoral
+  skin:
+    method: heat_weighted
+    max_influences_per_vertex: 4
+    preserve_volume: true
+    pin_regions:
+    - tail_base
+  morph_targets:
+  - id: alert_raise
+    region: cervical
+    driver: pose
+    range:
+    - 0
+    - 1
+  - id: juvenile_scaling
+    region: body
+    driver: life_stage
+    range:
+    - 0
+    - 1
+  - id: forage_lean
+    region: cervical
+    driver: browse_depletion
+    range:
+    - 0
+    - 1
+animation_contacts:
+- id: gait_cycle
+  kind: gait
+  targets:
+  - selector: bone:pes_foot_l
+    tolerance_m: 0.01
+    surface: ground
+  - selector: bone:pes_foot_r
+    tolerance_m: 0.01
+    surface: ground
+- id: forage_take
+  kind: browse
+  targets:
+  - selector: brush:zone/available
+    tolerance_m: 0.06
+    surface: plant
+  - selector: bone:jaw_tip
+    tolerance_m: 0.05
+    surface: self
+- id: alert_hold
+  kind: alert
+  targets:
+  - selector: bone:head_tip
+    tolerance_m: 0.0
+    surface: none
+- id: rest_settle
+  kind: rest
+  targets:
+  - selector: bone:pelvis
+    tolerance_m: 0.04
+    surface: ground
+integument:
+  scale_zones:
+  - id: zone_dorsal
+    region: dorsal
+    pattern: pebbled
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 900
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_flank
+    region: flank
+    pattern: granular
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 720
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_ventral
+    region: ventral
+    pattern: smooth
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 1260
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_limb_or_tail
+    region: tail
+    pattern: creased
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 630
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  pigmentation:
+    pattern: banded
+    age_change: juvenile patterning lost as the adult cover thickens
+    wear: moderate
+material_masks:
+- id: cover
+  applies_to: body
+  surface_type: hide
+  vertex_group: body_skin
+  base_color: '#8a7a56'
+  color_range:
+  - '#6f6144'
+  - '#8a7a56'
+  - '#a19068'
+  roughness:
+  - 0.5
+  - 0.8
+  normal_strength: 1.0
+  sss: 0.1
+  mask_uv: mask_cover
+- id: foot_pad
+  applies_to: foot_pad
+  surface_type: foot_pad
+  base_color: '#5c5142'
+  roughness:
+  - 0.7
+  - 0.95
+  normal_strength: 1.6
+- id: eye
+  applies_to: eye
+  surface_type: eye
+  base_color: '#2a1d14'
+  roughness:
+  - 0.05
+  - 0.2
+affordances:
+  diet_tags:
+  - resource: shoot
+    preference: 0.75
+    plant_selectors:
+    - plant.copperleaf.cl1|branch:tip
+    - plant.springwhip.sw1|shoot
+  - resource: seed
+    preference: 0.7
+    plant_selectors:
+    - plant.knuckleberry.kn1|seed
+  - resource: tender_foliage
+    preference: 0.5
+    plant_selectors:
+    - plant.spearleaf.sl2|shoot
+  interaction_envelope:
+    reach_height_m:
+      value: 1.56
+      unit: m
+    reach_radius_m: 0.91
+    mouth_tip_selector: bone:jaw_tip
+    clearance_width_m: 0.65
+  terrain_preference:
+  - sandy_lowland
+  - clearing_edge
+  - sparse_woodland
+  - browsed_patch
+  abundance: common
+  activity_rhythm: diurnal
+  signature_routines:
+  - crops low herb shoots with a sideways head-sweep, leaving a clipped stubble
+  - gives soft warning calls from the top of a low rise
+  - rakes seed heads into bare scrapes and returns to them
+  - sits down to rest in a scraped hollow, facing the open ground
+habitat_tags:
+- sandy_lowland
+- woodland_edge
+- clearing_edge
+references:
+- id: fauna-actor-catalog
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/fauna-actor-catalog.md
+  title: Fauna actor catalog and display-first food web
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: ecology-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/ecology-and-hydrology.md
+  title: Ecology and hydrology -- food web and placement principles
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: bristlebeak.bb1-reference-image
+  kind: local_image
+  locator: species/creatures/creature.bristlebeak.bb1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/creatures/*/reference/
+    may ship until cleared.
+notes: Low broad-beaked seed-and-shoot browser; deliberately not a second hero-lineage quadruped --
+  distinct proportions, gait and call.

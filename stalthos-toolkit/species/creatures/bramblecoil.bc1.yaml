@@ -1,0 +1,457 @@
+# Bramblecoil -- non-hero fauna actor profile (serpentine).
+#
+# FICTIONAL form for the Stalthosian Archipelago, Late Cretaceous inspired.
+# This is NOT a real taxon. No specimen, accession, citation, DOI or museum
+# record is asserted anywhere in this file: references[] holds only the
+# internal planning documents plus one unfilled placeholder slot whose
+# usage_rights are unknown. Every invented character is declared in the
+# `evidence` list and summarised by `uncertainty: speculative`.
+#
+# Morphological inspiration: small-to-medium constricting snake (squamate analogy)
+# Observable signature routines: hangs almost motionless in a bramble fork for minutes at a time; stays attached to the same fork and repositions only when the light changes; stalks small prey by short lateral advances without body movement elsewhere; coils around a captured item and lies still while it stops moving
+#
+# Size is a working hypothesis (mass_estimate.measured: false).
+schema: creature-definition
+kind: creature
+id: creature.bramblecoil.bc1
+version: 1
+common_names:
+  primary: Bramblecoil
+  working: true
+  aka: []
+uncertainty: speculative
+morphology_family: small-to-medium constricting snake (squamate analogy)
+generator: serpentine
+evidence:
+- feature: broad body plan only
+  tier: documented
+  note: broad body plan only; every regional detail below is a working design
+- feature: non-uniform ontogenetic proportions across head/neck/limbs/trunk/tail
+  tier: biomechanical_plausibility
+- feature: integument zone map and colour distribution
+  tier: comparative_inference
+  note: region map is invented for this taxon; no skin fossil is asserted
+- feature: observable signature routines, activity rhythm and abundance class
+  tier: speculative
+  note: display/life-history design, no fossil behaviour asserted
+body_plan:
+  posture: quadrupedal
+  spine_profile: horizontal
+  neck_length_share: 0.16
+  tail_length_share: 0.36
+  center_of_mass_m:
+    value: 0.608
+    unit: m
+  mass_estimate:
+    value: 3.5
+    unit: kg
+    measured: false
+    range:
+    - 2.625
+    - 4.55
+    note: Working hypothesis only; recompute from the volumetric anatomy.
+  axial:
+    cervical_count: 8
+    dorsal_count: 40
+    caudal_count: 100
+    ribcage_depth_share: 0.3
+    skull_profile: hooked
+  skeleton:
+  - id: skull
+    region: skull
+    length_share: 0.05
+    mass_share: 0.03
+    joint_limit_deg:
+      flex: 26
+      extend: 30
+      twist: 20
+    driven_by: skeleton
+  - id: mandible
+    region: mandible
+    length_share: 0.04
+    mass_share: 0.02
+    joint_limit_deg:
+      flex: 30
+      extend: 36
+      twist: 6
+    driven_by: skeleton
+  - id: cervical
+    region: cervical
+    length_share: 0.08
+    mass_share: 0.06
+    joint_limit_deg:
+      flex: 34
+      extend: 32
+      twist: 24
+    driven_by: skeleton
+  - id: dorsal
+    region: dorsal
+    length_share: 0.55
+    mass_share: 0.62
+    joint_limit_deg:
+      flex: 12
+      extend: 10
+      twist: 8
+    driven_by: skeleton
+  - id: caudal
+    region: caudal
+    length_share: 0.26
+    mass_share: 0.26
+    joint_limit_deg:
+      flex: 22
+      extend: 20
+      twist: 12
+    driven_by: soft_tissue
+  - id: tail_tip
+    region: tail_tip
+    length_share: 0.02
+    mass_share: 0.01
+    joint_limit_deg:
+      flex: 16
+      extend: 14
+      twist: 8
+    driven_by: soft_tissue
+  locomotion:
+    gaits:
+    - power_stroke
+    duty_factor: 0.4
+    footfall: lateral undulation
+    reach:
+      value: 0.48
+      unit: m
+  hydration:
+    drink_reach_m: 0.19
+    requires_kneel: false
+life_stages:
+- id: hatchling
+  label: Hatchling
+  age_label: hatchling
+  age_years:
+  - 0
+  - 0.1
+  total_length:
+    value: 0.48
+    unit: m
+  height_at_shoulder:
+    value: 0.154
+    unit: m
+  proportions:
+    skull: 0.05
+    mandible: 0.04
+    cervical: 0.08
+    dorsal: 0.55
+    caudal: 0.26
+    tail_tip: 0.02
+  girth_scale: 0.75
+  head_scale: 1.35
+  skin:
+    thickness_mm: 3.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - down_covering
+  - disproportionately_large_eyes
+  - short_limbs
+- id: juvenile
+  label: Juvenile
+  age_label: juvenile
+  age_years:
+  - 0.1
+  - 1.5
+  total_length:
+    value: 0.992
+    unit: m
+  height_at_shoulder:
+    value: 0.317
+    unit: m
+  proportions:
+    skull: 0.05
+    mandible: 0.04
+    cervical: 0.08
+    dorsal: 0.55
+    caudal: 0.26
+    tail_tip: 0.02
+  girth_scale: 0.92
+  head_scale: 1.12
+  skin:
+    thickness_mm: 3.68
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - smooth_skin
+  - shorter_snout
+  - rapid_alert_motion
+- id: adult
+  label: Adult
+  age_label: adult
+  age_years:
+  - 1.5
+  - 14
+  total_length:
+    value: 1.6
+    unit: m
+  height_at_shoulder:
+    value: 0.512
+    unit: m
+  proportions:
+    skull: 0.05
+    mandible: 0.04
+    cervical: 0.08
+    dorsal: 0.55
+    caudal: 0.26
+    tail_tip: 0.02
+  girth_scale: 1.0
+  head_scale: 1.0
+  skin:
+    thickness_mm: 4.0
+    wrinkle_regions:
+    - ankle
+    callus_regions: []
+  visible_traits:
+  - conspicuous_saddle_pattern
+  - bramble_station_hold
+  - constrictor_coil
+rig:
+  skeleton:
+    bone_count_range:
+    - 64
+    - 144
+    hierarchical: true
+    root: root
+    bone_naming: region_index
+  ik:
+  - id: head_look
+    type: head_look
+    chain:
+    - skull
+  - id: jaw_open
+    type: jaw
+    chain:
+    - mandible
+  - id: neck_chain
+    type: neck
+    chain:
+    - cervical
+    - dorsal
+    reach_limit_m: 0.96
+  skin:
+    method: automatic_bones
+    max_influences_per_vertex: 4
+    preserve_volume: true
+    pin_regions:
+    - tail_base
+  morph_targets:
+  - id: alert_raise
+    region: cervical
+    driver: pose
+    range:
+    - 0
+    - 1
+  - id: juvenile_scaling
+    region: body
+    driver: life_stage
+    range:
+    - 0
+    - 1
+  - id: forage_lean
+    region: cervical
+    driver: browse_depletion
+    range:
+    - 0
+    - 1
+animation_contacts:
+- id: gait_cycle
+  kind: gait
+  targets:
+  - selector: bone:pes_foot_l
+    tolerance_m: 0.01
+    surface: ground
+  - selector: bone:pes_foot_r
+    tolerance_m: 0.01
+    surface: ground
+- id: forage_take
+  kind: browse
+  targets:
+  - selector: brush:zone/avoid
+    tolerance_m: 0.06
+    surface: plant
+  - selector: bone:jaw_tip
+    tolerance_m: 0.05
+    surface: self
+- id: alert_hold
+  kind: alert
+  targets:
+  - selector: bone:head_tip
+    tolerance_m: 0.0
+    surface: none
+- id: rest_settle
+  kind: rest
+  targets:
+  - selector: bone:pelvis
+    tolerance_m: 0.04
+    surface: ground
+integument:
+  scale_zones:
+  - id: zone_dorsal
+    region: dorsal
+    pattern: pebbled
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 900
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_flank
+    region: flank
+    pattern: granular
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 720
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_ventral
+    region: ventral
+    pattern: smooth
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 1260
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  - id: zone_limb_or_tail
+    region: head
+    pattern: creased
+    size_mm:
+    - 4
+    - 12
+    density_per_m2: 630
+    roughness:
+    - 0.5
+    - 0.8
+    age_dependence: grows_with_age
+  pigmentation:
+    pattern: banded
+    age_change: juvenile patterning lost as the adult cover thickens
+    wear: moderate
+material_masks:
+- id: cover
+  applies_to: body
+  surface_type: hide
+  vertex_group: body_skin
+  base_color: '#6a5a42'
+  color_range:
+  - '#544733'
+  - '#6a5a42'
+  - '#877252'
+  roughness:
+  - 0.5
+  - 0.8
+  normal_strength: 1.0
+  sss: 0.1
+  mask_uv: mask_cover
+- id: eye
+  applies_to: eye
+  surface_type: eye
+  base_color: '#2a1d14'
+  roughness:
+  - 0.05
+  - 0.2
+affordances:
+  diet_tags:
+  - resource: small_prey
+    preference: 0.9
+  - resource: insect
+    preference: 0.3
+  interaction_envelope:
+    reach_height_m:
+      value: 0.96
+      unit: m
+    reach_radius_m: 0.56
+    mouth_tip_selector: bone:jaw_tip
+    clearance_width_m: 0.4
+  terrain_preference:
+  - brushland
+  - thicket
+  - woodland_edge
+  - browsed_patch
+  abundance: occasional
+  activity_rhythm: crepuscular
+  signature_routines:
+  - hangs almost motionless in a bramble fork for minutes at a time
+  - stays attached to the same fork and repositions only when the light changes
+  - stalks small prey by short lateral advances without body movement elsewhere
+  - coils around a captured item and lies still while it stops moving
+habitat_tags:
+- brushland
+- main_island_woodland
+- thicket
+- woodland_edge
+references:
+- id: fauna-actor-catalog
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/fauna-actor-catalog.md
+  title: Fauna actor catalog and display-first food web
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: ecology-doc
+  kind: planning_doc
+  locator: Rauken-Archipelago/docs/ecology-and-hydrology.md
+  title: Ecology and hydrology -- food web and placement principles
+  usage_rights: internal_reference
+  redistributable: false
+  confidence: high
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+- id: bramblecoil.bc1-reference-image
+  kind: local_image
+  locator: species/creatures/creature.bramblecoil.bc1/reference/structure_01.png
+  usage_rights: unknown
+  usage_rights_note: placeholder slot; nothing collected or rights cleared yet
+  confidence: low
+  supports:
+  - morphology_family
+  - body_plan
+  - affordances
+  - integument
+  - life_stages
+licenses:
+- id: definition-cc0
+  applies_to: definition
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: geometry-cc0
+  applies_to: generated_geometry
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: textures-cc0
+  applies_to: textures
+  license: CC0-1.0
+  holder: The Stalthosian Archipelago project
+- id: references-restricted
+  applies_to: reference_images
+  license: unknown
+  holder: unknown
+  redistribution_notes: No reference image rights are established; nothing from species/creatures/*/reference/
+    may ship until cleared.
+notes: Constricting snake; read is a long motionless coil held in one bramble fork, never slithering
+  across open ground.
