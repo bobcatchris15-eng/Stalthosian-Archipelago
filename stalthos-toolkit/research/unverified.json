@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-10-10T22:16:03.704Z",
+  "description": "Candidate sources that could NOT be verified for license, accessibility, or content. These are recorded honestly rather than trusted.",
+  "unverified": [
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Araucaria_araucana_1.jpg",
+      "intended_use": "plant.splitcrown.ar1 visual reference: Araucaria habit",
+      "reason": "File not found (404) on Wikimedia Commons; no such file exists at that title",
+      "date_checked": "2026-10-10",
+      "status": "not_found"
+    },
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Marattia_saligna.jpg",
+      "intended_use": "plant.basketfern.fn2 visual reference: Marattia habit",
+      "reason": "File not found (404) on Wikimedia Commons; no such file exists at that title",
+      "date_checked": "2026-10-10",
+      "status": "not_found"
+    },
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Araucaria_araucana_habitat.jpg",
+      "intended_use": "plant.splitcrown.ar1 visual reference: Araucaria habitat",
+      "reason": "File not found (404) on Wikimedia Commons; no such file exists at that title",
+      "date_checked": "2026-10-10",
+      "status": "not_found"
+    },
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Osmunda_regalis_2.jpg",
+      "intended_use": "plant.royalfrond.fn1 visual reference: Osmunda frond underside",
+      "reason": "File not found (404) on Wikimedia Commons; no such file exists at that title",
+      "date_checked": "2026-10-10",
+      "status": "not_found"
+    },
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Araucaria_araucana_-_Flickr_-_gailhampshire_(2).jpg",
+      "intended_use": "plant.splitcrown.ar1 visual reference: Araucaria bark/crown",
+      "reason": "Rate limited by Wikimedia API; could not verify license metadata",
+      "date_checked": "2026-10-10",
+      "status": "rate_limited"
+    },
+    {
+      "candidate_url": "https://commons.wikimedia.org/wiki/File:Equisetum_arvense-271.JPG",
+      "intended_use": "plant.jointreed.eq1 visual reference: Equisetum stem detail",
+      "reason": "Rate limited by Wikimedia API; could not verify license metadata (search snippet suggests CC BY-SA)",
+      "date_checked": "2026-10-10",
+      "status": "rate_limited"
+    },
+    {
+      "candidate_url": "https://api.si.edu/openaccess/api/v1.0/search?q=Araucaria",
+      "intended_use": "plant.splitcrown.ar1 Smithsonian specimen images",
+      "reason": "Requires API key (API_KEY_MISSING); cannot verify without registration",
+      "date_checked": "2026-10-10",
+      "status": "requires_auth"
+    },
+    {
+      "candidate_url": "species/plants/plant.basketfern.fn2/reference/crown_habit.jpg",
+      "intended_use": "plant.basketfern.fn2 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.bracketpolypore.fg1/reference/cap_zones.jpg",
+      "intended_use": "plant.bracketpolypore.fg1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.jointreed.eq1/reference/node_detail.jpg",
+      "intended_use": "plant.jointreed.eq1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.royalfrond.fn1/reference/sori_underside.jpg",
+      "intended_use": "plant.royalfrond.fn1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.softbough.sh1/reference/twig_arc.jpg",
+      "intended_use": "plant.softbough.sh1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.splitcrown.ar1/reference/trunk_plate.jpg",
+      "intended_use": "plant.splitcrown.ar1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/plants/plant.splitcrown.ar1/reference/crown_silhouette.jpg",
+      "intended_use": "plant.splitcrown.ar1 local reference photo placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/creatures/creature.brackenback.bk1/reference/armour_pattern.png",
+      "intended_use": "creature.brackenback.bk1 local reference image placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/creatures/creature.reedcrest.rc1/reference/crest_profile.png",
+      "intended_use": "creature.reedcrest.rc1 local reference image placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/creatures/creature.smalltrotter.st1/reference/skeletal_plate.png",
+      "intended_use": "creature.smalltrotter.st1 local reference image placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown (explicitly noted as placeholder)",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/creatures/creature.smalltrotter.st1/reference/skin_pebble.png",
+      "intended_use": "creature.smalltrotter.st1 local reference image placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "species/creatures/creature.thistletail.tt1/reference/plumage_tracts.png",
+      "intended_use": "creature.thistletail.tt1 local reference image placeholder",
+      "reason": "Local file does not exist; declared in species YAML with usage_rights: unknown",
+      "date_checked": "2026-10-10",
+      "status": "local_missing"
+    },
+    {
+      "candidate_url": "Rauken-Archipelago/docs/flora.md",
+      "intended_use": "All plant species: planning document with design intent",
+      "reason": "Internal planning document; usage_rights: internal_reference (not redistributable); not a scientific source",
+      "date_checked": "2026-10-10",
+      "status": "internal_only"
+    },
+    {
+      "candidate_url": "Rauken-Archipelago/docs/creatures.md",
+      "intended_use": "All creature species: planning document with design intent",
+      "reason": "Internal planning document; usage_rights: internal_reference (not redistributable); not a scientific source",
+      "date_checked": "2026-10-10",
+      "status": "internal_only"
+    },
+    {
+      "candidate_url": "Rauken-Archipelago/docs/plant-visual-catalog.md",
+      "intended_use": "plant.softbough.sh1 visual catalog reference",
+      "reason": "Internal planning document; usage_rights: internal_reference (not redistributable); not a scientific source",
+      "date_checked": "2026-10-10",
+      "status": "internal_only"
+    },
+    {
+      "candidate_url": "Rauken-Archipelago/docs/fauna-actor-catalog.md",
+      "intended_use": "creature.smalltrotter.st1 fauna catalog reference",
+      "reason": "Internal planning document; usage_rights: internal_reference (not redistributable); not a scientific source",
+      "date_checked": "2026-10-10",
+      "status": "internal_only"
+    }
+  ],
+  "summary": {
+    "total_unverified": 23,
+    "by_status": {
+      "not_found": 3,
+      "rate_limited": 2,
+      "requires_auth": 1,
+      "local_missing": 11,
+      "internal_only": 6
+    }
+  }
+}

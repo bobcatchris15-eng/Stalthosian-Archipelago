@@ -1,0 +1,52 @@
+# Sidecar references for plant.softbough.sh1 (Softbough)
+# Merge procedure: worker zero appends these entries to the species YAML's references[] array
+# Schema matches contracts/species-definition.schema.json#/$defs/reference
+
+references:
+  - id: gbif-salix-alb
+    kind: web
+    locator: https://api.gbif.org/v1/species/match?name=Salix%20alba
+    title: "GBIF Backbone Taxonomy: Salix alba L. (multiple matches noted)"
+    usage_rights: cc0
+    usage_rights_note: "GBIF.org terms of use - data explicitly CC0-1.0"
+    redistributable: true
+    confidence: medium
+    supports:
+      - morphology_family
+      - taxonomy_validation
+    notes: "Multiple equal matches for Salix alba; genus-level analogy only"
+  - id: polyhaven-cc0-general
+    kind: web
+    locator: https://polyhaven.com/license
+    title: "Poly Haven License - all assets CC0"
+    usage_rights: cc0
+    usage_rights_note: "General CC0 asset library for lighting/material calibration reference"
+    redistributable: true
+    confidence: high
+    supports:
+      - materials
+      - lighting_reference
+  - id: flora-design-doc
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/flora.md
+    title: "Flora and fungal life -- Softbough row"
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports:
+      - common_names
+      - habitat
+      - sauropod_role
+  - id: plant-visual-catalog
+    kind: planning_doc
+    locator: Rauken-Archipelago/docs/plant-visual-catalog.md
+    title: "Plant visual catalog -- production profile fields"
+    usage_rights: internal_reference
+    redistributable: false
+    confidence: high
+    supports:
+      - anatomy
+      - materials
+
+species_id: plant.softbough.sh1
+generated_at: "2026-10-10T22:16:03.704Z"
