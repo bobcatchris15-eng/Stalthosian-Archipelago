@@ -62,22 +62,44 @@ def register_declared() -> None:
             REGISTRY.add(name, summary, None, stage=stage)
 
 
+def _global_options(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Global options. Attached to the root parser AND every subcommand, so both
+    `stalthos -w var generate_plant ...` and `stalthos generate_plant -w var ...`
+    work. Agents should not have to remember argument order."""
+    parser.add_argument("--workspace", "-w", default=argparse.SUPPRESS,
+                        help="workspace root (default: $STEALTHOS_HOME or ./var)")
+    parser.add_argument("--seed", "-s", default=argparse.SUPPRESS,
+                        help="root seed (int or stable string label)")
+    parser.add_argument("--quiet", "-q", action="store_true", default=argparse.SUPPRESS,
+                        help="suppress stderr logs")
+    return parser
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog=PROGRAM,
         description="Stalthos Asset Toolkit: deterministic, reproducible asset production.",
     )
     parser.add_argument("--version", action="version", version=f"{PROGRAM} {__version__}")
-    parser.add_argument("--workspace", "-w", default=None, help="workspace root (default: $STEALTHOS_HOME or ./var)")
-    parser.add_argument("--seed", "-s", default=None, help="root seed (int or stable string label)")
-    parser.add_argument("--quiet", "-q", action="store_true", help="suppress stderr logs")
+    _global_options(parser)
+    # Suppressed defaults on the root parser: argparse only writes an attribute
+    # when the flag was actually seen, so a value given after the subcommand wins.
+    parser.set_defaults(workspace=None, seed=None, quiet=False)
+
+    common = argparse.ArgumentParser(add_help=False)
+    _global_options(common)
+    # NOTE: deliberately no set_defaults() on the subparser parent. argparse copies a
+    # subparser namespace over the main one, so defaults here would clobber a global
+    # option that was given BEFORE the subcommand. SUPPRESS means the subparser only
+    # writes the attributes it actually saw.
+
     subparsers = parser.add_subparsers(dest="command", metavar="<command>")
 
-    subparsers.add_parser("list", help="list declared commands and implementation status")
-    subparsers.add_parser("doctor", help="report external tool availability")
+    subparsers.add_parser("list", help="list declared commands and implementation status", parents=[common])
+    subparsers.add_parser("doctor", help="report external tool availability", parents=[common])
 
     for name, summary, _stage in DECLARED_COMMANDS:
-        sub = subparsers.add_parser(name, help=summary, description=summary)
+        sub = subparsers.add_parser(name, help=summary, description=summary, parents=[common])
         sub.add_argument("--definition", "-d", default=None, help="species/creature YAML or JSON definition")
         sub.add_argument("--asset-id", default=None, help="override the generated asset id")
         sub.add_argument("--stage", default=None, help="growth or life stage selector")

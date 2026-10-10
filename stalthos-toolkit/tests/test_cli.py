@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 STALTHOS = [sys.executable, "-m", "stalthos_toolkit.cli"]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def run_stalthos(*args, input_text=None, capture=True, check=False):
@@ -39,6 +40,27 @@ def parse_json_status(stdout: str) -> dict:
     return json.loads(stdout)
 
 
+def _registry() -> dict:
+    """Live implementation status, so these tests track reality instead of a
+    frozen snapshot taken before other stages were implemented."""
+    from stalthos_toolkit.cli import register_declared, _load_registered
+
+    register_declared()
+    _load_registered()
+    from stalthos_toolkit.core.contract import REGISTRY
+
+    register_declared()
+    return {row["name"]: row["implemented"] for row in REGISTRY.table()}
+
+
+def _pick(implemented: bool) -> str | None:
+    table = _registry()
+    for name, is_impl in table.items():
+        if is_impl is implemented:
+            return name
+    return None
+
+
 class TestCLIExitCodes:
     """Test that exit codes match the contract."""
 
@@ -55,47 +77,75 @@ class TestCLIExitCodes:
         assert code == 2
 
     def test_unimplemented_command_exits_5(self):
-        """Declared but unimplemented command → exit 5 (when definition provided)."""
-        # Use research_species which is declared but not implemented (per stalthos list)
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            f.write("id: test\nkind: plant\nmorphology_id: test\n")
-            def_path = f.name
-        try:
-            code, out, err = run_stalthos("research_species", "--definition", def_path)
-            assert code == 5, f"Expected exit 5, got {code}: {out} {err}"
-            status = parse_json_status(out)
-            assert status["exit_code"] == 5
-            assert status["ok"] is False
-            assert status["command"] == "research_species"
-            assert any(e["kind"] == "NotImplementedStage" for e in status["errors"])
-        finally:
-            Path(def_path).unlink()
+        """A declared-but-unimplemented command exits 5 (honest failure)."""
+        target = _pick(implemented=False)
+        if target is None:
+            pytest.skip("every declared command is implemented")
+        code, out, err = run_stalthos(target, "--definition", str(REPO_ROOT / "species/plants/splitcrown.yaml"))
+        assert code == 5, f"Expected exit 5, got {code}: {out} {err}"
+        status = parse_json_status(out)
+        assert status["exit_code"] == 5
+        assert status["ok"] is False
+        assert status["command"] == target
+        assert any(e["kind"] == "NotImplementedStage" for e in status["errors"])
 
     def test_missing_definition_exits_2(self):
-        """Missing --definition → exit 2 (usage error) for implemented commands."""
-        # generate_plant is implemented, so missing definition gives exit 2
-        code, out, err = run_stalthos("generate_plant")
+        """Missing --definition on an implemented command -> exit 2 (usage error)."""
+        target = _pick(implemented=True)
+        if target is None:
+            pytest.skip("no implemented command available")
+        code, out, err = run_stalthos(target)
         assert code == 2, f"Expected exit 2, got {code}: {out} {err}"
         status = parse_json_status(out)
         assert status["exit_code"] == 2
         assert status["ok"] is False
         assert any(e["kind"] == "UsageError" for e in status["errors"])
 
-    def test_bogus_blender_path_exits_4(self):
-        """Bogus --blender path → exit 4 (missing dependency) for implemented commands."""
-        # Need a definition file first to reach the blender check
+    def test_schema_invalid_definition_exits_2(self):
+        """A definition that violates the published schema -> exit 2, not a crash."""
+        target = _pick(implemented=True)
+        if target is None:
+            pytest.skip("no implemented command available")
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            f.write("id: test\nkind: plant\nmorphology_id: test\n")
+            f.write("id: test\nkind: plant\nmorphology_id: test\n")  # schema-invalid
             def_path = f.name
         try:
-            code, out, err = run_stalthos("generate_plant", "--definition", def_path, "--blender", "/definitely/not/blender")
-            assert code == 4, f"Expected exit 4 (missing blender), got {code}: {out} {err}"
+            code, out, err = run_stalthos(target, "--definition", def_path)
+            assert code == 2, f"Expected exit 2, got {code}: {out} {err}"
             status = parse_json_status(out)
-            assert status["exit_code"] == 4
-            assert status["ok"] is False
-            assert any(e["kind"] == "MissingDependency" for e in status["errors"])
+            assert status["errors"][0]["kind"] == "UsageError"
         finally:
             Path(def_path).unlink()
+
+    def test_bogus_blender_path_exits_4(self):
+        """Bogus --blender path -> exit 4 (missing dependency)."""
+        target = next(
+            (n for n in ("generate_plant", "build_creature", "rig_creature", "bake_materials",
+                         "render_turntable")
+             if _registry().get(n)),
+            None,
+        )
+        if target is None:
+            pytest.skip("no Blender-dependent command is implemented yet")
+        code, out, err = run_stalthos(
+            target,
+            "--definition", str(REPO_ROOT / "species/plants/splitcrown.yaml"),
+            "--blender", "/definitely/not/blender",
+        )
+        assert code == 4, f"Expected exit 4 (missing blender), got {code}: {out} {err}"
+        status = parse_json_status(out)
+        assert status["exit_code"] == 4
+        assert status["ok"] is False
+        assert any(e["kind"] == "MissingDependency" for e in status["errors"])
+
+    def test_find_blender_raises_missing_dependency(self):
+        """Tool discovery raises MissingDependency (exit code 4), never ImportError."""
+        from stalthos_toolkit.core.errors import MissingDependency
+        from stalthos_toolkit.core.workspace import find_blender
+
+        with pytest.raises(MissingDependency) as exc:
+            find_blender("/definitely/not/blender")
+        assert exc.value.exit_code == 4
 
 
 class TestJSONStatusEnvelope:
@@ -124,19 +174,16 @@ class TestJSONStatusEnvelope:
 
     def test_envelope_shape_on_failure(self):
         """Failed command emits valid envelope with ok=false and errors."""
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            f.write("id: test\nkind: plant\nmorphology_id: test\n")
-            def_path = f.name
-        try:
-            code, out, err = run_stalthos("research_species", "--definition", def_path)
-            assert code == 5
-            status = parse_json_status(out)
-            assert status["ok"] is False
-            assert status["exit_code"] == 5
-            assert len(status["errors"]) > 0
-            assert status["errors"][0]["kind"] == "NotImplementedStage"
-        finally:
-            Path(def_path).unlink()
+        target = _pick(implemented=False)
+        if target is None:
+            pytest.skip("every declared command is implemented")
+        code, out, err = run_stalthos(target, "--definition", str(REPO_ROOT / "species/plants/splitcrown.yaml"))
+        assert code == 5
+        status = parse_json_status(out)
+        assert status["ok"] is False
+        assert status["exit_code"] == 5
+        assert len(status["errors"]) > 0
+        assert status["errors"][0]["kind"] == "NotImplementedStage"
 
     def test_stdout_only_json_no_extra_text(self):
         """Stdout must contain ONLY the JSON envelope, nothing else."""
@@ -349,27 +396,27 @@ class TestManifestRoundtrip:
 
 
 class TestDefinitionLoading:
-    """Test schema-less definition loading (YAML/JSON/TOML)."""
+    """Definition loading: format handling (schema-free) and schema enforcement."""
 
     def test_load_yaml_definition(self):
-        """Load a valid YAML definition."""
+        """Load a YAML definition. validate=False tests format only."""
         from stalthos_toolkit.schemas.loader import load_definition
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write("id: test.plant\nkind: plant\nmorphology_id: test\n")
             f.flush()
-            data = load_definition(f.name)
+            data = load_definition(f.name, validate=False)
         assert data["id"] == "test.plant"
         assert data["kind"] == "plant"
 
     def test_load_json_definition(self):
-        """Load a valid JSON definition."""
+        """Load a JSON definition."""
         from stalthos_toolkit.schemas.loader import load_definition
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             f.write('{"id": "test.creature", "kind": "creature", "morphology_id": "test"}')
             f.flush()
-            data = load_definition(f.name)
+            data = load_definition(f.name, validate=False)
         assert data["id"] == "test.creature"
         assert data["kind"] == "creature"
 
@@ -380,8 +427,25 @@ class TestDefinitionLoading:
         with tempfile.NamedTemporaryFile(mode="w", suffix=".toml", delete=False) as f:
             f.write('id = "test"\nkind = "plant"\nmorphology_id = "test"\n')
             f.flush()
-            data = load_definition(f.name)
+            data = load_definition(f.name, validate=False)
         assert data["id"] == "test"
+
+    def test_shipped_definitions_validate(self):
+        """Every checked-in species/creature profile satisfies its published schema."""
+        from stalthos_toolkit.schemas.loader import load_definition
+
+        files = sorted((REPO_ROOT / "species").rglob("*.yaml"))
+        assert files, "no species definitions found"
+        for path in files:
+            data = load_definition(path)  # validate=True by default
+            assert data["id"], f"{path} has no id"
+
+    def test_shipped_definitions_have_no_unknown_properties(self):
+        """Guard against definitions drifting outside the published contracts."""
+        from stalthos_toolkit.schemas.loader import load_definition
+
+        for path in sorted((REPO_ROOT / "species").rglob("*.yaml")):
+            load_definition(path)
 
     def test_empty_file_raises_usage_error(self):
         """Empty definition file → UsageError."""
