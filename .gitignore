@@ -9,3 +9,8 @@ __pycache__/
 *.egg-info/
 .venv/
 .statefulclanker/
+
+# graphify knowledge graph: derived from the .md/.py corpus and fully regenerable
+# via `graphify <path>`. Agents read it in place (we share one checkout), so it does
+# not belong in history. graph.json / graph.html / GRAPH_REPORT.md are the outputs.
+graphify-out/
