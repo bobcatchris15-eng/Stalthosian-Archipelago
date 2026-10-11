@@ -93,3 +93,11 @@ and seed, fallen tree, bounded retention, duplicate exclusion, dead companion
 and repeated hero death continuity. These are no-GPU contract tests and provide
 no evidence of rendered quality or frame time. No disk format exists, so no
 malformed-save acceptance is claimed.
+
+## Persistence
+
+`persistence.hpp` adds engine-independent versioned save/load capability. It introduces a `SaveData` DTO to securely read and write the runtime state described above. Due to `foundation.hpp` explicitly hiding accessors to regions and lists of animals, we do not bypass it via pointer-to-member template hacks (which violate safety and intent). The host is expected to populate the DTO using its own knowledge of instantiated entities, and during loading, the DTO is evaluated and then used to rebuild `StalthosState` and `SimCore` via their public interfaces (`instantiate`, `retain`, etc.).
+
+The serialization uses a strictly bounded binary format (`STL1`) with explicitly sized collections and validation bounds (`MAX_ACTIVE_TRANSIENTS`, `MAX_RETAINED`, `MAX_REGIONS`, etc.) to prevent OOM vulnerabilities and crash conditions from truncated or corrupt files. Save operations employ atomic renaming (via `.tmp` file and `std::filesystem::rename`) to preserve prior valid saves in the event of hardware or space failures. `stalthos_domain_persistence` in `tests/CMakeLists.txt` validates this format boundary and failure behavior.
+
+Compatibility is guaranteed explicitly per version. Modifying enumerated values like `HeroSpecies` or exceeding the hard-coded region and transient entity limits will break compatibility.
