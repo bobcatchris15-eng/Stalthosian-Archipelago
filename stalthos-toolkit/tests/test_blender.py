@@ -731,6 +731,36 @@ def test_creature_build_and_rig(blender, workspace, creature_definition, capsys)
 
 
 @needs_blender
+def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspace, capsys):
+    definition = HERE.parent / "species" / "creatures" / "smalltrotter.yaml"
+    code, built = _run("build_creature", workspace, definition, capsys,
+                       "--seed", "42", "--stage", "independent_juvenile", blender_path=blender)
+    assert code == EXIT_OK, built
+    code, rigged = _run("rig_creature", workspace, definition, capsys,
+                        "--seed", "42", "--stage", "independent_juvenile", blender_path=blender)
+    assert code == EXIT_OK, rigged
+
+    gait = rigged["metrics"]["walk_cycle"]
+    assert gait["loop"]["passed"] is True
+    assert gait["glb_animation"]["passed"] is True
+    assert gait["glb_animation"]["animations"] == 1
+    assert gait["glb_animation"]["channels"] > 0
+    assert gait["contacts"]["foot_pad_vertex_counts"] == {
+        "bone:pes_foot_l": 8, "bone:pes_foot_r": 8,
+    }
+    assert gait["terrain_contact_height"]["actor_stride_translation_included"] is False
+    assert gait["validation"]["geometric_contact_passed"] is False
+
+    neutral = next(a["path"] for a in rigged["artifacts"]
+                   if a["path"].endswith(".neutral.glb"))
+    walk = next(a["path"] for a in rigged["artifacts"]
+                if a["path"].endswith(".walk_cycle.glb"))
+    from stalthos_toolkit.optimize.glb import GlbDocument
+    assert GlbDocument.read(neutral).gltf.get("animations", []) == []
+    assert len(GlbDocument.read(walk).gltf.get("animations", [])) == 1
+
+
+@needs_blender
 def test_rig_requires_a_source_master(blender, workspace, definition, capsys):
     code, envelope = _run("rig_creature", workspace, definition, capsys, blender_path=blender)
     assert code == EXIT_USAGE

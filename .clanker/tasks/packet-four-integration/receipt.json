@@ -5,7 +5,7 @@
   "native_ctest": "4/4 passed",
   "focused_gait": "6 passed in 0.15s",
   "focused_toolkit": "71 passed in 201.12 seconds on final integrated toolkit candidate",
-  "full_toolkit": "pending var/reports/toolkit-packet-four-final-full.log; earlier pre-correction run interrupted and retained",
+  "full_toolkit": "1954 passed, 2 skipped in 771.82s; final candidate hashes verified unchanged",
   "actual_blender_rig": "ok exit 0; contact acceptance false",
   "native_save_load": "adult age 3770.55498319678 preserved then advanced to 3773.764067902928",
   "native_death": "terminal death and retained world truth verified",
@@ -44,12 +44,8 @@
     "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py": "2a8ad8bf36b16680e12de48f8a9f0b3dbe2db8507e94eeeea6685d8d2231eb0a",
     "stalthos-toolkit/src/stalthos_toolkit/commands/rig_creature.py": "03145de69618339d10fc3045f7855ee87fef7b8690c1a2e92f8b91cc8b4242ad"
   },
-  "publication": "Validated native lifecycle/persistence/actor and worker policy published to origin/main in aad26acbe924e2695917f66065a51228c767d27d; toolkit source remains local pending complete final suite",
-  "pending_test_processes": {
-    "full_pytest_pid": 6768,
-    "full_exec_session": 80678,
-    "full_log": "var/reports/toolkit-packet-four-final-full.log"
-  },
+  "publication": "Toolkit validation gate passed; scoped publication authorized",
+  "pending_test_processes": {},
   "native_evidence": [
     "var/reports/packet-four-native-final-build.log",
     "var/reports/packet-four-native-final-ctest.log",
