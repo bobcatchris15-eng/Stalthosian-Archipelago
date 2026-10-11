@@ -1,7 +1,8 @@
 """Schema/definition tests. These must pass WITHOUT Blender.
 
 Covers:
-  * the five contracts load and are themselves well-formed
+  * the baseline contracts (plus any registered later, e.g. terrain) load
+    and are themselves well-formed
   * every checked-in definition satisfies its contract
   * the hand-rolled validator's error reporting (JSON pointers, keyword set)
   * the loader wires validation into Context.load_definition (exit 2)
@@ -37,11 +38,14 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 # --- contracts --------------------------------------------------------------
-def test_all_five_contracts_exist_and_declare_2020_12():
-    assert set(CONTRACT_FILES) == {
+def test_baseline_contracts_exist_and_every_contract_declares_2020_12():
+    # The original five must all still exist; later stages may register more
+    # (e.g. terrain-definition), so only the baseline is pinned exactly.
+    assert {
         "species-definition", "creature-definition", "asset-manifest",
         "status-envelope", "research-record",
-    }
+    } <= set(CONTRACT_FILES)
+    assert set(contract_names()) == set(CONTRACT_FILES)
     for name in contract_names():
         schema = load_contract(name)
         assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"

@@ -655,3 +655,29 @@ def test_env_override_finds_tool(tmp_path: Path, monkeypatch):
     monkeypatch.setenv("STEALTHOS_GLTFPACK", str(fake))
     state = toolbox.discover("gltfpack")
     assert state.available is True and state.path == str(fake)
+
+def test_tool_probe_survives_windows_codepage_output(monkeypatch):
+    """A cp1252 banner byte must not raise UnicodeDecodeError (see [[blender-not-installed]]).
+
+    Regression: a tool printing byte 0x90 on a cp1252 Windows host used to abort
+    the reader thread and wedge the whole worker process.
+    """
+    import subprocess as _sp
+    from stalthos_toolkit.optimize import tools
+
+    seen: dict = {}
+
+    class _Proc:
+        returncode = 0
+        stdout = "gltfpack v0.20 0x90\n"
+        stderr = ""
+
+    def _fake_run(argv, **kw):
+        seen.update(kw)
+        return _Proc()
+
+    monkeypatch.setattr(tools.shutil, "which", lambda n: "C:/tools/gltfpack.exe")
+    monkeypatch.setattr(tools.subprocess, "run", _fake_run)
+    version = tools.probe_version("C:/tools/gltfpack.exe")
+    assert version and version.startswith("0.20")
+    assert seen["encoding"] == "utf-8" and seen["errors"] == "replace"

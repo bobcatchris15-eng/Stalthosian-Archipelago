@@ -326,6 +326,39 @@ class Heightfield:
         ]
         return out
 
+    # --- derived grids -----------------------------------------------------
+    # `elevation` is the canonical height vector; `slope_degrees` is a derived
+    # grid computed once per heightfield (deterministic, cached).
+
+    @property
+    def elevation(self) -> list[float]:
+        return self.data
+
+    @property
+    def slope_degrees(self) -> list[float]:
+        cached = getattr(self, "_slope_cache", None)
+        if cached is not None and len(cached) == len(self.data):
+            return cached
+        w, h, cell = self.width, self.height, self.cell_size
+        out: list[float] = [0.0] * (w * h)
+        if w < 2 or h < 2 or cell <= 0.0:
+            self._slope_cache = out
+            return out
+        for iy in range(h):
+            y0 = max(iy - 1, 0)
+            y1 = min(iy + 1, h - 1)
+            dy = (y1 - y0) * cell
+            row = iy * w
+            for ix in range(w):
+                x0 = max(ix - 1, 0)
+                x1 = min(ix + 1, w - 1)
+                dx = (x1 - x0) * cell
+                gx = (self.get(x1, iy) - self.get(x0, iy)) / dx
+                gy = (self.get(ix, y1) - self.get(ix, y0)) / dy
+                out[row + ix] = math.degrees(math.atan(math.hypot(gx, gy)))
+        object.__setattr__(self, "_slope_cache", out)
+        return out
+
     def stats(self) -> dict[str, float]:
         if not self.data:
             return {"min": 0.0, "max": 0.0, "mean": 0.0, "land_fraction": 0.0, "cells": 0}

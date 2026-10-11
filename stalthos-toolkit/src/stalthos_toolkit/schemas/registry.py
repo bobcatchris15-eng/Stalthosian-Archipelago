@@ -28,6 +28,7 @@ CONTRACT_FILES = {
     "asset-manifest": "asset-manifest.schema.json",
     "status-envelope": "status-envelope.schema.json",
     "research-record": "research-record.schema.json",
+    "terrain-definition": "terrain-definition.schema.json",
 }
 
 

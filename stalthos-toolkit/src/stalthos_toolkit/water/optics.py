@@ -48,10 +48,11 @@ __all__ = [
     "TURBIDITY_UNITS",
     "TURBIDITY_TO_SCATTERING",
     "SUN_GLINT_BANDS",
+    "SUN_GLINT_LABELS",
     "DEPTH_RAMP",
     "WET_SAND",
     "DRYING",
-    "FOAM",
+    "FOAM_RULES",
     "SHALLOW_SSS",
     "LIGHTING",
     "absorption_coefficient_m",
@@ -357,27 +358,44 @@ TURBIDITY_TO_SCATTERING = {"ntu": 0.012, "ftu": 0.012, "mg_l_ss": 0.35}
 #: the band edges and the roughness numbers are presentation fits to that
 #: model's shape (slope variance ~ (0.003 + 0.00512 * U10)), not a lookup.
 SUN_GLINT_BANDS = {
-    # beaufort: (label, wind_ms, slope_variance, roughness, normal_scale)
-    0: {"label": "glassy calm", "wind_ms": 0.5, "slope_variance": 0.003,
+    # (beaufort_name, wind_ms, slope_variance, roughness, normal_scale)
+    0: {"beaufort_name": "glassy calm", "wind_ms": 0.5, "slope_variance": 0.003,
         "roughness": 0.005, "normal_scale": 0.05},
-    1: {"label": "light air", "wind_ms": 1.5, "slope_variance": 0.0038,
+    1: {"beaufort_name": "light air", "wind_ms": 1.5, "slope_variance": 0.0038,
         "roughness": 0.010, "normal_scale": 0.12},
-    2: {"label": "light breeze", "wind_ms": 3.0, "slope_variance": 0.0056,
+    2: {"beaufort_name": "light breeze", "wind_ms": 3.0, "slope_variance": 0.0056,
         "roughness": 0.022, "normal_scale": 0.28},
-    3: {"label": "gentle breeze", "wind_ms": 5.5, "slope_variance": 0.0074,
+    3: {"beaufort_name": "gentle breeze", "wind_ms": 5.5, "slope_variance": 0.0074,
         "roughness": 0.040, "normal_scale": 0.50},
-    4: {"label": "moderate breeze", "wind_ms": 8.0, "slope_variance": 0.0103,
+    4: {"beaufort_name": "moderate breeze", "wind_ms": 8.0, "slope_variance": 0.0103,
         "roughness": 0.070, "normal_scale": 0.85},
-    5: {"label": "fresh breeze", "wind_ms": 10.5, "slope_variance": 0.0129,
+    5: {"beaufort_name": "fresh breeze", "wind_ms": 10.5, "slope_variance": 0.0129,
         "roughness": 0.110, "normal_scale": 1.30},
-    6: {"label": "strong breeze", "wind_ms": 13.5, "slope_variance": 0.0165,
+    6: {"beaufort_name": "strong breeze", "wind_ms": 13.5, "slope_variance": 0.0165,
         "roughness": 0.165, "normal_scale": 1.90},
-    7: {"label": "near gale", "wind_ms": 16.5, "slope_variance": 0.0201,
+    7: {"beaufort_name": "near gale", "wind_ms": 16.5, "slope_variance": 0.0201,
         "roughness": 0.240, "normal_scale": 2.70},
-    8: {"label": "gale", "wind_ms": 19.5, "slope_variance": 0.0237,
+    8: {"beaufort_name": "gale", "wind_ms": 19.5, "slope_variance": 0.0237,
         "roughness": 0.340, "normal_scale": 3.80},
-    9: {"label": "strong gale", "wind_ms": 22.5, "slope_variance": 0.0273,
+    9: {"beaufort_name": "strong gale", "wind_ms": 22.5, "slope_variance": 0.0273,
         "roughness": 0.470, "normal_scale": 5.20},
+}
+
+#: Short artist-facing name for each glint band, keyed by sea state 0..9.
+#: ARTISTIC: these are *display* names for HUDs, layer names and material
+#: variants -- not a meteorology vocabulary. The canonical WMO Beaufort names
+#: stay in `SUN_GLINT_BANDS[state]["beaufort_name"]`; do not conflate the two.
+SUN_GLINT_LABELS = {
+    0: "glass",
+    1: "ripples",
+    2: "cat's paws",
+    3: "chop",
+    4: "light chop",
+    5: "waves",
+    6: "sea",
+    7: "swell",
+    8: "rough sea",
+    9: "high sea",
 }
 
 #: Clamp for the roughness the shader may actually receive. ARTISTIC: above ~0.5
@@ -434,7 +452,7 @@ DRYING = {
 }
 
 # --- foam ---------------------------------------------------------------------
-FOAM = {
+FOAM_RULES = {
     #: Foam coverage 0..1 is a *display* quantity. The three generator rules
     #: below each produce a coverage in [0,1]; they are combined by
     #: `foam_amount`. Every field is bounded and the bounds are asserted by tests.
@@ -723,13 +741,16 @@ def foam_amount(kind: str, *, strength: float = 1.0) -> float:
     `kind` is one of `breaking_crest`, `shoreline_swash`, `obstacle_wake`.
     `strength` is the rule's own driver (wave height ratio, swash ratio, flow
     ratio) already normalised to [0, 1] by the caller. The result is clamped to
-    the rule's `max_coverage` and to FOAM["max_coverage"].
+    the rule's `max_coverage` and to FOAM_RULES["max_coverage"].
     """
-    rules = FOAM.get(kind)
+    rules = FOAM_RULES.get(kind)
     if rules is None:
-        raise KeyError(f"unknown foam rule {kind!r}; known: {sorted(k for k in FOAM if isinstance(FOAM[k], dict))}")
+        raise KeyError(
+            f"unknown foam rule {kind!r}; "
+            f"known: {sorted(k for k in FOAM_RULES if isinstance(FOAM_RULES[k], dict))}"
+        )
     s = min(1.0, max(0.0, float(strength)))
-    return min(FOAM["max_coverage"], rules["max_coverage"]) * s
+    return min(FOAM_RULES["max_coverage"], rules["max_coverage"]) * s
 
 
 def sea_state_glint(sea_state: int | str, illumination: str = "clear_sky") -> dict[str, float]:
@@ -750,7 +771,8 @@ def sea_state_glint(sea_state: int | str, illumination: str = "clear_sky") -> di
     light = LIGHTING[illumination]
     roughness = min(SUN_GLINT_ROUGHNESS_MAX,
                     max(0.0, band["roughness"] + light["roughness_offset"]))
-    band.pop("label")
+    band.pop("label", None)
+    band.pop("beaufort_name", None)
     band["roughness"] = roughness
     band["specular_gain"] = light["specular_gain"]
     band["ambient_gain"] = light["ambient_gain"]
@@ -862,7 +884,8 @@ def optics_table() -> dict[str, Any]:
         },
         "sun_glint": {
             str(k): {
-                "label": band["label"],
+                "label": SUN_GLINT_LABELS[k],
+                "beaufort_name": band["beaufort_name"],
                 "wind_ms": _param(band["wind_ms"], "mobley94", "m/s",
                                   "ARTISTIC: representative, from the Cox-Munk U10 range."),
                 "slope_variance": _param(band["slope_variance"], "mobley94", None,
@@ -904,17 +927,17 @@ def optics_table() -> dict[str, Any]:
             "residual_darkening": _param(DRYING["residual_darkening"], "mobley94", None, "ARTISTIC."),
         },
         "foam": {
-            "max_coverage": _param(FOAM["max_coverage"], "mobley94", None,
+            "max_coverage": _param(FOAM_RULES["max_coverage"], "mobley94", None,
                                    "ARTISTIC: hard clamp on coverage."),
-            "bubble_scale_mm": _param(FOAM["bubble_scale_mm"], "mobley94", "mm", "ARTISTIC."),
-            "roughness": _param(FOAM["roughness"], "mobley94", None, "ARTISTIC."),
+            "bubble_scale_mm": _param(FOAM_RULES["bubble_scale_mm"], "mobley94", "mm", "ARTISTIC."),
+            "roughness": _param(FOAM_RULES["roughness"], "mobley94", None, "ARTISTIC."),
             "rules": {
                 kind: {
                     field: _param(val, "mobley94", None, "ARTISTIC: bounded display parameter.")
                     if not isinstance(val, dict) else val
                     for field, val in rule.items()
                 }
-                for kind, rule in FOAM.items() if isinstance(rule, dict)
+                for kind, rule in FOAM_RULES.items() if isinstance(rule, dict)
             },
         },
         "shallow_sss": {

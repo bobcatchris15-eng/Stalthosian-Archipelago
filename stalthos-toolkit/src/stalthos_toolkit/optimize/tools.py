@@ -104,6 +104,10 @@ def probe_version(path: str | None, *, timeout: float = 20.0) -> str | None:
             proc = subprocess.run(  # noqa: S603 - fixed argv, no shell
                 [path, *args],
                 capture_output=True, text=True, timeout=timeout, check=False,
+                # Never inherit the locale codec: a Windows cp1252 byte in a
+                # tool banner used to raise UnicodeDecodeError here, which
+                # aborted the reader thread and wedged the whole worker.
+                encoding="utf-8", errors="replace",
             )
         except (OSError, subprocess.SubprocessError):
             return None
@@ -152,6 +156,7 @@ def run_tool(path: str, args: Sequence[str], *, timeout: float | None = None,
     return subprocess.run(  # noqa: S603 - argv list, shell=False
         [path, *args],
         capture_output=True, text=True, timeout=timeout, cwd=cwd, check=False,
+        encoding="utf-8", errors="replace",
     )
 
 

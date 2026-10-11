@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stalthosian-archipelago.invalid/contracts/terrain-definition.schema.json",
+  "title": "Stalthos terrain definition",
+  "description": "Authoring input for the environment stage (terrain generation, hydrology, biome classification). One file per island or tile cluster. Every parameter here is an approximation chosen for display plausibility, not a measured geophysical quantity; the command emits Metric.measured=false for anything it cannot actually measure.",
+  "type": "object",
+  "required": [
+    "schema",
+    "kind",
+    "id",
+    "extent",
+    "resolution",
+    "seed_label",
+    "sea_level",
+    "generator",
+    "hydrology",
+    "biomes",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "description": "Which contract this document claims to satisfy.",
+      "enum": ["terrain-definition"]
+    },
+    "kind": {
+      "description": "Geographic scope. 'archipelago' seeds one run of the heightfield over the whole extent; 'island' is the common case.",
+      "enum": ["archipelago", "island", "tile"]
+    },
+    "id": {
+      "$ref": "#/$defs/slug",
+      "description": "Stable logical id, e.g. 'terrain.serrawhal.island'. Used for artifact ids and report filenames."
+    },
+    "version": {"type": "integer", "minimum": 1, "default": 1},
+    "name": {"type": "string", "minLength": 1},
+    "uncertainty": {
+      "$ref": "#/$defs/uncertainty",
+      "description": "Highest tier of speculation in this file. Terrain shapes here are invented landforms, not reconstructions of any real place."
+    },
+    "extent": {
+      "description": "Horizontal extent of the heightfield, in metres. Square, axis-aligned.",
+      "type": "object",
+      "required": ["size_m"],
+      "additionalProperties": false,
+      "properties": {
+        "size_m": {"type": "number", "exclusiveMinimum": 0, "description": "Edge length in metres."},
+        "seed_point": {
+          "type": "array",
+          "items": {"type": "number"},
+          "description": "Optional provenance note only; the pipeline is seed-driven, not coordinate-driven."
+        }
+      }
+    },
+    "resolution": {
+      "description": "Heightfield sampling. cells is the grid edge count; cell_size_m is derived as size_m / cells and reported, not authored.",
+      "type": "object",
+      "required": ["cells"],
+      "additionalProperties": false,
+      "properties": {
+        "cells": {"type": "integer", "minimum": 4, "maximum": 512, "description": "Grid edge count (cells x cells samples)."},
+        "cell_size_m": {"type": "number", "exclusiveMinimum": 0, "description": "Optional authored cell size; conflicts with size_m/cells are reported as a warning."},
+        "smooth_iterations": {"type": "integer", "minimum": 0, "maximum": 8, "default": 2}
+      }
+    },
+    "sea_level": {
+      "description": "Mean sea level in metres. Cells at or below this are submerged.",
+      "type": "number"
+    },
+    "elevation_range_m": {
+      "description": "Authored relief hint, [low, high] in metres. The generator produces something in this band; it is not a measurement.",
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "generator": {
+      "description": "Heightfield shaping parameters. All fields optional; defaults give a plausible volcanic island with a central ridge.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ridge_count": {"type": "integer", "minimum": 0, "maximum": 8, "default": 2},
+        "ridge_amplitude_m": {"type": "number", "minimum": 0, "default": 180.0},
+        "basin_depth_m": {"type": "number", "minimum": 0, "default": 40.0},
+        "shelf_width_cells": {"type": "integer", "minimum": 1, "maximum": 64, "default": 6, "description": "Width of the shallow shelf ring around the island."},
+        "seafloor_slope_m": {"type": "number", "default": 120.0},
+        "coast_fractal_octaves": {"type": "integer", "minimum": 1, "maximum": 8, "default": 5},
+        "coast_fractal_gain": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.55},
+        "warping": {"type": "string", "enum": ["none", "domain_warp", "billow"], "default": "domain_warp"}
+      }
+    },
+    "hydrology": {
+      "description": "Flow routing and water-table parameters. Everything here is a display approximation: no solver, no mass balance.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sea_level_m": {"type": "number", "description": "Drainage sink elevation. Defaults to the document's sea_level."},
+        "sea_level_tolerance_m": {"type": "number", "minimum": 0, "default": 0.5, "description": "Flat cells within this height of sea level are treated as water."},
+        "depression_filling": {
+          "description": "How sink holes are handled before routing. 'breached' is deterministic and cheap; 'priority_flood' is the plainer approximation; 'none' leaves pits unrouted.",
+          "enum": ["none", "priority_flood", "breached"],
+          "default": "priority_flood"
+        },
+        "pit_filling_max_cells": {"type": "integer", "minimum": 1, "maximum": 1000000, "default": 20000},
+        "water_table_base_m": {"type": "number", "description": "Percolation floor above sea level, in metres."},
+        "water_table_gain": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.35, "description": "How much elevation raises the perched water table."},
+        "water_table_depth_scale_m": {"type": "number", "exclusiveMinimum": 0, "default": 8.0},
+        "infiltration_mm_hr": {"type": "number", "minimum": 0, "default": 35.0},
+        "cumulative_infiltration_mm": {"type": "number", "minimum": 0, "default": 120.0, "description": "Capacity above which runoff is allowed to form."},
+        "flow_accumulation_threshold_cells": {"type": "integer", "minimum": 1, "default": 40},
+        "reach_threshold_cells": {"type": "integer", "minimum": 1, "default": 8}
+      }
+    },
+    "biomes": {
+      "description": "Biome classification overrides and thresholds. Codes and briefs are fixed by the implementation; this block only supplies thresholds, dominant-biome forcing and tags.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dominant_biome": {"enum": ["auto"], "default": "auto", "description": "'auto' keeps the largest emergent biome; any other value forces it and reports the share it holds."},
+        "force_biomes": {
+          "description": "Biome names that may be emitted. Restricting the palette is useful for tiles meant to sit inside one flora brief.",
+          "type": "array",
+          "items": {"$ref": "#/$defs/biome"}
+        },
+        "wetland_water_table_m": {"type": "number", "description": "Water-table depth below which wetland is possible."},
+        "scrub_slope": {"type": "number", "minimum": 0, "description": "Slope (rise/run) at or above which scrub replaces grassland."},
+        "alpine_heat_deficit": {"type": "number", "description": "Elevation above which the profile is alpine regardless of wetness."},
+        "montane_heat_deficit": {"type": "number", "description": "Elevation above which the profile is montane rather than warm."},
+        "coastal_slope": {"type": "number", "minimum": 0, "default": 0.06},
+        "grassland_wetness": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.4, "description": "At or below this wetness, grassland becomes scrub."},
+        "subtidal_depth_m": {"type": "number", "default": 18.0},
+        "deepsea_depth_m": {"type": "number", "default": 120.0},
+        "depth_steps_m": {
+          "description": "Extra submerged depth bands, ascending, for bespoke depth palettes.",
+          "type": "array",
+          "items": {"type": "number", "exclusiveMinimum": 0}
+        },
+        "tags": {
+          "description": "Free-form habitat tags carried into the biome report; they must already appear in the Rauken flora/ecology briefs.",
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "provenance": {
+      "description": "Where this landform came from. Planning documents are legitimate sources; invented coordinates are not.",
+      "type": "object",
+      "required": ["sources"],
+      "additionalProperties": false,
+      "properties": {
+        "notes": {"type": "string"},
+        "sources": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/reference"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "description": "Dotted lowercase identifier.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$"
+    },
+    "uncertainty": {
+      "description": "Highest tier of speculation anywhere in the document.",
+      "enum": ["observed", "inferred", "modelled", "speculative"]
+    },
+    "biome": {
+      "description": "Biome name from the fixed implementation palette (alpine, montane, drainage, mangrove, wetland, riparian, tidal, shoreline, coastal, grassland, scrub, subtidal, deepsea).",
+      "enum": [
+        "alpine",
+        "montane",
+        "drainage",
+        "mangrove",
+        "wetland",
+        "riparian",
+        "tidal",
+        "shoreline",
+        "coastal",
+        "grassland",
+        "scrub",
+        "subtidal",
+        "deepsea"
+      ]
+    },
+    "reference": {
+      "description": "A source consulted for this definition. usage_rights absent => uncertainty tier 'unverified' + warning.",
+      "type": "object",
+      "required": ["id", "locator", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/slug"},
+        "kind": {
+          "enum": [
+            "local_image",
+            "local_model",
+            "local_scan",
+            "book",
+            "journal",
+            "web",
+            "doi",
+            "museum_record",
+            "field_note",
+            "living_comparator",
+            "planning_doc"
+          ]
+        },
+        "locator": {"type": "string", "minLength": 1, "description": "Relative path, URL or DOI. Never invented."},
+        "title": {"type": "string"},
+        "usage_rights": {
+          "enum": [
+            "cc0",
+            "cc-by",
+            "cc-by-sa",
+            "public_domain",
+            "own_work",
+            "permission_granted",
+            "internal_reference",
+            "unknown",
+            "unverified"
+          ]
+        },
+        "note": {"type": "string"}
+      }
+    }
+  }
+}
