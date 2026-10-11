@@ -102,11 +102,12 @@ checks and its scope are described below.
 ## Persistence DTO boundary
 
 `persistence.hpp` provides a versioned, engine-independent `SaveData` format
-(`STL2`, while continuing to read `STL1`) and a checked reconstruction seam for
+(`STL3`, while continuing to read `STL1` and `STL2`) and a checked reconstruction seam for
 the fields represented in that DTO: independently accumulated physical and
 calendar time, world seed, retention limit, entity IDs and regions,
 retained-entity profile/status, dead-hero identity, and tree exceptions. The diagnostic engine host now connects capture and restore through explicit
-save/load arguments. Needs, age, complete body dynamics and other game state
+save/load arguments. STL3 additionally stores optional current-hero species,
+calendar age and validated life stage. Needs, bonds, complete body dynamics and other game state
 remain outside this format. No player save/load UI is implemented. Do not
 describe this seam as complete game persistence. Its optional host pose stores only diagnostic position, heading,
 and camera mode; it is not the animal's complete state.
@@ -131,6 +132,10 @@ entity and tree references against its actual catalog; the DTO can only reject
 internal duplicates and conflicting IDs because that catalog is not available
 here.
 
-Format version 2 fixes the enum ordinals and collection bounds. Changing those
-fields requires an explicit compatibility/versioning decision. STL1 remains a
-read-only compatibility format; new writes always produce STL2.
+Format version 3 retains the earlier enum ordinals and collection bounds and
+adds optional hero lifecycle data after the host pose. A lifecycle species must
+match any retained record for that same hero. STL1 and STL2 remain read-only
+compatibility formats; new writes always produce STL3. Legacy age is unknown,
+so explicit lifecycle migration starts at age zero, preferring the known retained
+hero species before a caller-supplied provisional fallback. See
+[the lifecycle format](../docs/lifecycle-persistence.md) for the complete policy.

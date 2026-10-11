@@ -1,0 +1,64 @@
+{
+  "task_id": "packet-four-integration",
+  "outcome": "partial",
+  "native_build": "passed final merged Release",
+  "native_ctest": "4/4 passed",
+  "focused_gait": "6 passed in 0.15s",
+  "focused_toolkit": "pending var/reports/packet-four-final-focused.log",
+  "full_toolkit": "pending var/reports/toolkit-packet-four-final-full.log; earlier pre-correction run interrupted and retained",
+  "actual_blender_rig": "ok exit 0; contact acceptance false",
+  "native_save_load": "adult age 3770.55498319678 preserved then advanced to 3773.764067902928",
+  "native_death": "terminal death and retained world truth verified",
+  "corrupt_save": {
+    "rejected": true,
+    "prior_save_unchanged": true,
+    "prior_save_sha256": "74336D68120A9EBA6C30C5ACFE5947069330A253D8F02E3655979464B5CF1DBC"
+  },
+  "review_corrections": [
+    "reject contradictory hero species",
+    "legacy species from known retained hero",
+    "require structural glTF validation success",
+    "declared contact selector/tolerance consumption",
+    "sample spread labeling avoids slip claim",
+    "backward motion plays clip",
+    "recompute hero alive after death before movement"
+  ],
+  "pending_jules": {
+    "jules-needs": "4917980815644905444",
+    "jules-relationships": "7316297015894091861",
+    "jules-activation": "16396772999683175155"
+  },
+  "remaining": [
+    "foot grounding/low-tail clearance",
+    "stride coupling and foot locking",
+    "post-death save reload/successor selection",
+    "needs/bonds/reproduction/full island coverage",
+    "representative visual and external frame-time acceptance"
+  ],
+  "full_draft_complete": false,
+  "fps_accepted": false,
+  "source_sha256": {
+    "stalthos-runtime/domain/persistence.hpp": "ecd2f1572ce012412785c2fb141baded7ae369e26b40ed3df9eef7ece65c63b3",
+    "stalthos-runtime/engine/main.cpp": "974f87fe205f4908a816ecd56c26740a1b19ef212a1301f0a842252c0b5a5194",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py": "1e2348274c0201a2c3706cd49bd913d56631f618f8841887f52d4369d5141737",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py": "2a8ad8bf36b16680e12de48f8a9f0b3dbe2db8507e94eeeea6685d8d2231eb0a",
+    "stalthos-toolkit/src/stalthos_toolkit/commands/rig_creature.py": "03145de69618339d10fc3045f7855ee87fef7b8690c1a2e92f8b91cc8b4242ad"
+  },
+  "publication": "Publish validated native lifecycle/persistence/actor and worker policy to main. Toolkit candidate remains local pending complete final suite.",
+  "pending_test_processes": {
+    "full_pytest_pid": 6768,
+    "full_exec_session": 80678,
+    "focused_pytest_pid": 15304,
+    "focused_exec_session": 75129
+  },
+  "native_evidence": [
+    "var/reports/packet-four-native-final-build.log",
+    "var/reports/packet-four-native-final-ctest.log",
+    "var/reports/packet-four-native-save.log",
+    "var/reports/packet-four-native-load.log",
+    "var/reports/packet-four-native-death.log",
+    "var/reports/packet-four-native-corrupt-proof.json"
+  ],
+  "secret_scan": "passed staged added lines",
+  "source_graph": "updated; 76 sources have zero extracted nodes, semantic completeness not claimed"
+}

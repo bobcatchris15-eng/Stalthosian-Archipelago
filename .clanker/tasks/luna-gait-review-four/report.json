@@ -1,0 +1,59 @@
+{
+  "scope": {
+    "graph_digest": "unavailable: graphify-out/graph.json is absent in this worktree",
+    "base_digest": "unavailable: no validated graph baseline is present",
+    "artifacts": [
+      "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+      "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+      "stalthos-toolkit/src/stalthos_toolkit/commands/rig_creature.py",
+      "stalthos-toolkit/tests/test_gait.py",
+      "stalthos-toolkit/tests/test_blender.py",
+      "E:/Stalthosian Archipelago/var/worktrees/luna-walk-cycle/var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+      "E:/Stalthosian Archipelago/var/worktrees/luna-walk-cycle/var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
+  "findings": [
+    {
+      "severity": "blocking",
+      "claim": "The produced clip does not meet the authored ground-contact acceptance; it is a partial proxy animation, not an accepted gait.",
+      "evidence": "The incoming worktree walk_cycle.json reports minimum hind-foot gaps of 0.64849 m (left) and 0.64639 m (right) against 0.02 m tolerances, zero of 9 nominal-stance samples in tolerance for each target, and sampled horizontal displacement of 0.10378 m / 0.07900 m. Its validation.passed is false and rig result contains the geometric-contact warning. This is correctly visible as failure; the GLB export itself remains a partial artifact.",
+      "reproducer": "Read var/worktrees/luna-walk-cycle/var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json; see also var/luna-gait-review-four/probe.log."
+    },
+    {
+      "severity": "material",
+      "claim": "The typed GLB animation check accepts structurally invalid channels because it treats validate_structure().validated as an error-free result.",
+      "evidence": "commands/rig_creature.py:29-33 checks structural.validated and nonzero channel count but ignores structural.errors/issues. optimize/glb.py:765 returns validated=true even when its errors count is nonzero. The synthetic malformed-target probe reports passed=true while structural_errors=1 and animation_target_missing for node 999.",
+      "reproducer": "Run python var/luna-gait-review-four/probe.py with PYTHONPATH set to stalthos-toolkit/src."
+    },
+    {
+      "severity": "material",
+      "claim": "Authored contact selectors are not used to construct the checks, and differing target tolerances collapse to the most permissive maximum.",
+      "evidence": "blender/scripts/rig.py:229-235 reads the contact but computes one max tolerance and hard-codes both selector aliases; later loops at :243 and :290 use that fixed map. The current smalltrotter YAML happens to define exactly those two selectors at the same 0.02 m tolerance, so this run matches its input. Removing, renaming, adding or tightening one target would still produce checks for the hard-coded two selectors and/or weaken the stricter target threshold.",
+      "reproducer": "Compare stalthos-toolkit/species/creatures/smalltrotter.yaml:309-317 with blender/scripts/rig.py:229-235, 290-293."
+    },
+    {
+      "severity": "minor",
+      "claim": "The sampled stance displacement metric is anchored to the first stored stance point rather than the touchdown point, so it is not a maximum slip-from-contact measurement.",
+      "evidence": "rig.py:294-295 samples at six Hz; :314-317 appends only stance positions; :343-350 measures every appended point from positions[0]. For rear_R the cyclic stance spans phase 0.5 through 1.0 and wraps to 0.0-0.12. Since the positions are collected in ascending phase order, positions[0] is phase 0.0 (late stance), not the phase 0.5 touchdown. The reported 0.07900 m is therefore a sampled displacement relative to that late-stance anchor and may miss the maximum excursion from contact. The metadata also discloses omitted actor stride translation and says this proxy does not prove horizontal foot lock.",
+      "reproducer": "Run python var/luna-gait-review-four/probe.py with PYTHONPATH set to stalthos-toolkit/src; compare rear_right_sampled_stance_phases with rig.py:294-350."
+    }
+  ],
+  "unproven_claims": [
+    "Neutral-only compatibility is supported by the conditional source path (gait outputs are added only when a walk_cycle contact exists), but this review did not rerun the Blender-backed neutral-only export.",
+    "The produced GLB has a real animation and matching sampled channel endpoints, but native Wicked actor playback was not demonstrated by this source/GLB review."
+  ],
+  "validation_debt": [
+    "The GLB validator needs a negative case with an existing animation containing an invalid target or other structural issue; the current test only covers a GLB with no animation at all.",
+    "Contact validation needs per-selector mapping and tolerances, with missing/unknown selectors represented as typed validation failures rather than implicit proxy checks.",
+    "Foot-slip aggregation should anchor to touchdown and report sampled per-stance excursion; it currently measures displacement from the first qualifying point in ascending phase order."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 4,
+    "attempted": "Read the handoff before implementation rationale, inspected the requested diff and existing definition, ran four Blender-free gait tests, parsed the actual exported GLB and checked structural errors/varying channels/endpoints, passed a malformed missing-node channel through the typed validator, checked cyclic rear-right stance-phase wrapping and slip-anchor semantics, and inspected the actual measured contact report. The combined test_gait plus test_blender run was interrupted in a slow timeout test to avoid duplicating the parent's already-running full suite; it is not counted as complete."
+  }
+}

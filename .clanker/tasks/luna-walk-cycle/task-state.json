@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-walk-cycle",
+  "status": "blocked",
+  "base_revision": "f72f3b5b20de8bb40a8d4b7310592c745dee0a3c",
+  "current_step": "verify-and-report",
+  "completed_steps": [
+    "read instructions and prior readiness report",
+    "implemented gait helper and conditional animated GLB export",
+    "ran focused Blender and offline tests",
+    "measured neutral foot pads, toe endpoints, and stance motion",
+    "saved final artifact and evidence receipt"
+  ],
+  "next_step": "Resolve foot-pad contact with an accepted foot IK/stride model and validate tail clearance before marking gait contact accepted.",
+  "touched_artifacts": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+    "stalthos-toolkit/src/stalthos_toolkit/commands/rig_creature.py",
+    "stalthos-toolkit/tests/test_blender.py",
+    "stalthos-toolkit/tests/test_gait.py",
+    ".clanker/tasks/luna-walk-cycle/brief.md",
+    ".clanker/tasks/luna-walk-cycle/task-state.json",
+    ".clanker/tasks/luna-walk-cycle/receipt.json",
+    ".clanker/tasks/luna-walk-cycle/report.md",
+    ".clanker/tasks/luna-walk-cycle/evidence.json",
+    ".clanker/tasks/luna-walk-cycle/focused-tests.log",
+    ".clanker/tasks/luna-walk-cycle/gait-tests.log",
+    ".clanker/tasks/luna-walk-cycle/build-creature.log",
+    ".clanker/tasks/luna-walk-cycle/rig-creature.log",
+    ".clanker/tasks/luna-walk-cycle/initial-failure.txt",
+    ".clanker/tasks/luna-walk-cycle/inspect_geometry.py",
+    ".clanker/tasks/luna-walk-cycle/geometry-inspection.log",
+    ".clanker/tasks/luna-walk-cycle/finalize.py",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.neutral.glb",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json"
+  ],
+  "validation": {
+    "passed": false,
+    "command": "python -m pytest -q stalthos-toolkit/tests/test_blender.py stalthos-toolkit/tests/test_gait.py",
+    "evidence_path": ".clanker/tasks/luna-walk-cycle/evidence.json"
+  },
+  "blockers": [
+    "Foot-pad stance contact remains 0.646-0.665 m above the declared z=0 plane and horizontal stance slip reaches 0.104 m. Follow-up requires foot IK/stride handling and tail clearance review."
+  ],
+  "assumptions": [
+    "Mapped the authored left/right pes selectors to hind toe bones because no matching pes_foot_l/r bones exist.",
+    "Used generated foot-pad bottom vertices, not toe-bone endpoints, as the contact surface.",
+    "Measured against the current z=0 scene plane; did not translate the model to conceal contact failure.",
+    "The 2.0 second cycle repeats at the runtime consumer; start/end keys are equal and the GLB animation contains one clip."
+  ],
+  "receipt_path": ".clanker/tasks/luna-walk-cycle/receipt.json",
+  "resume_instructions": "Start by inspecting this worktree at the walk-cycle handoff. The neutral and animated GLBs and their measured evidence are under var/luna-walk-cycle. The source implementation and focused tests are already complete and passed. Continue with the unresolved foot-pad ground contact and in-place slip; do not mark contact accepted until evaluated stance pad vertices remain within tolerance and horizontal motion is proven. Preserve the current failed evidence.",
+  "updated": "2026-10-11T22:23:14.019361+00:00"
+}

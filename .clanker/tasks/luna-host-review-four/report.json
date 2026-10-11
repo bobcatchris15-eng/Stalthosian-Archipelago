@@ -1,0 +1,52 @@
+{
+  "scope": {
+    "graph_digest": "not available in isolated checkout",
+    "base_digest": "f72f3b5b20de8bb40a8d4b7310592c745dee0a3c",
+    "artifacts": [
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/domain/persistence.hpp",
+      "stalthos-runtime/domain/lifecycle.hpp",
+      "stalthos-runtime/domain/foundation.hpp",
+      "stalthos-runtime/scripts/Run.ps1",
+      "stalthos-runtime/tests/persistence.cpp",
+      "stalthos-runtime/docs/actor-host.md",
+      "stalthos-runtime/docs/lifecycle-persistence.md",
+      "var/vendor/WickedEngine/WickedEngine/wiScene_Components.h",
+      "var/vendor/WickedEngine/WickedEngine/wiScene.cpp",
+      "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172249-ea4eba59/runtime-receipt.json",
+      "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172258-68626fc5/runtime-receipt.json",
+      "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172306-9647dd73/runtime-receipt.json"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
+  "findings": [
+    {
+      "severity": "material",
+      "claim": "Backward movement translates the imported actor while pausing its walk animation.",
+      "evidence": "In stalthos-runtime/engine/main.cpp, `walking` is `diagnosticWalk || down('W')` (around line 315), while movement speed also becomes -1 for `down('S')` (around lines 317-318). The animation control later plays only when `walking && heroAlive`, otherwise it pauses (around lines 334-337). Thus S moves the host actor but leaves the imported walk clip paused. The current Run.ps1 interface has no scripted S-key input probe, and no GPU host was launched during this review.",
+      "reproducer": "Source reproduction: open main.cpp at the `walking`/`speed` assignments and compare with the animation Play/Pause branch. A native S-key input probe remains needed when it does not overlap the root capture."
+    },
+    {
+      "severity": "minor",
+      "claim": "The actor-host guide names the wrong save format for lifecycle restoration.",
+      "evidence": "stalthos-runtime/docs/actor-host.md says lifecycle is restored from STL2 (paragraph 4). The current writer emits STL3 in persistence.hpp, and the tests assert STL3 magic in `testLifecycleStl3RoundtripAndValidation`; lifecycle-persistence.md also correctly documents STL3.",
+      "reproducer": "Compare the paragraph in docs/actor-host.md with persistence.hpp's `writeSave` magic and tests/persistence.cpp's STL3 assertion."
+    }
+  ],
+  "unproven_claims": [
+    "The receipt's source-front and host-forward axis fields plus the parent yaw offset do not independently demonstrate the animal's visible heading under controlled A/D input. Source structure preserves importer-created descendants beneath a separate motion parent, but a controlled native turn capture is still needed for axis/heading evidence.",
+    "Imported playback receipts demonstrate animation timer advancement and nonzero local transform-channel pose change; they do not establish visible gait quality, planted-foot contact, acceptable tail clearance, or final visuals. The early/late screenshots from the supplied death-stage receipt appear effectively unchanged at their distant framing, and that receipt correctly leaves visual acceptance false."
+  ],
+  "validation_debt": [
+    "The host intentionally rejects a snapshot without a current hero. Domain persistence can restore no-current-hero/dead-history snapshots, while the host currently has no successor-selection or post-death continuation path. The actor-host and lifecycle-persistence documentation disclose this boundary, and no claim of complete game persistence is made.",
+    "No native host launch or input automation was run by this reviewer because the root owns the GPU capture. The supplied receipts are feasibility evidence only."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 1,
+    "attempted": "Read the handoff, current state, reviewer role and candidate source; inspected the actor host, persistence/lifecycle contracts, supplied tests, documentation, pinned Wicked animation/hierarchy APIs, and three worker-host receipts plus early/late images. Ran the isolated Release domain build with `stalthos-runtime/scripts/Build.ps1 -DomainOnly -BuildDirectory .\\var\\build\\luna-host-review-four`; CTest passed 4/4 (domain scenarios, persistence, reference landscape, lifecycle). No implementation edits or GPU host launch."
+  }
+}

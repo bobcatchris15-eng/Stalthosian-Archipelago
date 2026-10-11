@@ -1,0 +1,37 @@
+{
+  "task_id": "luna-host-review-four",
+  "base_head": "f72f3b5b20de8bb40a8d4b7310592c745dee0a3c",
+  "outcome": "advances_partially_with_material_input_behavior_debt",
+  "validation": {
+    "command": "stalthos-runtime/scripts/Build.ps1 -DomainOnly -BuildDirectory .\\var\\build\\luna-host-review-four",
+    "build": "Release build completed with MSVC 19.51 /W4 /WX /permissive- for persistence, lifecycle and scenario targets; CMake also built reference landscape.",
+    "ctest": "4/4 passed: domain-scenarios, domain-persistence, reference-landscape, domain-lifecycle",
+    "host_gpu_launch": "not run; root owns capture"
+  },
+  "evidence": [
+    "var/build/luna-host-review-four/configure.log",
+    "var/build/luna-host-review-four/build.log",
+    "var/build/luna-host-review-four/Testing/Temporary/LastTest.log",
+    "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172249-ea4eba59/runtime-receipt.json",
+    "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172258-68626fc5/runtime-receipt.json",
+    "var/worktrees/luna-actor-host/var/reports/runtime/20261011-172306-9647dd73/runtime-receipt.json"
+  ],
+  "findings": [
+    "S input moves the actor while pausing its walk clip (source-reproducible; native input probe pending).",
+    "docs/actor-host.md says STL2 for lifecycle restoration where current lifecycle records are in STL3."
+  ],
+  "accepted_limits": [
+    "No-current-hero host load, no successor selection, and no lifecycle-age continuation after death are documented capability debt, not a false success claim.",
+    "Visual quality, foot contact, tail clearance, and target performance remain unaccepted in receipts."
+  ],
+  "artifacts_changed": [
+    ".clanker/tasks/luna-host-review-four/report.json",
+    ".clanker/tasks/luna-host-review-four/receipt.json"
+  ],
+  "implementation_edits": [],
+  "cost": {
+    "retries": 0,
+    "tool_wall_seconds": 17,
+    "tier": "inherited"
+  }
+}

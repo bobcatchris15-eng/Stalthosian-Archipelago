@@ -1,0 +1,7 @@
+PASS All Species Profiles Initialized
+PASS Accelerated Calendar with physical seconds unchanged
+PASS Big Jumps give all transitions exactly once
+PASS Repeated Death is terminal
+PASS Restored State validates age/stage
+PASS Malformed Time and Overflow are rejected cleanly
+6/6 tests passed

@@ -1,0 +1,68 @@
+{
+  "task_id": "luna-actor-host",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Optional --creature imports into a fresh Wicked scene and rejects missing mesh, skin, animation, or TRS channels.",
+      "met": true,
+      "how_checked": "Built Release and ran Run.ps1 with the Smalltrotter GLB; runtime receipt reports one mesh, one skin, one animation, 222 transform channels."
+    },
+    {
+      "condition": "Imported hierarchy remains under a motion parent; looping animation plays while walking and pauses otherwise without per-frame rig reset.",
+      "met": true,
+      "how_checked": "Source inspection plus native run; 1,130 and 4,658 frames reported playing during diagnostic walking; local animated-target pose delta was measured."
+    },
+    {
+      "condition": "Lifecycle uses SimCore scaled TimeStep, restores/saves current hero lifecycle, and terminal death stops motion and calls heroDied.",
+      "met": true,
+      "how_checked": "Two-process Run.ps1 proof restored age/stage and advanced age; 17-second scale-1000 run reached Dead with hero_alive=false and hero_death_known=true."
+    },
+    {
+      "condition": "Run.ps1 accepts Creature and bounded CalendarScale; receipts contain early/late phase captures and actual timer/local pose evidence.",
+      "met": true,
+      "how_checked": "Executed Run.ps1 with both options; receipts and SHA-256-hashed early/late PNGs are listed in evidence.md."
+    },
+    {
+      "condition": "Preserve proxy fallback and report axis/grounding/visual limits accurately.",
+      "met": true,
+      "how_checked": "Default box path remains; actor host receipt records +X source, +Z host forward, provisional sole offset and false tail-clearance acceptance."
+    },
+    {
+      "condition": "Establish planted-feet/tail-clearance acceptance from native screenshots.",
+      "met": false,
+      "how_checked": "Images show playback, but gait source bounds put low tail below provisional sole plane; foot contact/tail clearance are explicitly unaccepted."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/actor-host.md",
+    ".clanker/tasks/luna-actor-host/brief.md",
+    ".clanker/tasks/luna-actor-host/evidence.md",
+    ".clanker/tasks/luna-actor-host/receipt.json",
+    ".clanker/tasks/luna-actor-host/task-state.json",
+    "stalthos-runtime/domain/persistence.hpp"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-actor-host/evidence.md",
+    "var/build/stalthos-runtime/build.log",
+    "var/build/stalthos-runtime/build-receipt.json",
+    "var/reports/runtime/20261011-172249-ea4eba59/runtime-receipt.json",
+    "var/reports/runtime/20261011-172249-ea4eba59/motion-early.png",
+    "var/reports/runtime/20261011-172249-ea4eba59/motion-late.png",
+    "var/reports/runtime/20261011-172258-68626fc5/runtime-receipt.json",
+    "var/reports/runtime/20261011-172306-9647dd73/runtime-receipt.json",
+    "GLB SHA-256 ba5245ce725a4488f04c5ca6792202889be589b46cdfe537083e6577193d8197",
+    "Host executable SHA-256 6f50e6bfb0fb9ba5343e71a04b6bee1cbb741e0f6d7b07d6f243f1f28070fb02"
+  ],
+  "findings": [
+    "Smalltrotter walk-cycle native playback and local pose change are proven on this host. Screenshots are feasibility evidence, not visual acceptance or target-hardware performance.",
+    "The lifecycle persistence header in this checkout was copied by the dispatcher for the final integration build; its source ownership remains with the lifecycle-save task.",
+    "Host startup deliberately requires a current live hero from a loaded snapshot, so a post-death save is recorded but cannot be relaunched through this diagnostic host."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Legacy saves without explicit lifecycle restore from the same retained-hero species when available; otherwise Smalltrotter is the age-zero fallback, following the dispatcher-supplied final persistence helper.",
+    "The supplied provisional sole offset is applied at the motion parent; this does not establish tail clearance or actual foot planting."
+  ]
+}

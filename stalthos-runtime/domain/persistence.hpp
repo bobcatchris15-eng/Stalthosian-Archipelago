@@ -1,6 +1,7 @@
 #pragma once
 
 #include "foundation.hpp"
+#include "lifecycle.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -26,12 +27,19 @@ struct RetainedEntity {
 struct DeadHero { Identity id; RegionId region; };
 struct RegionTrees { RegionId region; std::vector<TreeException> trees; std::uint64_t revision = 0; };
 struct HostPose { Vec3 position; double headingRadians = 0; std::uint8_t cameraMode = 0; };
+struct HeroLifecycleSnapshot {
+    Identity heroId;
+    HeroSpecies species;
+    double calendarAge = 0.0;
+    LifeStage stage = LifeStage::Hatchling;
+};
 struct SaveData {
     double physicalSeconds = 0.0;
     double calendarSeconds = 0.0;
     std::uint64_t seed = 0;
     std::size_t retentionLimit = 64;
     std::optional<ActiveEntity> hero;
+    std::optional<HeroLifecycleSnapshot> heroLifecycle;
     std::vector<ActiveEntity> activeTransients;
     std::vector<RetainedEntity> retained;
     std::vector<DeadHero> deadHeroes;
@@ -111,8 +119,10 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
-    // STL2 header, times, seed, retention limit, identities, and optional pose.
-    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) + 4;
+    // STL3 header, times, seed, retention limit, identities, optional pose,
+    // and the lifecycle presence byte plus its fixed-width payload.
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
+        1 + (data.heroLifecycle ? 18 : 0) + 4;
     size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
     size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
     size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
@@ -120,6 +130,17 @@ inline std::uint64_t encodedSize(const SaveData& data) {
     for (const auto& region : data.regions)
         size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
     if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
+    return size;
+}
+
+inline std::uint64_t encodedSizeStl2(const SaveData& data) {
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) + 4;
+    size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
+    size = checkedAdd(size, 4);
+    for (const auto& region : data.regions)
+        size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
     return size;
 }
 
@@ -136,6 +157,22 @@ inline void validate(const SaveData& data) {
     if (!std::isfinite(data.physicalSeconds) || data.physicalSeconds < 0) throw std::runtime_error("invalid physical time");
     if (data.pose && (!finite(data.pose->position) || !std::isfinite(data.pose->headingRadians) || data.pose->cameraMode > 2))
         throw std::runtime_error("invalid host pose");
+    if (data.heroLifecycle) {
+        const auto& life = *data.heroLifecycle;
+        if (!data.hero || life.heroId != data.hero->id)
+            throw std::runtime_error("lifecycle identity does not match current hero");
+        if (!valid(life.species)) throw std::runtime_error("invalid lifecycle species");
+        if (static_cast<unsigned>(life.stage) > static_cast<unsigned>(LifeStage::Dead))
+            throw std::runtime_error("invalid lifecycle stage");
+        if (life.stage == LifeStage::Dead)
+            throw std::runtime_error("dead lifecycle cannot belong to current live hero");
+        try {
+            Lifecycle checked(life.species);
+            checked.restoreState(life.species, life.calendarAge, life.stage);
+        } catch (const std::exception&) {
+            throw std::runtime_error("lifecycle profile, age, and stage are inconsistent");
+        }
+    }
     if (data.retentionLimit > MAX_RETAINED) throw std::runtime_error("retention limit exceeds size bound");
     if (data.retained.size() > data.retentionLimit) throw std::runtime_error("retained records exceed retention limit");
     if (data.activeTransients.size() > MAX_ACTIVE_TRANSIENTS) throw std::runtime_error("too many active transients");
@@ -156,6 +193,8 @@ inline void validate(const SaveData& data) {
     for (const auto& value : data.retained) {
         const bool isHero = data.hero && data.hero->id == value.id;
         if (isHero && (!value.alive || !value.active || data.hero->region != value.region)) throw std::runtime_error("inconsistent retained hero");
+        if (isHero && data.heroLifecycle && value.species != data.heroLifecycle->species)
+            throw std::runtime_error("retained hero species contradicts lifecycle species");
         if (activeIds.count(value.id) && !isHero) throw std::runtime_error("active retained overlap requires host representation");
         if (deadIds.count(value.id) && (value.alive || value.active)) throw std::runtime_error("inconsistent retained dead hero");
     }
@@ -202,8 +241,8 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL2", 4);
-    detail::write_u32(os, 2);
+    os.write("STL3", 4);
+    detail::write_u32(os, 3);
     detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
@@ -215,6 +254,13 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
         detail::write_double(os, data.pose->position.x); detail::write_double(os, data.pose->position.y);
         detail::write_double(os, data.pose->position.z); detail::write_double(os, data.pose->headingRadians);
         detail::write_u8(os, data.pose->cameraMode);
+    }
+    detail::write_u8(os, data.heroLifecycle ? 1 : 0);
+    if (data.heroLifecycle) {
+        detail::write_u64(os, data.heroLifecycle->heroId);
+        detail::write_u8(os, static_cast<std::uint8_t>(data.heroLifecycle->species));
+        detail::write_double(os, data.heroLifecycle->calendarAge);
+        detail::write_u8(os, static_cast<std::uint8_t>(data.heroLifecycle->stage));
     }
 
     auto active = data.activeTransients;
@@ -270,9 +316,11 @@ inline SaveData readSave(const std::filesystem::path& path) {
     if (!is.read(magic, 4))
         throw std::runtime_error("invalid magic or corrupt file");
     const bool legacy = std::strncmp(magic, "STL1", 4) == 0;
-    if (!legacy && std::strncmp(magic, "STL2", 4) != 0) throw std::runtime_error("invalid magic or corrupt file");
+    const bool stl2 = std::strncmp(magic, "STL2", 4) == 0;
+    const bool stl3 = std::strncmp(magic, "STL3", 4) == 0;
+    if (!legacy && !stl2 && !stl3) throw std::runtime_error("invalid magic or corrupt file");
     const auto version = detail::read_u32(is);
-    if ((legacy && version != 1) || (!legacy && version != 2)) throw std::runtime_error("unsupported save version");
+    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
     if (!legacy) data.physicalSeconds = detail::read_double(is);
@@ -289,6 +337,22 @@ inline SaveData readSave(const std::filesystem::path& path) {
         const auto hasPose = detail::read_u8(is);
         if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
         if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
+    }
+    if (stl3) {
+        const auto hasLifecycle = detail::read_u8(is);
+        if (hasLifecycle > 1) throw std::runtime_error("corrupt lifecycle presence flag");
+        if (hasLifecycle) {
+            HeroLifecycleSnapshot life;
+            life.heroId = detail::read_u64(is);
+            const auto species = detail::read_u8(is);
+            if (species > static_cast<std::uint8_t>(HeroSpecies::Longstride)) throw std::runtime_error("invalid lifecycle species");
+            life.species = static_cast<HeroSpecies>(species);
+            life.calendarAge = detail::read_double(is);
+            const auto stage = detail::read_u8(is);
+            if (stage > static_cast<std::uint8_t>(LifeStage::Dead)) throw std::runtime_error("invalid lifecycle stage");
+            life.stage = static_cast<LifeStage>(stage);
+            data.heroLifecycle = life;
+        }
     }
 
     auto count = detail::read_u32(is);
@@ -363,8 +427,28 @@ inline SaveData readSave(const std::filesystem::path& path) {
         legacySize = detail::checkedAdd(legacySize, 4);
         for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
         if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
-    } else if (detail::encodedSize(data) != fileSize) throw std::runtime_error("save size does not match encoded records");
+    } else if ((stl3 ? detail::encodedSize(data) : detail::encodedSizeStl2(data)) != fileSize)
+        throw std::runtime_error("save size does not match encoded records");
     return data;
+}
+
+inline HeroLifecycleSnapshot captureHeroLifecycle(const Lifecycle& lifecycle, Identity heroId) {
+    return {heroId, lifecycle.species(), lifecycle.calendarAge(), lifecycle.stage()};
+}
+
+inline Lifecycle restoreHeroLifecycle(const SaveData& data, HeroSpecies legacySpecies) {
+    detail::validate(data);
+    if (!data.hero) throw std::runtime_error("cannot restore lifecycle without current hero");
+    // Old saves may already know this hero's species through retention. Preserve
+    // that evidence before using the caller's explicit provisional fallback.
+    auto species = legacySpecies;
+    for (const auto& retained : data.retained)
+        if (retained.id == data.hero->id) species = retained.species;
+    Lifecycle lifecycle(data.heroLifecycle ? data.heroLifecycle->species : species);
+    if (data.heroLifecycle) {
+        lifecycle.restoreState(data.heroLifecycle->species, data.heroLifecycle->calendarAge, data.heroLifecycle->stage);
+    } // Without lifecycle evidence: known retained species or supplied fallback, age zero.
+    return lifecycle;
 }
 
 inline SaveData captureSave(const SimCore& sim, const StalthosState& world, std::optional<HostPose> pose = std::nullopt) {

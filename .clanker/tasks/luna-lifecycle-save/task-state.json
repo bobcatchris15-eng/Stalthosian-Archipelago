@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-lifecycle-save",
+  "status": "complete",
+  "base_revision": "f72f3b5",
+  "current_step": "implementation, documentation, and MSVC Release domain validation complete",
+  "completed_steps": [
+    "read repository instructions and required Clanker workflow",
+    "define and send stable lifecycle persistence API to dispatcher",
+    "add STL3 optional hero lifecycle DTO, validation, wire read/write, and restore/capture helpers",
+    "preserve STL1/STL2 reading and test explicit legacy age-zero fallback",
+    "document wire contract, migration, live hero death policy, and unfinished gameplay",
+    "build with MSVC Release DomainOnly and run persistence/lifecycle executables"
+  ],
+  "next_step": "Dispatcher integrates the persistence seam with the host and reruns merged-tree validation.",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/docs/lifecycle-persistence.md",
+    ".clanker/tasks/luna-lifecycle-save/brief.md",
+    ".clanker/tasks/luna-lifecycle-save/receipt.json",
+    ".clanker/tasks/luna-lifecycle-save/evidence/msvc-release-domain.log",
+    ".clanker/tasks/luna-lifecycle-save/evidence/persistence-tests.log",
+    ".clanker/tasks/luna-lifecycle-save/evidence/lifecycle-tests.log"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "stalthos-runtime/scripts/Build.ps1 -DomainOnly; StalthosPersistence.exe; StalthosLifecycle.exe; git diff --check",
+    "evidence_path": ".clanker/tasks/luna-lifecycle-save/evidence/persistence-tests.log"
+  },
+  "blockers": [],
+  "assumptions": [
+    "Current-hero lifecycle must be alive. After world.heroDied removes current hero, lifecycle snapshot is absent and world death state remains authoritative.",
+    "Legacy save lifecycle migration is explicit and provisional: caller supplies species; helper returns age 0/Hatchling."
+  ],
+  "receipt_path": ".clanker/tasks/luna-lifecycle-save/receipt.json",
+  "resume_instructions": "Implementation and bounded validation are complete. Review receipt.json and evidence logs. Integrate the stable API from persistence.hpp in the host, then rerun merged-tree validation. Full needs, bonds, reproduction, parenting, and dependent care remain unfinished.",
+  "updated": "2026-10-11T22:15:39Z"
+}

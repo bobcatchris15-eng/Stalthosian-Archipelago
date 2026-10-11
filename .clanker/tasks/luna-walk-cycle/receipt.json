@@ -1,0 +1,76 @@
+{
+  "task_id": "luna-walk-cycle",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Pure gait helper produces deterministic cyclic phase/contact plans and passes offline unit tests.",
+      "met": true,
+      "how_checked": "python -m pytest -q stalthos-toolkit/tests/test_blender.py stalthos-toolkit/tests/test_gait.py; 69 passed in 132.29s; focused test log at .clanker/tasks/luna-walk-cycle/focused-tests.log"
+    },
+    {
+      "condition": "rig_creature consumes animation_contacts.walk_cycle and emits neutral plus animated GLBs and machine-readable motion metadata.",
+      "met": true,
+      "how_checked": "Final build_creature and rig_creature envelopes plus emitted files under var/luna-walk-cycle; neutral GLB has 0 animations; walk GLB has 1 animation and 222 channels."
+    },
+    {
+      "condition": "Actual Blender output has valid animation channels and loop/contact evidence is recorded.",
+      "met": true,
+      "how_checked": "Blender 5.2.0 rig_creature run; stalthos.optimize.glb validation passed; motion JSON records exact loop boundary and foot-pad sample results. Geometric contact result is false."
+    },
+    {
+      "condition": "Both hind foot pads remain within authored 0.02 m ground tolerance for all sampled stance frames, with planted horizontal motion.",
+      "met": false,
+      "how_checked": "Motion JSON: 9 stance samples each, 0/9 within tolerance, gaps 0.646-0.665 m; in-place stance slip up to 0.104 m/0.079 m and no actor stride translation."
+    },
+    {
+      "condition": "No visual quality, Wicked import, or target hardware FPS acceptance is claimed without evidence.",
+      "met": true,
+      "how_checked": "Task report and motion metadata explicitly state limitations."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+    "stalthos-toolkit/src/stalthos_toolkit/commands/rig_creature.py",
+    "stalthos-toolkit/tests/test_blender.py",
+    "stalthos-toolkit/tests/test_gait.py",
+    ".clanker/tasks/luna-walk-cycle/brief.md",
+    ".clanker/tasks/luna-walk-cycle/task-state.json",
+    ".clanker/tasks/luna-walk-cycle/receipt.json",
+    ".clanker/tasks/luna-walk-cycle/report.md",
+    ".clanker/tasks/luna-walk-cycle/evidence.json",
+    ".clanker/tasks/luna-walk-cycle/focused-tests.log",
+    ".clanker/tasks/luna-walk-cycle/gait-tests.log",
+    ".clanker/tasks/luna-walk-cycle/build-creature.log",
+    ".clanker/tasks/luna-walk-cycle/rig-creature.log",
+    ".clanker/tasks/luna-walk-cycle/initial-failure.txt",
+    ".clanker/tasks/luna-walk-cycle/inspect_geometry.py",
+    ".clanker/tasks/luna-walk-cycle/geometry-inspection.log",
+    ".clanker/tasks/luna-walk-cycle/finalize.py",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.neutral.glb",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-walk-cycle/evidence.json",
+    ".clanker/tasks/luna-walk-cycle/focused-tests.log",
+    ".clanker/tasks/luna-walk-cycle/build-creature.log",
+    ".clanker/tasks/luna-walk-cycle/rig-creature.log",
+    ".clanker/tasks/luna-walk-cycle/initial-failure.txt"
+  ],
+  "findings": [
+    "The YAML selectors bone:pes_foot_l/r do not exist in this proxy skeleton; they are explicitly aliased to toe_rear_L/R.",
+    "The actual foot pads are 8-vertex boxes embedded in body_proxy; measuring toe bone tails under-reports pad-to-ground gap by about 0.035 m.",
+    "The remaining lowest body point is the rear tail at z=0.469616 m while rear pad bottoms are z=0.652438 m; translating the full asset down to ground the pads would put the tail below the plane.",
+    "An in-place cycle cannot establish planted world-space feet without actor stride translation and foot IK."
+  ],
+  "blockers": [
+    "Foot-pad stance contact remains 0.646-0.665 m above the declared z=0 plane and horizontal stance slip reaches 0.104 m. Follow-up requires foot IK/stride handling and tail clearance review."
+  ],
+  "assumptions_made": [
+    "Mapped the authored left/right pes selectors to hind toe bones because no matching pes_foot_l/r bones exist.",
+    "Used generated foot-pad bottom vertices, not toe-bone endpoints, as the contact surface.",
+    "Measured against the current z=0 scene plane; did not translate the model to conceal contact failure.",
+    "The 2.0 second cycle repeats at the runtime consumer; start/end keys are equal and the GLB animation contains one clip."
+  ]
+}

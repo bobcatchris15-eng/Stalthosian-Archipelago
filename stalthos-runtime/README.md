@@ -1,4 +1,4 @@
-# The Stalthosian Archipelago â€” runtime construction
+# The Stalthosian Archipelago — runtime construction
 
 **Decided:** Wicked Engine, native C++17, Windows DX12. **Target:** a full draft with all five playable lives and all four islands. The current executable is an initial diagnostic host, not that completed draft.
 
@@ -56,7 +56,7 @@ These dispatch permissions describe a cooperative worker boundary, not an operat
 
 Verified 2026-10-11: a clean source compile under `var/build/wicked-fresh-release` published `var/vendor/wicked-fresh-release-cache`; the host rebuilt against it and rendered the baked Softbough GLB at 1920x1080. Evidence is under `var/reports/runtime/20261011-152740-b402c296`. `StalthosPersistence` adds tested bounded versioned DTO save files; the subsequent checkpoint below adds host diagnostic save/load and exact region revision restoration. Run all four native scenario executables through CTest.
 
-## Snapshot and landscape checkpoint â€” 2026-10-11
+## Snapshot and landscape checkpoint — 2026-10-11
 
 STL2 saves preserve independent physical/calendar clocks, authoritative identity inventories and exact region revisions. STL1 remains readable with documented fallbacks. The diagnostic host accepts these explicit local options:
 
@@ -69,4 +69,6 @@ The first actual two-process probe preserved the marker's x/z position and both 
 
 `domain/reference_landscape.hpp` supplies a provisional 192m Main Island patch with aligned creek, shoulders and bluff, deterministic habitat/placement queries, and wet-ground vegetation exclusion. The host samples its terrain, imports eight Softbough shrub instances and draws a bounded creek surface. Rock geometry is still provisional. This is a composed reference fixture, not complete island coverage or final water/scene acceptance.
 
-The independently reviewed `domain/lifecycle.hpp` provides calendar-based hatchling/juvenile/adult/old/dead progression for five fictional profiles, terminal death and validated restore. Its pacing values are proposed draft defaults. This core is tested separately; it is not yet connected to the host or the save schema. Reproduction, parenting and needs remain unfinished. An actual toolkit Smalltrotter probe produced a 74-joint neutral GLB with zero animations; walk-cycle generation/export and Wicked actor playback are next.
+The independently reviewed `domain/lifecycle.hpp` provides calendar-based hatchling/juvenile/adult/old/dead progression for five fictional profiles, terminal death and validated restore. Its pacing values are proposed draft defaults. The fourth packet connects this core to the native shared clock and STL3 optional hero lifecycle snapshot. Reproduction, parenting and needs remain unfinished. The neutral GLB retains zero animations; a separate deterministic walk-cycle GLB now exports one animation and 222 channels, with actual Wicked local pose playback evidence. Foot contact and low-tail clearance remain failed acceptance gates.
+
+The walk-cycle toolkit changes are currently a local validation candidate. Native actor support accepts an external animated GLB; final toolkit suite completion is required before publishing the generator changes.

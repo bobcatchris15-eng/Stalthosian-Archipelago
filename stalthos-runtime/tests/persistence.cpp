@@ -130,17 +130,17 @@ void testMalformedFilesAndBounds() {
 
     data = SaveData{}; data.activeTransients = {{20, 1}, {21, 2}};
     writeSave(path, data);
-    // STL2 active IDs begin at byte 46; replace the second ID with the first ID.
-    overwriteU64(path, 62, 20);
+    // STL3 lifecycle presence adds one byte before the active list.
+    overwriteU64(path, 63, 20);
     rejects([&] { (void)readSave(path); }, "duplicate or conflicting entity identity");
 
     data = SaveData{};
     data.retained.push_back({3, 4, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
     writeSave(path, data);
-    // The retained active flag follows ID, region, species, reason, and alive at byte 69.
+    // The retained active flag follows the STL3 header and record fields at byte 70.
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(69); detail::write_u8(io, 2); io.flush();
+        io.seekp(70); detail::write_u8(io, 2); io.flush();
         check(io.good(), "failed to mutate retained boolean fixture");
     }
     rejects([&] { (void)readSave(path); }, "invalid retained boolean flag");
@@ -257,6 +257,103 @@ void testLegacyStl1Compatibility() {
     std::filesystem::remove(path);
 }
 
+void testLifecycleStl3RoundtripAndValidation() {
+    const auto path = std::filesystem::path("test_lifecycle_stl3.sav");
+    SaveData data; data.hero = ActiveEntity{44, 7}; data.calendarSeconds = 12345;
+    Lifecycle source(HeroSpecies::Reedcrest);
+    source.restoreState(HeroSpecies::Reedcrest, 4000.0, LifeStage::Adult);
+    data.heroLifecycle = captureHeroLifecycle(source, data.hero->id);
+    writeSave(path, data);
+    const auto encoded = bytes(path);
+    check(encoded.size() == detail::encodedSize(data), "STL3 exact encoded size mismatch");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL3", "new save did not use STL3");
+    const auto loaded = readSave(path);
+    check(loaded.heroLifecycle && loaded.heroLifecycle->heroId == 44 &&
+        loaded.heroLifecycle->species == HeroSpecies::Reedcrest &&
+        near(loaded.heroLifecycle->calendarAge, 4000.0) && loaded.heroLifecycle->stage == LifeStage::Adult,
+        "hero lifecycle fields did not roundtrip");
+    const auto restored = restoreHeroLifecycle(loaded, HeroSpecies::Smalltrotter);
+    check(restored.species() == HeroSpecies::Reedcrest && near(restored.calendarAge(), 4000.0) && restored.stage() == LifeStage::Adult,
+        "captured lifecycle did not restore");
+
+    const auto previous = encoded;
+    auto rejectWrite = [&](SaveData invalid, const char* reason) {
+        rejects([&] { writeSave(path, invalid); }, reason);
+        check(bytes(path) == previous, "invalid lifecycle write changed previous save");
+        check(!std::filesystem::exists(path.string() + ".tmp"), "invalid lifecycle write left a temp file");
+    };
+    auto invalid = data; invalid.heroLifecycle->heroId = 45;
+    rejectWrite(invalid, "lifecycle identity");
+    invalid = data; invalid.hero.reset();
+    rejectWrite(invalid, "lifecycle identity");
+    invalid = data; invalid.heroLifecycle->calendarAge = 1000; // Age is below Reedcrest's adult threshold.
+    rejectWrite(invalid, "inconsistent");
+    invalid = data; invalid.heroLifecycle->stage = LifeStage::Dead;
+    rejectWrite(invalid, "dead lifecycle");
+    invalid = data; invalid.heroLifecycle->calendarAge = std::numeric_limits<double>::quiet_NaN();
+    rejectWrite(invalid, "inconsistent");
+    invalid = data; invalid.heroLifecycle->stage = static_cast<LifeStage>(200);
+    rejectWrite(invalid, "invalid lifecycle stage");
+    invalid = data;
+    invalid.retained.push_back({44, 7, HeroSpecies::Smalltrotter, RetentionReason::BondedPeer, true, true});
+    rejectWrite(invalid, "species contradicts lifecycle");
+    rejects([&] { (void)restoreSave(invalid); }, "species contradicts lifecycle");
+    auto consistent = data;
+    consistent.retained.push_back({44, 7, HeroSpecies::Reedcrest, RetentionReason::BondedPeer, true, true});
+    writeSave(path, consistent);
+    check(readSave(path).retained[0].species == HeroSpecies::Reedcrest,
+        "consistent retained hero lifecycle failed to roundtrip");
+    std::filesystem::remove(path);
+}
+
+void testStl2MigrationAndStl3Corruption() {
+    const auto path = std::filesystem::path("test_lifecycle_compat.sav");
+    // Construct a valid pre-lifecycle STL2 fixture with a current hero and pose.
+    {
+        std::ofstream out(path, std::ios::binary | std::ios::trunc);
+        out.write("STL2", 4); detail::write_u32(out, 2);
+        detail::write_double(out, 3.0); detail::write_double(out, 9.0);
+        detail::write_u64(out, 91); detail::write_u64(out, 64);
+        detail::write_u8(out, 1); detail::write_u64(out, 8); detail::write_u64(out, 2);
+        detail::write_u8(out, 0);
+        detail::write_u32(out, 0); detail::write_u32(out, 0); detail::write_u32(out, 0); detail::write_u32(out, 0);
+    }
+    auto old = readSave(path);
+    check(old.hero && old.hero->id == 8 && !old.heroLifecycle, "STL2 migration invented lifecycle data");
+    const auto migrated = restoreHeroLifecycle(old, HeroSpecies::Thistletail);
+    check(migrated.species() == HeroSpecies::Thistletail && migrated.calendarAge() == 0.0 && migrated.stage() == LifeStage::Hatchling,
+        "STL2 fallback did not use supplied species and age zero");
+    old.retained.push_back({8, 2, HeroSpecies::Smalltrotter, RetentionReason::BondedPeer, true, true});
+    const auto knownSpecies = restoreHeroLifecycle(old, HeroSpecies::Reedcrest);
+    check(knownSpecies.species() == HeroSpecies::Smalltrotter && knownSpecies.calendarAge() == 0.0,
+        "legacy fallback overrode the retained hero's known species");
+    writeSave(path, old);
+    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '3',
+        "STL2 read/write migration did not emit STL3");
+
+    SaveData data; data.hero = ActiveEntity{2, 3};
+    data.heroLifecycle = HeroLifecycleSnapshot{2, HeroSpecies::Smalltrotter, 0.0, LifeStage::Hatchling};
+    writeSave(path, data);
+    auto file = bytes(path);
+    file.resize(59 + 8 + 1 + 8); // Truncate the lifecycle stage byte itself.
+    { std::ofstream out(path, std::ios::binary | std::ios::trunc); out.write(file.data(), static_cast<std::streamsize>(file.size())); }
+    rejects([&] { (void)readSave(path); }, "truncated");
+
+    writeSave(path, data);
+    {
+        std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
+        io.seekp(58); detail::write_u8(io, 2); io.flush();
+    }
+    rejects([&] { (void)readSave(path); }, "lifecycle presence");
+    writeSave(path, data);
+    {
+        std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
+        io.seekp(4); detail::write_u32(io, 4); io.flush();
+    }
+    rejects([&] { (void)readSave(path); }, "unsupported save version");
+    std::filesystem::remove(path);
+}
+
 void testInvalidPhysicalTimeAndPose() {
     const auto path = std::filesystem::path("test_pose_validation.sav");
     SaveData baseline; writeSave(path, baseline); const auto original = bytes(path);
@@ -285,6 +382,8 @@ int main() {
         {"restore checks mutation statuses", testRestoreStatusesAndDomainState},
         {"authoritative capture through file roundtrip", testAuthoritativeCaptureRoundtrip},
         {"STL1 fixture compatibility", testLegacyStl1Compatibility},
+        {"STL3 lifecycle roundtrip and validation", testLifecycleStl3RoundtripAndValidation},
+        {"STL2 migration and STL3 corruption", testStl2MigrationAndStl3Corruption},
         {"physical time and pose validation", testInvalidPhysicalTimeAndPose}
     };
     int failed = 0;
@@ -292,6 +391,6 @@ int main() {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (8 - failed) << "/8 tests passed\n";
+    std::cout << (10 - failed) << "/10 tests passed\n";
     return failed ? 1 : 0;
 }

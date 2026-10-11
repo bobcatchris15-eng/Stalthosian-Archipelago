@@ -1,0 +1,55 @@
+{
+  "task_id": "luna-lifecycle-save",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Optional current-hero lifecycle snapshot validates identity, species, age, stage, and live/dead policy.",
+      "met": true,
+      "how_checked": "StalthosPersistence.exe: lifecycle roundtrip and validation scenario passed; invalid hero ID, missing current hero, contradictory age/stage, NaN age, invalid stage, and Dead stage were rejected while prior bytes remained intact."
+    },
+    {
+      "condition": "New saves write STL3 with exact bounded size and STL1/STL2 remain readable; malformed, truncated, unsupported, and trailing data reject.",
+      "met": true,
+      "how_checked": "StalthosPersistence.exe passed STL1 fixture compatibility, STL2 migration, exact-size assertion, truncated lifecycle stage, noncanonical lifecycle flag, and unsupported version checks."
+    },
+    {
+      "condition": "Legacy absence does not invent age/species; explicit helper uses supplied species and age zero.",
+      "met": true,
+      "how_checked": "STL2 fixture read with empty heroLifecycle; restoreHeroLifecycle(old, Thistletail) produced Thistletail, age 0, Hatchling."
+    },
+    {
+      "condition": "Existing persistence suite and lifecycle suite pass under actual MSVC Release DomainOnly build.",
+      "met": true,
+      "how_checked": "Build.ps1 -DomainOnly completed with MSVC 19.51; StalthosPersistence.exe reported 10/10 and StalthosLifecycle.exe reported 6/6."
+    },
+    {
+      "condition": "Lifecycle wire format, validation, migration, death policy, and unfinished scope are documented.",
+      "met": true,
+      "how_checked": "Reviewed stalthos-runtime/docs/lifecycle-persistence.md."
+    },
+    {
+      "condition": "Keep captureSave/restoreSave APIs compatible and deliver stable helper API to host integration.",
+      "met": true,
+      "how_checked": "Header retains the existing signatures and exposes captureHeroLifecycle / restoreHeroLifecycle; API was sent to dispatcher for host worker."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/docs/lifecycle-persistence.md",
+    ".clanker/tasks/luna-lifecycle-save/brief.md",
+    ".clanker/tasks/luna-lifecycle-save/task-state.json",
+    ".clanker/tasks/luna-lifecycle-save/receipt.json"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-lifecycle-save/evidence/msvc-release-domain.log",
+    ".clanker/tasks/luna-lifecycle-save/evidence/persistence-tests.log",
+    ".clanker/tasks/luna-lifecycle-save/evidence/lifecycle-tests.log"
+  ],
+  "findings": [
+    "Host integration remains owned by the dispatcher/host worker; this task provides the validated persistence seam, not full game integration. The full game draft still lacks completed needs, bonds, reproduction, parenting, and dependent care."
+  ],
+  "assumptions_made": [
+    "A current hero remains live. Death is represented by existing world death state; its current-hero lifecycle snapshot is omitted after heroDied removes the active hero. Legacy lifecycle restore requires caller-supplied species and uses age zero only as explicit provisional migration policy."
+  ]
+}

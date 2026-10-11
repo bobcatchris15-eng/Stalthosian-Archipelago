@@ -1,10 +1,11 @@
 [CmdletBinding()]
-param([double]$Duration = 15, [string]$Plant = '', [switch]$Interactive,
+param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $exe = Join-Path $root 'var/build/stalthos-runtime/Release/Stalthos.exe'
 if (-not (Test-Path $exe)) { throw 'Runtime executable absent; run Build.ps1' }
+if (-not [double]::IsFinite($CalendarScale) -or $CalendarScale -lt 0 -or $CalendarScale -gt 10000) { throw 'CalendarScale must be 0..10000' }
 $id = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0,8)
 $output = Join-Path $root "var/reports/runtime/$id"
 New-Item -ItemType Directory -Force $output | Out-Null
@@ -15,6 +16,8 @@ $start.UseShellExecute = $false
 $start.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
 foreach ($arg in @('dx12','alwaysactive','--output',$output,'--duration',$Duration.ToString([Globalization.CultureInfo]::InvariantCulture))) { $start.ArgumentList.Add($arg) }
 if ($Plant) { $start.ArgumentList.Add('--plant'); $start.ArgumentList.Add((Resolve-Path $Plant).Path) }
+if ($Creature) { $start.ArgumentList.Add('--creature'); $start.ArgumentList.Add((Resolve-Path $Creature).Path) }
+if ($CalendarScale -ne 1) { $start.ArgumentList.Add('--calendar-scale'); $start.ArgumentList.Add($CalendarScale.ToString([Globalization.CultureInfo]::InvariantCulture)) }
 if ($Interactive) { $start.ArgumentList.Add('--interactive') }
 if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
 foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {

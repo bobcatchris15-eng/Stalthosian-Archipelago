@@ -1,0 +1,157 @@
+{
+  "command": "build_creature",
+  "ok": true,
+  "exit_code": 0,
+  "seed": 42,
+  "asset_id": "creature.smalltrotter.st1",
+  "started_at": 1791757311.388,
+  "duration_s": 2.001,
+  "partial": false,
+  "artifacts": [
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\logs\\build_creature_creature.smalltrotter.st1.independent_juvenile.log",
+      "role": "report",
+      "sha256": "14871b47f1925ff765e45dff7b60d60c3780ce5beaee234978f7aca0b38d9520",
+      "bytes": 3616
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.blend",
+      "role": "source",
+      "sha256": "53d92eee6ecc41b785b8a912662c3082e046277e1de2307c0458982a69ec0737",
+      "bytes": 667455
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.result.json",
+      "role": "source",
+      "sha256": "79ed5a3f8da8c0f65578c7c3d42fe0f86df98d2aa5fd972a7e56a52719f84e12",
+      "bytes": 2823
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\manifests\\creature.smalltrotter.st1.json",
+      "role": "report",
+      "sha256": "50bbbae80a90d2e4dfc0e42f33449c015a514671646e41ff2ab2f3c100fb311e",
+      "bytes": 7146
+    }
+  ],
+  "metrics": {
+    "blender_run": {
+      "returncode": 0,
+      "duration_s": 1.613,
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--factory-startup",
+        "-noaudio",
+        "--disable-autoexec",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\stalthos-toolkit\\src\\stalthos_toolkit\\blender\\scripts\\creature.py",
+        "--",
+        "--params",
+        "C:\\Users\\Chris\\AppData\\Local\\Temp\\stalthos_blender_9u18gb9d\\params.json"
+      ],
+      "timeout_s": 110.0,
+      "log_path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\logs\\build_creature_creature.smalltrotter.st1.independent_juvenile.log",
+      "has_result": true
+    },
+    "tool_versions": {
+      "blender": "5.2.0 LTS"
+    },
+    "objects": [
+      {
+        "name": "body_proxy",
+        "type": "MESH",
+        "vertices": 907,
+        "triangles": 1730,
+        "polygons": 826,
+        "dimensions": {
+          "x": 1.572272,
+          "y": 0.495824,
+          "z": 1.224012
+        },
+        "materials": [
+          "creature_skin"
+        ],
+        "modifiers": [],
+        "collections": [
+          "creature"
+        ],
+        "geometry_digest": "577b4e0dc2f20e4d9b8ab0effb61e379146a35254a0e75a9d0d0db5269717076"
+      },
+      {
+        "name": "integument_proxy",
+        "type": "MESH",
+        "vertices": 0,
+        "triangles": 0,
+        "polygons": 0,
+        "dimensions": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "materials": [],
+        "modifiers": [],
+        "collections": [
+          "creature"
+        ],
+        "geometry_digest": "a8e11241576826a37ba150d91e7478f87ba192f7421406ed168e7622e488116b"
+      }
+    ],
+    "object_count": 2,
+    "triangles": 1730,
+    "vertices": 907,
+    "polygons": 826,
+    "materials": [
+      "creature_skin"
+    ],
+    "geometry_digest": "fc565d1ecffc583f1061f91db98d73c598061060503389596bc61813f700cf35",
+    "skull_length_m": 0.07488,
+    "trunk_segments": 13,
+    "neck_segments": 15,
+    "tail_segments": 32,
+    "limbs": 4,
+    "stance_height_m": 0.95,
+    "osteoderms": 0,
+    "bristles": 0,
+    "proxy_disclaimer": "anatomical proxy for pipeline verification; proportions are parameters, not fossil measurements",
+    "rig_target": "spine/neck/tail/limb chains at defined joint positions",
+    "joints_recorded": [
+      "head",
+      "limbs",
+      "neck",
+      "spine",
+      "tail"
+    ],
+    "dimensions_m": {
+      "x": 1.5723,
+      "y": 0.4958,
+      "z": 1.224
+    },
+    "determinism": {
+      "seed": 7840023632744163192,
+      "time_input_used": false
+    },
+    "blender": "5.2.0 LTS",
+    "engine": "EEVEE",
+    "timings_s": {
+      "build_geometry": 0.0031,
+      "to_objects": 0.005,
+      "materials": 0.0059,
+      "save_blend": 0.0505
+    },
+    "bpy_total_s": 0.1825,
+    "proxy_note": "anatomical proxy for pipeline verification; proportions are definition parameters, not fossil measurements",
+    "stage": "independent_juvenile",
+    "posture": "quadrupedal",
+    "proxy_approximation": true,
+    "source_blend": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.blend"
+  },
+  "provenance": {},
+  "warnings": [
+    "[build_creature] no integument detail requested for this stage",
+    "anatomical proxy for pipeline verification; proportions are definition parameters, not fossil measurements"
+  ],
+  "errors": [],
+  "logs": []
+}

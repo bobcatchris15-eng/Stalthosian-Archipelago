@@ -1,0 +1,61 @@
+{
+  "task_id": "luna-gait-review-four",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Assess neutral-only backward compatibility.",
+      "met": false,
+      "how_checked": "Source inspection shows gait outputs are conditional on gait_contacts, so the no-walk path appears preserved; the Blender-backed neutral-only export was not rerun in this review."
+    },
+    {
+      "condition": "Verify actual exported animation channels and loop endpoints.",
+      "met": true,
+      "how_checked": "Parsed incoming Blender 5.2 GLB: one animation, 222 structurally valid channels, eight varying limb channels and zero output endpoint mismatches."
+    },
+    {
+      "condition": "Check typed failure for malformed animation channels.",
+      "met": false,
+      "how_checked": "Synthetic GLB channel targeted nonexistent node 999; _validate_walk_animation returned passed=true although validate_structure reported one animation_target_missing error."
+    },
+    {
+      "condition": "Assess determinism of the authored gait.",
+      "met": false,
+      "how_checked": "The pure helper is deterministic and contains no random source; no repeated full Blender export/hash comparison was performed, so output determinism is not established."
+    },
+    {
+      "condition": "Assess authored selector mapping, tolerance use, and contact/stance/slip semantics.",
+      "met": false,
+      "how_checked": "Current YAML selectors map to the hard-coded hind-toe aliases and both tolerances equal 0.02 m. Source still collapses tolerance to a maximum and does not fail on unknown or missing selectors. Contact gaps fail; right-foot slip is sampled relative to a late-stance anchor, not touchdown."
+    },
+    {
+      "condition": "Keep an accepted-gait claim aligned with measurements.",
+      "met": true,
+      "how_checked": "The actual motion metadata sets validation.passed=false and the rig result records a geometric-contact warning; review classifies the artifact as partial proxy animation only."
+    }
+  ],
+  "artifacts_changed": [
+    ".clanker/tasks/luna-gait-review-four/report.json",
+    ".clanker/tasks/luna-gait-review-four/receipt.json",
+    ".clanker/tasks/luna-gait-review-four/focused-tests.log",
+    "var/luna-gait-review-four/probe.py",
+    "var/luna-gait-review-four/probe.log"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-gait-review-four/report.json",
+    ".clanker/tasks/luna-gait-review-four/focused-tests.log",
+    "var/luna-gait-review-four/probe.py",
+    "var/luna-gait-review-four/probe.log",
+    "E:/Stalthosian Archipelago/var/worktrees/luna-walk-cycle/var/luna-walk-cycle/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+    "E:/Stalthosian Archipelago/var/worktrees/luna-walk-cycle/var/luna-walk-cycle/sources/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.rig.result.json"
+  ],
+  "findings": [
+    "Actual gait contact is explicitly failed and should remain a partial proxy artifact until the measured feet meet the authored ground tolerance.",
+    "The current typed GLB validator can accept malformed targets, though the actual produced GLB inspected here has no structural issues."
+  ],
+  "blockers": [
+    "Accepted gait/contact behavior remains unachieved: measured hind-foot gaps are approximately 0.646-0.648 m against 0.02 m targets."
+  ],
+  "assumptions_made": [
+    "The Clunker role instructions and supplied human handoff define review context; the assigned scope is the incoming gait implementation and its produced proxy artifact."
+  ]
+}

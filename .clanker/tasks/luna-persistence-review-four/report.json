@@ -1,0 +1,27 @@
+{
+  "scope": {
+    "graph_digest": "unavailable: bin/graph-adapter.sh and bin/graph-delta.py are absent from this review checkout; parent reports refreshed graph with a zero-node warning",
+    "base_digest": "f72f3b5b20de8bb40a8d4b7310592c745dee0a3c",
+    "artifacts": [
+      "stalthos-runtime/domain/persistence.hpp",
+      "stalthos-runtime/tests/persistence.cpp",
+      "stalthos-runtime/domain/README.md"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_goal",
+    "drift": []
+  },
+  "findings": [],
+  "unproven_claims": [
+    "This review validates the lifecycle DTO and native domain tests only; it does not prove that the game host saves/restores the live hero Lifecycle object. `engine/main.cpp` calls captureSave/restoreSave but has no captureHeroLifecycle/restoreHeroLifecycle call sites at this review snapshot."
+  ],
+  "validation_debt": [
+    "The host integration must explicitly connect its live hero lifecycle to captureHeroLifecycle/restoreHeroLifecycle; this review did not establish live actor age/stage continuity."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 3,
+    "attempted": "Built the domain suite with scripts/Build.ps1 -DomainOnly using Visual Studio 18 2026 Release, rebuilt after root changes, and ran CTest (4/4 passed). Compiled and ran an independent MSVC /O2 /DNDEBUG probe that first reproduced an accepted STL3 same-hero species conflict, then recompiled after the root correction and observed rejection. A second independent MSVC probe built a valid STL2 file with a retained current hero and observed that migration first overrode the known species, then after correction preserved the retained Smalltrotter species over a Reedcrest caller fallback. Inspected STL1/STL2/STL3 parsing, lifecycle enum/age/stage validation, file/aggregate bounds, truncation handling, and prior-save protection. Current persistence.cpp includes direct STL3 species-mismatch and legacy fallback regressions. The requested graph delta tool is absent in this review checkout."
+  }
+}

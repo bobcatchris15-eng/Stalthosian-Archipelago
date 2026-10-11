@@ -23,3 +23,9 @@ The project uses `main` as its synchronized branch. Local workers use isolated `
 Install the Python package with `python -m pip install -e ./stalthos-toolkit`. The local `stalthos` command must resolve this checkout, rather than a retired worker directory. Portable optimization packages are pinned: gltfpack 1.3 and Compressonator 4.5.52. Cache the official release ZIPs under `var/tools/downloads/`, then run `./stalthos-toolkit/scripts/Prepare-Tools.ps1` and dot-source `./stalthos-toolkit/scripts/Use-Tools.ps1`. The normal PowerShell pipeline wrapper activates verified packages automatically. Setup checks archive and executable hashes and preserves mismatched existing installations. Optional missing tools remain visible in `stalthos doctor`.
 
 Official portable archives: [gltfpack Windows 1.3](https://github.com/zeux/meshoptimizer/releases/download/v1.3/gltfpack-windows.zip) (save as `gltfpack-windows-1.3.zip`) and [Compressonator CLI 4.5.52](https://github.com/GPUOpen-Tools/compressonator/releases/download/V4.5.52/compressonatorcli-4.5.52-win64.zip).
+
+## Fourth construction checkpoint
+
+Wicked imports the animated Smalltrotter draft alongside eight authored shrubs. STL3 persists current hero lifecycle age/species/stage with STL1/STL2 read compatibility; actual separate-process save/load and terminal death probes pass. Native CTest passes 4/4. Foot contact/low-tail clearance, full gameplay coverage and external 30 FPS acceptance remain unfinished. See `.clanker/current-work.md` and the fourth integration receipt for test status and the three active Jules tasks. Worker selection now uses the lowest capable model/effort; Jules has a separate three-task remote pool with a 100/day ceiling.
+
+The walk-cycle toolkit changes are currently a local validation candidate. Native actor support accepts an external animated GLB; final toolkit suite completion is required before publishing the generator changes.

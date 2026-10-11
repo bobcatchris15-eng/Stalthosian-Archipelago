@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-actor-host",
+  "status": "complete",
+  "base_revision": "f72f3b5b20de8bb40a8d4b7310592c745dee0a3c",
+  "current_step": "Implement and verify animated actor/lifecycle host wiring",
+  "completed_steps": [
+    "Read repository instructions, Clinker prelude/role, Wicked importer and animation APIs, and lifecycle/persistence APIs.",
+    "Added optional creature import and validated mesh/skin/TRS animation; parented imported scene under a host motion root with axis/sole calibration.",
+    "Connected lifecycle to the shared scaled SimCore TimeStep, lifecycle save/restore, and terminal death handling.",
+    "Built Release and completed native import/playback, lifecycle continuity, death, screenshot and receipt runs.",
+    "Wrote actor host documentation, evidence, and schema-shaped receipt."
+  ],
+  "next_step": "Integrate and review this host diff; resolve authored low-tail/sole-ground clearance before claiming foot-contact acceptance.",
+  "touched_artifacts": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/actor-host.md",
+    ".clanker/tasks/luna-actor-host/brief.md",
+    ".clanker/tasks/luna-actor-host/evidence.md",
+    ".clanker/tasks/luna-actor-host/receipt.json",
+    ".clanker/tasks/luna-actor-host/task-state.json",
+    "stalthos-runtime/domain/persistence.hpp"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1 Release against pinned Wicked source; Run.ps1 actor import, two-process lifecycle save/load, and terminal death diagnostic runs.",
+    "evidence_path": ".clanker/tasks/luna-actor-host/evidence.md"
+  },
+  "assumptions": [
+    "Legacy or absent lifecycle state uses the reviewed persistence helper fallback; otherwise lifecycle state is bound to the current hero identity.",
+    "Ground sole offset is provisional and tail-clearance acceptance remains false."
+  ],
+  "receipt_path": ".clanker/tasks/luna-actor-host/receipt.json",
+  "resume_instructions": "Read receipt.json and evidence.md. Review only the listed host/script/docs diff and the dispatcher-owned lifecycle persistence header. Playback/lifecycle feasibility passed; low-tail ground clearance, final visuals and target-hardware performance remain unresolved.",
+  "updated": "2026-10-11T17:24:30-05:00"
+}

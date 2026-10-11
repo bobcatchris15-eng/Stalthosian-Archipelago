@@ -1,0 +1,11 @@
+PASS roundtrip and deterministic ordering
+PASS write and restore validation
+PASS malformed files and aggregate bounds
+PASS write failure preserves prior save
+PASS restore checks mutation statuses
+PASS authoritative capture through file roundtrip
+PASS STL1 fixture compatibility
+PASS STL3 lifecycle roundtrip and validation
+PASS STL2 migration and STL3 corruption
+PASS physical time and pose validation
+10/10 tests passed

@@ -1,0 +1,402 @@
+{
+  "command": "rig_creature",
+  "ok": true,
+  "exit_code": 0,
+  "seed": 42,
+  "asset_id": "creature.smalltrotter.st1.rig",
+  "started_at": 1791757313.869,
+  "duration_s": 3.383,
+  "partial": false,
+  "artifacts": [
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\logs\\rig_creature_creature.smalltrotter.st1.independent_juvenile.log",
+      "role": "report",
+      "sha256": "886bf01801943d01e6e40552ecb0bb14c6acde1d94e31cd43bdb1f81d58b16bc",
+      "bytes": 12723
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.neutral.glb",
+      "role": "runtime",
+      "sha256": "b1645521be259238439c790d39d9f006a2bfba40fb5a963b2e17db1725d94c85",
+      "bytes": 84476
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+      "role": "runtime",
+      "sha256": "ba5245ce725a4488f04c5ca6792202889be589b46cdfe537083e6577193d8197",
+      "bytes": 139656
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+      "role": "report",
+      "sha256": "b89722c3de3f9bfae9013866530a7d875e60617d33d3aee6a673ccea588f924d",
+      "bytes": 6036
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.rig.blend",
+      "role": "source",
+      "sha256": "17d9e922a2dc07457ba4cbe2053a94beb252c63bb7c2573b1b467824c7ea1c54",
+      "bytes": 928491
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.rig.result.json",
+      "role": "source",
+      "sha256": "aa3453f5da0cf80969f680da6ca0132f523e256cc77291091b5dd15cc8d6b0fa",
+      "bytes": 11113
+    },
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\manifests\\creature.smalltrotter.st1.rig.json",
+      "role": "report",
+      "sha256": "5e6a8382980b5ec837cf87d99e6ba8d2cb134b2af305c3581c3fff48f0cc2c1a",
+      "bytes": 8028
+    }
+  ],
+  "metrics": {
+    "blender_run": {
+      "returncode": 0,
+      "duration_s": 2.862,
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--factory-startup",
+        "-noaudio",
+        "--disable-autoexec",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\stalthos-toolkit\\src\\stalthos_toolkit\\blender\\scripts\\rig.py",
+        "--",
+        "--params",
+        "C:\\Users\\Chris\\AppData\\Local\\Temp\\stalthos_blender_cz88w5rg\\params.json"
+      ],
+      "timeout_s": 110.0,
+      "log_path": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\reports\\logs\\rig_creature_creature.smalltrotter.st1.independent_juvenile.log",
+      "has_result": true
+    },
+    "tool_versions": {
+      "blender": "5.2.0 LTS"
+    },
+    "objects": [
+      {
+        "name": "body_proxy",
+        "type": "MESH",
+        "vertices": 907,
+        "triangles": 1730,
+        "polygons": 826,
+        "dimensions": {
+          "x": 1.572272,
+          "y": 0.468646,
+          "z": 1.224012
+        },
+        "materials": [
+          "creature_skin"
+        ],
+        "modifiers": [
+          {
+            "name": "Armature",
+            "type": "ARMATURE",
+            "show_viewport": true,
+            "show_render": true
+          }
+        ],
+        "collections": [
+          "creature"
+        ],
+        "geometry_digest": "577b4e0dc2f20e4d9b8ab0effb61e379146a35254a0e75a9d0d0db5269717076"
+      },
+      {
+        "name": "creature_rig",
+        "type": "ARMATURE",
+        "vertices": 0,
+        "triangles": 0,
+        "polygons": 0,
+        "dimensions": {
+          "x": 1.437327,
+          "y": 0.396904,
+          "z": 1.088298
+        },
+        "materials": [],
+        "modifiers": [],
+        "collections": [
+          "Scene Collection"
+        ],
+        "geometry_digest": ""
+      },
+      {
+        "name": "integument_proxy",
+        "type": "MESH",
+        "vertices": 0,
+        "triangles": 0,
+        "polygons": 0,
+        "dimensions": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "materials": [],
+        "modifiers": [],
+        "collections": [
+          "creature"
+        ],
+        "geometry_digest": "a8e11241576826a37ba150d91e7478f87ba192f7421406ed168e7622e488116b"
+      }
+    ],
+    "object_count": 3,
+    "triangles": 1730,
+    "vertices": 907,
+    "polygons": 826,
+    "materials": [
+      "creature_skin"
+    ],
+    "geometry_digest": "fc565d1ecffc583f1061f91db98d73c598061060503389596bc61813f700cf35",
+    "bone_count": 74,
+    "spine_bones": 13,
+    "neck_bones": 15,
+    "head_bones": 2,
+    "tail_bones": 32,
+    "limb_bones": 12,
+    "limb_chains": [
+      "front_L",
+      "front_R",
+      "rear_L",
+      "rear_R"
+    ],
+    "roots": [
+      "spine_00"
+    ],
+    "single_root": true,
+    "weighting": "ARMATURE_AUTO",
+    "deform_bones": 74,
+    "vertices_weighted": 907,
+    "pose": {
+      "neutral": true,
+      "offset_bones": []
+    },
+    "walk_cycle": {
+      "clip": "walk_cycle",
+      "source_contact_id": "walk_cycle",
+      "seed": 8811810870233949828,
+      "duration_s": 2.0,
+      "fps": 24,
+      "frame_range": [
+        1,
+        49
+      ],
+      "loop": {
+        "passed": true,
+        "max_channel_error": 0.0,
+        "per_limb_error": {
+          "rear_L": 0.0,
+          "front_L": 0.0,
+          "rear_R": 0.0,
+          "front_R": 0.0
+        }
+      },
+      "contacts": {
+        "targets": {
+          "bone:pes_foot_l": {
+            "samples": 13,
+            "invalid_samples": 0,
+            "within_tolerance": 0,
+            "fraction_within_tolerance": 0.0,
+            "min_abs_ground_distance_m": 0.6484901309013367,
+            "max_abs_ground_distance_m": 0.6649248600006104,
+            "min_signed_ground_distance_m": 0.6484901309013367,
+            "max_signed_ground_distance_m": 0.6649248600006104,
+            "tolerance_m": 0.02
+          },
+          "bone:pes_foot_r": {
+            "samples": 13,
+            "invalid_samples": 0,
+            "within_tolerance": 0,
+            "fraction_within_tolerance": 0.0,
+            "min_abs_ground_distance_m": 0.646385669708252,
+            "max_abs_ground_distance_m": 0.66162109375,
+            "min_signed_ground_distance_m": 0.646385669708252,
+            "max_signed_ground_distance_m": 0.66162109375,
+            "tolerance_m": 0.02
+          }
+        },
+        "all_targets_sampled": true,
+        "nominal_stance_samples": {
+          "targets": {
+            "bone:pes_foot_l": {
+              "samples": 9,
+              "invalid_samples": 0,
+              "within_tolerance": 0,
+              "fraction_within_tolerance": 0.0,
+              "min_abs_ground_distance_m": 0.6511701941490173,
+              "max_abs_ground_distance_m": 0.6649248600006104,
+              "min_signed_ground_distance_m": 0.6511701941490173,
+              "max_signed_ground_distance_m": 0.6649248600006104,
+              "tolerance_m": 0.02
+            },
+            "bone:pes_foot_r": {
+              "samples": 9,
+              "invalid_samples": 0,
+              "within_tolerance": 0,
+              "fraction_within_tolerance": 0.0,
+              "min_abs_ground_distance_m": 0.646385669708252,
+              "max_abs_ground_distance_m": 0.6560633182525635,
+              "min_signed_ground_distance_m": 0.646385669708252,
+              "max_signed_ground_distance_m": 0.6560633182525635,
+              "tolerance_m": 0.02
+            }
+          },
+          "all_targets_sampled": true
+        },
+        "each_target_all_stance_samples_within_tolerance": false,
+        "max_horizontal_foot_slip_during_sampled_stance": {
+          "bone:pes_foot_l": {
+            "samples": 9,
+            "max_displacement_m": 0.10378069989383228
+          },
+          "bone:pes_foot_r": {
+            "samples": 9,
+            "max_displacement_m": 0.07900415454059839
+          }
+        },
+        "selector_to_bone_aliases": {
+          "bone:pes_foot_l": "toe_rear_L",
+          "bone:pes_foot_r": "toe_rear_R"
+        },
+        "foot_pad_vertex_counts": {
+          "bone:pes_foot_l": 8,
+          "bone:pes_foot_r": 8
+        },
+        "measurement": "evaluated, armature-deformed hind foot-pad bottom vertices against z=0"
+      },
+      "terrain_contact_height": {
+        "label": "in-place terrain contact height check",
+        "actor_stride_translation_included": false,
+        "horizontal_foot_lock_checked": true,
+        "per_target_minimum_gap_m": {
+          "bone:pes_foot_l": 0.6484901309013367,
+          "bone:pes_foot_r": 0.646385669708252
+        },
+        "max_horizontal_foot_slip_during_sampled_stance_m": {
+          "bone:pes_foot_l": 0.10378069989383228,
+          "bone:pes_foot_r": 0.07900415454059839
+        }
+      },
+      "neutral_geometry": {
+        "body_proxy_world_z_bounds_m": {
+          "min_m": 0.46961596608161926,
+          "max_m": 1.6936278343200684
+        },
+        "toe_bone_endpoints_world_m": {
+          "toe_rear_L": {
+            "head_world_m": [
+              -0.1836000382900238,
+              0.20487140119075775,
+              0.7251874804496765
+            ],
+            "tail_world_m": [
+              -0.13867203891277313,
+              0.20487140119075775,
+              0.6871874928474426
+            ]
+          },
+          "toe_rear_R": {
+            "head_world_m": [
+              -0.18359999358654022,
+              -0.18849803507328033,
+              0.7248616814613342
+            ],
+            "tail_world_m": [
+              -0.13867199420928955,
+              -0.1858402043581009,
+              0.6869547367095947
+            ]
+          },
+          "toe_front_L": {
+            "head_world_m": [
+              0.16199998557567596,
+              0.16903796792030334,
+              0.741655707359314
+            ],
+            "tail_world_m": [
+              0.20692798495292664,
+              0.1697215437889099,
+              0.7036618590354919
+            ]
+          },
+          "toe_front_R": {
+            "head_world_m": [
+              0.16200000047683716,
+              -0.11134832352399826,
+              0.7445922493934631
+            ],
+            "tail_world_m": [
+              0.20692799985408783,
+              -0.1027037724852562,
+              0.7075885534286499
+            ]
+          }
+        },
+        "grounding_note": "lowering whole proxy to support hind toes would place body_proxy below z=0"
+      },
+      "validation": {
+        "passed": false,
+        "loop_passed": true,
+        "geometric_contact_passed": false,
+        "glb_animation_passed": true
+      },
+      "limitations": [
+        "YAML selector names do not exist in the proxy rig; explicit hind-toe aliases were used.",
+        "Foot-pad geometry is part of body_proxy, but this in-place cycle has no actor stride translation and does not prove horizontal foot lock.",
+        "Proxy geometry and automatically weighted rig are not a final creature asset."
+      ],
+      "glb_animation": {
+        "passed": true,
+        "animations": 1,
+        "channels": 222,
+        "structure": {
+          "validated": true,
+          "tool": "stalthos.optimize.glb",
+          "errors": 0,
+          "issues": [],
+          "summary": {
+            "nodes": 77,
+            "meshes": 1,
+            "primitives": 1,
+            "vertices": 1121,
+            "triangles": 1730,
+            "materials": 1,
+            "textures": 0,
+            "images": 0,
+            "skins": 1,
+            "joints": 74,
+            "animations": 1,
+            "animation_channels": 222,
+            "draw_calls": 1
+          }
+        }
+      }
+    },
+    "determinism": {
+      "seed": 8210638322044084845,
+      "time_input_used": false
+    },
+    "blender": "5.2.0 LTS",
+    "engine": "EEVEE",
+    "timings_s": {
+      "open_source": 0.014,
+      "build_armature": 0.0062,
+      "skin": 0.0341,
+      "neutral_pose": 0.0015,
+      "export_neutral": 0.3807,
+      "author_walk_cycle": 0.5963,
+      "save": 0.0643
+    },
+    "bpy_total_s": 1.2265,
+    "proxy_note": "anatomical proxy rig for pipeline verification; proportions are definition parameters, not fossil measurements",
+    "source_blend": "E:\\Stalthosian Archipelago\\var\\worktrees\\luna-walk-cycle\\var\\luna-walk-cycle\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.blend"
+  },
+  "provenance": {},
+  "warnings": [
+    "[rig_creature] walk_cycle geometric ground contact failed tolerance; see motion metadata"
+  ],
+  "errors": [],
+  "logs": []
+}

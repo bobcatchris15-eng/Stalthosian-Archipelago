@@ -1,0 +1,58 @@
+{
+  "task_id": "luna-persistence-review-four",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Read the project goal, task state, repository instructions, and clanker review contract before reviewing implementation rationale.",
+      "met": true,
+      "how_checked": "Read AGENTS.md, .clanker/autoclank/HUMAN_HANDOFF.md, .clanker/current-work.md, .clanker/GENERAL_PROJECT_STATE.md, PROJECT-BUILD-PLAN.md M3, and clanker-mode contracts/prelude.md and roles/clunker.md. The requested graph adapter/delta scripts are absent in this checkout."
+    },
+    {
+      "condition": "Adversarially review STL3 lifecycle persistence, validation, legacy migration, and prior-save/size/truncation behavior without editing implementation.",
+      "met": true,
+      "how_checked": "Inspected the persistence.hpp and persistence.cpp diff and relevant domain/lifecycle contracts. The standalone probes falsified same-hero species consistency in the initial candidate; root then added STL3 validation and legacy retained-species fallback. Reviewer did not edit implementation."
+    },
+    {
+      "condition": "Compile and run independent MSVC Release probes against the candidate and rerun the domain CTest suite after corrections.",
+      "met": true,
+      "how_checked": "Compiled two standalone /std:c++17 /W4 /WX /O2 /DNDEBUG probes with VS 18 BuildTools. The final STL3 mismatch output is `accepted=0 error=retained hero species contradicts lifecycle species`; final STL2 migration output is `accepted=1 retained_species=0 legacy_lifecycle_species=0`. Rebuilt the updated Release test target and final CTest passed 4/4, including the newly added direct species-consistency and legacy-precedence assertions."
+    },
+    {
+      "condition": "Write report.json and receipt.json with reproducible evidence and remaining validation debt.",
+      "met": true,
+      "how_checked": "Created this task folder record and kept standalone sources/logs under ignored var/reviewprobes/luna-persistence-review-four."
+    }
+  ],
+  "artifacts_changed": [
+    ".clanker/tasks/luna-persistence-review-four/report.json",
+    ".clanker/tasks/luna-persistence-review-four/receipt.json",
+    "var/reviewprobes/luna-persistence-review-four/hero_species_conflict.cpp",
+    "var/reviewprobes/luna-persistence-review-four/hero_species_conflict_fixed.log",
+    "var/reviewprobes/luna-persistence-review-four/legacy_retained_hero_species_conflict.cpp",
+    "var/reviewprobes/luna-persistence-review-four/legacy_retained_hero_species_conflict_fixed.log",
+    "var/reviewprobes/luna-persistence-review-four/ctest_after_legacy_fix.log",
+    "var/reviewprobes/luna-persistence-review-four/ctest_final.log"
+  ],
+  "evidence": [
+    "var/reviewprobes/luna-persistence-review-four/hero_species_conflict.cpp",
+    "var/reviewprobes/luna-persistence-review-four/hero_species_conflict_fixed.log",
+    "var/reviewprobes/luna-persistence-review-four/legacy_retained_hero_species_conflict.cpp",
+    "var/reviewprobes/luna-persistence-review-four/legacy_retained_hero_species_conflict_fixed.log",
+    "var/reviewprobes/luna-persistence-review-four/ctest_after_legacy_fix.log",
+    "var/reviewprobes/luna-persistence-review-four/ctest_final.log"
+  ],
+  "findings": [
+    "The independent STL3 probe initially reproduced a same-current-hero species contradiction; root added validation and a direct regression test, and the post-fix probe and final suite reject it.",
+    "The independent STL2 migration probe initially showed the caller fallback overriding known retained species; root updated restoreHeroLifecycle and added a regression test, and the post-fix probe and final suite preserve the retained species."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "When an old STL1/STL2 save retains the current hero, that retained record species is the known identity truth and takes precedence over the provisional caller fallback; age still defaults to zero because old formats contain no lifecycle-age evidence.",
+    "This review covers domain lifecycle persistence and compatibility only; game UI, complete actor state, and full draft acceptance are outside the seam review."
+  ],
+  "cost": {
+    "tier": "inherited",
+    "retries": 0,
+    "wall_clock_s": 90
+  }
+}
