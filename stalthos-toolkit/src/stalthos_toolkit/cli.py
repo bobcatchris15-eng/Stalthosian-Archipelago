@@ -125,13 +125,24 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--timeout", type=float, default=None, help="external tool timeout in seconds")
         sub.add_argument("--strict", action="store_true", help="treat warnings as failures")
         sub.add_argument("--dry-run", action="store_true", help="plan the work without writing artifacts")
+        # Wired by worker zero so the optimize stage's degraded and depth
+        # controls are reachable from the CLI. Both were already READ from
+        # ctx.options by their command modules (and by STEALTHOS_* env vars);
+        # without the declaration, --allow-degraded was env-var-only and
+        # --levels was unreachable. Declared here, passed through below.
+        sub.add_argument("--allow-degraded", action="store_true",
+                         help="permit explicitly degraded output when a required external "
+                              "tool is missing (uncompressed textures, non-optimized LODs); "
+                              "degraded paths warn and record measured=false")
+        sub.add_argument("--levels", type=int, default=None,
+                         help="LOD chain depth for generate_lods (default: per-kind policy)")
 
     return parser
 
 
 def _options_from_args(args: argparse.Namespace) -> dict[str, Any]:
     keys = ("definition", "asset_id", "stage", "variant", "count", "out",
-            "blender", "timeout", "strict", "dry_run")
+            "blender", "timeout", "strict", "dry_run", "allow_degraded", "levels")
     return {k: getattr(args, k) for k in keys if hasattr(args, k)}
 
 

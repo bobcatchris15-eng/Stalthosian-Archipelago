@@ -6,10 +6,10 @@ here rather than being copy-pasted three times.
 
 `allow_degraded`
 ----------------
-The CLI in `cli.py` is frozen and does not yet declare `--allow-degraded`, so
-the flag is read, in order, from:
+The CLI in `cli.py` now declares `--allow-degraded` (wired by worker zero,
+2026-10-10). The flag is read, in order, from:
 
-1. ``ctx.options["allow_degraded"]`` (once worker zero wires the flag),
+1. ``ctx.options["allow_degraded"]`` (the declared CLI flag),
 2. the ``STEALTHOS_ALLOW_DEGRADED=1`` environment variable,
 3. otherwise False — i.e. the strict default.
 

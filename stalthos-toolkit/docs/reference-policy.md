@@ -84,8 +84,18 @@ The `publish_asset` stage (stage 9) writes a provenance manifest at `var/reports
 ```
 
 **Rules:**
-- Only sources with `redistributable: true` appear in the manifest.
-- `internal_reference` sources are **excluded** from published manifests.
+- **Two different artifacts, two different rules.** This section describes the
+  **redistributable credits manifest** — the thing that ships to third parties.
+  `publish_asset` writes a **build receipt** to
+  `var/reports/receipts/<asset_id>.json`, which is an *internal build record*,
+  not a published credits screen.
+- In the **redistributable credits manifest**, only sources with
+  `redistributable: true` appear, and `internal_reference` sources are excluded.
+- In the **build receipt**, all references are copied **verbatim** as
+  provenance, including `internal_reference` and unverified entries, alongside
+  `unverified_usage_rights` and `usage_rights_block_publication: false`. This
+  satisfies intent i-0002's requirement to *record provenance*; a receipt is
+  where that record belongs.
 - Attribution strings must be copy-paste ready for credits screens.
 
 ---
@@ -140,13 +150,33 @@ When adding a new source:
 
 ## 8. Compliance Checklist (for `publish_asset`)
 
+> **Amended 2026-10-10 under active intent i-0002.** Unverifiable licence
+> information is **recorded, not enforced**. `usage_rights: unknown` /
+> `unverified` / absent is an allowed, expected state for a non-commercial
+> personal project. It produces a warning and an entry in the build receipt's
+> `unverified_usage_rights` list. It is **not** a publication blocker. The
+> checklist below was originally written to gate on established rights; that
+> reading is superseded and an agent following it literally would block assets
+> the operator has explicitly permitted.
+
 Before promoting an asset:
-- [ ] All references in sidecar have `usage_rights` in `{cc0, cc-by, cc-by-sa, public_domain, own_work, permission_granted}`
-- [ ] No `unknown` or `absent` usage_rights in sidecar
-- [ ] All redistributable sources have attribution recorded
-- [ ] `source-registry.json` passes `test_references.py`
-- [ ] Manifest includes `licensed_references` array with attribution
-- [ ] No internal-only sources leaked into manifest
+- [ ] **Blocking — structural:** validation outcome is `pass`
+- [ ] **Blocking — structural:** `status.partial` is false
+- [ ] **Blocking — structural:** every artifact exists and its sha256 matches the manifest
+- [ ] **Blocking — structural:** provenance records seed, `input_hashes` and `tool_versions`
+- [ ] **Blocking — structural:** no promotion-path collision (two artifacts
+      flattening onto one target for the same `asset_id`)
+- [ ] **Warning only:** any reference carries `usage_rights` outside
+      `{cc0, cc-by, cc-by-sa, public_domain, own_work, permission_granted}` →
+      warn, record in `unverified_usage_rights`, do **not** block
+- [ ] **Warning only:** `source-registry.json` passes `test_references.py`
+- [ ] Recording — every redistributable source carries its attribution string
+
+The enforced behaviour lives in `commands/publish_asset.py`. The four structural
+blockers are `ProvenanceSeedMissing`, `ProvenanceInputHashesMissing` /
+`…Invalid`, `ProvenanceToolVersionsMissing`, `ArtifactMissing` / `ArtifactUnhashed`
+/ `ArtifactHashMismatch`, plus `PromotionCollision`. **No licensing condition is
+a blocker**; `_licensing_warnings()` appends only to `warnings`.
 
 ---
 

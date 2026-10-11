@@ -17,15 +17,23 @@ unattended Windows agent.
 
 | Stage | Name | Commands | Status |
 |-------|------|----------|--------|
-| 1 | Source/Research | `research_species` | Not Implemented (exit 5) |
+| 1 | Source/Research | `research_species` | Implemented |
 | 2 | Parameterization | *(definition authoring — no CLI command)* | Manual/authored |
-| 3 | High-Resolution Generation | `generate_plant`, `build_creature`, `rig_creature` | Not Implemented (exit 5) |
-| 4 | Texture/Material Creation | `bake_materials` | Not Implemented (exit 5) |
-| 5 | Variants/Stages | `generate_plant_variants` | Not Implemented (exit 5) |
-| 6 | Optimization | `generate_lods` | Not Implemented (exit 5) |
-| 7 | Interchange | *(handled by `publish_asset`)* | Not Implemented (exit 5) |
-| 8 | Quality Assurance | `render_turntable`, `render_growth_stages`, `validate_asset`, `benchmark_asset` | Not Implemented (exit 5) |
-| 9 | Publish | `publish_asset` | Not Implemented (exit 5) |
+| 3 | High-Resolution Generation | `generate_plant`, `build_creature`, `rig_creature` | Implemented |
+| 4 | Texture/Material Creation | `bake_materials` | Implemented |
+| 5 | Variants/Stages | `generate_plant_variants` | Implemented |
+| 6 | Optimization | `generate_lods` | Implemented (degrades without `gltfpack`) |
+| 7 | Interchange | *(handled by `publish_asset`)* | Implemented |
+| 8 | Quality Assurance | `render_turntable`, `render_growth_stages`, `validate_asset`, `benchmark_asset` | Implemented (frame time **never measured** — no harness) |
+| 9 | Publish | `publish_asset` | Implemented |
+
+> **Status source of truth:** `stalthos list` reports live per-command status. As of
+> 2026-10-10 all twelve commands are registered and implemented. `benchmark_asset`
+> reports `frame_time_measured: false` permanently — the toolkit ships no runtime
+> harness, so the 30 FPS floor is unverified for every asset until one exists.
+> Real-tool paths (`gltfpack`, Compressonator, glTF-Validator) are **untested
+> against the actual tools**; no such tool is installed on the build machine.
+> See `docs/optimize-and-publish.md` for the optimize stage in detail.
 
 > **Key:** "Not Implemented (exit 5)" means the command exists in the registry but its
 > handler is the `not_implemented` stub. Running it emits a JSON status envelope with
