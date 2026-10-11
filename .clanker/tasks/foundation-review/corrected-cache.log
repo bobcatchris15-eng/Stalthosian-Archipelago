@@ -1,0 +1,7 @@
+valid ACCEPTED
+empty REJECTED Cache manifest must contain exactly 80 objects and five libraries/runtime inputs
+partial REJECTED Cache manifest must contain exactly 80 objects and five libraries/runtime inputs
+duplicate REJECTED Cache manifest artifact set does not match consumed inputs
+wrong_configuration REJECTED Cache must be Release configuration
+wrong_schema REJECTED Unsupported cache provenance schema
+bad_hash REJECTED Cache artifact changed: objects/cmake_pch.obj

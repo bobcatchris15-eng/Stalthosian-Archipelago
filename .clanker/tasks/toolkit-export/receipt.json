@@ -1,0 +1,43 @@
+{
+  "task_id": "toolkit-readiness",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Expose export_gltf API compatible with existing generate_lods bridge",
+      "met": true,
+      "how_checked": "Signature export_gltf(blend_path,glb_path,*,seed,ctx=None,blender_exe=None,timeout=None); existing caller ignores return and checks target exists. Optional ctx propagates discovery, timeout and artifacts."
+    },
+    {
+      "condition": "Meaningful offline export and failure tests",
+      "met": true,
+      "how_checked": "PYTHONPATH=stalthos-toolkit/src STALTHOS_TEST_BLENDER=<nonexistent path> python -m pytest -q tests/test_blender_export_bridge.py tests/test_blender.py: 60 passed, 10 skipped in 63.12 s. Six dedicated tests cover valid replacement/hash registration, malformed/truncated outputs, tool failure preservation, missing source."
+    },
+    {
+      "condition": "Real Blender export from existing Softbough source to isolated output",
+      "met": true,
+      "how_checked": "Blender 5.2.0 LTS exited0 in1.518s; 99300-byte GLB emitted; source SHA256 unchanged; hashed GLB and log registered in status."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/runner.py",
+    "stalthos-toolkit/tests/test_blender_export_bridge.py"
+  ],
+  "evidence": [
+    ".clanker/tasks/toolkit-readiness/export-tests.log",
+    ".clanker/tasks/toolkit-readiness/evidence/export-workspace/reports/export-status.json",
+    ".clanker/tasks/toolkit-readiness/evidence/export-workspace/reports/logs/export_gltf_softbough.log",
+    ".clanker/tasks/toolkit-readiness/evidence/export-workspace/intermediate/softbough.glb"
+  ],
+  "findings": [
+    "Existing optimization bridge lives commands/generate_lods.py, not optimize/tools.py. Root will pass ctx=ctx on integration.",
+    "Import MissingDependency added to runner imports because existing FileNotFoundError handler used it without import.",
+    "Initial wider test attempt was interrupted after noticing real Blender render tests enabled; final runner suite explicitly disables real Blender tests via STALTHOS_TEST_BLENDER nonexistent override."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Output is GLB only, consistent with existing glb_path API and optimizer target.",
+    "Export selection contains MESH, ARMATURE and EMPTY objects; cameras/lights are excluded from asset output.",
+    "Animations are requested but this static Softbough run does not validate an animated creature export.",
+    "Header validation rejects empty/truncated/wrong-version/wrong-length output; downstream asset validator remains responsible for full glTF validation."
+  ]
+}

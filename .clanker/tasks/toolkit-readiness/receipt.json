@@ -1,0 +1,66 @@
+{
+  "task_id": "toolkit-readiness",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Real research_species Softbough resolves planning docs from documented toolkit cwd; absent photo remains warning",
+      "met": true,
+      "how_checked": "PYTHONPATH=src STEALTHOS_PROJECT_ROOT=<original project> stalthos research_species -d species/plants/softbough.yaml --seed 42 --workspace <task evidence>; exit 0, flora-design-doc and plant-visual-catalog exists/resolved true, twig photo false"
+    },
+    {
+      "condition": "Focused path tests pass",
+      "met": true,
+      "how_checked": "PYTHONPATH=src python -m pytest -q tests/test_research_paths.py: 8 passed in 0.65 s"
+    },
+    {
+      "condition": "Full suite command run with real output saved",
+      "met": true,
+      "how_checked": "PYTHONPATH=src python -m pytest -q > full-suite.log: collection fails on pre-existing water SUN_GLINT_LABELS import; 1 error in 21.33 s"
+    },
+    {
+      "condition": "Full suite passes",
+      "met": false,
+      "how_checked": "Collection error in excluded water files prevents suite execution"
+    },
+    {
+      "condition": "Operational docs no longer claim all canonical stages are stubs",
+      "met": true,
+      "how_checked": "README and pipeline removed stale all-unimplemented claims, each stage To test; Wicked frame-time limitation documented; git diff --check passes"
+    },
+    {
+      "condition": "Dependencies reviewed for Pydantic/environment imports",
+      "met": true,
+      "how_checked": "Read-only primary source scan finds from pydantic import BaseModel, Field in hydrology.py and biomes.py. Added pydantic>=2.0,<3; Blender NumPy stays Blender-runtime dependency."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/commands/research_species.py",
+    "stalthos-toolkit/pyproject.toml",
+    "stalthos-toolkit/README.md",
+    "stalthos-toolkit/docs/toolkit-pipeline.md",
+    "stalthos-toolkit/tests/test_research_paths.py"
+  ],
+  "evidence": [
+    ".clanker/tasks/toolkit-readiness/focused-tests.log",
+    ".clanker/tasks/toolkit-readiness/full-suite.log",
+    ".clanker/tasks/toolkit-readiness/evidence-research-status.json",
+    ".clanker/tasks/toolkit-readiness/evidence/research-workspace/reports/research/plant.softbough.sh1.json"
+  ],
+  "findings": [
+    "Worktree base lacks primary uncommitted environment and water fixes. water/__init__.py imports SUN_GLINT_LABELS missing from optics.py, causing collection failure.",
+    "Frozen architecture still says stdlib + PyYAML only; this owner cannot change it. Pydantic dependency covers the preserved dirty environment implementation.",
+    "Research stage only normalizes references offline; unresolved photo causes unverified tier despite planning docs resolving."
+  ],
+  "blockers": [
+    "Full suite needs root integration with preserved dirty water changes or separate water owner correction."
+  ],
+  "assumptions_made": [
+    "Definition-relative lookup retains priority over explicit roots to preserve authored local-reference behavior.",
+    "Recognize toolkit root through pyproject.toml and src/stalthos_toolkit; explicit project root supports detached worktrees.",
+    "STEALTHOS_PLAN_DOCS supports docs basename and authored Rauken-Archipelago/docs prefix when pointing at the canonical docs directory."
+  ],
+  "cost": {
+    "tier": "bounded",
+    "retries": 1
+  }
+}

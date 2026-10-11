@@ -1,0 +1,38 @@
+{
+  "task_id": "wicked-construction",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Pinned engine ready and initial native construction packet implemented",
+      "met": true,
+      "how_checked": "Release Build.ps1 completed; six domain scenarios passed; bounded 8 second 1920x1080 DX12 run produced an inspected screenshot with the shrub visible; independent source and boundary review passed."
+    },
+    {
+      "condition": "Toolkit corrections validated without disturbing original work",
+      "met": true,
+      "how_checked": "1922 passed, 2 skipped; real research/export/degraded LOD commands completed; all nine original SHA256 checks remained unchanged."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/",
+    "PROJECT-BUILD-PLAN.md",
+    "AGENTS.md",
+    "stalthos-toolkit/src/stalthos_toolkit/commands/research_species.py",
+    "stalthos-toolkit/src/stalthos_toolkit/commands/generate_lods.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/runner.py"
+  ],
+  "evidence": [
+    "var/reports/toolkit-final-tests-20261011.log",
+    "var/build/stalthos-runtime/build-receipt.json",
+    "var/reports/runtime/20261011-122124-676205ca/runtime-receipt.json",
+    ".clanker/tasks/foundation-review/clunker-report.json",
+    "var/reports/original-work-preservation.json"
+  ],
+  "findings": [
+    "Initial host only; full draft and performance remain unaccepted.",
+    "Current engine path uses verified compiled cache; fresh engine build remains pending.",
+    "Default four-level Softbough fallback LOD fails; two-level diagnostic chain succeeds.",
+    "Procedural plant materials need runtime baking for visual fidelity."
+  ],
+  "blockers": []
+}

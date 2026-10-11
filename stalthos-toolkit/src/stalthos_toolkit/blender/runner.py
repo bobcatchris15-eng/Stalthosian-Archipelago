@@ -41,6 +41,8 @@ from ..core.errors import (
     ExternalToolFailed,
     Interrupted,
     ToolkitError,
+    UsageError,
+    MissingDependency,
 )
 from ..core.workspace import find_blender
 
@@ -336,6 +338,95 @@ def blender_version(ctx: Context, *, blender_exe: str | None = None, timeout: fl
     return first[0].strip() if first else "unknown"
 
 
+# Kept here because export is a runner capability, not a second optimizer.
+_EXPORT_GLTF_SCRIPT = r"""
+import json
+import sys
+from pathlib import Path
+import bpy
+
+args = sys.argv[sys.argv.index("--") + 1:]
+params = json.loads(Path(args[args.index("--params") + 1]).read_text(encoding="utf-8"))
+bpy.ops.wm.open_mainfile(filepath=params["source_blend"], load_ui=False)
+bpy.context.scene.frame_set(1)
+bpy.ops.object.select_all(action="DESELECT")
+for obj in bpy.context.scene.objects:
+    if obj.type in {"MESH", "ARMATURE", "EMPTY"}:
+        obj.select_set(True)
+result = bpy.ops.export_scene.gltf(
+    filepath=params["output_glb"], export_format="GLB", use_selection=True,
+    export_yup=True, export_animations=True,
+)
+if "FINISHED" not in result:
+    raise RuntimeError("Blender glTF exporter did not finish")
+output = Path(params["output_glb"])
+Path("result.json").write_text(json.dumps({
+    "ok": True, "blender_version": bpy.app.version_string,
+    "seed": params["seed"], "output_bytes": output.stat().st_size,
+    "export_format": "GLB", "animations_requested": True,
+}), encoding="utf-8")
+"""
+
+
+def export_gltf(
+    blend_path: str | Path,
+    glb_path: str | Path,
+    *,
+    seed: int,
+    ctx: Context | None = None,
+    blender_exe: str | None = None,
+    timeout: float | None = None,
+) -> BlenderRun:
+    """Export an editable master to GLB using the existing headless runner.
+
+    Compatible with the optimization-stage bridge. Optional ``ctx`` propagates
+    tool overrides, timeout, logs and artifact registration. Without it, logs
+    live below the output folder and Blender uses environment/default discovery.
+    Export to a unique sibling first; preserve an existing target on failure.
+    """
+    from ..core.workspace import Workspace
+
+    source = Path(blend_path).expanduser().resolve()
+    target = Path(glb_path).expanduser().resolve()
+    if not source.is_file():
+        raise UsageError(f"Blender source not found: {source}")
+    if source == target or target.suffix.lower() != ".glb":
+        raise UsageError("export_gltf requires a distinct .glb output path")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    context = ctx or Context(workspace=Workspace(target.parent), seed=seed)
+    descriptor, scratch_name = tempfile.mkstemp(prefix=f".{target.stem}_", suffix=".glb", dir=target.parent)
+    os.close(descriptor)
+    scratch = Path(scratch_name)
+    try:
+        with tempfile.TemporaryDirectory(prefix="stalthos_export_script_") as script_dir:
+            script = Path(script_dir) / "export_gltf.py"
+            script.write_text(_EXPORT_GLTF_SCRIPT, encoding="utf-8")
+            run = run_blender(
+                context, script=script,
+                params={"source_blend": str(source), "output_glb": str(scratch), "seed": seed},
+                blender_exe=blender_exe, timeout=timeout,
+                log_name=f"export_gltf_{target.stem}",
+            )
+        # A zero process exit alone is insufficient: reject empty/truncated or
+        # non-GLB outputs before replacing any previously accepted target.
+        import struct
+        with scratch.open("rb") as exported:
+            header = exported.read(12)
+        if len(header) != 12:
+            raise BlenderError("Blender export produced a truncated GLB")
+        magic, version, length = struct.unpack("<4sII", header)
+        if magic != b"glTF" or version != 2 or length != scratch.stat().st_size:
+            raise BlenderError("Blender export produced an invalid GLB header")
+        os.replace(scratch, target)
+        if context.status is not None:
+            context.status.add_artifact(context.artifact(target, role="intermediate"))
+            if run.log_path is not None:
+                context.status.add_artifact(context.artifact(run.log_path, role="log"))
+        return run
+    finally:
+        scratch.unlink(missing_ok=True)
+
+
 def python_executable() -> str:
     return sys.executable
 
@@ -347,6 +438,7 @@ __all__ = [
     "SCRIPTS_DIR",
     "blender_version",
     "build_argv",
+    "export_gltf",
     "resolve_blender",
     "resolve_timeout",
     "run_blender",

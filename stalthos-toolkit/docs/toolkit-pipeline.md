@@ -1,15 +1,14 @@
 # Stalthos Toolkit — Operational Pipeline Runbook
 
-**Status:** *Proposed* (v0.1.0-draft). This document maps the canonical 9-stage pipeline from
+**Status:** *To test* (v0.1.0 implementation draft). This document maps the canonical 9-stage pipeline from
 `Rauken-Archipelago/docs/asset-toolkit.md` onto the 12 declared CLI commands, describing
 inputs, outputs, artifact locations, failure modes, and inter-stage checks for an
 unattended Windows agent.
 
-> **Grounding rule:** `stalthos list` output is the source of truth for implementation
-> status. As of the current snapshot, **all 12 commands are declared but unimplemented
-> (exit 5)**. This runbook documents the *intended* contract; every stage marked
-> *Not Implemented* must be treated as a hard blocker until the owning worker delivers
-> a working implementation.
+> **Grounding rule:** `stalthos list` is the source of truth for command
+> registration. All twelve canonical commands have implementations. The command
+> reference below describes the intended artifacts; specific real-tool runs and
+> asset inspection are still required before claiming production readiness.
 
 ---
 
@@ -29,10 +28,10 @@ unattended Windows agent.
 
 > **Status source of truth:** `stalthos list` reports live per-command status. As of
 > 2026-10-10 all twelve commands are registered and implemented. `benchmark_asset`
-> reports `frame_time_measured: false` permanently — the toolkit ships no runtime
+> reports `frame_time_measured: false` in its current implementation — the toolkit ships no runtime
 > harness, so the 30 FPS floor is unverified for every asset until one exists.
-> Real-tool paths (`gltfpack`, Compressonator, glTF-Validator) are **untested
-> against the actual tools**; no such tool is installed on the build machine.
+> Real-tool optimization and validation require separate receipts; use
+> `stalthos doctor` to verify present availability on the production machine.
 > See `docs/optimize-and-publish.md` for the optimize stage in detail.
 
 > **Key:** "Not Implemented (exit 5)" means the command exists in the registry but its
@@ -52,14 +51,14 @@ authoring step.
 
 | Aspect | Detail |
 |--------|--------|
-| **Inputs** | `--definition` (optional YAML/JSON with `references`, `measurements`, `license` fields), `--seed`, `--workspace` |
-| **Outputs** | Research record at `var/reports/research/<species_id>.json` with normalized citations, measurement ranges, license clearance flags, confidence tiers |
+| **Inputs** | `--definition` (required species YAML/JSON declaring `references`), `--seed`, `--workspace` |
+| **Outputs** | Research record at `var/reports/research/<species_id>.json` with normalized locators, declared usage rights, unresolved entries, and confidence tiers |
 | **Artifacts** | Role `report`, sha256-hashed |
 | **Exit codes** | 0=success, 2=bad definition, 4=missing tool (none required), 5=unimplemented, 6=tool failure, 7=timeout |
 | **Inter-stage check** | Human/agent reviews `license` flags (no uncleared proprietary refs); confirms measurement ranges cover all generator parameters |
 
-> *Not Implemented* — will exit 5. When implemented, should accept a loose research
-> dossier and emit a structured `ResearchRecord` schema (TBD in `contracts/`).
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -78,8 +77,8 @@ artifacts derive from it.
 | **Exit codes** | 0=success, 2=bad definition/missing required fields, 3=validation fail (post-gen), 4=Blender missing, 5=unimplemented, 6=Blender crashed/non-zero, 7=timeout |
 | **Inter-stage check** | Agent verifies: `.blend` exists and is loadable; manifest `content_hash` matches expectation; `metrics.triangles` > 0; no orphan objects; all generator parameters traceable to definition |
 
-> *Not Implemented* — will exit 5. When implemented, the Blender script lives in
-> `src/stalthos_toolkit/blender/generate_plant.py` and is invoked headless.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -98,7 +97,8 @@ placement maps) for a creature from its YAML definition. Produces the editable
 | **Exit codes** | Same as `generate_plant` |
 | **Inter-stage check** | Skeleton hierarchy valid; bone names match `BeastCore` convention; osteoderm/quill maps present as vertex groups or geometry nodes; manifest records `growth_curves` per body region |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -115,7 +115,8 @@ existing creature source `.blend` and export neutral poses.
 | **Exit codes** | 0=success, 2=missing source/definition, 3=rig validation fail, 4=Blender missing, 5=unimplemented, 6=Blender failure, 7=timeout |
 | **Inter-stage check** | Rig hierarchy intact; no cycle in constraints; neutral poses export cleanly; bone roll consistent; vertex groups non-empty for all deform bones |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -134,8 +135,8 @@ Produces uncompressed intermediate textures; compression happens in `generate_lo
 | **Exit codes** | 0=success, 2=bad UVs/missing materials, 3=bake validation fail (seams, padding), 4=Blender/Compressonator missing, 5=unimplemented, 6=Blender failure, 7=timeout |
 | **Inter-stage check** | All expected texture slots present; no solid-color fills (indicates bake failure); padding ≥ 16px; normal map in OpenGL convention (documented in manifest); `measured=False` for any estimated metrics |
 
-> *Not Implemented* — will exit 5. **Compressonator** required for BC5/BC7 in publish;
-> absence → exit 4 unless `--allow-degraded`.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -154,7 +155,8 @@ with its own manifest linking back to the parent.
 | **Exit codes** | 0=success, 2=bad count/parent missing, 3=variant validation fail, 4=Blender missing, 5=unimplemented, 6=Blender failure, 7=timeout |
 | **Inter-stage check** | Variant count matches `--count`; each manifest `provenance.parent_asset_id` set; silhouettes visually distinct (manual/agent spot-check); no duplicate seeds |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -173,8 +175,8 @@ back to Blender Decimate with `--allow-degraded`.
 | **Exit codes** | 0=success, 2=missing source, 3=LOD validation fail (silhouette drift > threshold), 4=gltfpack/meshoptimizer missing (degraded mode), 5=unimplemented, 6=optimizer failure, 7=timeout |
 | **Inter-stage check** | Triangle counts per LOD within budget; silhouette comparison (render diff) < 2% pixel difference at target screen coverage; collision proxy convex hull valid; manifest records `measured=True` for triangle counts |
 
-> *Not Implemented* — will exit 5. **gltfpack** or **meshoptimizer** strongly recommended;
-> without them, only degraded Blender decimate is available.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -192,7 +194,8 @@ lighting, fixed resolution) for visual QA and regression detection.
 | **Exit codes** | 0=success, 2=missing runtime asset, 3=render validation fail (black frames, NaN pixels), 4=Blender missing, 5=unimplemented, 6=Blender render failure, 7=timeout |
 | **Inter-stage check** | Frame count matches spec; no pure-black frames; manifest `previews` list populated; agent can diff against golden master (perceptual hash) |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -210,7 +213,8 @@ species (plants: seedling→senescent; creatures: hatchling→senescent).
 | **Exit codes** | Same as `render_turntable` |
 | **Inter-stage check** | All defined stages rendered; proportions match `growth_curves` in definition; no missing stages |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -229,7 +233,8 @@ provenance completeness.
 | **Checks (minimum)** | • Mesh: manifold, no degenerate faces, UVs in [0,1], no overlapping UVs (unless intentional) • Normals: consistent orientation, no hard-edge artifacts • Skeleton: hierarchy matches BeastCore, no orphan bones, weights sum to 1 • Materials: all texture slots filled, normal map convention recorded • Provenance: manifest `content_hash` reproducible, all input hashes present • Affordances: browse heights, contact bounds present |
 | **Inter-stage check** | `validation.outcome == "pass"` required before `publish_asset`; `--strict` promotes warnings to exit 3 |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -248,8 +253,8 @@ Does **not** infer — only reports measured values (`measured=True`).
 | **Metrics reported** | `triangles_lod0`, `triangles_lod1`, `vr_mb`, `draw_calls`, `frame_ms_p50`, `frame_ms_p99`, `texture_memory_mb`, `shader_variants` |
 | **Inter-stage check** | All metrics `measured=True`; frame time < 16.67ms (60 FPS) at target LOD on GTX 1080; VRAM < budget; manifest updated |
 
-> *Not Implemented* — will exit 5. Requires a renderer harness (Flax/Wicked) — not in
-> toolkit scope. Toolkit only defines the **output schema** and invocation contract.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -269,7 +274,8 @@ future: copy to engine content directory). Writes a **build receipt** manifest w
 | **Rules** | • Refuses to promote if `manifest.validation.outcome != "pass"` • Refuses if `partial: true` on any upstream status • Verifies `content_hash` matches re-computed hash • Records tool versions at publish time |
 | **Inter-stage check** | Receipt `content_hash` matches manifest; all runtime files present and hashed; license provenance complete |
 
-> *Not Implemented* — will exit 5.
+> *To test* — verify the actual output and available tools on the production
+> machine. Registration alone does not establish acceptance.
 
 ---
 
@@ -318,9 +324,9 @@ stalthos benchmark_asset  -d species/creatures/smalltrotter.yaml
 stalthos publish_asset    -d species/creatures/smalltrotter.yaml
 ```
 
-> **Current reality:** Every command above exits 5. The pipeline **cannot run
-> end-to-end today**. This section documents the *target* sequence; each stage
-> will unblock as its owning worker delivers.
+> **Current reality:** These commands have implementations. This sequence is
+> a production recipe to verify with real tools, not evidence that the chain has
+> completed successfully for an asset. Stop and inspect each nonzero status.
 
 ---
 
@@ -429,7 +435,7 @@ or FloraSim.*
    - `mature_dimensions_m`, `edible_parts`, `defenses`, `affordances`
    - `generator` (Geometry Nodes group name) + `parameters`
    - `references[]`, `licenses[]`
-2. Run `stalthos research_species -d species/plants/<new_species>.yaml` (when implemented)
+2. Run `stalthos research_species -d species/plants/<new_species>.yaml`
 3. Run the full pipeline (stages 3–9)
 4. **No Python/Blender code changes required** if the `generator` exists.
 5. If a new morphology generator is needed, add it to `blender/` Geometry Nodes
@@ -496,24 +502,43 @@ var/
 
 ## 9. Contract Problems & Open Questions (For Operator)
 
-### 9.1 Core/Contract Issues Found
+### 9.1 Current implementation limits
 
-| Issue | Severity | Description |
-|-------|----------|-------------|
-| **Missing `contracts/` schemas** | High | `docs/toolkit-architecture.md` references `contracts/` JSON schemas for validation, but the directory doesn't exist. `schemas/loader.py` has no schema validation — it only parses YAML/JSON/TOML. |
-| **`research_species` has no output schema** | Medium | The command is declared but no `ResearchRecord` schema exists in `contracts/`. The runbook assumes one. |
-| **`generate_plant_variants` output model unclear** | Medium | Does it produce full `.blend` files per variant, or lightweight Geometry Nodes override JSONs? The architecture says "source masters stay editable" — full `.blend` per variant may bloat LFS. |
-| **`benchmark_asset` requires external renderer** | High | The toolkit defines the *output schema* but not the harness. Need a decision: minimal headless Blender render benchmark vs. engine-specific (Flax/Wicked). |
-| **No `publish_asset` destination config** | Low | Currently publishes to `var/runtime/`. Real deploy needs engine content path. Should be configurable. |
-| **`stalthos doctor` doesn't check Python package versions** | Low | Only checks external CLIs. Could record `stalthos-toolkit`, `PyYAML`, `blender --version` parse. |
+- `contracts/` and the existing schema registry provide species and research
+  record validation. Keep that registry as the single validator.
+- Variant generation, creature proxies, baking, optimization, and publication
+  have implementations. Their artifact tables describe intended outputs;
+  real-tool evidence remains necessary for each production chain.
+- Creature generation currently targets quadrupedal proxies. Other body plans
+  need production coverage and visual review.
+- LOD impostor and collision output require review; degraded optimization is
+  explicit, not equivalent to accepted engine content.
+- `benchmark_asset` measures offline asset costs. The selected engine is
+  **Wicked**; packaged Wicked scene frame times on target hardware are required
+  to establish the 30 FPS floor. Blender render times do not establish it.
+- Publication writes the toolkit runtime workspace. Import into the game and
+  runtime material/animation validation require their own integration evidence.
 
-### 9.2 Open Questions for Operator
+### 9.2 Planning reference lookup
 
-1. **Variant storage model:** Full `.blend` per variant vs. Geometry Nodes override JSON? Impacts LFS cost and `generate_plant_variants` implementation.
-2. **Benchmark harness:** Accept headless Blender Eevee/Cycles render time as proxy, or require Flax/Wicked integration?
-3. **Schema validation:** Should `schemas/loader.py` validate against JSON Schema (require `jsonschema` dep) or keep schema-less?
-4. **Creature rig standard:** `BeastCore` bone naming convention needs to be documented in `contracts/` so `rig_creature` and `validate_asset` agree.
-5. **License provenance:** `references[]` and `licenses[]` in definitions — should the toolkit enforce a controlled vocabulary (CC0, CC-BY, proprietary, etc.)?
+Run `stalthos research_species -d species/plants/softbough.yaml --seed 42` from
+`stalthos-toolkit/`. Definition-local folders retain lookup priority. The
+resolver also recognizes the toolkit root and its parent project root, so
+`Rauken-Archipelago/docs/*.md` locators resolve in the normal sibling layout.
+
+For an isolated worktree without the planning clone, set
+`$env:STEALTHOS_PROJECT_ROOT = 'C:\path\to\project'`, or set
+`$env:STEALTHOS_PLAN_DOCS` to the original `Rauken-Archipelago/docs` folder.
+These roots are read-only lookup locations. The audit does not fetch sources,
+clear unknown photo rights, or treat missing files as resolved references.
+
+### 9.3 Python dependencies
+
+Install via `python -m pip install -e .`. Package dependencies include PyYAML
+and Pydantic 2: the environment hydrology/biome descriptors use `BaseModel` and
+`Field`. NumPy inside the Blender bake script is supplied by Blender's Python
+runtime; it is not a host-Python dependency. Tests run offline with
+`$env:PYTHONPATH = 'src'; python -m pytest -q`.
 
 ---
 

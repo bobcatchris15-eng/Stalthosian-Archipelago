@@ -18,7 +18,7 @@ planning-only; this repository is code.
 
 ```
 stalthos-toolkit/
-  pyproject.toml            # stdlib + PyYAML only; console script `stalthos`
+  pyproject.toml            # stdlib + PyYAML + Pydantic 2; console script `stalthos`
   contracts/                # JSON Schemas (the machine-readable contract)
   docs/
     toolkit-architecture.md # this file: contracts, invariants, ownership

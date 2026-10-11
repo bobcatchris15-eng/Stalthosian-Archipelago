@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "toolkit-readiness",
+  "status": "complete",
+  "base_revision": "abe3b3fd39b72900841dcae7ae7248d7ccd329eb",
+  "current_step": "root integration reconciled original clean-worktree collection failure",
+  "completed_steps": [
+    "read frozen contract and inspected baseline",
+    "implemented reference lookup and regression coverage",
+    "corrected dependencies and operational claims",
+    "ran focused tests and real research command",
+    "ran full suite; baseline water collection failure retained",
+    "integrated root suite passed1916/2 using preserved existing water work"
+  ],
+  "touched_artifacts": [
+    "stalthos-toolkit/src/stalthos_toolkit/commands/research_species.py",
+    "stalthos-toolkit/pyproject.toml",
+    "stalthos-toolkit/README.md",
+    "stalthos-toolkit/docs/toolkit-pipeline.md",
+    "stalthos-toolkit/tests/test_research_paths.py"
+  ],
+  "updated": "2026-10-11T17:08:36.179385+00:00",
+  "resume_instructions": "Root should review/copy only artifacts_changed, preserve dirty environment and water changes, then run integrated suite. Worker must not change excluded water/core/cli/schema files.",
+  "validation": {
+    "passed": true,
+    "command": "PYTHONPATH=src python -m pytest -q",
+    "evidence_path": "var/reports/toolkit-integrated-tests-20261011.log"
+  },
+  "blockers": [],
+  "assumptions": [
+    "Definition-relative lookup retains priority over explicit roots to preserve authored local-reference behavior.",
+    "Recognize toolkit root through pyproject.toml and src/stalthos_toolkit; explicit project root supports detached worktrees.",
+    "STEALTHOS_PLAN_DOCS supports docs basename and authored Rauken-Archipelago/docs prefix when pointing at the canonical docs directory."
+  ],
+  "receipt_path": ".clanker\\tasks\\toolkit-readiness\\integration-receipt.json"
+}

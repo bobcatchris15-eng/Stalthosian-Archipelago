@@ -1,0 +1,12 @@
+{
+  "engine": "WickedEngine",
+  "repository": "https://github.com/turanszkij/WickedEngine.git",
+  "tag": "v0.72.120",
+  "revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+  "license": "MIT",
+  "selection": "Decided by user on 2026-10-11",
+  "graphics_api": "DX12",
+  "baseline_resolution": [1920, 1080],
+  "hardware_raytracing_required": false,
+  "avx2_required": false
+}

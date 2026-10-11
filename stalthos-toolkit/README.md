@@ -16,7 +16,7 @@ published runtime asset — unattended, deterministically, with full provenance.
 
 - **Console script:** `stalthos` (installed via `pip install -e .`)
 - **Entrypoint:** `scripts/stalthos.ps1` (PowerShell 5.1 / pwsh 7 compatible)
-- **Core language:** Python 3.11+ (stdlib + PyYAML only)
+- **Core language:** Python 3.11+ (PyYAML; Pydantic 2 for environment descriptors)
 - **External tools:** Blender 4.3+ (required), gltfpack/meshoptimizer, AMD Compressonator (optional but recommended)
 - **Output:** JSON status envelopes on stdout, artifacts under `var/`, full provenance manifests
 
@@ -36,47 +36,46 @@ pip install -e .
 stalthos list
 stalthos doctor
 
-# 4. Run the pipeline on a reference plant (will exit 5 until stages are implemented)
+# 4. Run the pipeline on a reference plant (requires generation/optimization tools)
 .\scripts\stalthos.ps1 -Definition species/plants/splitcrown.yaml -Seed 42
 ```
 
-### Expected Smoke Test Output
+### Readiness checks
 
-```text
-> stalthos list
---- research_species         [1 source/research]  Collect and normalize species references...
---- generate_plant           [3 high-resolution generation]  Generate canonical plant source geometry...
---- generate_plant_variants  [5 variants/stages]  Generate seeded morphological variants...
---- build_creature           [3 high-resolution generation]  Build creature anatomical proxy geometry...
---- rig_creature             [3 high-resolution generation]  Create/refresh the authored rig...
---- bake_materials           [4 texture/material creation]  Bake multiscale material structure...
---- generate_lods            [6 optimization]  Generate LOD chain, collision proxy...
---- render_turntable         [8 quality assurance]  Render a deterministic turntable review sheet...
---- render_growth_stages     [8 quality assurance]  Render a growth/life stage comparison sheet...
---- validate_asset           [8 quality assurance]  Run geometry/material/rig/provenance checks...
---- benchmark_asset          [8 quality assurance]  Measure geometry, texture, memory and frame-time cost...
---- publish_asset            [9 publish]  Promote validated artifacts to runtime/...
+`stalthos list` reports registered command implementation status. All twelve
+canonical commands have implementations; this does not establish end-to-end
+production readiness. `stalthos doctor` reports discovered external executables
+as JSON. Inspect both outputs on the machine where assets will be produced.
 
-> stalthos doctor
-{
-  "command": "doctor",
-  "ok": true,
-  "exit_code": 0,
-  "metrics": {
-    "tools": {
-      "blender": {"available": true, "path": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe"},
-      "gltfpack": {"available": false, "path": null},
-      ...
-    },
-    "workspace": "...\\stalthos-toolkit\\var",
-    "python": "3.14.5"
-  }
-}
+Creature generation is currently a quadrupedal proxy path. LOD generation may
+use degraded fallbacks, and offline benchmarking does not measure running-game
+frame times. Missing tools and unresolved reference photographs must remain
+visible in status reports. Follow `docs/toolkit-pipeline.md` for invocation and
+accept each asset using actual command output and visual/runtime evidence.
+
+### Planning reference lookup
+
+From this toolkit directory, run:
+
+```powershell
+stalthos research_species -d species/plants/softbough.yaml --seed 42
 ```
 
-> **Note:** All 12 commands currently show `---` (unimplemented, exit 5). This is the
-> *current reality* — the pipeline is a contract waiting for stage workers to implement.
-> See `docs/toolkit-pipeline.md` for the stage→command map and implementation status.
+Local references are searched relative to the definition, then any explicit
+`STEALTHOS_PROJECT_ROOT` / `STEALTHOS_PLAN_DOCS` override, then the toolkit and
+its parent project directory. The normal sibling `Rauken-Archipelago/docs/`
+layout therefore works from the toolkit cwd. In a detached worktree without
+that read-only planning clone, set the project root explicitly:
+
+```powershell
+$env:STEALTHOS_PROJECT_ROOT = 'C:\path\to\Stalthosian-Archipelago'
+# Alternatively, point to the original planning docs directory:
+$env:STEALTHOS_PLAN_DOCS = 'C:\path\to\Stalthosian-Archipelago\Rauken-Archipelago\docs'
+stalthos research_species -d species/plants/softbough.yaml --seed 42
+```
+
+This is an offline reference audit. URLs and DOIs are normalized without
+fetching their contents; absent photographs and unknown rights remain warnings.
 
 ---
 
@@ -201,7 +200,8 @@ even on failure. Logs go to stderr.
 
 ```powershell
 # Run core tests (no Blender required)
-pytest tests/ -v
+$env:PYTHONPATH = 'src'
+python -m pytest -q
 ```
 
 Tests cover: CLI exit codes, JSON envelope shape, deterministic seeding,
@@ -243,8 +243,8 @@ Proprietary to The Stalthosian Archipelago project. See individual asset
 
 ## Status
 
-**v0.1.0-draft** — Foundation contract frozen (`toolkit-architecture.md`),
-pipeline runbook drafted (`toolkit-pipeline.md`), PowerShell entrypoint written,
-tests scaffolded. All 12 commands are **declared but unimplemented (exit 5)**.
-Stage workers (A, B, C) own command implementations; worker D owns this
-operational layer.
+**v0.1.0 implementation draft** — All twelve canonical commands are implemented.
+The frozen contract and operational runbook govern their use; external-tool
+availability, generator coverage, asset appearance, and Wicked runtime
+performance still require evidence. A green command list is not a production
+acceptance result.

@@ -1,0 +1,7 @@
+PASS shared calendar with responsive physical time
+PASS body-relative forward at all camera headings
+PASS destination persistence and direct cancellation
+PASS camera-only stimulus excluded from bodily perception
+PASS contact idempotence and fail-closed bounds
+PASS region and death continuity across hero replacement
+6/6 scenarios passed

@@ -268,7 +268,7 @@ def _export_blend(ctx: Context, blend: Path, out_dir: Path, asset_id: str) -> Pa
     for name in ("export_gltf", "export_glb"):
         function = getattr(runner, name, None)
         if callable(function):
-            function(blend, target, seed=ctx.seed)
+            function(blend, target, seed=ctx.seed, ctx=ctx)
             if target.exists():
                 return target
             raise ExternalToolFailed(f"blender.runner.{name}", -1,

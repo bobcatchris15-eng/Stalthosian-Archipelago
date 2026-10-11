@@ -1,0 +1,23 @@
+{
+  "task_id": "opencode-engine-review",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Headless requested model reads scoped source and returns a concrete final report",
+      "met": true,
+      "how_checked": "opencode/space-bunny-free; final text 9143 characters; process exit 0; source-read events retained; proposals remain unimplemented and require root review"
+    }
+  ],
+  "artifacts_changed": [],
+  "evidence": [
+    ".clanker\\tasks\\opencode-engine-review\\report.md",
+    ".clanker\\tasks\\opencode-engine-review\\events.jsonl",
+    ".clanker\\tasks\\opencode-engine-review\\process-result.json"
+  ],
+  "findings": [
+    "Default orchestrator missing; explicit built-in build agent selected",
+    "Bash deny caused free-tier HTTP403; approval gate restored source execution",
+    "Headless ask-gated shell request rejected without execution; final report obtained in same-session follow-up"
+  ],
+  "blockers": []
+}

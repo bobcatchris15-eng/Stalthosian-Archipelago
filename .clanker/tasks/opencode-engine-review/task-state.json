@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "opencode-engine-review",
+  "status": "complete",
+  "base_revision": "abe3b3fd39b72900841dcae7ae7248d7ccd329eb",
+  "current_step": "Final source-analysis report received and root reviewed",
+  "completed_steps": [
+    "isolated checkout prepared",
+    "exact installed model ID checked",
+    "process launched",
+    "Resolved local agent and permission configuration failures",
+    "Verified real source read events and final text with exit 0"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-11T17:19:01.908112+00:00",
+  "next_step": "parse final events and process result; integrate useful recommendations",
+  "resume_instructions": "Read brief.md, launch.json, events.jsonl, stderr.log and process-result.json. Do not dispatch duplicate work. Read-only OpenCode task; only opencode provider model used.",
+  "validation": {
+    "passed": true,
+    "evidence_path": ".clanker\\tasks\\opencode-engine-review\\report.md"
+  },
+  "receipt_path": ".clanker\\tasks\\opencode-engine-review\\receipt.json"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "toolkit-readiness",
+  "status": "complete",
+  "base_revision": "abe3b3fd39b72900841dcae7ae7248d7ccd329eb",
+  "current_step": "export bridge checked; ready for root integration",
+  "completed_steps": [
+    "read frozen contract and inspected baseline",
+    "implemented reference lookup and regression coverage",
+    "corrected dependencies and operational claims",
+    "ran focused tests and real research command",
+    "ran full suite; baseline water collection failure retained",
+    "implemented atomic GLB export bridge",
+    "verified dedicated and existing offline runner tests",
+    "verified real Blender export with unchanged master hash"
+  ],
+  "touched_artifacts": [
+    "stalthos-toolkit/src/stalthos_toolkit/commands/research_species.py",
+    "stalthos-toolkit/pyproject.toml",
+    "stalthos-toolkit/README.md",
+    "stalthos-toolkit/docs/toolkit-pipeline.md",
+    "stalthos-toolkit/tests/test_research_paths.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/runner.py",
+    "stalthos-toolkit/tests/test_blender_export_bridge.py"
+  ],
+  "updated": "2026-10-11T17:06:36.099786+00:00",
+  "resume_instructions": "Root should copy runner.py and test_blender_export_bridge.py; pass ctx=ctx in commands/generate_lods.py bridge, then rerun actual chain. Earlier five toolkit readiness owned files already reported separately.",
+  "validation": {
+    "passed": true,
+    "command": "offline runner suite plus actual export",
+    "evidence_path": ".clanker\\tasks\\toolkit-readiness\\export-tests.log"
+  },
+  "blockers": [],
+  "assumptions": [
+    "Definition-relative lookup retains priority over explicit roots to preserve authored local-reference behavior.",
+    "Recognize toolkit root through pyproject.toml and src/stalthos_toolkit; explicit project root supports detached worktrees.",
+    "STEALTHOS_PLAN_DOCS supports docs basename and authored Rauken-Archipelago/docs prefix when pointing at the canonical docs directory."
+  ],
+  "receipt_path": ".clanker\\tasks\\toolkit-readiness\\export-bridge-receipt.json",
+  "next_step": "write export bridge receipt after focused runner tests"
+}

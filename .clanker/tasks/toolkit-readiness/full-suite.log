@@ -1,0 +1,18 @@
+
+=================================== ERRORS ====================================
+_________________ ERROR collecting tests/test_water_optics.py _________________
+ImportError while importing test module 'E:\Stalthosian Archipelago\var\worktrees\toolkit-readiness\stalthos-toolkit\tests\test_water_optics.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_water_optics.py:30: in <module>
+    from stalthos_toolkit.water import optics
+src\stalthos_toolkit\water\__init__.py:20: in <module>
+    from .optics import (
+E   ImportError: cannot import name 'SUN_GLINT_LABELS' from 'stalthos_toolkit.water.optics' (E:\Stalthosian Archipelago\var\worktrees\toolkit-readiness\stalthos-toolkit\src\stalthos_toolkit\water\optics.py)
+=========================== short test summary info ===========================
+ERROR tests/test_water_optics.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 21.33s

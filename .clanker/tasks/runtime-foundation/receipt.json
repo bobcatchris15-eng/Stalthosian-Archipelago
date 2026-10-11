@@ -1,0 +1,78 @@
+{
+  "assumptions_made": [
+    "Y up, heading zero +Z, distances metres, radians; caller assigns unique numeric IDs.",
+    "State is single-threaded and host schedules actors and activation budgets.",
+    "Caller invokes heroDied for current hero; ordinary retire is not its lifecycle transition.",
+    "Contact sessions increase monotonically; stale callbacks carry the original session token.",
+    "No disk save format introduced to avoid premature persistent-schema commitment."
+  ],
+  "acceptance": [
+    {
+      "met": true,
+      "condition": "shared calendar with responsive physical seconds",
+      "how_checked": "MSVC scenarios.exe timeScenario passed"
+    },
+    {
+      "met": true,
+      "condition": "body-relative forward at camera headings",
+      "how_checked": "steeringScenario: four body headings x four camera headings passed"
+    },
+    {
+      "met": true,
+      "condition": "destination persistence/direct cancellation",
+      "how_checked": "intentScenario: hunger 100 calls, pause/replan, direct cancellation, explicit preservation and terminal autonomy passed"
+    },
+    {
+      "met": true,
+      "condition": "camera-only stimulus exclusion",
+      "how_checked": "perceptionScenario: static_assert incompatible types and camera-only runtime stimulus passed"
+    },
+    {
+      "met": true,
+      "condition": "repeated contact idempotence",
+      "how_checked": "contactScenario: invalid/duplicate/over-capacity/stale session depletion checks passed"
+    },
+    {
+      "met": true,
+      "condition": "fallen tree/dead companion continuity across hero deaths and reactivation",
+      "how_checked": "continuityScenario: two hero deaths, revisit snapshot, retained dead companion exclusion and capacity bound passed"
+    },
+    {
+      "met": true,
+      "condition": "strict malformed save behavior if persistence added",
+      "how_checked": "Not applicable: disk save format intentionally absent; explicitly documented in-memory-only contract"
+    },
+    {
+      "met": true,
+      "condition": "standard-only native foundation and all five hero identifiers",
+      "how_checked": "compiled with MSVC /std:c++17 /W4 /WX /permissive- and code inspection; five enum identifiers"
+    },
+    {
+      "met": true,
+      "condition": "document interface and atomic task receipt",
+      "how_checked": "domain/README.md and task-local atomic JSON state/receipt; jsonschema validation command"
+    }
+  ],
+  "blockers": [],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/foundation.hpp",
+    "stalthos-runtime/domain/README.md",
+    "stalthos-runtime/tests/scenarios.cpp",
+    "stalthos-runtime/tests/CMakeLists.txt",
+    ".clanker/tasks/runtime-foundation/task-state.json",
+    ".clanker/tasks/runtime-foundation/receipt.json"
+  ],
+  "outcome": "done",
+  "findings": [
+    "No disk persistence, rendering, frame-time evidence, navigation, autonomous behavioral AI or species lifecycle is implemented by this packet.",
+    "Retained identity capacity fails closed and retains dead identities; explicit decay/retirement policy remains future work.",
+    "Conspicuous hero death exceptions are not capped; future disk-save/carcass decay policy must bound long-session exceptions.",
+    "Perception separation is a type boundary; engine adapter must supply only bodily filtered BodyStimulus."
+  ],
+  "task_id": "runtime-foundation",
+  "evidence": [
+    ".clanker/tasks/runtime-foundation/compile.log",
+    ".clanker/tasks/runtime-foundation/scenarios.log",
+    "compile exit 0; scenario exit 0; 6/6 scenarios passed"
+  ]
+}

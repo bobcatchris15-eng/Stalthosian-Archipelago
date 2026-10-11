@@ -1,0 +1,54 @@
+{
+  "command": "research_species",
+  "ok": true,
+  "exit_code": 0,
+  "seed": 42,
+  "asset_id": "plant.softbough.sh1",
+  "started_at": 1791737669.651,
+  "duration_s": 0.091,
+  "partial": false,
+  "artifacts": [
+    {
+      "path": "E:\\Stalthosian Archipelago\\var\\worktrees\\toolkit-readiness\\.clanker\\tasks\\toolkit-readiness\\evidence\\research-workspace\\reports\\research\\plant.softbough.sh1.json",
+      "role": "report",
+      "sha256": "d88b0c6c0d2b74d36e559038a44bd240bf2ce5d405b1358e05ba1d7086fd4999",
+      "bytes": 6505
+    }
+  ],
+  "metrics": {
+    "record_path": "E:\\Stalthosian Archipelago\\var\\worktrees\\toolkit-readiness\\.clanker\\tasks\\toolkit-readiness\\evidence\\research-workspace\\reports\\research\\plant.softbough.sh1.json",
+    "written": true,
+    "references": 3,
+    "references_verified": 2,
+    "references_unverified": 1,
+    "unresolved_locators": 1,
+    "uncertainty": "unverified",
+    "offline": true
+  },
+  "provenance": {
+    "generator": "stalthos-toolkit",
+    "toolkit_version": "0.1.0",
+    "tool_versions": {
+      "python": "3.14.5",
+      "network_access": "none"
+    },
+    "command": "research_species",
+    "seed": 42,
+    "input_hashes": {
+      "E:\\Stalthosian Archipelago\\var\\worktrees\\toolkit-readiness\\stalthos-toolkit\\species\\plants\\softbough.yaml": "9bb3da113902955d7ea5a5edd613a7f3a734932f2bf33694f6cbb03b5e46e2b7",
+      "definition:softbough.yaml#content": "04948f0be2e214e72a442c4392e1b625faebd736bae1b47e179aeb2847575d2c"
+    },
+    "record_schema": "research-record",
+    "declared_uncertainty": "biomechanical_plausibility"
+  },
+  "warnings": [
+    "plant.softbough.sh1: reference softbough-twig-photo: local path not found: species/plants/plant.softbough.sh1/reference/twig_arc.jpg",
+    "plant.softbough.sh1: reference softbough-twig-photo: usage rights unverified (unknown); record tier is 'unverified' and the asset is not redistributable",
+    "plant.softbough.sh1: evidence tier degraded to 'unverified' -- 1 reference(s) have no established usage rights",
+    "plant.softbough.sh1: 1 locator(s) could not be resolved offline (recorded in the report, never guessed)"
+  ],
+  "errors": [],
+  "logs": [
+    "wrote E:\\Stalthosian Archipelago\\var\\worktrees\\toolkit-readiness\\.clanker\\tasks\\toolkit-readiness\\evidence\\research-workspace\\reports\\research\\plant.softbough.sh1.json"
+  ]
+}

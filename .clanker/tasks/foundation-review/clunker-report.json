@@ -1,0 +1,32 @@
+{
+  "scope": {
+    "base_digest": "initial runtime foundation",
+    "artifacts": [
+      "stalthos-runtime/domain/foundation.hpp",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/scripts/Build.ps1",
+      "stalthos-runtime/scripts/Prepare-Wicked.ps1",
+      "stalthos-runtime/scripts/Run.ps1",
+      "var/vendor/WickedEngine/Editor/ModelImporter_GLTF.cpp",
+      "var/vendor/WickedEngine/WickedEngine/wiScene.cpp",
+      "var/vendor/WickedEngine/WickedEngine/wiScene_Components.cpp"
+    ],
+    "graph_digest": "not supplied; direct source review"
+  },
+  "goal_alignment": {
+    "verdict": "advances_goal",
+    "drift": []
+  },
+  "findings": [],
+  "unproven_claims": [
+    "No engine host GPU launch performed by reviewer; root owns launch. Frame times, visuals and full draft remain correctly labeled unaccepted in runtime receipt."
+  ],
+  "validation_debt": [
+    "GPU and interactive input verification delegated to root."
+  ],
+  "asks": [],
+  "effort": {
+    "attempted": "Read host/build/setup/run/config and domain source; compiled supplied scenarios and independent hero boundary probe in isolated review directory; ran 6 supplied scenarios, cache validation malformed-manifest probe, and 8 toolkit resolver tests. No implementation edits, GPU launch, installations or network calls. Revalidated root corrections: compiled corrected root scenarios (6/6 pass, including hero boundary regression); executed exact current Build.ps1 validation block against valid cache and empty/partial/duplicate/wrong configuration/wrong schema/bad hash manifests. Valid accepted, all six invalid cases rejected. Both findings resolved. Additional source review of fresh-scene glTF import, top-level translation, Merge and terrain normal winding against local pinned engine found no new defect; see import-winding-review.md.",
+    "probes_run": 6
+  }
+}

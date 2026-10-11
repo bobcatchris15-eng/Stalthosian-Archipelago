@@ -63,14 +63,7 @@ def research_species(ctx: Context) -> Status:
             hint="add a `references:` list with at least one locator",
         )
 
-    # Where relative local paths are resolved from: the definition's own folder
-    # first, then the repository `species/` root it may sit under, then
-    # $STEALTHOS_PLAN_DOCS when the definition cites planning docs that live
-    # outside this repository (they do: Rauken-Archipelago/ is planning-only).
-    base_dirs = [definition_path.parent, definition_path.parent.parent]
-    plan_docs = os.environ.get("STEALTHOS_PLAN_DOCS")
-    if plan_docs:
-        base_dirs.append(Path(plan_docs).expanduser())
+    base_dirs = _reference_base_dirs(definition_path)
     declared = definition.get("uncertainty")
     declared_tier = declared if isinstance(declared, str) else None
 
@@ -169,6 +162,33 @@ def research_species(ctx: Context) -> Status:
 
 
 # --- helpers ----------------------------------------------------------------
+def _reference_base_dirs(definition_path: Path) -> list[Path]:
+    """Resolve authored local references without depending on invocation cwd.
+
+    Definition-local paths retain priority. Explicit external checkout roots
+    and the discovered toolkit/project roots support repository-relative refs.
+    STEALTHOS_PLAN_DOCS accepts either the planning docs folder or a root.
+    """
+    definition_path = definition_path.resolve()
+    bases = [definition_path.parent, definition_path.parent.parent]
+    project_root = os.environ.get("STEALTHOS_PROJECT_ROOT")
+    if project_root:
+        bases.append(Path(project_root).expanduser().resolve())
+    plan_docs = os.environ.get("STEALTHOS_PLAN_DOCS")
+    if plan_docs:
+        docs = Path(plan_docs).expanduser().resolve()
+        bases.append(docs)
+        # Existing definitions use Rauken-Archipelago/docs/<file>; the
+        # documented override points directly at that docs directory.
+        if docs.name == "docs" and docs.parent.name == "Rauken-Archipelago":
+            bases.append(docs.parent.parent)
+    for ancestor in definition_path.parents:
+        if (ancestor / "pyproject.toml").is_file() and (ancestor / "src/stalthos_toolkit").is_dir():
+            bases.extend([ancestor, ancestor.parent])
+            break
+    return list(dict.fromkeys(bases))
+
+
 def _record_path(ctx: Context, species_id: str) -> Path:
     explicit = ctx.options.get("out")
     if explicit:

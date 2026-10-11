@@ -19,6 +19,19 @@ Two halves, do not confuse them:
   production pipeline. Start at `stalthos-toolkit/docs/toolkit-architecture.md`
   (the frozen contract) and `stalthos-toolkit/docs/toolkit-pipeline.md` (the runbook).
 
+## Runtime construction — 2026-10-11
+
+The user has selected **Wicked Engine** and authorized construction of a **full
+first draft** of the actual game. `stalthos-runtime/` owns the native C++ runtime,
+domain contracts, engine host and Windows build/run scripts. The toolkit remains
+the offline asset pipeline. `PROJECT-BUILD-PLAN.md` defines full draft coverage;
+`.clanker/current-work.md` and `.clanker/GENERAL_PROJECT_STATE.md` hold execution
+state. Engine source, compiled dependencies, builds and captures live under
+ignored `var/`. Planning inputs stay read-only. Engine alternatives are historical
+research, not an unresolved selection task. Preserve unrelated dirty work and
+use bounded isolated workers with reviewed integration. Build/launch feasibility
+does not establish final visuals, full draft completion or 30 FPS acceptance.
+
 ## Read before you write
 
 - `stalthos-toolkit/docs/toolkit-architecture.md` — command contract, status

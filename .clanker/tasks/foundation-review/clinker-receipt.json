@@ -1,0 +1,49 @@
+{
+  "task_id": "foundation-review",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "met": true,
+      "how_checked": "Compiled supplied domain scenarios (6/6 pass), independent hero API probe, cache malformed manifest probe; eight toolkit resolver tests pass. Read host/scripts/CMake/config.",
+      "condition": "Independent concrete foundation review"
+    },
+    {
+      "met": true,
+      "how_checked": "Source and receipts explicitly distinguish diagnostic host from visual/performance acceptance; actual GPU launch reserved for root.",
+      "condition": "Truthful launch/readiness verification"
+    }
+  ],
+  "artifacts_changed": [
+    "review/CMakeLists.txt",
+    "review/probe.cpp",
+    "review/cache-probe.ps1",
+    "review/boundary-probe.log",
+    "review/scenarios.log",
+    "review/cache-probe.log",
+    "review/clunker-report.json",
+    "review/corrected-cache-probe.ps1",
+    "review/corrected-cache.log",
+    "review/corrected-scenarios.log",
+    "import-winding-review.md"
+  ],
+  "evidence": [
+    "review/scenarios.log",
+    "review/boundary-probe.log",
+    "review/cache-probe.log",
+    "review/corrected-scenarios.log",
+    "review/corrected-cache.log",
+    "import-winding-review.md"
+  ],
+  "findings": [
+    "Both original P2 findings corrected and independently revalidated; no open findings."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Foundational packet is expected to establish boundaries, not implement all gameplay."
+  ],
+  "cost": {
+    "retries": 0,
+    "wall_clock_s": 240,
+    "tier": "inherited"
+  }
+}
