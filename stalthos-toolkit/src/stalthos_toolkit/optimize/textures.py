@@ -218,8 +218,14 @@ class CompressionReport:
 
 def _compress_one(source: Path, target: Path, policy: TextureSlotPolicy, tool_path: str,
                    *, timeout: float | None) -> tuple[list[str], list[str]]:
-    """Run Compressonator. Returns (argv, stderr). Raises on failure."""
-    args = ["-i", str(source), "-o", str(target), "-f", policy.format, "-fd", "-overwrite"]
+    """Run Compressonator. Returns (argv, stderr). Raises on failure.
+
+    Verified against compressonatorcli V4.5.52: the CLI takes SourceFile and
+    DestFile POSITIONALLY and spells the destination format `-fd <FORMAT>`.
+    It has no -i/-o/-f and no -overwrite; passing them yields
+    "Option [-i] : Command option is invalid" and exit 127.
+    """
+    args = [str(source), str(target), "-fd", policy.format]
     try:
         proc = toolbox.run_tool(tool_path, args, timeout=timeout)
     except TimeoutError as exc:

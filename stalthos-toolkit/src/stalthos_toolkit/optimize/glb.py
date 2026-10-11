@@ -224,6 +224,16 @@ class GlbDocument:
             raise GlbError(f"buffer index {buffer_index} out of range ({len(buffers)} buffers)")
         uri = buffers[buffer_index].get("uri")
         if uri is None:
+            # A GLB carries at most ONE uri-less buffer: the BIN chunk. gltfpack -cc
+            # emits a *second* uri-less buffer for the EXT_meshopt_compression
+            # fallback payload. Returning the BIN chunk for it would silently
+            # hand back the wrong bytes, so refuse with a typed error instead.
+            if buffer_index != 0:
+                raise GlbError(
+                    f"buffer {buffer_index} has no uri; a GLB's BIN chunk can only back buffer 0",
+                    detail={"buffer": buffers[buffer_index], "buffer_index": buffer_index},
+                    hint="re-run the external tool without meshopt compression (-cc) so the "
+                         "asset stays a single-buffer GLB this reader can decode")
             return bytes(self.binary)
         if uri.startswith("data:"):
             import base64
@@ -238,6 +248,15 @@ class GlbDocument:
         if index >= len(views):
             raise GlbError(f"bufferView index {index} out of range")
         view = views[index]
+        # Under EXT_meshopt_compression the view's byteOffset/byteLength describe
+        # the DECODED fallback layout, not bytes present in the BIN chunk. Slicing
+        # the chunk by them yields garbage, so say so rather than misread geometry.
+        ext = view.get("extensions") or {}
+        if "EXT_meshopt_compression" in ext:
+            raise GlbError(
+                f"bufferView {index} uses EXT_meshopt_compression, which this reader does not decode",
+                detail={"view": view},
+                hint="re-run without meshopt compression (-cc) to keep the LOD chain readable")
         raw = self._buffer_bytes(int(view.get("buffer", 0)))
         offset = int(view.get("byteOffset", 0))
         length = int(view.get("byteLength", 0))
@@ -705,7 +724,11 @@ def run_gltfpack_simplify(source: str | Path, target: str | Path, ratio: float, 
                        detail={"ratio": ratio},
                        hint=toolbox.INSTALL_HINTS["gltfpack"])
     ratio = max(0.001, min(1.0, float(ratio)))
-    args = ["-i", str(source), "-o", str(target), "-si", f"{ratio:.6f}", "-cc"]
+    # NOTE: no -cc. Meshopt compression makes gltfpack emit a second uri-less
+    # buffer and offset-decode views; this toolkit's own GLB writer never produces
+    # EXT_meshopt_compression, so a compressed LOD could not be re-read, validated
+    # or published. Determinism and round-trippability beat the bytes saved.
+    args = ["-i", str(source), "-o", str(target), "-si", f"{ratio:.6f}"]
     try:
         proc = toolbox.run_tool(state.path or "", args, timeout=timeout)
     except TimeoutError as exc:

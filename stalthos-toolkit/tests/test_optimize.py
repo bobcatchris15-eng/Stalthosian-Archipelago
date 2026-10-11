@@ -131,7 +131,6 @@ def build_test_glb(path: Path, *, grid: int = 12, skinned: bool = False) -> Path
         "materials": [{"name": "bark"}],
         "accessors": accessors,
         "bufferViews": views,
-        "buffers": [{"byteLength": len(binary)}],
     }
     if skinned:
         gltf["skins"] = [{"joints": [2], "skeleton": 2}]
@@ -150,6 +149,11 @@ def build_test_glb(path: Path, *, grid: int = 12, skinned: bool = False) -> Path
                           "interpolation": "LINEAR"}],
             "channels": [{"sampler": 0, "target": {"node": 2, "path": "translation"}}],
         }]
+
+    # Declared AFTER every add_view call: skin and animation append further
+    # bufferViews, and a byteLength captured earlier leaves the buffer short.
+    # The toolkit's own reader tolerated that; gltfpack does not.
+    gltf["buffers"] = [{"byteLength": len(binary)}]
 
     path.parent.mkdir(parents=True, exist_ok=True)
     return GlbDocument(gltf, bytes(binary)).write(path)
@@ -457,14 +461,16 @@ def test_texture_compression_degraded_emits_uncompressed_with_warning(tmp_path: 
 def test_texture_compression_invokes_compressonator(tmp_path: Path, monkeypatch):
     """Proves the argv we build is well formed, using a stub in place of the tool.
 
-    This verifies OUR command line, not AMD Compressonator's behaviour.
+    This verifies OUR command line, not AMD Compressonator's behaviour. The
+    flags mirror compressonatorcli V4.5.52: positional source/dest, `-fd <fmt>`.
     """
     recorded: list[list[str]] = []
 
     def fake_run_tool(path, args, timeout=None, cwd=None):
         recorded.append(list(args))
-        target = Path(args[args.index("-o") + 1])
-        fmt = args[args.index("-f") + 1]
+        # Real CLI shape: compressonatorcli SourceFile DestFile -fd <FORMAT>
+        target = Path(args[1])
+        fmt = args[args.index("-fd") + 1]
         vk = {"BC4": 131, "BC5": 139, "BC7": 147}[fmt]
         identifier = bytes((0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A))
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -482,9 +488,12 @@ def test_texture_compression_invokes_compressonator(tmp_path: Path, monkeypatch)
     source.write_bytes(_png())
     report = compress_textures([(source, "color")], tmp_path / "out")
     assert report.degraded is False
-    assert recorded and recorded[0][0] == "-i"
-    assert "-f" in recorded[0] and recorded[0][recorded[0].index("-f") + 1] == "BC7"
-    assert "-fd" in recorded[0]                      # mip chain requested
+    argv = recorded[0]
+    assert Path(argv[0]) == source                   # source is positional
+    assert Path(argv[1]) == tmp_path / "out" / "albedo.ktx2"   # dest is positional
+    assert argv[argv.index("-fd") + 1] == "BC7"      # destination format via -fd
+    assert "-i" not in argv and "-o" not in argv and "-f" not in argv
+    assert "-overwrite" not in argv
     outcome = report.outcomes[0]
     assert outcome.compressed is True
     assert outcome.format == "BC7"

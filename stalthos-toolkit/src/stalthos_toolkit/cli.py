@@ -9,6 +9,7 @@ Guarantees:
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 import time
 from typing import Any
@@ -163,22 +164,26 @@ def _cmd_list() -> int:
 
 def _cmd_doctor(workspace: Workspace) -> int:
     status = Status(command="doctor")
+    from .core.workspace import find_blender
+    from .optimize import tools as toolbox
+
     tools: dict[str, Any] = {}
-    for tool, probe in (("blender", None), ("gltfpack", "gltfpack"), ("meshoptimizer", "meshoptimizer"),
-                        ("compressonator", "compressonator"), ("ktx", "ktx"), ("git", "git"),
+    for tool, probe in (("gltfpack", "gltfpack"), ("meshoptimizer", "meshoptimizer"),
+                        ("compressonator", "compressonator"), ("ktx", "ktx"),
                         ("magick", "magick"), ("ffmpeg", "ffmpeg")):
-        if tool == "blender":
-            from .core.workspace import find_blender
-
-            try:
-                tools[tool] = {"available": True, "path": find_blender()}
-            except ToolkitError as exc:
-                tools[tool] = {"available": False, "error": exc.message}
-        else:
-            import shutil
-
-            path = shutil.which(probe)
-            tools[tool] = {"available": bool(path), "path": path}
+        # Probe through the tool registry, not shutil.which: the real binaries are
+        # named compressonatorcli / gltf_validator, and a bare which() reports a
+        # tool as missing when it is installed under its documented name.
+        state = toolbox.discover(tool, with_version=True)
+        tools[tool] = {"available": state.available, "path": state.path,
+                       **({"version": state.version_or_unknown()} if state.available else {}),
+                       **({} if state.available else {"error": state.reason})}
+    git_path = shutil.which("git")
+    tools["git"] = {"available": bool(git_path), "path": git_path}
+    try:
+        tools["blender"] = {"available": True, "path": find_blender()}
+    except ToolkitError as exc:
+        tools["blender"] = {"available": False, "error": exc.message}
     status.metrics["tools"] = tools
     status.metrics["workspace"] = str(workspace.root)
     status.metrics["python"] = sys.version.split()[0]

@@ -165,21 +165,23 @@ class ChainResult:
 
 
 # --- attribute re-encoding --------------------------------------------------
-def _pack_component(component_type: int, normalized: bool, value: float) -> float:
+def _pack_component(component_type: int, normalized: bool, value: float) -> float | int:
     """Encode one [0,1] (or [-1,1]) value into an integer component.
 
-    Returns a float so the FLOAT branch can pass the value through unchanged.
+    Returns an **int** for every integer component type and a float only for
+    FLOAT: `struct.pack` rejects a float for 'H'/'B' ("required argument is not an
+    integer"), so a blanket float return corrupts every integer write.
     """
     if component_type == FLOAT:
         return float(value)
     if normalized:
         if component_type == 5120:      # BYTE
-            return float(max(-128, min(127, int(round(value * 127.0)))))
+            return max(-128, min(127, int(round(value * 127.0))))
         if component_type == UNSIGNED_SHORT:
-            return float(max(0, min(65535, int(round(value * 65535.0)))))
-        return float(max(0, min(255, int(round(max(0.0, min(1.0, value)) * 255.0)))))
-    limit = 65535.0 if component_type == UNSIGNED_SHORT else 255.0
-    return float(max(0, min(int(limit), int(round(max(0.0, min(1.0, value)) * limit)))))
+            return max(0, min(65535, int(round(value * 65535.0))))
+        return max(0, min(255, int(round(max(0.0, min(1.0, value)) * 255.0))))
+    limit = 65535 if component_type == UNSIGNED_SHORT else 255
+    return max(0, min(limit, int(round(max(0.0, min(1.0, value)) * limit))))
 
 
 def _uv_bytes(mesh: MeshArrays, uvs: Sequence[tuple[float, float]]) -> bytes:
