@@ -49,8 +49,9 @@ def require_blender(ctx: Context) -> str:
 def check_result(run: BlenderRun) -> dict[str, Any]:
     """Turn ``ok: false`` in the result envelope into ExternalToolFailed (6).
 
-    core.errors.ExternalToolFailed's signature is frozen (``tool``, ``returncode``,
-    ``stderr``), so the structured detail travels as JSON inside ``stderr``.
+    Blender exited 0 here — the *script* refused. Pass ``reason`` so the message
+    says so instead of the self-contradictory "external tool failed: blender
+    (exit 0)". The structured detail still travels as JSON inside ``stderr``.
     """
     result = run.result_or_raise()
     if not result.get("ok", False):
@@ -63,7 +64,9 @@ def check_result(run: BlenderRun) -> dict[str, Any]:
             "log": str(run.log_path),
             "result_json": result,
         }
+        kind = str(err.get("kind") or "script_error").strip() or "script_error"
         raise ExternalToolFailed("blender", run.returncode,
+                                 reason=f"exited 0, script reported {kind}",
                                  stderr=json.dumps(detail, indent=2, default=str))
     return result
 

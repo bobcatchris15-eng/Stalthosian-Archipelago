@@ -65,10 +65,25 @@ class NotImplementedStage(ToolkitError):
 class ExternalToolFailed(ToolkitError):
     exit_code = EXIT_EXTERNAL
 
-    def __init__(self, tool: str, returncode: int, *, stderr: str | None = None):
+    def __init__(self, tool: str, returncode: int, *, stderr: str | None = None,
+                 reason: str | None = None):
+        """An external tool could not produce a usable result.
+
+        `reason` describes *how* it failed when the process itself exited
+        cleanly. Without it the message reads "external tool failed: blender
+        (exit 0)" for a Blender run that exited 0 and merely reported ok:false
+        — self-contradictory, and it blames the binary for a script-level
+        failure. Reported by worker W15, fixed by worker zero 2026-10-10.
+
+        Exit code is unchanged (6) either way: the §2.3 contract table has no
+        distinct code for "tool ran, script refused", and inventing one would
+        break the frozen contract to fix a message.
+        """
+        how = reason if reason else f"exit {returncode}"
         super().__init__(
-            f"external tool failed: {tool} (exit {returncode})",
-            detail={"tool": tool, "returncode": returncode, "stderr": (stderr or "")[-4000:]},
+            f"external tool failed: {tool} ({how})",
+            detail={"tool": tool, "returncode": returncode, "reason": reason,
+                    "stderr": (stderr or "")[-4000:]},
         )
         self.tool = tool
         self.returncode = returncode
