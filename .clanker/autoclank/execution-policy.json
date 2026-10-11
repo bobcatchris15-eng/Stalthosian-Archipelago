@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "max_active_workers": 3,
+  "scheduled_wake_minutes": 35,
+  "max_dispatches_per_wake": 6,
+  "idle_wake_action": "exit without dispatch",
+  "model_family": "gpt-6-luna",
+  "efforts": [
+    "low",
+    "medium",
+    "high"
+  ],
+  "halt_file": ".clanker/HALT",
+  "preserve_dirty_work": true,
+  "allowed_installs": "project-local free/open-source toolkit dependencies",
+  "external_paid_api_spend_ceiling": 0,
+  "publication_authorized": true,
+  "publication_scope": "Validated project commits to origin main; no force push, release or deployment",
+  "project_remote": "https://github.com/bobcatchris15-eng/Stalthosian-Archipelago.git",
+  "jules_session": "5999252246045191178",
+  "automation_id": "stalthos-full-draft-construction"
+}

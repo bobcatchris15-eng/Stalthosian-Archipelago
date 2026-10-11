@@ -1,0 +1,53 @@
+{
+  "task_id": "luna-persistence-review",
+  "outcome": "blocking_findings",
+  "acceptance": [
+    {
+      "met": true,
+      "condition": "Review source contracts and supplied persistence tests",
+      "how_checked": "Read root and candidate AGENTS.md, foundation.hpp, persistence.hpp, tests/persistence.cpp, domain README, and searched all runtime persistence call sites."
+    },
+    {
+      "met": true,
+      "condition": "Check Windows save replacement behavior using the specified toolchain",
+      "how_checked": "Configured and built a small isolated MSVC probe with Visual Studio 18 2026; two writes to the same path succeeded and the second save loaded as calendarSeconds=2.0."
+    },
+    {
+      "met": true,
+      "condition": "Build and run standalone persistence tests",
+      "how_checked": "CMake Visual Studio 18 2026 build succeeded; executable reported PASS for all five supplied scenarios."
+    },
+    {
+      "met": false,
+      "condition": "Durable save correctness for game state",
+      "how_checked": "Review found P1 restore truncation, aggregate size bounds, duplicate identity validation, and absent host save/load integration; see clunker-report.json."
+    }
+  ],
+  "artifacts_changed": [
+    ".clanker/tasks/luna-persistence-review/clunker-report.json",
+    ".clanker/tasks/luna-persistence-review/receipt.json"
+  ],
+  "evidence": [
+    "Candidate ignored build output: var/worktrees/jules-persistence-review/var/build/persistence-review/standalone/Debug/stalthos_domain_persistence.exe",
+    "Candidate ignored diagnostic probes under var/worktrees/jules-persistence-review/var/build/persistence-review/"
+  ],
+  "findings": [
+    "PERSIST-001 retained restore overflow silently loses records",
+    "PERSIST-002 no aggregate byte/entity bounds",
+    "PERSIST-003 duplicate IDs can be silently collapsed during restore",
+    "PERSIST-004 persistence DTO has no runtime host call sites",
+    "PERSIST-005 region revision continuity is not represented"
+  ],
+  "blockers": [
+    "Do not claim durable in-game persistence is complete until PERSIST-001 through PERSIST-004 are resolved or the scope is explicitly limited to a DTO contract."
+  ],
+  "assumptions_made": [
+    "Durable-save review includes both format validation and honest runtime integration status.",
+    "The host remains responsible for catalog-specific identity/reference checks."
+  ],
+  "cost": {
+    "retries": 0,
+    "wall_clock_s": 0,
+    "tier": "inherited"
+  }
+}

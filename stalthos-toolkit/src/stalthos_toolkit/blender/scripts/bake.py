@@ -43,6 +43,15 @@ import _materials as MAT  # noqa: E402
 PASSES = ("albedo", "roughness", "normal", "thickness")
 
 
+def _set_object_materials(obj: Any, materials: list[Any], polygon_indices: list[int]) -> None:
+    """Replace mesh slots and restore each polygon's authored slot index."""
+    obj.data.materials.clear()
+    for material in materials:
+        obj.data.materials.append(material)
+    for polygon, material_index in zip(obj.data.polygons, polygon_indices):
+        polygon.material_index = material_index
+
+
 def _ensure_uv(obj: bpy.types.Object, report: S.Reporter) -> str:
     if obj.data.uv_layers and obj.data.uv_layers[0].name:
         return "existing"
@@ -161,6 +170,44 @@ def _activate_bake_target(mat: bpy.types.Material, img: bpy.types.Image) -> None
     nt.nodes.active = tex
 
 
+def _authored_channel_material(source: Any, image: Any, channel: str) -> Any | None:
+    """Copy an authored Principled graph and expose one authored PBR input as emission."""
+    if source is None or not getattr(source, "use_nodes", False) or source.node_tree is None:
+        return None
+    mat = source.copy()
+    mat.name = f"bake_{channel}_{source.name}"
+    nodes = mat.node_tree.nodes
+    output = next((node for node in nodes if node.type == "OUTPUT_MATERIAL"
+                   and getattr(node, "is_active_output", True)), None)
+    if output is None:
+        return None
+    surface_link = next((link for link in mat.node_tree.links
+                         if link.to_node == output and link.to_socket.name == "Surface"), None)
+    principled = (surface_link.from_node if surface_link is not None else None)
+    if principled is None or principled.type != "BSDF_PRINCIPLED":
+        return None
+    socket_name = "Base Color" if channel == "albedo" else "Roughness"
+    source_socket = principled.inputs.get(socket_name)
+    if source_socket is None:
+        return None
+    emission = nodes.new("ShaderNodeEmission")
+    emission.location = (output.location.x - 220, output.location.y)
+    if source_socket.is_linked:
+        mat.node_tree.links.new(source_socket.links[0].from_socket, emission.inputs["Color"])
+    else:
+        value = source_socket.default_value
+        if channel == "roughness":
+            scalar = float(value)
+            emission.inputs["Color"].default_value = (scalar, scalar, scalar, 1.0)
+        else:
+            emission.inputs["Color"].default_value = value
+    for link in list(mat.node_tree.links):
+        if link.to_node == output and link.to_socket.name == "Surface":
+            mat.node_tree.links.remove(link)
+    mat.node_tree.links.new(emission.outputs["Emission"], output.inputs["Surface"])
+    mat["stalthos_authored_channel"] = channel
+    _activate_bake_target(mat, image)
+    return mat
 def _save(img: bpy.types.Image, path: str) -> str:
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     img.file_format = "PNG"
@@ -218,48 +265,68 @@ def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
 
     written: list[dict[str, Any]] = []
     per_pass: dict[str, list[str]] = {}
+    baked_images: dict[str, dict[str, bpy.types.Image]] = {obj.name: {} for obj in objects}
+    originals = {
+        obj.name: ([slot.material for slot in obj.material_slots],
+                   [polygon.material_index for polygon in obj.data.polygons])
+        for obj in objects
+    }
 
     for pass_name in PASSES:
         if pass_name not in params.get("passes", list(PASSES)):
             continue
         images = []
-        materials = {}
+        materials: dict[str, list[Any]] = {}
         normal_copies: list[bpy.types.Material] = []
         for index, obj in enumerate(objects):
             img = _new_image(f"bake_{pass_name}_{index}", size,
                              non_color=pass_name != "albedo")
-            if pass_name == "albedo":
-                mat = MAT.structure_emission_material(f"bake_albedo_{obj.name}", preset,
-                                                       seed=seed, scale_hint=scale_hint)
-            elif pass_name == "roughness":
-                mat = MAT.structure_roughness_material(f"bake_rough_{obj.name}", preset,
-                                                       seed=seed, scale_hint=scale_hint)
-            elif pass_name == "thickness":
-                mat = MAT.structure_thickness_material(f"bake_thick_{obj.name}",
-                                                        seed=seed, scale_hint=scale_hint)
-            else:
-                # normal pass: a per-object *copy* of the authored material.
-                # Sharing one material between objects would make the second
-                # object's active image node overwrite the first's, so the
-                # first object would bake into an empty image.
-                source_mat = obj.data.materials[0] if obj.data.materials else None
-                if source_mat is not None:
-                    mat = source_mat.copy()
-                    mat.name = f"bake_normal_{obj.name}"
-                    normal_copies.append(mat)
-                else:
-                    mat = MAT.build_procedural_material(f"normal_{obj.name}", preset,
-                                                        seed=seed, scale_hint=scale_hint)
-            materials[obj.name] = mat
-            _activate_bake_target(mat, img)
             images.append(img)
+            source_slots, _ = originals[obj.name]
+            slots = source_slots or [None]
+            slot_materials: list[Any] = []
+            for slot_index, source_mat in enumerate(slots):
+                if pass_name in {"albedo", "roughness"}:
+                    mat = _authored_channel_material(source_mat, img, pass_name)
+                    if mat is None:
+                        report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
+                                    f"has no supported authored {pass_name} input; using "
+                                    "explicit procedural fallback and marking material incomplete")
+                        if pass_name == "albedo":
+                            mat = MAT.structure_emission_material(
+                                f"bake_albedo_fallback_{obj.name}_{slot_index}", preset,
+                                seed=seed, scale_hint=scale_hint)
+                        else:
+                            mat = MAT.structure_roughness_material(
+                                f"bake_rough_fallback_{obj.name}_{slot_index}", preset,
+                                seed=seed, scale_hint=scale_hint)
+                        obj["stalthos_authored_material_complete"] = False
+                        _activate_bake_target(mat, img)
+                    else:
+                        mat["stalthos_material_fallback"] = False
+                elif pass_name == "thickness":
+                    mat = MAT.structure_thickness_material(f"bake_thick_{obj.name}_{slot_index}",
+                                                           seed=seed, scale_hint=scale_hint)
+                    _activate_bake_target(mat, img)
+                else:
+                    if source_mat is not None:
+                        mat = source_mat.copy()
+                        mat.name = f"bake_normal_{obj.name}_{slot_index}"
+                        normal_copies.append(mat)
+                    else:
+                        report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
+                                    "has no authored material for normal baking")
+                        mat = MAT.build_procedural_material(
+                            f"normal_fallback_{obj.name}_{slot_index}", preset,
+                            seed=seed, scale_hint=scale_hint)
+                        obj["stalthos_authored_material_complete"] = False
+                    _activate_bake_target(mat, img)
+                slot_materials.append(mat)
+            materials[obj.name] = slot_materials
 
-        originals = {}
         for obj in objects:
-            originals[obj.name] = [s.material for s in obj.material_slots]
-            obj.data.materials.clear()
-            obj.data.materials.append(materials[obj.name])
-
+            _, polygon_indices = originals[obj.name]
+            _set_object_materials(obj, materials[obj.name], polygon_indices)
         bpy.ops.object.select_all(action="DESELECT")
         for obj in objects:
             obj.select_set(True)
@@ -279,28 +346,45 @@ def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
             except RuntimeError as exc:
                 report.warn(f"bake pass {pass_name} failed: {exc}")
 
-        for obj in objects:
+        for index, obj in enumerate(objects):
             pass_name_ = pass_name
             path = os.path.join(params["outputs"]["textures"], f"{obj.name}_{pass_name_}.png")
-            img = next((i for i, o in zip(images, objects) if o.name == obj.name), None)
+            img = images[index]
             if img is not None:
                 written.append({"path": _save(img, path), "role": "intermediate",
                                 "kind": "texture", "pass": pass_name, "object": obj.name})
                 per_pass.setdefault(pass_name, []).append(path)
+                baked_images[obj.name][pass_name] = img
                 stats = _image_stats(img)
                 if stats.get("flat"):
                     report.warn(f"{obj.name}_{pass_name_}.png is flat (no variation captured); "
                                 "the bake target needs a structure input")
 
-        # restore the authored material (masters stay editable)
+        # Restore authored inputs after every pass. Later passes (especially
+        # NORMAL) must never see an earlier pass's emission/material setup.
         for obj in objects:
-            obj.data.materials.clear()
-            for mat in originals[obj.name]:
-                if mat is not None:
-                    obj.data.materials.append(mat)
+            source_slots, polygon_indices = originals[obj.name]
+            _set_object_materials(obj, source_slots, polygon_indices)
         for mat in normal_copies:
             if mat.users == 0:
                 bpy.data.materials.remove(mat)
+
+    # Bind baked maps only after every pass has finished, leaving authored
+    # materials available as inputs throughout the full bake sequence.
+    for obj in objects:
+        maps = baked_images[obj.name]
+        for pass_name in ("albedo", "roughness", "normal"):
+            img = maps.get(pass_name)
+            if img is not None:
+                img.pack()
+        source_slots, polygon_indices = originals[obj.name]
+        baked_slots = []
+        for slot_index, source_mat in enumerate(source_slots):
+            name = (source_mat.name if source_mat is not None else f"{obj.name}_slot{slot_index}")
+            baked_slots.append(_baked_pbr_material(name, maps))
+        if not source_slots:
+            baked_slots.append(_baked_pbr_material(f"{obj.name}_baked", maps))
+        _set_object_materials(obj, baked_slots, polygon_indices)
 
     with report.time("save_blend"):
         blend_path = S.save_blend(params["outputs"]["blend"])
@@ -321,6 +405,15 @@ def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
             "thickness_method": ("per-vertex nearest-neighbour chord written to the "
                                  "stalthos_thickness mesh attribute (geometric estimate)"),
             "lighting_in_albedo": False,
+            "material_export_ready": all(
+                all(key in baked_images[obj.name] for key in ("albedo", "roughness", "normal"))
+                and obj.get("stalthos_authored_material_complete", True)
+                for obj in objects
+            ),
+            "authored_material_complete": all(
+                obj.get("stalthos_authored_material_complete", True) for obj in objects
+            ),
+            "material_slots_preserved": True,
             "directional_light_baked": False,
             "denoising": False,
             "animated_seed": False,
@@ -331,6 +424,48 @@ def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         "artifacts": written,
         "object_names": [o.name for o in objects],
     }
+
+
+def _baked_pbr_material(name: str, images: dict[str, bpy.types.Image]) -> bpy.types.Material:
+    """Build one exportable glTF PBR material from an object's baked channels."""
+    mat = bpy.data.materials.new(f"{name}_baked")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputMaterial")
+    output.location = (500, 0)
+    shader = nodes.new("ShaderNodeBsdfPrincipled")
+    shader.location = (200, 0)
+    mat.node_tree.links.new(shader.outputs["BSDF"], output.inputs["Surface"])
+
+    def texture(channel: str, color_space: str, y: int) -> bpy.types.ShaderNodeTexImage | None:
+        image = images.get(channel)
+        if image is None:
+            return None
+        image.colorspace_settings.name = color_space
+        image.pack()
+        node = nodes.new("ShaderNodeTexImage")
+        node.name = f"StalthosBaked_{channel}"
+        node.label = f"Baked {channel}"
+        node.image = image
+        node.location = (-300, y)
+        mat[f"stalthos_baked_{channel}"] = (os.path.splitext(os.path.basename(getattr(image, "filepath", "")))[0]
+                                               or image.name)
+        return node
+
+    albedo = texture("albedo", "sRGB", 300)
+    roughness = texture("roughness", "Non-Color", 0)
+    normal = texture("normal", "Non-Color", -300)
+    if albedo:
+        mat.node_tree.links.new(albedo.outputs["Color"], shader.inputs["Base Color"])
+    if roughness:
+        mat.node_tree.links.new(roughness.outputs["Color"], shader.inputs["Roughness"])
+    if normal:
+        normal_node = nodes.new("ShaderNodeNormalMap")
+        normal_node.location = (0, -300)
+        mat.node_tree.links.new(normal.outputs["Color"], normal_node.inputs["Color"])
+        mat.node_tree.links.new(normal_node.outputs["Normal"], shader.inputs["Normal"])
+    return mat
 
 
 def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:

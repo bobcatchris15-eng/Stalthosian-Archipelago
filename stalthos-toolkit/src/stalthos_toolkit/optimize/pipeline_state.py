@@ -114,18 +114,24 @@ def find_source_asset(manifest: dict[str, Any], workspace_root: Path) -> dict[st
     Blender master. Returns the artifact dict (with a resolved `path`), or None.
     """
     entries = artifacts(manifest)
-    for suffix in GEOMETRY_SUFFIXES:
-        for entry in entries:
-            if str(entry.get("path", "")).lower().endswith(suffix):
-                resolved = dict(entry)
-                resolved["_resolved"] = str(resolve(str(entry.get("path", "")), workspace_root))
-                return resolved
-    for suffix in BLEND_SUFFIXES:
-        for entry in entries:
-            if str(entry.get("path", "")).lower().endswith(suffix):
-                resolved = dict(entry)
-                resolved["_resolved"] = str(resolve(str(entry.get("path", "")), workspace_root))
-                return resolved
+    baked = [e for e in entries if e.get("role") == "source" and
+             (e.get("importer_settings") or {}).get("generated_by") == "bake_materials"]
+    for entry in baked:
+        candidate = resolve(str(entry.get("path", "")), workspace_root)
+        if candidate.is_file():
+            return {**entry, "_resolved": str(candidate)}
+    # Never use a collision proxy or a prior LOD as the next generation source.
+    # Explicit source artifacts are authoritative even when a derived GLB exists.
+    for group in ([e for e in entries if e.get("role") == "source"],
+                  [e for e in entries if e.get("role") != "collision" and
+                   (e.get("importer_settings") or {}).get("generated_by") != "generate_lods"]):
+        for suffix in (*GEOMETRY_SUFFIXES, *BLEND_SUFFIXES):
+            for entry in group:
+                path = str(entry.get("path", ""))
+                if path.lower().endswith(suffix):
+                    candidate = resolve(path, workspace_root)
+                    if candidate.is_file():
+                        return {**entry, "_resolved": str(candidate)}
     return None
 
 

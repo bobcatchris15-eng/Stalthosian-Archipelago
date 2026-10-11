@@ -44,8 +44,10 @@ from . import tools as toolbox
 from .decimate import DecimateResult, cluster_decimate, collision_proxy
 from .glb import (
     ARRAY_BUFFER,
+    BYTE,
     ELEMENT_ARRAY_BUFFER,
     FLOAT,
+    SHORT,
     UNSIGNED_BYTE,
     UNSIGNED_INT,
     UNSIGNED_SHORT,
@@ -184,18 +186,51 @@ def _pack_component(component_type: int, normalized: bool, value: float) -> floa
     return max(0, min(limit, int(round(max(0.0, min(1.0, value)) * limit))))
 
 
-def _uv_bytes(mesh: MeshArrays, uvs: Sequence[tuple[float, float]]) -> bytes:
+def _uv_range(component_type: int) -> tuple[int, int, str]:
+    ranges = {
+        BYTE: (-128, 127, "b"),
+        UNSIGNED_BYTE: (0, 255, "B"),
+        SHORT: (-32768, 32767, "h"),
+        UNSIGNED_SHORT: (0, 65535, "H"),
+    }
+    try:
+        return ranges[component_type]
+    except KeyError as exc:
+        raise GlbError(f"unsupported UV accessor componentType {component_type}") from exc
+
+
+def _uv_bytes(mesh: MeshArrays, uvs: Sequence[tuple[float, float]]) -> tuple[bytes, tuple[list[float], list[float]]]:
+    """Encode UVs in their source representation and report encoded bounds."""
     out = bytearray()
-    for u, v in uvs:
-        if mesh.uv_component == FLOAT:
-            out += struct.pack("<2f", float(u), float(v))
-        elif mesh.uv_component == UNSIGNED_SHORT:
-            out += struct.pack("<2H", _pack_component(UNSIGNED_SHORT, mesh.uv_normalized, u),
-                               _pack_component(UNSIGNED_SHORT, mesh.uv_normalized, v))
-        else:
-            out += struct.pack("<2B", _pack_component(UNSIGNED_BYTE, True, u),
-                               _pack_component(UNSIGNED_BYTE, True, v))
-    return bytes(out)
+    mins = [float("inf"), float("inf")]
+    maxs = [float("-inf"), float("-inf")]
+    if mesh.uv_component == FLOAT:
+        fmt = "f"
+        lower, upper = float("-inf"), float("inf")
+    else:
+        lower, upper, fmt = _uv_range(mesh.uv_component)
+    divisor = {BYTE: 127.0, SHORT: 32767.0}.get(mesh.uv_component, 1.0)
+    if mesh.uv_normalized and mesh.uv_component in (UNSIGNED_BYTE, UNSIGNED_SHORT):
+        divisor = float(upper)
+    for uv in uvs:
+        encoded = []
+        for axis, value in enumerate(uv):
+            if mesh.uv_component == FLOAT:
+                component: float | int = float(value)
+            elif mesh.uv_normalized:
+                normalized_value = max(-1.0 if mesh.uv_component in (BYTE, SHORT) else 0.0,
+                                       min(1.0, float(value)))
+                component = max(int(lower), min(int(upper), int(round(normalized_value * divisor))))
+            else:
+                component = max(int(lower), min(int(upper), int(round(float(value)))))
+            encoded.append(component)
+            mins[axis] = min(mins[axis], float(component))
+            maxs[axis] = max(maxs[axis], float(component))
+        out += struct.pack(f"<2{fmt}", *encoded)
+    if not uvs:
+        mins = [0.0, 0.0]
+        maxs = [0.0, 0.0]
+    return bytes(out), (mins, maxs)
 
 
 def _weights_bytes(mesh: MeshArrays, weights: Sequence[tuple[float, float, float, float]]) -> bytes:
@@ -248,11 +283,11 @@ def _apply_arrays(doc: GlbDocument, primitive: dict[str, Any], mesh: MeshArrays)
                                                  count=len(mesh.normals), buffer_view=view)
 
     if mesh.uvs:
-        payload = _uv_bytes(mesh, mesh.uvs)
+        payload, uv_minmax = _uv_bytes(mesh, mesh.uvs)
         view = doc.append_buffer_view(payload, target=ARRAY_BUFFER)
         attributes[f"TEXCOORD_{mesh.uv_set}"] = doc.add_accessor(
             component_type=mesh.uv_component, atype="VEC2", count=len(mesh.uvs),
-            buffer_view=view, normalized=mesh.uv_normalized)
+            buffer_view=view, normalized=mesh.uv_normalized, minmax=uv_minmax)
 
     if mesh.joints and mesh.weights:
         joint_payload = bytearray()
@@ -309,17 +344,33 @@ def _decimate_document(source: GlbDocument, ratio: float) -> tuple[GlbDocument, 
 def _trim_document(source: GlbDocument, target_triangles: int) -> tuple[GlbDocument, int]:
     """Hard-cap a derived document's triangle count (deterministic trim)."""
     doc = source.copy()
-    per_primitive = max(1, target_triangles) if target_triangles else 1
+    entries = []
     for mesh in doc.gltf.get("meshes") or []:
-        primitives = mesh.get("primitives") or []
-        for index, primitive in enumerate(primitives):
+        for index, primitive in enumerate(mesh.get("primitives") or []):
             arrays = doc.primitive_arrays(primitive)
-            if arrays is None or arrays.triangle_count <= per_primitive:
-                continue
-            ratio = per_primitive / arrays.triangle_count
-            outcome = cluster_decimate(arrays, ratio)
+            if arrays is not None and arrays.triangle_count:
+                entries.append((mesh, index, primitive, arrays))
+    total = sum(entry[3].triangle_count for entry in entries)
+    if total <= target_triangles:
+        return doc.compact(), target_triangles
+    if target_triangles < len(entries):
+        raise GlbError("triangle budget cannot preserve every nonempty primitive",
+                       hint="increase the LOD triangle budget or reduce level count")
+    # Reserve one face per primitive, then apportion the shared remainder by
+    # source size. Stable largest-remainder allocation never exceeds the total.
+    remaining = target_triangles - len(entries)
+    capacities = [entry[3].triangle_count - 1 for entry in entries]
+    capacity = sum(capacities)
+    quotas = [remaining * value // capacity for value in capacities]
+    residues = [remaining * value % capacity for value in capacities]
+    for index in sorted(range(len(entries)), key=lambda i: (-residues[i], i))[:remaining - sum(quotas)]:
+        quotas[index] += 1
+    for (mesh, index, primitive, arrays), share in zip(entries, quotas):
+        budget = 1 + share
+        if arrays.triangle_count > budget:
+            outcome = cluster_decimate(arrays, budget / arrays.triangle_count)
             mesh["primitives"][index] = _apply_arrays(doc, primitive, outcome.mesh)
-    return doc.compact(), per_primitive
+    return doc.compact(), target_triangles
 
 
 def _count(doc: GlbDocument) -> dict[str, int]:
@@ -422,6 +473,7 @@ def build_lod_chain(source_path: str | Path, out_dir: str | Path, *, asset_id: s
                 f"(LOD{index - 1} already has {previous_triangles} triangles)",
                 hint="reduce the LOD level count for this asset")
 
+        local_trim = False
         if use_gltfpack and index > 0:
             actual_ratio = target_triangles / base_triangles
             run_gltfpack_simplify(source_path, target_path, actual_ratio, timeout=timeout)
@@ -430,12 +482,23 @@ def build_lod_chain(source_path: str | Path, out_dir: str | Path, *, asset_id: s
             if counts["triangles"] >= (previous_triangles or float("inf")) or \
                     counts["triangles"] > target_triangles:
                 # meshoptimizer overshot: enforce the hard cap locally.
+                if not allow_degraded:
+                    raise GlbError("gltfpack exceeded the shared LOD budget; Python correction requires opt-in",
+                                   hint="pass --allow-degraded to accept an unmeasured Python hard-cap correction")
+                local_trim = True
+                result.degraded = True
+                result.warnings.append(f"{name}: Python hard-cap correction followed gltfpack; visual quality is unmeasured")
                 trimmed, _ = _trim_document(doc, target_triangles)
                 trimmed.write(target_path)
                 doc = trimmed
         else:
-            doc, _ = _decimate_document(source, target_triangles / base_triangles) if index > 0 \
+            doc, decimate_results = _decimate_document(source, target_triangles / base_triangles) if index > 0 \
                 else (source.copy(), [])
+            if any(outcome.used_area_trim for outcome in decimate_results):
+                result.warnings.append(
+                    f"{name}: at least one primitive required deterministic largest-area triangle "
+                    "retention after grid clustering collapsed below half its budget; silhouette "
+                    "quality remains unmeasured.")
             doc.write(target_path)
 
         # Per-level simplifier truth. LOD0 is a verbatim re-encode of the source
@@ -448,7 +511,7 @@ def build_lod_chain(source_path: str | Path, out_dir: str | Path, *, asset_id: s
 
         record = _record(index, name, target_path, doc, target_ratio=ratio,
                          base_triangles=base_triangles, simplifier=level_simplifier,
-                         degraded=result.degraded or level_simplifier != "gltfpack")
+                         degraded=result.degraded or local_trim or level_simplifier != "gltfpack")
         result.records.append(record)
         previous_triangles = record.triangles
 

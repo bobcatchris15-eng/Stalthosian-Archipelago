@@ -34,6 +34,7 @@ class DecimateResult:
     achieved_ratio: float
     cluster_count: int
     dropped_triangles: int
+    used_area_trim: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -41,6 +42,7 @@ class DecimateResult:
             "achieved_ratio": round(self.achieved_ratio, 6),
             "clusters": self.cluster_count,
             "dropped_triangles": self.dropped_triangles,
+            "used_area_trim": self.used_area_trim,
         }
 
 
@@ -59,29 +61,51 @@ def _bounds(positions: list[tuple[float, float, float]]) -> tuple[list[float], l
 
 
 def _cluster_positions(positions: list[tuple[float, float, float]], indices: list[int],
-                       divisions: int) -> dict[tuple[int, int, int], list[int]]:
+                       divisions: int, *, uvs: list[tuple[float, float]] | None = None,
+                       joints: list[tuple[int, int, int, int]] | None = None,
+                       weights: list[tuple[float, float, float, float]] | None = None
+                       ) -> dict[tuple[int, int, int, int], list[int]]:
     mins, maxs = _bounds(positions)
     extent = [max(maxs[a] - mins[a], 1e-9) for a in range(3)]
-    cells: dict[tuple[int, int, int], list[int]] = {}
+    # A primitive is already a material boundary. Within it, keep duplicate
+    # position vertices on opposite sides of a UV seam separate, and never
+    # blend vertices with different bone influence sets.
+    position_uvs: dict[tuple[float, float, float], set[tuple[float, float]]] = {}
+    if uvs:
+        for index, position in enumerate(positions):
+            position_uvs.setdefault(position, set()).add(uvs[index])
+    signatures: list[tuple[object, ...]] = []
+    for index, position in enumerate(positions):
+        seam_uv = uvs[index] if uvs and len(position_uvs[position]) > 1 else None
+        influences = ()
+        if joints and weights:
+            influences = tuple(sorted({int(joint) for joint, weight in zip(joints[index], weights[index])
+                                       if weight > 1e-6}))
+        signatures.append((seam_uv, influences))
+    signature_ids = {signature: group for group, signature in enumerate(
+        sorted(set(signatures), key=repr))}
+
+    cells: dict[tuple[int, int, int, int], list[int]] = {}
     for vertex_index, p in enumerate(positions):
-        key = tuple(min(divisions - 1, int((p[a] - mins[a]) / extent[a] * divisions)) for a in range(3))
-        cells.setdefault(key, []).append(vertex_index)  # type: ignore[arg-type]
+        grid = tuple(min(divisions - 1, int((p[a] - mins[a]) / extent[a] * divisions)) for a in range(3))
+        key = (*grid, signature_ids[signatures[vertex_index]])
+        cells.setdefault(key, []).append(vertex_index)
     # Keep only clusters actually referenced by a triangle: unreferenced
     # vertices are a geometry defect, not something a LOD should carry.
     referenced = {i for i in indices}
     return {key: members for key, members in cells.items() if any(i in referenced for i in members)}
 
 
-def _divisions_for(target_vertices: int, bounds_cells: int) -> int:
+def _divisions_for(target_vertices: int, bounds_cells: float) -> int:
     """Choose a grid resolution whose expected vertex count is closest to target.
 
-    Cubic grid: vertices ~ (divisions^3) * fill, and we clamp to [1, 32] because
-    beyond 32^3 clustering degenerates into "copy the mesh".
+    Cubic grid: vertices ~ (divisions^3) * fill, and we clamp to [2, 128] because
+    beyond the bounded 128-division search used by the fallback.
     """
     if target_vertices <= 0:
-        return 1
-    best, best_error = 1, None
-    for divisions in range(1, 33):
+        return 2
+    best, best_error = 2, None
+    for divisions in range(2, 129):
         estimate = (divisions ** 3) * bounds_cells
         error = abs(estimate - target_vertices)
         if best_error is None or error < best_error:
@@ -145,7 +169,8 @@ def _compact(mesh: MeshArrays, indices: list[int]) -> MeshArrays:
             used[i] = len(used)
     order = sorted(used)          # stable, input-order remap
     positions = [mesh.positions[i] for i in order]
-    new_indices = [used[i] for i in indices]
+    remap = {vertex: index for index, vertex in enumerate(order)}
+    new_indices = [remap[i] for i in indices]
     return MeshArrays(
         positions=positions,
         indices=new_indices,
@@ -172,27 +197,50 @@ def cluster_decimate(mesh: MeshArrays, ratio: float) -> DecimateResult:
 
     target_triangles = max(1, int(math.floor(source_triangles * ratio)))
     target_vertices = max(4, int(math.ceil(target_triangles / 2)))
+    seed_divisions = _divisions_for(target_vertices, 1.0)
 
-    # Two passes: cluster, then drop whatever is still over budget. Bounds are
-    # recomputed after clustering because the cluster grid changes the extent.
-    working = mesh
+    # Grid occupancy is highly shape-dependent: a cubic estimate can wipe a
+    # planar or thin mesh. Evaluate bounded resolutions against the actual
+    # triangle count, and retain the candidate closest to the requested budget.
+    # This remains a degraded spatial clusterer; it makes no silhouette claim.
+    best_candidate: tuple[tuple[int, int, int], MeshArrays] | None = None
+    for divisions in range(2, 129):
+        cells = _cluster_positions(mesh.positions, mesh.indices, divisions,
+                                   uvs=mesh.uvs, joints=mesh.joints, weights=mesh.weights)
+        candidate = _cluster_mesh(mesh, cells)
+        if candidate.triangle_count:
+            score = (abs(candidate.triangle_count - target_triangles),
+                     abs(divisions - seed_divisions), divisions)
+            if best_candidate is None or score < best_candidate[0]:
+                best_candidate = (score, candidate)
+
+    working: MeshArrays
+    used_area_trim = False
     dropped = 0
-    for _ in range(2):
-        cells = _cluster_positions(working.positions, working.indices,
-                                   _divisions_for(max(4, target_vertices // 2), 1.0))
-        working = _cluster_mesh(working, cells)
-        if working.triangle_count > target_triangles:
-            working, dropped_now = _drop_smallest_triangles(working, target_triangles)
-            dropped += dropped_now
-        else:
-            break
+    if best_candidate is None:
+        # No valid grid preserves any face (for example, an extremely small
+        # planar input). Retain the largest-area source triangles honestly.
+        working, dropped = _drop_smallest_triangles(mesh, target_triangles)
+        used_area_trim = True
+    else:
+        _, working = best_candidate
+        # A severe undershoot is a topology collapse. Fall back to bounded,
+        # deterministic area selection from source geometry and surface that
+        # path in the result for callers. Triangle counts are factual; visual
+        # quality remains unmeasured.
+        if working.triangle_count < max(1, target_triangles // 2):
+            working, dropped = _drop_smallest_triangles(mesh, target_triangles)
+            used_area_trim = True
+        elif working.triangle_count > target_triangles:
+            working, dropped = _drop_smallest_triangles(working, target_triangles)
 
     achieved = working.triangle_count / source_triangles
     return DecimateResult(mesh=working, requested_ratio=ratio, achieved_ratio=achieved,
-                          cluster_count=working.vertex_count, dropped_triangles=dropped)
+                          cluster_count=working.vertex_count, dropped_triangles=dropped,
+                          used_area_trim=used_area_trim)
 
 
-def _cluster_mesh(mesh: MeshArrays, cells: dict[tuple[int, int, int], list[int]]) -> MeshArrays:
+def _cluster_mesh(mesh: MeshArrays, cells: dict[tuple[int, int, int, int], list[int]]) -> MeshArrays:
     """Collapse each cluster to one vertex (averaged attributes)."""
     positions: list[tuple[float, float, float]] = []
     remap: dict[int, int] = {}
@@ -215,10 +263,11 @@ def _cluster_mesh(mesh: MeshArrays, cells: dict[tuple[int, int, int], list[int]]
             continue  # degenerate after collapse
         indices += [a, b, c]
 
+    ordered_cells = [cells[key] for key in sorted(cells)]
     normals = None
     if mesh.normals:
         normals = []
-        for members in cells.values():
+        for members in ordered_cells:
             count = len(members)
             normals.append((
                 sum(mesh.normals[i][0] for i in members) / count,
@@ -229,7 +278,7 @@ def _cluster_mesh(mesh: MeshArrays, cells: dict[tuple[int, int, int], list[int]]
     uvs = None
     if mesh.uvs:
         uvs = []
-        for members in cells.values():
+        for members in ordered_cells:
             count = len(members)
             uvs.append((
                 sum(mesh.uvs[i][0] for i in members) / count,
@@ -240,7 +289,7 @@ def _cluster_mesh(mesh: MeshArrays, cells: dict[tuple[int, int, int], list[int]]
     if mesh.joints and mesh.weights:
         joints = []
         weights = []
-        for members in cells.values():
+        for members in ordered_cells:
             totals: dict[int, float] = {}
             for i in members:
                 for joint, weight in zip(mesh.joints[i], mesh.weights[i]):

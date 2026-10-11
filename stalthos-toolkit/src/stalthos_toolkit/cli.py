@@ -168,9 +168,8 @@ def _cmd_doctor(workspace: Workspace) -> int:
     from .optimize import tools as toolbox
 
     tools: dict[str, Any] = {}
-    for tool, probe in (("gltfpack", "gltfpack"), ("meshoptimizer", "meshoptimizer"),
-                        ("compressonator", "compressonator"), ("ktx", "ktx"),
-                        ("magick", "magick"), ("ffmpeg", "ffmpeg")):
+    for tool in ("gltfpack", "meshoptimizer", "compressonator", "gltf_validator",
+                 "gltf_transform", "ktx", "magick", "ffmpeg"):
         # Probe through the tool registry, not shutil.which: the real binaries are
         # named compressonatorcli / gltf_validator, and a bare which() reports a
         # tool as missing when it is installed under its documented name.
@@ -181,7 +180,13 @@ def _cmd_doctor(workspace: Workspace) -> int:
     git_path = shutil.which("git")
     tools["git"] = {"available": bool(git_path), "path": git_path}
     try:
-        tools["blender"] = {"available": True, "path": find_blender()}
+        blender_path = find_blender()
+        blender_version = toolbox.probe_version(blender_path)
+        tools["blender"] = {
+            "available": True,
+            "path": blender_path,
+            "version": blender_version or "unknown",
+        }
     except ToolkitError as exc:
         tools["blender"] = {"available": False, "error": exc.message}
     status.metrics["tools"] = tools

@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import struct
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -39,29 +40,26 @@ ARRAY_BUFFER = 34962
 ELEMENT_ARRAY_BUFFER = 34963
 
 FLOAT = 5126
-UNSIGNED_BYTE = 5121
-UNSIGNED_SHORT = 5122
-UNSIGNED_INT = 5125
 BYTE = 5120
+UNSIGNED_BYTE = 5121
+SHORT = 5122
+UNSIGNED_SHORT = 5123
+UNSIGNED_INT = 5125
 
 _COMPONENT: dict[int, tuple[str, int]] = {
     BYTE: ("b", 1),
     UNSIGNED_BYTE: ("B", 1),
+    SHORT: ("h", 2),
     UNSIGNED_SHORT: ("H", 2),
     UNSIGNED_INT: ("I", 4),
-    5123: ("h", 2),   # SHORT
-    5130: ("h", 2),   # normalized SHORT
-    5131: ("H", 2),   # normalized UNSIGNED_SHORT
     FLOAT: ("f", 4),
-    5124: ("i", 4),   # INT
 }
 
 _NORMALIZE_DIVISOR: dict[int, float] = {
     BYTE: 127.0,
     UNSIGNED_BYTE: 255.0,
-    5123: 32767.0,
-    5130: 32767.0,
-    5131: 65535.0,
+    SHORT: 32767.0,
+    UNSIGNED_SHORT: 65535.0,
 }
 
 _COMPONENT_COUNT: dict[str, int] = {
@@ -288,11 +286,24 @@ class GlbDocument:
         fmt, size = _COMPONENT[component_type]
         divisor = _NORMALIZE_DIVISOR.get(component_type, 1.0) if accessor.get("normalized") else 1.0
 
+        element_size = components * size
+        if stride < element_size or start < 0 or start + max(0, count - 1) * stride + element_size > len(raw):
+            raise GlbError(
+                f"accessor {index} exceeds its bufferView",
+                detail={"accessor": accessor, "bufferView": view_index,
+                        "bufferView_bytes": len(raw), "stride": stride},
+            )
+
         out: list[tuple[float, ...]] = []
         for i in range(count):
             base = start + i * stride
             values = struct.unpack_from(f"<{components}{fmt}", raw, base)
-            out.append(tuple(v / divisor for v in values))  # type: ignore[arg-type]
+            if accessor.get("normalized") and component_type in (BYTE, SHORT):
+                # Signed normalized values use max(value / positive_max, -1).
+                decoded = tuple(max(-1.0, v / divisor) for v in values)
+            else:
+                decoded = tuple(v / divisor for v in values)
+            out.append(decoded)  # type: ignore[arg-type]
         return out
 
     def append_buffer_view(self, payload: bytes, *, target: int | None = None) -> int:
@@ -364,6 +375,15 @@ class GlbDocument:
             view_index = int(accessors[index].get("bufferView", -1))
             if 0 <= view_index < len(views) and view_index not in keep_views:
                 keep_views.append(view_index)
+        # Embedded images are direct bufferView consumers too; accessors are
+        # not their only owners. Keep their payloads and rewrite references
+        # alongside accessor bufferViews so compaction cannot alias image bytes
+        # with vertex/index data.
+        for image in self.gltf.get("images") or []:
+            if "bufferView" in image:
+                view_index = int(image["bufferView"])
+                if 0 <= view_index < len(views) and view_index not in keep_views:
+                    keep_views.append(view_index)
         keep_views.sort()
 
         blob = bytearray()
@@ -412,6 +432,9 @@ class GlbDocument:
                 for slot in ("input", "output"):
                     if slot in sampler:
                         sampler[slot] = accessor_remap[int(sampler[slot])]
+        for image in gltf.get("images") or []:
+            if "bufferView" in image:
+                image["bufferView"] = view_remap[int(image["bufferView"])]
         return GlbDocument(gltf, bytes(blob))
 
     # --- meshes -------------------------------------------------------------
@@ -675,8 +698,11 @@ def validate_with_tools(path: str | Path, *, timeout: float | None = None) -> di
         except json.JSONDecodeError:
             payload = {"numErrors": 1 if proc.returncode else 0, "raw": (proc.stdout or "")[:2000]}
         messages = (payload.get("issues") or {}).get("messages") or []
+        errors = int(payload.get("numErrors", 1 if proc.returncode else 0) or 0)
+        if proc.returncode:
+            errors = max(1, errors)
         result.update({"validated": True, "tool": "gltf_validator",
-                       "errors": payload.get("numErrors", 1 if proc.returncode else 0),
+                       "errors": errors,
                        "warnings": payload.get("numWarnings", 0),
                        "issues": messages[:20], "returncode": proc.returncode})
         return result
@@ -688,13 +714,52 @@ def validate_with_tools(path: str | Path, *, timeout: float | None = None) -> di
         except (OSError, TimeoutError) as exc:
             result["reason"] = f"gltf-transform could not be run: {exc}"
             return result
+        output = "\n".join(part for part in (proc.stdout, proc.stderr) if part)
+        plain_output = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", output)
+        errors = 1 if proc.returncode else _gltf_transform_error_count(plain_output)
         result.update({"validated": True, "tool": "gltf_transform", "returncode": proc.returncode,
-                       "errors": 1 if proc.returncode else 0,
-                       "issues": [(proc.stderr or proc.stdout or "")[:2000]]})
+                       "errors": errors, "issues": [plain_output[:2000]]})
         return result
 
     result["reason"] = "no glTF validator installed (gltf-validator or gltf-transform); structural check only"
     return result
+
+
+def _gltf_transform_error_count(output: str) -> int:
+    """Count severity-zero rows in gltf-transform's validator table.
+
+    The CLI prints an ``ERROR`` section heading even when it found no errors,
+    followed by ``info: No errors found.``. Treating that heading as an issue
+    made a successful validation look like a failure. Count actual rows from
+    the table's severity column instead.
+    """
+    if re.search(r"\bno\s+errors?\s+found\b", output, re.IGNORECASE):
+        return 0
+
+    lines = output.splitlines()
+    header_index = None
+    severity_index = None
+    for index, line in enumerate(lines):
+        if not re.search(r"\bcode\b", line, re.IGNORECASE) or not re.search(
+            r"\bseverity\b", line, re.IGNORECASE
+        ):
+            continue
+        cells = [cell.strip().lower() for cell in re.split(r"[│|]", line) if cell.strip()]
+        if "severity" in cells:
+            header_index = index
+            severity_index = cells.index("severity")
+            break
+    if header_index is None or severity_index is None:
+        return 0
+
+    errors = 0
+    for line in lines[header_index + 1:]:
+        if not re.search(r"[│|]", line):
+            continue
+        cells = [cell.strip() for cell in re.split(r"[│|]", line) if cell.strip()]
+        if len(cells) > severity_index and cells[severity_index] == "0":
+            errors += 1
+    return errors
 
 
 def validate_structure(doc: GlbDocument) -> dict[str, Any]:

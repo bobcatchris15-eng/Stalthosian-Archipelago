@@ -340,6 +340,31 @@ if (-not (Test-Path $statusDir)) {
 }
 Write-Log "Status directory: $statusDir"
 
+# Activate only verified project-local tools, unless the caller supplied an
+# explicit tool override. Use-Tools changes this PowerShell process only; a bad
+# local installation is ignored so PATH-based discovery can still proceed.
+$toolkitRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = Split-Path -Parent $toolkitRoot
+$projectToolsRoot = Join-Path $repositoryRoot "var\tools"
+$projectToolsScript = Join-Path $PSScriptRoot "Use-Tools.ps1"
+$projectToolSpecs = @(
+    @{ Name = "gltfpack"; EnvName = "STEALTHOS_GLTFPACK"; Exe = (Join-Path $projectToolsRoot "gltfpack-1.3\gltfpack.exe"); Folder = (Join-Path $projectToolsRoot "gltfpack-1.3") },
+    @{ Name = "compressonator"; EnvName = "STEALTHOS_COMPRESSONATOR"; Exe = (Join-Path $projectToolsRoot "compressonator-4.5.52\compressonatorcli-4.5.52-win64\compressonatorcli.exe"); Folder = (Join-Path $projectToolsRoot "compressonator-4.5.52") }
+)
+foreach ($projectTool in $projectToolSpecs) {
+    $manifestPath = Join-Path $projectTool.Folder "stalthos-tool-provenance.json"
+    $configuredPath = [Environment]::GetEnvironmentVariable($projectTool.EnvName, "Process")
+    if (-not $configuredPath -and (Test-Path -LiteralPath $projectTool.Exe -PathType Leaf) -and
+        (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        try {
+            $null = & $projectToolsScript -Tool $projectTool.Name -ToolkitRoot $toolkitRoot -InstallRoot $projectToolsRoot
+            Write-Log "Using verified project-local $($projectTool.Name)"
+        } catch {
+            Write-Log "Ignoring project-local $($projectTool.Name): $($_.Exception.Message)" "WARN"
+        }
+    }
+}
+
 # Run stalthos doctor first
 Write-Log "Running stalthos doctor..."
 $doctorArgs = @("--workspace", $workspacePath, "--quiet", "doctor")

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-tool-audit",
+  "status": "complete",
+  "base_revision": "ca7409f45b034adc8067a82fda1d727141c57400",
+  "current_step": "tool inventory report and receipt written",
+  "completed_steps": [
+    "read Clanker protocol and worktree instructions",
+    "read toolkit architecture and inspect tool discovery/doctor",
+    "run doctor and directly probe installed executable versions",
+    "write inventory report and receipt"
+  ],
+  "touched_artifacts": [
+    ".clanker/tasks/luna-tool-audit/report.md",
+    ".clanker/tasks/luna-tool-audit/task-state.json",
+    ".clanker/tasks/luna-tool-audit/receipt.json"
+  ],
+  "updated": "2026-10-11T18:07:37.1131986Z",
+  "validation": {
+    "passed": true,
+    "command": "PowerShell manual schema-field review; direct executable probes and toolkit doctor",
+    "evidence_path": ".clanker/tasks/luna-tool-audit/report.md"
+  },
+  "blockers": [],
+  "assumptions": [
+    "PATH and toolkit standard candidates are the discovery scope for classifying tools as missing; no exhaustive machine-wide disk search was performed.",
+    "Direct node invocation of the installed glTF-Transform CLI is sufficient evidence the installed package is usable despite the PowerShell shim producing no visible output in its probe."
+  ],
+  "receipt_path": ".clanker/tasks/luna-tool-audit/receipt.json",
+  "resume_instructions": "Read report.md and receipt.json. The inventory task is complete; no installations or toolkit source changes were performed."
+}

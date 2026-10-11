@@ -98,6 +98,19 @@ def bake_materials(ctx: Context) -> Status:
                "shaders with all lights removed and a black world, so no directional "
                "lighting is baked into albedo"),
     )
+    # Register the verified derived master on an existing parent asset. A later
+    # LOD stage must use that explicit artifact, never guess a stale bake path.
+    parent_path = ctx.workspace.reports / "manifests" / f"{asset_id}.json"
+    baked_master = Path(outputs[blended_rel])
+    if metrics.get("material_export_ready") and parent_path.is_file() and baked_master.is_file():
+        from ..optimize.pipeline_state import artifact_entry, load_manifest, update_manifest
+        from ..core.seeding import sha256_file
+        ref = artifact_entry(str(baked_master), sha256_file(baked_master),
+                             baked_master.stat().st_size, "source",
+                             {"generated_by": "bake_materials", "source_sha256": sha256_file(source),
+                              "seed": ctx.seed})
+        update_manifest(parent_path, load_manifest(parent_path), artifacts_to_add=[ref])
+        status.add_artifact(ctx.artifact(parent_path, role="intermediate"))
     status.asset_id = f"{asset_id}.bake"
     return status
 

@@ -33,3 +33,19 @@ User-authorized headless tasks ran on opencode/big-pickle and opencode/space-bun
 ## Checkpoint handling
 
 The generic skill checkpoint script stages the whole checkout. This repository had unrelated dirty work, so root adapted the checkpoint to an explicit owned-path list, verified all nine original hashes, checked the staged diff and ran the same built-in secret pattern. The source graph was refreshed synchronously; no fabricated prior structural delta is claimed. Only this packet is committed on codex/full-draft-wicked; no push is performed.
+
+
+## Autonomous continuation authorization — 2026-10-11
+
+Human source, verbatim:
+> Alright, continue clanking autonomously. you have the planning docs, coordinate a couple luna low-medium-high agents to get it going and keep working through new tasks with new agents
+> You should have the ttoolkit available, if anything is missing you can install it
+
+Proceed through the full-draft implementation queue with bounded Luna workers and independent review. Install missing free/open-source toolkit dependencies locally. Preserve all unrelated dirty work, source planning input and historical evidence. Root chooses reversible task boundaries and reasonable provisional draft details; meaningful acceptance requires actual evidence. A thread heartbeat now continues this work hourly, with quiet unchanged wakes and notification on meaningful verified progress, failure, completion or an actual blocker. At most three active workers; each scheduled wake is capped at 35 minutes of active work, then consolidates state for the next wake. No paid external API fallback, deploy, publish or push authority is inferred.
+
+## Remote synchronization authorization (2026-10-11)
+
+User: "Keep local and remote in sync, the local starting should be included". Origin is https://github.com/bobcatchris15-eng/Stalthosian-Archipelago.git. Publish validated project commits to main, including the nine safeguarded starting paths. No force pushes. Jules CLI v0.1.42 is authenticated and source connected. Session 5999252246045191178 owns domain/persistence.hpp, tests/persistence.cpp, tests/CMakeLists.txt and domain/README.md. Retrieve into an isolated checkout and review before integration. CLI reference https://jules.google/docs/cli/reference/; API requires separate API key, CLI login alone is not API-key evidence.
+
+## Current checkpoint
+See current-work.md and tasks/packet-two-integration/receipt.json. Fresh engine compilation and DTO persistence tests now pass. Six wake dispatches used. Resume verification before further dispatch; next implementation is foundation snapshot/restore and host save/load. User-authorized validated publication is main on origin; earlier no-push statements are historical and superseded by synchronization authorization.

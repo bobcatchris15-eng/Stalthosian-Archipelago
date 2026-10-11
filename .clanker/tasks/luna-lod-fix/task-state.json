@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-lod-fix",
+  "status": "complete",
+  "base_revision": "ca7409f45b034adc8067a82fda1d727141c57400",
+  "current_step": "LOD fallback fix and acceptance evidence complete",
+  "completed_steps": [
+    "required prelude, role, worktree instructions, toolkit architecture, prior LOD report and assessment read",
+    "reproduced catastrophic reduction against the actual two-primitive Softbough GLB",
+    "implemented deterministic resolution candidate selection and seam/deformation-safe cluster grouping",
+    "added five focused synthetic regression cases, including multi-primitive byte determinism",
+    "focused offline tests passed and actual Softbough four-level chain structurally validated",
+    "receipt and task-state validated against Clinker schemas"
+  ],
+  "next_step": "Root review and integration",
+  "touched_artifacts": [
+    "stalthos-toolkit/src/stalthos_toolkit/optimize/decimate.py",
+    "stalthos-toolkit/src/stalthos_toolkit/optimize/lods.py",
+    "stalthos-toolkit/tests/test_lod_collapse_regression.py",
+    ".clanker/tasks/luna-lod-fix/task-state.json",
+    ".clanker/tasks/luna-lod-fix/receipt.json",
+    ".clanker/tasks/luna-lod-fix/focused-tests.log",
+    ".clanker/tasks/luna-lod-fix/softbough-fixture.log"
+  ],
+  "updated": "2026-10-11T18:11:22.383590+00:00",
+  "validation": {
+    "passed": true,
+    "command": "python -m pytest -q tests/test_lod_collapse_regression.py tests/test_optimize.py -k \"lod_collapse_regression or cluster_decimate or generate_lods_command_writes_chain\"",
+    "evidence_path": ".clanker/tasks/luna-lod-fix/focused-tests.log"
+  },
+  "blockers": [],
+  "assumptions": [
+    "Preserve the existing policy that each derived LOD is computed from the original LOD0 source and that strict decreasing nonempty chain validation remains the caller contract.",
+    "Separate primitives retain material boundaries because decimation continues per primitive; UV seam duplicates and distinct bone influence sets are isolated during clustering."
+  ],
+  "receipt_path": ".clanker/tasks/luna-lod-fix/receipt.json",
+  "resume_instructions": "Read receipt.json and focused-tests.log, then inspect only the listed optimize modules and regression test. The actual Softbough GLBs are in stalthos-toolkit/var/luna-lod-fix-softbough-final. Root review is the remaining action."
+}

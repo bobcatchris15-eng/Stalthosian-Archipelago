@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "task": "packet-two-integration",
+  "date": "2026-10-11",
+  "status": "validated scoped packet; complete suite repeat queued",
+  "jules_session": "5999252246045191178",
+  "worker_dispatches": 6,
+  "native_ctest": "2/2 passed; six foundation and five persistence groups",
+  "prior_full_suite": "1938 passed, 2 skipped in 462.38s before final authored/GLB corrections",
+  "latest_full_attempt": "Interrupted at wake time boundary; imported pre-correction bake test produced known failure. Do not claim this attempt passed. Final focused amendment suite separately verifies changed paths. Repeat complete suite before next new dispatch.",
+  "remaining_acceptance": [
+    "host snapshot/save/load",
+    "physical clock and region revisions",
+    "representative island",
+    "animated creatures",
+    "lifecycle/ecology",
+    "five lives/four islands",
+    "visual acceptance",
+    "external 30 FPS target capture"
+  ],
+  "artifacts": [
+    {
+      "path": "var/reports/toolkit-packet-two-final.log",
+      "sha256": "7eb6e41a236e38a906ebdcb357e34d14f024663892b21f242411cc0a2966c80e",
+      "bytes": 2232
+    },
+    {
+      "path": "var/reports/toolkit-packet-two-publish.log",
+      "sha256": "da3978a31155136ec2f683dbd61fcfbe5541e7192d984622c67703f40e45ecd8",
+      "bytes": 225
+    },
+    {
+      "path": "var/reports/packet-two-amendment-tests-final.log",
+      "sha256": "0b28ed3ce9e136a03ee38f6165f62b36124468231e87c6e916ff0a65295ba8bf",
+      "bytes": 113
+    },
+    {
+      "path": "var/reports/baked-material-probe/authored-lods-final.json",
+      "sha256": "1d20836347ca1f98498fe625b9fdf10083f7f186f33ba285a0ec751e18d9b143",
+      "bytes": 13470
+    },
+    {
+      "path": "var/reports/baked-material-probe/authored-bake-status.json",
+      "sha256": "0eb1c0689b6fa8e159bbfcd73de78837984383b16e4a789bfb96277e729b091b",
+      "bytes": 8076
+    },
+    {
+      "path": "var/reports/baked-material-probe/export-result.json",
+      "sha256": "86723f8ef8a6340a8e55faf6f1ceffacb93d5b0c5d1fc703bf343f0674e0afa4",
+      "bytes": 290
+    },
+    {
+      "path": "var/reports/runtime/20261011-153547-e99886d8/runtime-receipt.json",
+      "sha256": "279406e56b7610fd2d61ed4d8417db1fdd3a97d51a7c07febaa5556481aa3d51",
+      "bytes": 698
+    },
+    {
+      "path": "var/vendor/wicked-fresh-release-cache/provenance.json",
+      "sha256": "691b518d004607faa750bbb9a51caa8c1eea45dbb7076d73dcd6d59b3d65d60b",
+      "bytes": 14951
+    },
+    {
+      "path": "var/reports/compressonator-readiness/receipt.json",
+      "sha256": "fadfd15af082268b49866235cf03fa08500d41bd539c823dd79373d94d03b7f9",
+      "bytes": 239
+    }
+  ],
+  "asset_command": {
+    "ok": true,
+    "triangles": [
+      2592,
+      1036,
+      388,
+      129
+    ],
+    "external_validator_errors": 0,
+    "degraded": true,
+    "quality_measured": false
+  },
+  "graph": "Adapter refreshed; zero-node JSON and stale semantic label warnings retained; no semantic acceptance claimed",
+  "final_focused_suite": "58 passed in 136.51s; final integrated changed-path coverage"
+}

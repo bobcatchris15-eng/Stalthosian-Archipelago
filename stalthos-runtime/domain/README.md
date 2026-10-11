@@ -91,5 +91,39 @@ goal priority/pause/resume/completion/cancellation; compile-time rejection of
 camera stimulus injection; invalid, duplicate and stale resource transfers;
 and seed, fallen tree, bounded retention, duplicate exclusion, dead companion
 and repeated hero death continuity. These are no-GPU contract tests and provide
-no evidence of rendered quality or frame time. No disk format exists, so no
-malformed-save acceptance is claimed.
+no evidence of rendered quality or frame time. The separate persistence DTO
+checks and its scope are described below.
+
+## Persistence DTO boundary
+
+`persistence.hpp` provides a versioned, engine-independent `SaveData` format
+(`STL1`) and a checked reconstruction seam for the fields represented in that
+DTO: calendar time, world seed, retention limit, entity IDs and regions,
+retained-entity profile/status, dead-hero identity, and tree exceptions. It is
+not wired to `engine/main.cpp` or a host snapshot source, and the DTO omits
+transforms, body state, needs, age, and other game state. The running game does
+not yet provide player save/load. Do not describe this seam as complete game
+persistence.
+
+The reader checks the whole file byte limit before parsing, then bounds each
+collection and aggregate tree count before reserving storage. Both read and
+write reject invalid time values, enum values, retained counts above the
+retention limit, duplicate entity identities across lists, repeated regions or duplicate tree IDs within one region, and dead retained records marked active. Writes validate before
+touching the prior save, use a temporary sibling file, remove it after failures,
+and rename it into place only after a successful flush and close. Records are
+serialized in stable ID/region/tree order. The standalone Windows tests cover
+malformed inputs, bounded file size, duplicate IDs, deterministic bytes,
+preservation of a prior save on write failure, and checked domain restoration.
+
+Host integration still needs an authoritative entity/catalog snapshot and an
+apply path. The current `StalthosState` API does not expose its retained, active,
+dead-hero, or region inventories; `recordTree` increments region revisions but
+there is no API to restore a prior revision. A narrow root-owned API should
+export a coherent domain snapshot and apply it atomically, including explicit
+region revision restoration or a documented cache invalidation rule. The host
+must validate entity and tree references against its actual catalog; the DTO
+can only reject internal duplicates and conflicting IDs because that catalog
+is not available here.
+
+Format version 1 fixes the enum ordinals and collection bounds. Changing those
+fields requires an explicit compatibility/versioning decision.

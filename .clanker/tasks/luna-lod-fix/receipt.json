@@ -1,0 +1,73 @@
+{
+  "task_id": "luna-lod-fix",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Actual Softbough source yields four nonempty, strictly decreasing Python LODs or a truthful bounded failure.",
+      "met": true,
+      "how_checked": "Ran build_lod_chain against the specified source GLB with prefer=python; actual counts were 2592, 866, 380, 128, monotonic=True, structural_ok=True."
+    },
+    {
+      "condition": "First reduction avoids catastrophic under-collapse.",
+      "met": true,
+      "how_checked": "Actual LOD1 retained 866/2592=0.334 of source triangles (prior observed two-level result was 23); planar-grid regression also asserts at least half the target."
+    },
+    {
+      "condition": "Deterministic output byte check.",
+      "met": true,
+      "how_checked": "Regression builds the same two-primitive chain twice and compares each corresponding LOD GLB byte-for-byte."
+    },
+    {
+      "condition": "Meaningful small, planar, UV/deformation boundary, and multiple-primitive regression cases.",
+      "met": true,
+      "how_checked": "Five new regressions cover a two-triangle plane, a larger planar grid, UV seam vertex separation, bone influence separation, and a two-material multi-primitive four-level chain."
+    },
+    {
+      "condition": "Focused offline tests pass.",
+      "met": true,
+      "how_checked": "python -m pytest -q tests/test_lod_collapse_regression.py tests/test_optimize.py -k \"lod_collapse_regression or cluster_decimate or generate_lods_command_writes_chain\" => 8 passed, 29 deselected; no Blender/network required."
+    },
+    {
+      "condition": "Keep degraded status and visual quality claims honest.",
+      "met": true,
+      "how_checked": "Fixture chain reports degraded=True, generic missing-gltfpack warning, structural_ok=True, and silhouette_drift measured=False for every level; area-retention fallback adds an explicit warning."
+    },
+    {
+      "condition": "Task-state and receipt conform to Clinker schemas.",
+      "met": true,
+      "how_checked": "Validated task-state.json and receipt.json with jsonschema against the installed clanker-mode task-state and clinker-receipt schemas."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/optimize/decimate.py",
+    "stalthos-toolkit/src/stalthos_toolkit/optimize/lods.py",
+    "stalthos-toolkit/tests/test_lod_collapse_regression.py",
+    ".clanker/tasks/luna-lod-fix/task-state.json",
+    ".clanker/tasks/luna-lod-fix/receipt.json",
+    ".clanker/tasks/luna-lod-fix/focused-tests.log",
+    ".clanker/tasks/luna-lod-fix/softbough-fixture.log"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-lod-fix/focused-tests.log",
+    ".clanker/tasks/luna-lod-fix/softbough-fixture.log",
+    "stalthos-toolkit/var/luna-lod-fix-softbough-final/lod0.glb",
+    "stalthos-toolkit/var/luna-lod-fix-softbough-final/lod1.glb",
+    "stalthos-toolkit/var/luna-lod-fix-softbough-final/lod2.glb",
+    "stalthos-toolkit/var/luna-lod-fix-softbough-final/lod3.glb"
+  ],
+  "findings": [
+    "The supplied source-analysis report hypothesized many small leaf primitives, but the actual Softbough GLB has two primitives; both are large (1224 and 1368 triangles).",
+    "The existing optimize command test passes with a pytest thread warning caused by CP1252 decoding an external process byte stream; it did not affect the test result.",
+    "Area-only source triangle retention is used only when no grid candidate survives or the best grid result is less than half its target. Such output is explicitly warned and remains visually unmeasured."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Preserve the existing policy that each derived LOD is computed from the original LOD0 source and that strict decreasing nonempty chain validation remains the caller contract.",
+    "Separate primitives retain material boundaries because decimation continues per primitive; UV seam duplicates and distinct bone influence sets are isolated during clustering."
+  ],
+  "cost": {
+    "tier": "inherited",
+    "wall_clock_s": 240,
+    "retries": 1
+  }
+}

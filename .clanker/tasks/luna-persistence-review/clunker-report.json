@@ -1,0 +1,67 @@
+{
+  "scope": {
+    "candidate": "var/worktrees/jules-persistence-review",
+    "artifacts": [
+      "stalthos-runtime/domain/foundation.hpp",
+      "stalthos-runtime/domain/persistence.hpp",
+      "stalthos-runtime/domain/README.md",
+      "stalthos-runtime/tests/persistence.cpp",
+      "stalthos-runtime/engine/main.cpp"
+    ],
+    "mode": "independent read-only review; only review report and receipt written in root checkout"
+  },
+  "verdict": "blocking_findings",
+  "findings": [
+    {
+      "id": "PERSIST-001",
+      "severity": "P1",
+      "title": "Restore silently drops retained entities over retentionLimit",
+      "evidence": "restoreSave calls state.instantiate and state.retain without checking their bool results at persistence.hpp:311-313. StalthosState::retain returns false once retained_.size() reaches retentionLimit_ (foundation.hpp:129-131). Independent Windows probe with retentionLimit=1 and two retained records produced retained_input=2 retained_output=1 second_present=0.",
+      "impact": "A structurally valid save can load as success while permanently losing retained animal history and its species/reason/status. Read validation also accepts a retained count greater than the stored retention limit.",
+      "required_fix": "Reject inconsistent SaveData before restoration or make restoration fail explicitly when an entity cannot be instantiated/retained; add a regression test asserting no partial successful restore."
+    },
+    {
+      "id": "PERSIST-002",
+      "severity": "P1",
+      "title": "Collection limits are not aggregate or byte limits",
+      "evidence": "MAX_REGIONS=500000 and MAX_TREES_PER_REGION=50000 are checked independently (persistence.hpp:57-58, 263-273). A file can therefore describe up to 25,000,000,000 tree records, with no total-tree or total-byte cap before vector reserve/read. The domain README claims these bounds prevent OOM, but the combined bounds do not constrain total allocation to a safe budget.",
+      "impact": "A large or crafted save can exhaust memory, disk, or load time despite passing every individual collection bound. The maximum permitted aggregate is not practically loadable.",
+      "required_fix": "Set and enforce a conservative whole-file byte cap plus aggregate region/tree count caps before reserve/allocation, on both write and read paths."
+    },
+    {
+      "id": "PERSIST-003",
+      "severity": "P1",
+      "title": "Duplicate identity records are accepted and silently collapsed",
+      "evidence": "readSave parses collections without cross-list uniqueness checks. restoreSave ignores instantiate/retain failures (persistence.hpp:311-322). Independent Windows probe wrote and read two active transient records with id=20 and different regions; readSave returned both, restoration collapsed the conflict, and a subsequent instantiate(20,3) returned false. Hero/other cross-list conflicts can fail later during restore rather than at file validation.",
+      "impact": "Corrupt or inconsistent data can silently select one region/species/status for an identity, or fail partway through restore. The file is not validated as a coherent snapshot.",
+      "required_fix": "Validate identity uniqueness and legal cross-record state relationships before accepting the save; propagate every failed state reconstruction operation as an explicit load error. Validate referenced regions/tree identifiers against the host's known catalog when host integration exists."
+    },
+    {
+      "id": "PERSIST-004",
+      "severity": "P1",
+      "title": "Save/load is not connected to the actual game host",
+      "evidence": "Search of stalthos-runtime found writeSave/readSave/restoreSave usage only in tests/persistence.cpp; engine/main.cpp has no persistence call sites. domain/README.md:99-100 describes host population as expected future work.",
+      "impact": "This is a tested serialization DTO and domain reconstruction seam, not currently durable player save/load. The running game cannot use it to persist actual host state. It also has no host snapshot source for actual transforms, body/needs/age or other entity state beyond ID and region.",
+      "required_fix": "Keep claims scoped to a persistence DTO until host save/load wiring exists. For actual persistence, add a host-owned snapshot/application path and enumerate the game state that is intentionally saved versus regenerated."
+    },
+    {
+      "id": "PERSIST-005",
+      "severity": "P2",
+      "title": "Region snapshot revision is not persisted",
+      "evidence": "RegionSnapshot exposes a revision and recordTree increments it on every update (foundation.hpp:99, 167-176). SaveData::RegionTrees contains only region and tree values; restoreSave replays each unique tree once. Updating the same tree multiple times before saving yields original revision > unique tree count, so restored revision differs.",
+      "impact": "Any future host cache or asynchronous preparation that relies on snapshotCurrent may observe a changed revision after load, and revision continuity is not covered by current round-trip tests.",
+      "required_fix": "Persist revision with region snapshot state if it is a durable version token, or define and document that revisions intentionally restart on load and make host cache invalidation follow that rule."
+    }
+  ],
+  "verified": {
+    "windows_replace_existing": "PASS: standalone MSVC 19.51 probe wrote the same save path twice; second read returned calendarSeconds=2.0. The suspected std::filesystem::rename overwrite failure did not reproduce on this Windows target.",
+    "supplied_persistence_tests": "PASS: built stalthos_domain_persistence from stalthos-runtime/tests/CMakeLists.txt with Visual Studio 18 2026 and ran 5/5 scenarios.",
+    "roundtrip_fields": "Existing tests cover calendar, world seed, retentionLimit, hero ID/region, active IDs/regions, retained fields, dead hero IDs/regions, region tree condition/time, and basic reconstruction of calendar/seed/retention/death/tree state.",
+    "missing_coverage": "No overwrite-existing test in supplied suite; no aggregate cap, duplicate/cross-list ID, retained-over-limit, malformed retentionLimit, region revision continuity, host integration, or real game save/load tests."
+  },
+  "limitations": [
+    "No source edits, engine build, GPU launch, or host integration were performed.",
+    "Aggregate exhaustion was assessed from the admitted count bounds; no multi-gigabyte stress file was generated.",
+    "Unknown region/tree reference validation cannot be completed until the host catalog is available to persistence code."
+  ]
+}

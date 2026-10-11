@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "review": "luna-build-review",
+  "scope": [
+    "var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Build-Wicked.ps1",
+    "var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Prepare-Wicked.ps1",
+    "var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Build.ps1",
+    "var/worktrees/luna-wicked-build/stalthos-runtime/tests/Build-Wicked.Tests.ps1",
+    "var/worktrees/luna-lod-fix/stalthos-toolkit/src/stalthos_toolkit/optimize/lods.py",
+    "var/worktrees/luna-lod-fix/stalthos-toolkit/src/stalthos_toolkit/optimize/decimate.py"
+  ],
+  "pinned_source_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+  "pinned_source_clean": true,
+  "focused_test": {
+    "command": "pwsh -NoLogo -NoProfile -File var/worktrees/luna-wicked-build/stalthos-runtime/tests/Build-Wicked.Tests.ps1",
+    "exit_code": 0,
+    "result": "passed mocked publication and failure-preservation scenario; no real CMake target validation"
+  },
+  "findings": [
+    {"severity":"blocker","id":"build-target-alias","file":"var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Build-Wicked.ps1","line":69},
+    {"severity":"blocker","id":"dxcompiler-cache-path-mismatch","file":"var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Prepare-Wicked.ps1","line":54},
+    {"severity":"blocker","id":"in-place-cache-publication","file":"var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Prepare-Wicked.ps1","line":55},
+    {"severity":"high","id":"fresh-build-not-enforced","file":"var/worktrees/luna-wicked-build/stalthos-runtime/scripts/Build-Wicked.ps1","line":69},
+    {"severity":"blocker","id":"lod-global-triangle-cap-per-primitive","file":"var/worktrees/luna-lod-fix/stalthos-toolkit/src/stalthos_toolkit/optimize/lods.py","line":312}
+  ],
+  "real_engine_build_run": false,
+  "gpu_run": false,
+  "full_suite_run": false,
+  "report": ".clanker/tasks/luna-build-review/report.md"
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "luna-tool-audit",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Inventory installed real tools expected by the toolkit, especially Blender, gltfpack/meshoptimizer, Compressonator, glTF-Transform and image tools.",
+      "met": true,
+      "how_checked": "Ran stalthos doctor, queried Get-Command for expected executable names, and directly probed Blender, FFmpeg and installed glTF-Transform 4.5.1. Findings and paths are in report.md."
+    },
+    {
+      "condition": "Inspect current discovery/options scripts and distinguish missing binaries from discovery gaps.",
+      "met": true,
+      "how_checked": "Read core/workspace.py, optimize/tools.py, cli.py doctor, texture invocation and toolkit architecture; report records path fallback and omitted registry-supported doctor probes."
+    },
+    {
+      "condition": "Provide concise actionable installation candidates from official sources.",
+      "met": true,
+      "how_checked": "Report includes official project/download URLs and the executable names/PATH expectations for missing tools."
+    },
+    {
+      "condition": "Do not install tools or modify source; own task-local report/state/receipt only.",
+      "met": true,
+      "how_checked": "No installer or source edit was run; task files are the only intentional worktree changes. One doctor invocation created a workspace directory outside the worktree at E:\\Stalthosian Archipelago\\var\\var\\audit-workspace; this was not inspected or removed."
+    },
+    {
+      "condition": "Produce schema-valid task-state and receipt.",
+      "met": true,
+      "how_checked": "Fields and required acceptance entries manually checked against contracts/task-state.schema.json and contracts/clinker-receipt.schema.json from the installed Clanker skill."
+    }
+  ],
+  "artifacts_changed": [
+    ".clanker/tasks/luna-tool-audit/report.md",
+    ".clanker/tasks/luna-tool-audit/task-state.json",
+    ".clanker/tasks/luna-tool-audit/receipt.json"
+  ],
+  "evidence": [
+    ".clanker/tasks/luna-tool-audit/report.md",
+    "stalthos doctor stdout captured in task transcript",
+    "PowerShell executable and version probes captured in task transcript"
+  ],
+  "findings": [
+    "Toolkit doctor misses registry-supported gltf_transform and gltf_validator and omits Blender version.",
+    "Blender is present at a standard fallback path though Get-Command cannot resolve it by name.",
+    "glTF-Transform 4.5.1 is installed and works via Node CLI, but doctor does not report it.",
+    "The doctor probe created E:\\Stalthosian Archipelago\\var\\var\\audit-workspace outside the authorized worktree; it was not modified further."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Missing classifications use PATH and the standard lookup candidates, not an exhaustive disk-wide search."
+  ],
+  "cost": {
+    "tier": "bounded",
+    "wall_clock_s": 90,
+    "retries": 0
+  }
+}

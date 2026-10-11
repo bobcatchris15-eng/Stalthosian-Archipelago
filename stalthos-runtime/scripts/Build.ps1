@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([string]$CMake = '', [switch]$DomainOnly)
+param([string]$CMake = '', [switch]$DomainOnly, [string]$Source = '', [string]$BuildDirectory = '', [string]$CacheDirectory = '')
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 if (-not $CMake) {
@@ -7,9 +7,16 @@ if (-not $CMake) {
     if ($onPath) { $CMake = $onPath.Source } else { $CMake = 'C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe' }
 }
 if (-not (Test-Path $CMake)) { throw 'CMake unavailable; install Windows C++ build tools or pass -CMake' }
-$build = Join-Path $root 'var/build/stalthos-runtime'
-$engine = Join-Path $root 'var/vendor/WickedEngine'
-$cache = Join-Path $root 'var/vendor/wicked-release-cache'
+function Resolve-VarPath([string]$Value, [string]$Default, [string]$Name) {
+    $path = [IO.Path]::GetFullPath($(if ($Value) { $Value } else { $Default }))
+    $varRoot = [IO.Path]::GetFullPath((Join-Path $root 'var')).TrimEnd('\') + '\'
+    if (-not $path.StartsWith($varRoot, [StringComparison]::OrdinalIgnoreCase)) { throw "$Name must stay inside this checkout's var directory: $path" }
+    return $path
+}
+$build = Resolve-VarPath $BuildDirectory (Join-Path $root 'var/build/stalthos-runtime') 'BuildDirectory'
+$engine = [IO.Path]::GetFullPath($(if ($Source) { $Source } else { Join-Path $root 'var/vendor/WickedEngine' }))
+$cache = Resolve-VarPath $CacheDirectory (Join-Path $root 'var/vendor/wicked-release-cache') 'CacheDirectory'
+if ($build.TrimEnd('\').StartsWith($cache.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase) -or $cache.TrimEnd('\').StartsWith($build.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase) -or $build.TrimEnd('\') -eq $cache.TrimEnd('\')) { throw 'BuildDirectory and CacheDirectory must be separate, non-overlapping var paths' }
 New-Item -ItemType Directory -Force $build | Out-Null
 if (-not $DomainOnly) {
     $lock = Get-Content (Join-Path $root 'stalthos-runtime/config/wicked.lock.json') -Raw | ConvertFrom-Json
@@ -36,5 +43,6 @@ if ($LASTEXITCODE -ne 0) { throw 'Runtime Release build failed' }
 $exe = Join-Path $build 'Release/Stalthos.exe'
 if (-not $DomainOnly -and -not (Test-Path $exe)) { throw 'Build did not produce the game executable' }
 if (-not $DomainOnly) {
-    [ordered]@{schema_version=1;engine_revision=$rev;configuration='Release';executable=$exe;executable_sha256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant();cache_provenance_sha256=(Get-FileHash (Join-Path $cache 'provenance.json') -Algorithm SHA256).Hash.ToLowerInvariant();source_revision=(& git -C $root rev-parse HEAD).Trim();dirty_working_tree=$true;note='Application built locally against verified copied engine Release inputs'} | ConvertTo-Json | Set-Content (Join-Path $build 'build-receipt.json') -Encoding utf8
+    $cacheNote = $provenance.note
+    [ordered]@{schema_version=1;engine_revision=$rev;configuration='Release';executable=$exe;executable_sha256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant();cache_provenance_sha256=(Get-FileHash (Join-Path $cache 'provenance.json') -Algorithm SHA256).Hash.ToLowerInvariant();source_revision=(& git -C $root rev-parse HEAD).Trim();dirty_working_tree=$true;note="Application built locally against engine inputs: $cacheNote"} | ConvertTo-Json | Set-Content (Join-Path $build 'build-receipt.json') -Encoding utf8
 }
