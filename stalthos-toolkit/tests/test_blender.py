@@ -16,6 +16,7 @@ Tests assert on the JSON status envelope and exit codes, never on log text.
 from __future__ import annotations
 
 import json
+import locale
 import os
 import subprocess
 import sys
@@ -29,6 +30,7 @@ from stalthos_toolkit.blender import params as P
 from stalthos_toolkit.blender.runner import (
     DEFAULT_TIMEOUT_S,
     BlenderError,
+    blender_version,
     build_argv,
     resolve_timeout,
     run_blender,
@@ -831,6 +833,64 @@ def test_render_growth_stages_renders_every_stage(blender, workspace, tmp_path, 
     assert stages == ["seedling", "mature"]
     for stage in envelope["metrics"]["stages"]:
         assert stage["renders"], f"{stage['stage']} produced no renders"
+
+
+# --- tool-version provenance -------------------------------------------------
+#
+# `blender --version` embeds non-ASCII bytes on some Windows builds. Decoding it
+# with the locale codec (cp1252) killed the stdout reader thread, so the recorded
+# tool version silently degraded to "unknown" and flowed into determinism
+# provenance. These tests pin the decode to utf-8/replace.
+
+#: a banner containing bytes that cp1252 cannot decode (0x90 is an undefined
+#: cp1252 codepoint), so a locale-codec decode raises exactly as it did in CI.
+_NON_ASCII_BANNER = b"Blender 4.3.1 \x90 custom build\n"
+
+
+def _stub_run_returning_banner(monkeypatch):
+    """Replace subprocess.run in the runner with one that mimics real decoding."""
+    captured = {}
+
+    def fake_run(argv, **kwargs):
+        captured.update(kwargs)
+        encoding = kwargs.get("encoding")
+        errors = kwargs.get("errors") or "strict"
+        # No encoding= means subprocess uses locale.getpreferredencoding(False),
+        # which is how the original bug reproduced.
+        text = (_NON_ASCII_BANNER.decode(encoding, errors) if encoding
+                else _NON_ASCII_BANNER.decode(locale.getpreferredencoding(False), errors))
+        return subprocess.CompletedProcess(argv, 0, stdout=text, stderr="")
+
+    monkeypatch.setattr("stalthos_toolkit.blender.runner.subprocess.run", fake_run)
+    return captured
+
+
+def test_blender_version_decodes_banner_as_utf8(workspace, tmp_path, monkeypatch):
+    exe = tmp_path / "fake-blender"
+    exe.write_text("stub", encoding="utf-8")  # only needs to resolve, never exec
+    _stub_run_returning_banner(monkeypatch)
+    version = blender_version(Context(workspace=workspace), blender_exe=str(exe))
+    assert version == "Blender 4.3.1 \ufffd custom build", (
+        "a non-ASCII version banner must not decay to 'unknown'")
+    assert version != "unknown"
+
+
+def test_blender_version_pins_utf8_not_the_locale_codec(workspace, tmp_path, monkeypatch):
+    """Guard the fix directly: the decode must not be locale-dependent."""
+    exe = tmp_path / "fake-blender"
+    exe.write_text("stub", encoding="utf-8")
+    captured = _stub_run_returning_banner(monkeypatch)
+    blender_version(Context(workspace=workspace), blender_exe=str(exe))
+    assert captured.get("encoding") == "utf-8"
+    assert captured.get("errors") == "replace"
+
+
+def test_blender_version_is_unknown_when_the_probe_fails(workspace, tmp_path, monkeypatch):
+    exe = tmp_path / "fake-blender"
+    exe.write_text("stub", encoding="utf-8")
+    monkeypatch.setattr("stalthos_toolkit.blender.runner.subprocess.run",
+                        lambda argv, **kw: (_ for _ in ()).throw(OSError("boom")))
+    assert blender_version(Context(workspace=workspace), blender_exe=str(exe)) == "unknown"
 
 
 @needs_blender

@@ -328,6 +328,7 @@ def blender_version(ctx: Context, *, blender_exe: str | None = None, timeout: fl
     exe = resolve_blender(ctx, blender_exe)
     try:
         out = subprocess.run([exe, "--version"], capture_output=True, text=True,
+                             encoding="utf-8", errors="replace",
                              timeout=timeout, stdin=subprocess.DEVNULL)
     except (OSError, subprocess.SubprocessError):
         return "unknown"
