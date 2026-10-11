@@ -18,15 +18,22 @@ void timeScenario() {
     auto rest = clock.advance(.016, 3600);
     auto chooser = clock.advance(.016, .1);
     check(near(normal.physicalSeconds, rest.physicalSeconds), "acceleration changed contact delta");
+    check(near(clock.physicalSeconds(), .048), "physical time did not accumulate independently");
     check(near(rest.calendarSeconds, 57.6), "rest calendar acceleration wrong");
     check(near(chooser.calendarSeconds, .0016), "context time dilation wrong");
     check(near(clock.calendarSeconds(), .016 + 57.6 + .0016), "domains did not share calendar");
     check(near(clock.advance(.25, 0).calendarSeconds, 0), "paused calendar advanced");
     double before = clock.calendarSeconds();
+    const double physicalBefore = clock.physicalSeconds();
     rejects([&] { clock.advance(-1); }); rejects([&] { clock.advance(1, -1); });
     rejects([&] { clock.advance(std::numeric_limits<double>::infinity()); });
     rejects([&] { clock.advance(std::numeric_limits<double>::max(), 2); });
-    check(clock.calendarSeconds() == before, "invalid clock request changed calendar");
+    check(clock.calendarSeconds() == before && clock.physicalSeconds() == physicalBefore, "invalid clock request changed time");
+    SimCore large; large.advance(std::numeric_limits<double>::max(), 0);
+    rejects([&] { large.advance(std::numeric_limits<double>::max(), 0); });
+    check(large.physicalSeconds() == std::numeric_limits<double>::max(), "physical overflow mutated clock");
+    const auto restored = SimCore::fromTimes(123.0, 456.0);
+    check(restored.physicalSeconds() == 123.0 && restored.calendarSeconds() == 456.0, "independent time restore failed");
 }
 void steeringScenario() {
     const double pi = std::acos(-1.0);
@@ -123,6 +130,36 @@ void continuityScenario() {
     retainedHero.heroDied();
     check(retainedHero.heroDeathKnown(500) && !retainedHero.retained(500)->alive, "retained hero death transition failed");
 }
+void snapshotScenario() {
+    StalthosState world(77, 4);
+    world.recordTree(3, {80, TreeCondition::Fallen, 4});
+    world.recordTree(3, {80, TreeCondition::Dead, 5});
+    check(world.instantiate(10, 3) && world.retain(10, HeroSpecies::Reedcrest, RetentionReason::BondedPeer), "retained hero setup failed");
+    world.setHero(10, 3);
+    check(world.instantiate(11, 99) && world.retain(11, HeroSpecies::Longstride, RetentionReason::DependentYoung), "retained companion setup failed");
+    world.retire(11);
+    world.heroDied();
+    world.setHero(12, 8);
+    check(world.instantiate(13, 8), "transient setup failed");
+    auto source = world.snapshot();
+    source.regions.push_back({99, 0, {}});
+    auto restored = StalthosState::fromSnapshot(source);
+    const auto copy = restored.snapshot();
+    check(copy.seed == 77 && copy.retentionLimit == 4 && copy.hero && copy.hero->first == 12, "snapshot header/current hero mismatch");
+    check(copy.retained.size() == 2 && copy.retained[0].id == 10 && !copy.retained[0].alive && !copy.retained[0].active,
+        "retained dead former hero was not preserved");
+    check(copy.deadHeroes.size() == 1 && copy.deadHeroes[0].first == 10, "dead former hero exception missing");
+    check(copy.active.size() == 2, "active inventory mismatch");
+    check(copy.regions.size() == 2 && copy.regions[0].revision == 2 && copy.regions[0].trees.size() == 1 &&
+        copy.regions[1].region == 99 && copy.regions[1].revision == 0 && copy.regions[1].trees.empty(), "region revisions/empty record mismatch");
+    auto maxRevision = copy; maxRevision.regions[0].revision = std::numeric_limits<std::uint64_t>::max();
+    auto guarded = StalthosState::fromSnapshot(maxRevision);
+    rejects([&] { guarded.recordTree(3, {80, TreeCondition::Fallen, 9}); });
+    check(guarded.regionSnapshot(3).revision == std::numeric_limits<std::uint64_t>::max() &&
+        guarded.regionSnapshot(3).trees[0].condition == TreeCondition::Dead, "revision overflow changed region snapshot");
+    rejects([&] { world.recordTree(3, {81, static_cast<TreeCondition>(99), 7}); });
+    check(world.regionSnapshot(3).revision == 2, "invalid tree enum changed region revision");
+}
 }
 int main() {
     const std::pair<const char*, std::function<void()>> scenarios[] = {
@@ -131,13 +168,14 @@ int main() {
         {"destination persistence and direct cancellation", intentScenario},
         {"camera-only stimulus excluded from bodily perception", perceptionScenario},
         {"contact idempotence and fail-closed bounds", contactScenario},
-        {"region and death continuity across hero replacement", continuityScenario}
+        {"region and death continuity across hero replacement", continuityScenario},
+        {"authoritative domain snapshot reconstruction", snapshotScenario}
     };
     int failed = 0;
     for (auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (6 - failed) << "/6 scenarios passed\n";
+    std::cout << (7 - failed) << "/7 scenarios passed\n";
     return failed ? 1 : 0;
 }

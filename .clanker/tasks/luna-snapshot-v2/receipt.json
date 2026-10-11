@@ -1,0 +1,30 @@
+{
+  "task_id": "luna-snapshot-v2",
+  "outcome": "done",
+  "acceptance": [
+    {"condition":"SimCore preserves independently accumulated physical and calendar seconds, validates before mutation, and rejects either accumulation overflow.","met":true,"how_checked":"MSVC Release CTest domain-scenarios; independent values, calendar acceleration, physical overflow, and unchanged clock checks passed."},
+    {"condition":"Foundation snapshot exports seed, retention limit, current hero, active inventory, retained statuses, dead heroes, and exact region records including empty regions.","met":true,"how_checked":"7/7 scenarios passed; snapshot reconstruction checks current/dead retained heroes, active identities, repeated-tree revision, and empty region."},
+    {"condition":"Restore validates all snapshots before reconstruction and preserves legitimate hero/retained overlaps while rejecting conflicts, duplicate identities, invalid status/enums/time, and inconsistent revisions.","met":true,"how_checked":"StalthosState::fromSnapshot builds validated candidate maps before returning; persistence validation tests and snapshot scenarios passed under Release CTest."},
+    {"condition":"SaveData stores physical time, exact region revisions, and optional finite/range-checked host pose; STL1 reads with zero physical time and deterministic legacy revision reconstruction; new writes use explicit STL2 version.","met":true,"how_checked":"8/8 persistence groups passed, including STL1 fixture with empty and populated regions, STL2 pose/revision roundtrip, and invalid pose/time rejection."},
+    {"condition":"Provide captureSave(sim, world[, pose]) and pair-return restoreSave(data) APIs for root host integration.","met":true,"how_checked":"Headers expose both APIs; authoritative capture/write/read/restore/capture test preserved identical serialized bytes."},
+    {"condition":"Preserve existing bounds, deterministic ordering, prior-save preservation, and temporary cleanup.","met":true,"how_checked":"Persistence suite passed deterministic byte comparisons, malformed bounds, invalid-write preservation, and temp-path cleanup cases."},
+    {"condition":"Cover revised same tree, region-local tree identities, retained current hero, dead former retained hero plus successor, high/empty revisions, malformed references, no-change rejection, legacy compatibility, and default/no-pose cases.","met":true,"how_checked":"Release persistence/scenario suite passed 7 scenario groups and 8 persistence groups; evidence in evidence.md and CTest LastTest.log."},
+    {"condition":"Document that pose is a diagnostic host transform and this seam is not complete game persistence.","met":true,"how_checked":"Reviewed stalthos-runtime/domain/README.md updated persistence boundary and pose-scope wording."},
+    {"condition":"Build and run standalone DomainOnly Release tests with MSVC warning-as-error flags.","met":true,"how_checked":"Configured and built `var/build/luna-snapshot-v2` with the provided VS 18 CMake; MSVC build succeeded and CTest passed 2/2."},
+    {"condition":"Stay within assigned worktree and do not change host, scripts, CMake, toolkit, planning inputs, network state, or commits.","met":true,"how_checked":"Reviewed `git status --short`; intended changes are limited to the five owned source/doc/test files and this task's records. No commit or network command was used."}
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/foundation.hpp",
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/tests/scenarios.cpp",
+    "stalthos-runtime/domain/README.md",
+    ".clanker/tasks/luna-snapshot-v2/task-state.json",
+    ".clanker/tasks/luna-snapshot-v2/evidence.md",
+    ".clanker/tasks/luna-snapshot-v2/receipt.json"
+  ],
+  "evidence": [".clanker/tasks/luna-snapshot-v2/evidence.md", "var/build/luna-snapshot-v2/Testing/Temporary/LastTest.log"],
+  "findings": ["STL1 stores only final tree overrides, so its exact historical revision cannot be recovered. The reader uses the documented deterministic lower bound equal to the number of saved tree records.", "The test CMake project uses the Visual Studio generator; CMAKE_BUILD_TYPE is ignored, so Release was explicitly selected with `--config Release`.", "Host catalog validation and actual host save/load remain root integration responsibilities; this task implements the domain seam only."],
+  "blockers": [],
+  "assumptions_made": ["Legacy revision reconstruction counts each persisted tree override once because STL1 did not encode repeated updates to a tree.", "HostPose camera mode is represented as an unsigned 8-bit enum value and accepts only values 0, 1, or 2 as specified by the brief."]
+}

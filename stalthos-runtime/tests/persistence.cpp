@@ -44,26 +44,28 @@ void testRoundtripAndDeterminism() {
     const auto path = std::filesystem::path("test_roundtrip.sav");
     const auto path2 = std::filesystem::path("test_roundtrip_2.sav");
     SaveData data;
-    data.calendarSeconds = 42.5; data.seed = 999; data.retentionLimit = 128;
+    data.physicalSeconds = 2.5; data.calendarSeconds = 42.5; data.seed = 999; data.retentionLimit = 128;
     data.hero = ActiveEntity{1, 10};
     data.activeTransients = {{3, 11}, {2, 10}};
     data.retained = {
         {5, 11, HeroSpecies::Reedcrest, RetentionReason::DependentYoung, false, false},
         {4, 10, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true}};
     data.deadHeroes.push_back({6, 12});
-    data.regions.push_back({10, {{101, TreeCondition::StandingDamaged, 20.0}, {100, TreeCondition::Fallen, 10.0}}});
+    data.regions.push_back({10, {{101, TreeCondition::StandingDamaged, 20.0}, {100, TreeCondition::Fallen, 10.0}}, 5});
+    data.pose = HostPose{{1, 2, 3}, .5, 2};
     writeSave(path, data);
     writeSave(path2, data);
     check(bytes(path) == bytes(path2), "same DTO did not serialize deterministically");
 
     auto loaded = readSave(path);
-    check(near(loaded.calendarSeconds, 42.5) && loaded.seed == 999 && loaded.retentionLimit == 128, "header fields mismatch");
+    check(near(loaded.physicalSeconds, 2.5) && near(loaded.calendarSeconds, 42.5) && loaded.seed == 999 && loaded.retentionLimit == 128, "header fields mismatch");
     check(loaded.hero && loaded.hero->id == 1 && loaded.hero->region == 10, "hero mismatch");
     check(loaded.activeTransients.size() == 2 && loaded.activeTransients[0].id == 2 && loaded.activeTransients[1].id == 3, "active order/fields mismatch");
     check(loaded.retained.size() == 2 && loaded.retained[0].id == 4 && loaded.retained[1].id == 5, "retained order/fields mismatch");
     check(loaded.retained[0].species == HeroSpecies::Smalltrotter && loaded.retained[0].reason == RetentionReason::Caregiver && loaded.retained[0].alive && loaded.retained[0].active, "retained state mismatch");
     check(!loaded.retained[1].alive && !loaded.retained[1].active, "dead retained state mismatch");
     check(loaded.deadHeroes.size() == 1 && loaded.deadHeroes[0].id == 6, "dead hero mismatch");
+    check(loaded.regions[0].revision == 5 && loaded.pose && loaded.pose->cameraMode == 2 && near(loaded.pose->position.z, 3), "revision or pose mismatch");
     check(loaded.regions.size() == 1 && loaded.regions[0].trees.size() == 2 && loaded.regions[0].trees[0].tree == 100, "tree order/fields mismatch");
     std::filesystem::remove(path); std::filesystem::remove(path2);
 }
@@ -74,7 +76,8 @@ void testWriteAndRestoreValidation() {
     writeSave(path, baseline);
     const auto original = bytes(path);
     const auto preserved = [&](SaveData invalid, const char* expected) {
-        rejects([&] { writeSave(path, invalid); }, expected);
+        try { rejects([&] { writeSave(path, invalid); }, expected); }
+        catch (const std::exception& e) { throw std::runtime_error(std::string("expected [") + expected + "] but " + e.what()); }
         check(bytes(path) == original, "invalid write changed previous save");
         check(!std::filesystem::exists(path.string() + ".tmp"), "invalid write left a temp file");
         rejects([&] { (void)restoreSave(invalid); }, expected);
@@ -86,6 +89,13 @@ void testWriteAndRestoreValidation() {
     preserved(invalid, "retained records exceed retention limit");
     invalid = baseline; invalid.hero = ActiveEntity{9, 10}; invalid.activeTransients.push_back({9, 11});
     preserved(invalid, "duplicate or conflicting entity identity");
+    invalid = baseline; invalid.retained = {
+        {9, 10, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true},
+        {9, 10, HeroSpecies::Reedcrest, RetentionReason::BondedPeer, true, true}};
+    preserved(invalid, "duplicate or conflicting entity identity");
+    invalid = baseline; invalid.hero = ActiveEntity{9, 10};
+    invalid.retained.push_back({9, 11, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
+    preserved(invalid, "inconsistent retained hero");
     invalid = baseline; invalid.retained.push_back({9, 10, static_cast<HeroSpecies>(200), RetentionReason::Caregiver, true, true});
     preserved(invalid, "invalid species");
     invalid = baseline; invalid.regions.push_back({2, {{99, TreeCondition::Fallen, 1.0}}});
@@ -114,23 +124,23 @@ void testMalformedFilesAndBounds() {
     SaveData data; data.retentionLimit = 2;
     data.retained.push_back({3, 4, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
     writeSave(path, data);
-    // retentionLimit is the u64 beginning at byte 24. Lower it below the stored count.
-    overwriteU64(path, 24, 0);
+    // STL2 retentionLimit begins at byte 32. Lower it below the stored count.
+    overwriteU64(path, 32, 0);
     rejects([&] { (void)readSave(path); }, "retained records exceed retention");
 
     data = SaveData{}; data.activeTransients = {{20, 1}, {21, 2}};
     writeSave(path, data);
-    // With no hero, the active count begins at byte 33; replace the second ID with the first ID.
-    overwriteU64(path, 53, 20);
+    // STL2 active IDs begin at byte 46; replace the second ID with the first ID.
+    overwriteU64(path, 62, 20);
     rejects([&] { (void)readSave(path); }, "duplicate or conflicting entity identity");
 
     data = SaveData{};
     data.retained.push_back({3, 4, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
     writeSave(path, data);
-    // The retained active flag follows ID, region, species, reason, and alive at byte 60.
+    // The retained active flag follows ID, region, species, reason, and alive at byte 69.
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(60); detail::write_u8(io, 2); io.flush();
+        io.seekp(69); detail::write_u8(io, 2); io.flush();
         check(io.good(), "failed to mutate retained boolean fixture");
     }
     rejects([&] { (void)readSave(path); }, "invalid retained boolean flag");
@@ -171,8 +181,8 @@ void testRestoreStatusesAndDomainState() {
     data.activeTransients.push_back({1, 10});
     data.retained.push_back({2, 10, HeroSpecies::Reedcrest, RetentionReason::BondedPeer, true, false});
     data.deadHeroes.push_back({3, 11}); data.hero = ActiveEntity{4, 12};
-    data.regions.push_back({10, {{100, TreeCondition::Fallen, 50.0}}});
-    data.regions.push_back({11, {{100, TreeCondition::Dead, 51.0}}});
+    data.regions.push_back({10, {{100, TreeCondition::Fallen, 50.0}}, 7});
+    data.regions.push_back({11, {{100, TreeCondition::Dead, 51.0}}, 9});
     auto restored = restoreSave(data);
     auto& sim = restored.first; auto& state = restored.second;
     check(near(sim.calendarSeconds(), 100.0) && state.worldSeed() == 42, "calendar or seed not restored");
@@ -184,10 +194,85 @@ void testRestoreStatusesAndDomainState() {
     check(snapshot.trees.size() == 1 && snapshot.trees[0].condition == TreeCondition::Fallen, "tree exception not restored");
 
     check(state.regionSnapshot(11).trees.size() == 1, "region-local tree identity was lost");
+    check(state.regionSnapshot(10).revision == 7 && state.regionSnapshot(11).revision == 9, "region revisions not restored exactly");
 
     // Every status-bearing mutation is checked during restore. Capacity mismatch is rejected before reconstruction.
     data.retentionLimit = 0;
     rejects([&] { (void)restoreSave(data); }, "retained records exceed retention limit");
+}
+
+void testAuthoritativeCaptureRoundtrip() {
+    SimCore sim; sim.advance(1.25, 3600.0);
+    StalthosState source(1234, 8);
+    source.recordTree(10, {70, TreeCondition::Fallen, 12});
+    source.recordTree(10, {70, TreeCondition::Dead, 13});
+    source.recordTree(11, {70, TreeCondition::StandingDamaged, 14});
+    source.setHero(1, 10);
+    check(source.retain(1, HeroSpecies::Smalltrotter, RetentionReason::BondedPeer), "retained current hero setup failed");
+    source.heroDied();
+    source.setHero(2, 11);
+    check(source.retain(2, HeroSpecies::Reedcrest, RetentionReason::Caregiver), "retained successor setup failed");
+    check(source.instantiate(3, 12), "transient setup failed");
+    auto snapshot = source.snapshot(); snapshot.regions.push_back({99, 1000, {}});
+    auto world = StalthosState::fromSnapshot(snapshot);
+    const HostPose pose{{-1, 2.5, 8}, -0.25, 1};
+    auto captured = captureSave(sim, world, pose);
+    check(captured.physicalSeconds == 1.25 && captured.calendarSeconds == 4500, "time capture did not preserve independent clocks");
+    check(captured.retained.size() == 2 && captured.retained[0].id == 1 && !captured.retained[0].alive && captured.retained[1].id == 2 && captured.retained[1].active,
+        "capture did not preserve former/current retained heroes");
+    check(captured.regions.size() == 3 && captured.regions[0].revision == 2 && captured.regions[1].revision == 1 &&
+        captured.regions[2].region == 99 && captured.regions[2].revision == 1000 && captured.regions[2].trees.empty(), "capture did not preserve exact and empty region revisions");
+
+    const auto p1 = std::filesystem::path("test_capture_1.sav");
+    const auto p2 = std::filesystem::path("test_capture_2.sav");
+    writeSave(p1, captured);
+    auto loaded = readSave(p1);
+    auto restored = restoreSave(loaded);
+    auto recaptured = captureSave(restored.first, restored.second, loaded.pose);
+    writeSave(p2, recaptured);
+    check(bytes(p1) == bytes(p2), "state/capture/write/read/restore/capture changed serialized state");
+    check(restored.second.heroDeathKnown(1) && restored.second.retained(1) && !restored.second.retained(1)->alive,
+        "dead retained former hero was not restored");
+    check(restored.second.retained(2) && restored.second.retained(2)->active && restored.second.regionSnapshot(99).revision == 1000,
+        "current retained hero or high empty revision was not restored");
+    std::filesystem::remove(p1); std::filesystem::remove(p2);
+}
+
+void testLegacyStl1Compatibility() {
+    const auto path = std::filesystem::path("test_legacy_stl1.sav");
+    std::ofstream out(path, std::ios::binary | std::ios::trunc);
+    out.write("STL1", 4); detail::write_u32(out, 1); detail::write_double(out, 55);
+    detail::write_u64(out, 900); detail::write_u64(out, 4); detail::write_u8(out, 0);
+    detail::write_u32(out, 0); detail::write_u32(out, 0); detail::write_u32(out, 0);
+    detail::write_u32(out, 2);
+    detail::write_u64(out, 8); detail::write_u32(out, 0);
+    detail::write_u64(out, 9); detail::write_u32(out, 1); detail::write_u64(out, 70);
+    detail::write_u8(out, static_cast<std::uint8_t>(TreeCondition::Fallen)); detail::write_double(out, 44);
+    out.close(); check(!out.fail(), "failed to write STL1 fixture");
+    auto loaded = readSave(path);
+    check(loaded.physicalSeconds == 0 && loaded.calendarSeconds == 55 && loaded.regions.size() == 2,
+        "STL1 physical default or fields changed");
+    check(loaded.regions[0].revision == 0 && loaded.regions[1].revision == 1,
+        "STL1 deterministic revision reconstruction changed");
+    std::filesystem::remove(path);
+}
+
+void testInvalidPhysicalTimeAndPose() {
+    const auto path = std::filesystem::path("test_pose_validation.sav");
+    SaveData baseline; writeSave(path, baseline); const auto original = bytes(path);
+    auto noPose = readSave(path);
+    check(!noPose.pose && noPose.physicalSeconds == 0, "default pose or physical time is not empty/zero");
+    for (const auto& invalid : std::vector<SaveData>{
+        [] { SaveData d; d.physicalSeconds = -1; return d; }(),
+        [] { SaveData d; d.physicalSeconds = std::numeric_limits<double>::infinity(); return d; }(),
+        [] { SaveData d; d.pose = HostPose{{NAN, 0, 0}, 0, 0}; return d; }(),
+        [] { SaveData d; d.pose = HostPose{{0, 0, 0}, INFINITY, 0}; return d; }(),
+        [] { SaveData d; d.pose = HostPose{{0, 0, 0}, 0, 3}; return d; }()}) {
+        rejects([&] { writeSave(path, invalid); });
+        check(bytes(path) == original, "invalid time or pose changed previous save");
+        rejects([&] { (void)restoreSave(invalid); });
+    }
+    std::filesystem::remove(path);
 }
 } // namespace
 
@@ -197,13 +282,16 @@ int main() {
         {"write and restore validation", testWriteAndRestoreValidation},
         {"malformed files and aggregate bounds", testMalformedFilesAndBounds},
         {"write failure preserves prior save", testWriteFailurePreservesPriorSave},
-        {"restore checks mutation statuses", testRestoreStatusesAndDomainState}
+        {"restore checks mutation statuses", testRestoreStatusesAndDomainState},
+        {"authoritative capture through file roundtrip", testAuthoritativeCaptureRoundtrip},
+        {"STL1 fixture compatibility", testLegacyStl1Compatibility},
+        {"physical time and pose validation", testInvalidPhysicalTimeAndPose}
     };
     int failed = 0;
     for (const auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (5 - failed) << "/5 tests passed\n";
+    std::cout << (8 - failed) << "/8 tests passed\n";
     return failed ? 1 : 0;
 }

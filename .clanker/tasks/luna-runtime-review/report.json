@@ -1,0 +1,30 @@
+{
+  "scope": {
+    "graph_digest": "not available in this isolated checkout",
+    "base_digest": "28c1bdd0c468004c4c8c86096621a3f4f723b712",
+    "artifacts": [
+      "stalthos-runtime/domain/foundation.hpp sha256 e21204d4f7844f59bb8888b520b375efd8dd4d973e2a0cd2ca9886e711928e00",
+      "stalthos-runtime/domain/persistence.hpp sha256 f587c99594053458e0d2c789ca7fc9e118403858a1894c0876a89f43f289ed3d",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/scripts/Run.ps1",
+      "var/review/luna-runtime-review/state_invariants.cpp",
+      "var/review/luna-runtime-review/final_invariants.cpp"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
+  "findings": [],
+  "unproven_claims": [],
+  "validation_debt": [
+    "The host refuses valid no-current-hero saves at main.cpp load (diagnostic executable currently requires a live hero); the DTO supports post-death no-hero snapshots.",
+    "The host loads only HostPose x/z/heading/camera mode and recomputes y from terrain, despite serializing HostPose.position.y. Current grounded marker host does not exercise an airborne pose.",
+    "No actual Wicked host rebuild/run was performed in this isolated review; the dispatcher is building the integrated host and owns that validation."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 4,
+    "attempted": "Inspected persistence/foundation DTO and host wiring. Built persistence tests and domain scenarios with MSVC 2026 /W4 /WX: persistence 8/8 and scenarios 7/7. Reproduced the original invalid-enum and revision-overflow defects on the earlier copied candidate, then reran a strict MSVC final-source probe confirming both now reject before mutation. Also tested deterministic roundtrip, malformed files/bounds, previous-save preservation, overwriting an existing save, STL1 compatibility, retained/current/dead hero capture, and exact region revisions. No target runtime or visual/performance claim."
+  }
+}

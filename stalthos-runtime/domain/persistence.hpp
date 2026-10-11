@@ -24,8 +24,10 @@ struct RetainedEntity {
     bool alive; bool active;
 };
 struct DeadHero { Identity id; RegionId region; };
-struct RegionTrees { RegionId region; std::vector<TreeException> trees; };
+struct RegionTrees { RegionId region; std::vector<TreeException> trees; std::uint64_t revision = 0; };
+struct HostPose { Vec3 position; double headingRadians = 0; std::uint8_t cameraMode = 0; };
 struct SaveData {
+    double physicalSeconds = 0.0;
     double calendarSeconds = 0.0;
     std::uint64_t seed = 0;
     std::size_t retentionLimit = 64;
@@ -34,6 +36,7 @@ struct SaveData {
     std::vector<RetainedEntity> retained;
     std::vector<DeadHero> deadHeroes;
     std::vector<RegionTrees> regions;
+    std::optional<HostPose> pose;
 };
 
 constexpr std::size_t MAX_ACTIVE_TRANSIENTS = 500'000;
@@ -108,14 +111,14 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
-    // Header plus fixed fields and collection counts; tree records are 17 bytes.
-    std::uint64_t size = 8 + 8 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 4;
+    // STL2 header, times, seed, retention limit, identities, and optional pose.
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) + 4;
     size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
     size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
     size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
     size = checkedAdd(size, 4);
     for (const auto& region : data.regions)
-        size = checkedAdd(size, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
+        size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
     if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
     return size;
 }
@@ -129,8 +132,10 @@ inline std::uint64_t serializedFileSize(const std::filesystem::path& path) {
 }
 
 inline void validate(const SaveData& data) {
-    if (!std::isfinite(data.calendarSeconds) || data.calendarSeconds < 0)
-        throw std::runtime_error("invalid calendar");
+    if (!std::isfinite(data.calendarSeconds) || data.calendarSeconds < 0) throw std::runtime_error("invalid calendar");
+    if (!std::isfinite(data.physicalSeconds) || data.physicalSeconds < 0) throw std::runtime_error("invalid physical time");
+    if (data.pose && (!finite(data.pose->position) || !std::isfinite(data.pose->headingRadians) || data.pose->cameraMode > 2))
+        throw std::runtime_error("invalid host pose");
     if (data.retentionLimit > MAX_RETAINED) throw std::runtime_error("retention limit exceeds size bound");
     if (data.retained.size() > data.retentionLimit) throw std::runtime_error("retained records exceed retention limit");
     if (data.activeTransients.size() > MAX_ACTIVE_TRANSIENTS) throw std::runtime_error("too many active transients");
@@ -138,16 +143,27 @@ inline void validate(const SaveData& data) {
     if (data.deadHeroes.size() > MAX_DEAD_HEROES) throw std::runtime_error("too many dead heroes");
     if (data.regions.size() > MAX_REGIONS) throw std::runtime_error("too many regions");
 
-    std::set<Identity> entityIds;
-    if (data.hero) claimIdentity(entityIds, data.hero->id);
-    for (const auto& value : data.activeTransients) claimIdentity(entityIds, value.id);
+    std::set<Identity> activeIds, retainedIds, deadIds;
+    if (data.hero) activeIds.insert(data.hero->id);
+    for (const auto& value : data.activeTransients) claimIdentity(activeIds, value.id);
     for (const auto& value : data.retained) {
-        claimIdentity(entityIds, value.id);
+        claimIdentity(retainedIds, value.id);
         if (!valid(value.species)) throw std::runtime_error("invalid species");
         if (!valid(value.reason)) throw std::runtime_error("invalid retention reason");
         if (value.active && !value.alive) throw std::runtime_error("dead retained entity cannot be active");
     }
-    for (const auto& value : data.deadHeroes) claimIdentity(entityIds, value.id);
+    for (const auto& value : data.deadHeroes) claimIdentity(deadIds, value.id);
+    for (const auto& value : data.retained) {
+        const bool isHero = data.hero && data.hero->id == value.id;
+        if (isHero && (!value.alive || !value.active || data.hero->region != value.region)) throw std::runtime_error("inconsistent retained hero");
+        if (activeIds.count(value.id) && !isHero) throw std::runtime_error("active retained overlap requires host representation");
+        if (deadIds.count(value.id) && (value.alive || value.active)) throw std::runtime_error("inconsistent retained dead hero");
+    }
+    if (data.hero && deadIds.count(data.hero->id)) throw std::runtime_error("current hero is dead");
+    for (const auto& value : data.deadHeroes)
+        if (activeIds.count(value.id) || (retainedIds.count(value.id) &&
+            (std::find_if(data.retained.begin(), data.retained.end(), [&](const auto& r) { return r.id == value.id && r.region == value.region && !r.alive && !r.active; }) == data.retained.end())))
+            throw std::runtime_error("conflicting dead hero identity");
 
     std::set<RegionId> regions;
     std::size_t totalTrees = 0;
@@ -164,6 +180,8 @@ inline void validate(const SaveData& data) {
             if (!std::isfinite(tree.changedAt) || tree.changedAt < 0) throw std::runtime_error("invalid tree timestamp");
         }
     }
+    for (const auto& region : data.regions)
+        if (region.revision < region.trees.size()) throw std::runtime_error("region revision below tree record count");
     (void)encodedSize(data);
 }
 
@@ -184,13 +202,20 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL1", 4);
-    detail::write_u32(os, 1);
+    os.write("STL2", 4);
+    detail::write_u32(os, 2);
+    detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
     detail::write_u64(os, static_cast<std::uint64_t>(data.retentionLimit));
     detail::write_u8(os, data.hero ? 1 : 0);
     if (data.hero) { detail::write_u64(os, data.hero->id); detail::write_u64(os, data.hero->region); }
+    detail::write_u8(os, data.pose ? 1 : 0);
+    if (data.pose) {
+        detail::write_double(os, data.pose->position.x); detail::write_double(os, data.pose->position.y);
+        detail::write_double(os, data.pose->position.z); detail::write_double(os, data.pose->headingRadians);
+        detail::write_u8(os, data.pose->cameraMode);
+    }
 
     auto active = data.activeTransients;
     std::sort(active.begin(), active.end(), [](const auto& a, const auto& b) { return a.id < b.id; });
@@ -218,6 +243,7 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     for (auto& region : regions) {
         std::sort(region.trees.begin(), region.trees.end(), [](const auto& a, const auto& b) { return a.tree < b.tree; });
         detail::write_u64(os, region.region);
+        detail::write_u64(os, region.revision);
         detail::write_u32(os, static_cast<std::uint32_t>(region.trees.size()));
         for (const auto& tree : region.trees) {
             detail::write_u64(os, tree.tree);
@@ -241,11 +267,15 @@ inline SaveData readSave(const std::filesystem::path& path) {
     std::ifstream is(path, std::ios::binary);
     if (!is) throw std::runtime_error("failed to open save file");
     char magic[4];
-    if (!is.read(magic, 4) || std::strncmp(magic, "STL1", 4) != 0)
+    if (!is.read(magic, 4))
         throw std::runtime_error("invalid magic or corrupt file");
-    if (detail::read_u32(is) != 1) throw std::runtime_error("unsupported save version");
+    const bool legacy = std::strncmp(magic, "STL1", 4) == 0;
+    if (!legacy && std::strncmp(magic, "STL2", 4) != 0) throw std::runtime_error("invalid magic or corrupt file");
+    const auto version = detail::read_u32(is);
+    if ((legacy && version != 1) || (!legacy && version != 2)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
+    if (!legacy) data.physicalSeconds = detail::read_double(is);
     data.calendarSeconds = detail::read_double(is);
     data.seed = detail::read_u64(is);
     const auto limit = detail::read_u64(is);
@@ -255,6 +285,11 @@ inline SaveData readSave(const std::filesystem::path& path) {
     const auto hasHero = detail::read_u8(is);
     if (hasHero > 1) throw std::runtime_error("corrupt hero presence flag");
     if (hasHero) data.hero = ActiveEntity{detail::read_u64(is), detail::read_u64(is)};
+    if (!legacy) {
+        const auto hasPose = detail::read_u8(is);
+        if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
+        if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
+    }
 
     auto count = detail::read_u32(is);
     if (count > MAX_ACTIVE_TRANSIENTS || static_cast<std::uint64_t>(count) * 16 > fileSize)
@@ -293,6 +328,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
     for (std::uint32_t i = 0; i < count; ++i) {
         RegionTrees region;
         region.region = detail::read_u64(is);
+        if (!legacy) region.revision = detail::read_u64(is);
         const auto trees = detail::read_u32(is);
         if (trees > MAX_TREES_PER_REGION || trees > MAX_TOTAL_TREES - totalTrees ||
             static_cast<std::uint64_t>(trees) * 17 > fileSize)
@@ -309,39 +345,61 @@ inline SaveData readSave(const std::filesystem::path& path) {
             if (!std::isfinite(tree.changedAt) || tree.changedAt < 0) throw std::runtime_error("invalid tree timestamp");
             region.trees.push_back(tree);
         }
+        // STL1 stored only final tree overrides, so exact historical revision counts
+        // were unavailable. Use the deterministic lower bound: one per saved override.
+        if (legacy) region.revision = static_cast<std::uint64_t>(region.trees.size());
         data.regions.push_back(std::move(region));
     }
     char trailing;
     if (is.read(&trailing, 1)) throw std::runtime_error("trailing bytes at end of file");
     if (is.bad()) throw std::runtime_error("failed while reading save file");
     detail::validate(data);
-    if (detail::encodedSize(data) != fileSize) throw std::runtime_error("save size does not match encoded records");
+    if (legacy) {
+        // Compare against the legacy layout, whose records omit physical time, pose and revisions.
+        std::uint64_t legacySize = 8 + 8 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 4;
+        legacySize = detail::checkedAdd(legacySize, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
+        legacySize = detail::checkedAdd(legacySize, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
+        legacySize = detail::checkedAdd(legacySize, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
+        legacySize = detail::checkedAdd(legacySize, 4);
+        for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
+        if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
+    } else if (detail::encodedSize(data) != fileSize) throw std::runtime_error("save size does not match encoded records");
+    return data;
+}
+
+inline SaveData captureSave(const SimCore& sim, const StalthosState& world, std::optional<HostPose> pose = std::nullopt) {
+    const auto snapshot = world.snapshot();
+    SaveData data; data.physicalSeconds = sim.physicalSeconds(); data.calendarSeconds = sim.calendarSeconds();
+    data.seed = snapshot.seed; data.retentionLimit = snapshot.retentionLimit; data.pose = pose;
+    if (snapshot.hero) data.hero = ActiveEntity{snapshot.hero->first, snapshot.hero->second};
+    std::set<Identity> retainedIds;
+    for (const auto& value : snapshot.retained) {
+        retainedIds.insert(value.id);
+        data.retained.push_back({value.id, value.region, value.species, value.reason, value.alive, value.active});
+    }
+    for (const auto& value : snapshot.active)
+        if ((!snapshot.hero || snapshot.hero->first != value.first) && !retainedIds.count(value.first))
+            data.activeTransients.push_back({value.first, value.second});
+    for (const auto& value : snapshot.deadHeroes) data.deadHeroes.push_back({value.first, value.second});
+    for (const auto& value : snapshot.regions) data.regions.push_back({value.region, value.trees, value.revision});
+    detail::validate(data);
     return data;
 }
 
 inline std::pair<SimCore, StalthosState> restoreSave(const SaveData& data) {
-    detail::validate(data); // Validate the whole snapshot before constructing any state.
-    SimCore sim;
-    if (data.calendarSeconds > 0) sim.advance(data.calendarSeconds, 1.0);
-    StalthosState state(data.seed, data.retentionLimit);
-    for (const auto& value : data.deadHeroes) {
-        state.setHero(value.id, value.region);
-        state.heroDied();
-    }
-    for (const auto& value : data.retained) {
-        if (!state.instantiate(value.id, value.region)) throw std::runtime_error("failed to instantiate retained entity");
-        if (!state.retain(value.id, value.species, value.reason)) throw std::runtime_error("failed to restore retained entity");
-        if (!value.alive) {
-            if (!state.markRetainedDead(value.id)) throw std::runtime_error("failed to restore retained death state");
-        } else if (!value.active) {
-            state.retire(value.id);
-        }
-    }
-    for (const auto& value : data.activeTransients)
-        if (!state.instantiate(value.id, value.region)) throw std::runtime_error("failed to instantiate active transient");
-    for (const auto& region : data.regions)
-        for (const auto& tree : region.trees) state.recordTree(region.region, tree);
-    if (data.hero) state.setHero(data.hero->id, data.hero->region);
+    detail::validate(data); // Complete DTO validation precedes reconstruction.
+    FoundationSnapshot foundation; foundation.seed = data.seed; foundation.retentionLimit = data.retentionLimit;
+    if (data.hero) foundation.hero = std::make_pair(data.hero->id, data.hero->region);
+    for (const auto& value : data.activeTransients) foundation.active.emplace_back(value.id, value.region);
+    if (data.hero) foundation.active.emplace_back(data.hero->id, data.hero->region);
+    for (const auto& value : data.retained)
+        foundation.retained.push_back({value.id, value.region, value.species, value.reason, value.alive, value.active});
+    for (const auto& value : data.retained)
+        if (value.active && (!data.hero || value.id != data.hero->id)) foundation.active.emplace_back(value.id, value.region);
+    for (const auto& value : data.deadHeroes) foundation.deadHeroes.emplace_back(value.id, value.region);
+    for (const auto& value : data.regions) foundation.regions.push_back({value.region, value.revision, value.trees});
+    auto sim = SimCore::fromTimes(data.physicalSeconds, data.calendarSeconds);
+    auto state = StalthosState::fromSnapshot(foundation);
     return {std::move(sim), std::move(state)};
 }
 

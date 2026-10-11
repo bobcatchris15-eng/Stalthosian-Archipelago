@@ -1,4 +1,4 @@
-# Construction handoff — 2026-10-11
+# Construction handoff â€” 2026-10-11
 
 Wicked is selected and the complete full draft remains the target. The initial construction packet is implemented: pinned project-local engine source and hash-verified Release inputs; native C++17 host; domain foundations; toolkit reference/dependency/export corrections. No scheduling or unattended background continuation is enabled.
 
@@ -35,7 +35,7 @@ User-authorized headless tasks ran on opencode/big-pickle and opencode/space-bun
 The generic skill checkpoint script stages the whole checkout. This repository had unrelated dirty work, so root adapted the checkpoint to an explicit owned-path list, verified all nine original hashes, checked the staged diff and ran the same built-in secret pattern. The source graph was refreshed synchronously; no fabricated prior structural delta is claimed. Only this packet is committed on codex/full-draft-wicked; no push is performed.
 
 
-## Autonomous continuation authorization — 2026-10-11
+## Autonomous continuation authorization â€” 2026-10-11
 
 Human source, verbatim:
 > Alright, continue clanking autonomously. you have the planning docs, coordinate a couple luna low-medium-high agents to get it going and keep working through new tasks with new agents
@@ -47,5 +47,8 @@ Proceed through the full-draft implementation queue with bounded Luna workers an
 
 User: "Keep local and remote in sync, the local starting should be included". Origin is https://github.com/bobcatchris15-eng/Stalthosian-Archipelago.git. Publish validated project commits to main, including the nine safeguarded starting paths. No force pushes. Jules CLI v0.1.42 is authenticated and source connected. Session 5999252246045191178 owns domain/persistence.hpp, tests/persistence.cpp, tests/CMakeLists.txt and domain/README.md. Retrieve into an isolated checkout and review before integration. CLI reference https://jules.google/docs/cli/reference/; API requires separate API key, CLI login alone is not API-key evidence.
 
-## Current checkpoint
-See current-work.md and tasks/packet-two-integration/receipt.json. Fresh engine compilation and DTO persistence tests now pass. Six wake dispatches used. Resume verification before further dispatch; next implementation is foundation snapshot/restore and host save/load. User-authorized validated publication is main on origin; earlier no-push statements are historical and superseded by synchronization authorization.
+## Current checkpoint — third construction packet
+
+See current-work.md and tasks/packet-three-integration/receipt.json. The final offline toolkit suite passed 1947 tests with two skipped; native CTest passes 4/4. Snapshot STL2 and actual diagnostic host save/load now preserve clocks, domain state, seed and horizontal pose; corrupt-load rejection preserves the prior save. The deterministic creek fixture renders with eight authored shrubs. Jules lifecycle session 10020203100517924387 completed, was independently corrected/reviewed and integrated as a domain core; host wiring and lifecycle persistence remain next work. A real Smalltrotter neutral rig has 74 joints but no animation clips.
+
+Six wake dispatches used; all slots released. Start the next wake by checking HALT and current receipts. Next concrete task is authored/exported walk animation with glTF channel/contact/loop checks and Wicked playback; lifecycle host/save integration can proceed in a non-overlapping isolated task. No full draft, scenery or 30 FPS acceptance is claimed. User-authorized validated publication is main on origin; earlier no-push statements and earlier validation/unfinished lists above are historical and superseded by synchronization authorization and this checkpoint. Keep unrelated logs and lifecycle.obj untouched.

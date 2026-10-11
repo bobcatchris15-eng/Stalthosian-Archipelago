@@ -1,4 +1,4 @@
-# The Stalthosian Archipelago — runtime construction
+# The Stalthosian Archipelago â€” runtime construction
 
 **Decided:** Wicked Engine, native C++17, Windows DX12. **Target:** a full draft with all five playable lives and all four islands. The current executable is an initial diagnostic host, not that completed draft.
 
@@ -41,7 +41,7 @@ Build outputs and logs live under `var/build/stalthos-runtime`. Each run creates
 
 `domain/foundation.hpp` separates responsive physical time from calendar scaling; provides body-relative steering, direct/destination/autonomous intent priority, separate body and camera stimuli, contact idempotence, deterministic region seeds, bounded retained identities, tree exceptions and hero-death continuity. Current heroes must use the explicit death transition; generic retirement/death cannot invalidate them. Six scenario groups cover these boundaries, including the independent review regressions.
 
-The host uses the shared clock, direct authority, heading and initial hero identity. Other foundation cases are exercised by console scenarios and are not yet visible gameplay. State remains in memory: disk save/load, atomic recovery, lifecycle/ecology/streaming, real creature anatomy/animation, water, authored geography and game UI remain to implement. The blockout's analytical ground following is not collision/navigation acceptance.
+The host uses the shared clock, direct authority, heading and initial hero identity. Other foundation cases are exercised by console scenarios and are not yet visible gameplay. The diagnostic host now saves and restores foundation inventories, clocks and a ground-projected marker pose. Full animal state, recovery beyond checked file replacement, connected lifecycle/ecology/streaming, real creature anatomy/animation, finished water/scenery and game UI remain incomplete. The blockout's analytical ground following is not collision/navigation acceptance.
 
 See `../PROJECT-BUILD-PLAN.md` for the complete draft coverage and dependency order, and `../.clanker/current-work.md` for durable work state. Representative scene quality, moving images and target GTX 1080/Ryzen performance remain acceptance gates.
 
@@ -54,4 +54,19 @@ Task launchers under `.clanker/tasks/opencode-lod-review` and `.clanker/tasks/op
 
 These dispatch permissions describe a cooperative worker boundary, not an operating-system sandbox. Inspect actual final events and exit status before treating a worker as successful.
 
-Verified 2026-10-11: a clean source compile under `var/build/wicked-fresh-release` published `var/vendor/wicked-fresh-release-cache`; the host rebuilt against it and rendered the baked Softbough GLB at 1920x1080. Evidence is under `var/reports/runtime/20261011-152740-b402c296`. `StalthosPersistence` adds tested bounded versioned DTO save files; host snapshot/save/load wiring and full region revision restoration are still pending. Run both native scenario executables through CTest.
+Verified 2026-10-11: a clean source compile under `var/build/wicked-fresh-release` published `var/vendor/wicked-fresh-release-cache`; the host rebuilt against it and rendered the baked Softbough GLB at 1920x1080. Evidence is under `var/reports/runtime/20261011-152740-b402c296`. `StalthosPersistence` adds tested bounded versioned DTO save files; the subsequent checkpoint below adds host diagnostic save/load and exact region revision restoration. Run all four native scenario executables through CTest.
+
+## Snapshot and landscape checkpoint â€” 2026-10-11
+
+STL2 saves preserve independent physical/calendar clocks, authoritative identity inventories and exact region revisions. STL1 remains readable with documented fallbacks. The diagnostic host accepts these explicit local options:
+
+```powershell
+./stalthos-runtime/scripts/Run.ps1 -Duration 6 -DiagnosticWalk -SaveState var/saves/draft.sav
+./stalthos-runtime/scripts/Run.ps1 -Duration 5 -LoadState var/saves/draft.sav -SaveState var/saves/draft.sav
+```
+
+The first actual two-process probe preserved the marker's x/z position and both saved clocks; calendar time continued from 5.831596699 to 10.669071901 seconds. Evidence: `var/reports/runtime-packet-three-continuity.json`. Save paths are restricted by the helper to this project's `var/`. The host requires a current live hero and recomputes the marker's vertical coordinate from the reference terrain; unsupported no-hero/vertical dynamics remain explicit limitations.
+
+`domain/reference_landscape.hpp` supplies a provisional 192m Main Island patch with aligned creek, shoulders and bluff, deterministic habitat/placement queries, and wet-ground vegetation exclusion. The host samples its terrain, imports eight Softbough shrub instances and draws a bounded creek surface. Rock geometry is still provisional. This is a composed reference fixture, not complete island coverage or final water/scene acceptance.
+
+The independently reviewed `domain/lifecycle.hpp` provides calendar-based hatchling/juvenile/adult/old/dead progression for five fictional profiles, terminal death and validated restore. Its pacing values are proposed draft defaults. This core is tested separately; it is not yet connected to the host or the save schema. Reproduction, parenting and needs remain unfinished. An actual toolkit Smalltrotter probe produced a 74-joint neutral GLB with zero animations; walk-cycle generation/export and Wicked actor playback are next.

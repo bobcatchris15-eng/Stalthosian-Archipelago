@@ -22,16 +22,25 @@ inline constexpr std::array<const char*, 5> heroSpeciesNames {
 // Calendar age/environment advances together. Input/contact consume physicalSeconds.
 struct TimeStep { double physicalSeconds; double calendarSeconds; };
 class SimCore {
+    double physical_ = 0;
     double calendar_ = 0;
 public:
+    static SimCore fromTimes(double physicalSeconds, double calendarSeconds) {
+        if (!std::isfinite(physicalSeconds) || physicalSeconds < 0 || !std::isfinite(calendarSeconds) || calendarSeconds < 0)
+            throw std::invalid_argument("invalid restored simulation time");
+        SimCore value; value.physical_ = physicalSeconds; value.calendar_ = calendarSeconds; return value;
+    }
+    double physicalSeconds() const { return physical_; }
     double calendarSeconds() const { return calendar_; }
     TimeStep advance(double physicalSeconds, double calendarScale = 1) {
         if (!std::isfinite(physicalSeconds) || physicalSeconds < 0 ||
             !std::isfinite(calendarScale) || calendarScale < 0)
             throw std::invalid_argument("invalid time step");
         double elapsed = physicalSeconds * calendarScale;
-        if (!std::isfinite(elapsed) || !std::isfinite(calendar_ + elapsed))
-            throw std::overflow_error("calendar overflow");
+        if (!std::isfinite(elapsed) || !std::isfinite(calendar_ + elapsed) ||
+            !std::isfinite(physical_ + physicalSeconds))
+            throw std::overflow_error("simulation time overflow");
+        physical_ += physicalSeconds;
         calendar_ += elapsed;
         return {physicalSeconds, elapsed};
     }
@@ -102,6 +111,20 @@ struct RetainedAnimal {
     Identity id; RegionId region; HeroSpecies species; RetentionReason reason;
     bool alive = true; bool active = false;
 };
+struct FoundationRegion {
+    RegionId region;
+    std::uint64_t revision;
+    std::vector<TreeException> trees;
+};
+struct FoundationSnapshot {
+    std::uint64_t seed = 0;
+    std::size_t retentionLimit = 64;
+    std::optional<std::pair<Identity, RegionId>> hero;
+    std::vector<std::pair<Identity, RegionId>> active;
+    std::vector<RetainedAnimal> retained;
+    std::vector<std::pair<Identity, RegionId>> deadHeroes;
+    std::vector<FoundationRegion> regions;
+};
 class StalthosState {
     struct Region { std::uint64_t revision = 0; std::map<Identity, TreeException> trees; };
     std::uint64_t seed_;
@@ -152,7 +175,12 @@ public:
     bool excluded(Identity id) const { return active_.count(id) || retained_.count(id) || deadHeroes_.count(id); }
     void setHero(Identity id, RegionId region) {
         if (hero_) throw std::logic_error("current hero must die before replacement");
-        if (!instantiate(id, region)) throw std::logic_error("hero identity unavailable");
+        auto active = active_.find(id);
+        if (active != active_.end()) {
+            auto retained = retained_.find(id);
+            if (active->second != region || retained == retained_.end() || !retained->second.alive || !retained->second.active || retained->second.region != region)
+                throw std::logic_error("hero identity unavailable");
+        } else if (!instantiate(id, region)) throw std::logic_error("hero identity unavailable");
         hero_ = id;
     }
     void heroDied() {
@@ -164,7 +192,11 @@ public:
     bool heroDeathKnown(Identity id) const { return deadHeroes_.count(id) != 0; }
     void recordTree(RegionId region, TreeException tree) {
         if (!std::isfinite(tree.changedAt) || tree.changedAt < 0) throw std::invalid_argument("invalid tree timestamp");
-        auto& r = regions_[region]; r.trees.insert_or_assign(tree.tree, tree); ++r.revision;
+        if (static_cast<unsigned>(tree.condition) > static_cast<unsigned>(TreeCondition::Dead)) throw std::invalid_argument("invalid tree condition");
+        auto found = regions_.find(region);
+        if (found != regions_.end() && found->second.revision == std::numeric_limits<std::uint64_t>::max())
+            throw std::overflow_error("region revision overflow");
+        auto& value = regions_[region]; value.trees.insert_or_assign(tree.tree, tree); ++value.revision;
     }
     RegionSnapshot regionSnapshot(RegionId region) const {
         RegionSnapshot s{regionSeed(region), 0, {}};
@@ -174,6 +206,75 @@ public:
     }
     bool snapshotCurrent(RegionId region, std::uint64_t revision) const {
         auto r = regions_.find(region); return revision == (r == regions_.end() ? 0 : r->second.revision);
+    }
+    FoundationSnapshot snapshot() const {
+        FoundationSnapshot result; result.seed = seed_; result.retentionLimit = retentionLimit_;
+        if (hero_) result.hero = std::make_pair(*hero_, active_.at(*hero_));
+        for (const auto& value : active_) result.active.push_back(value);
+        for (const auto& value : retained_) result.retained.push_back(value.second);
+        for (const auto& value : deadHeroes_) result.deadHeroes.push_back(value);
+        for (const auto& value : regions_) {
+            FoundationRegion region{value.first, value.second.revision, {}};
+            for (const auto& tree : value.second.trees) region.trees.push_back(tree.second);
+            result.regions.push_back(std::move(region));
+        }
+        return result;
+    }
+    static StalthosState fromSnapshot(const FoundationSnapshot& input) {
+        if (input.retentionLimit > 10'000 || input.retained.size() > input.retentionLimit ||
+            input.active.size() > 500'000 || input.deadHeroes.size() > 10'000 || input.regions.size() > 100'000)
+            throw std::invalid_argument("foundation snapshot exceeds bounds");
+        std::map<Identity, RegionId> active;
+        std::map<Identity, RetainedAnimal> retained;
+        std::map<Identity, RegionId> dead;
+        std::set<Identity> activeIds, retainedIds, deadIds;
+        for (const auto& value : input.active)
+            if (!activeIds.insert(value.first).second) throw std::invalid_argument("duplicate active identity");
+            else active.emplace(value);
+        for (const auto& value : input.retained) {
+            if (static_cast<unsigned>(value.species) > static_cast<unsigned>(HeroSpecies::Longstride) ||
+                static_cast<unsigned>(value.reason) > static_cast<unsigned>(RetentionReason::NotableEncounter) ||
+                (value.active && !value.alive)) throw std::invalid_argument("invalid retained status");
+            const bool isHero = input.hero && input.hero->first == value.id;
+            if (!retainedIds.insert(value.id).second) throw std::invalid_argument("duplicate retained identity");
+            if (isHero && (input.hero->second != value.region || !value.alive || !value.active))
+                throw std::invalid_argument("inconsistent retained hero");
+            if (value.active && (!active.count(value.id) || active.at(value.id) != value.region)) throw std::invalid_argument("active retained identity missing matching active record");
+            if (!value.active && active.count(value.id)) throw std::invalid_argument("inactive retained identity has active record");
+            if (active.count(value.id) && !value.active && !isHero) throw std::invalid_argument("conflicting retained identity");
+            if (!retained.emplace(value.id, value).second) throw std::invalid_argument("duplicate retained identity");
+        }
+        for (const auto& value : input.deadHeroes) {
+            const bool isRetained = retained.count(value.first) != 0;
+            if (!deadIds.insert(value.first).second || (!isRetained && (active.count(value.first) || (input.hero && input.hero->first == value.first))) || !dead.emplace(value).second)
+                throw std::invalid_argument("conflicting dead hero identity");
+            if (isRetained && (retained.at(value.first).region != value.second || retained.at(value.first).alive || retained.at(value.first).active))
+                throw std::invalid_argument("inconsistent retained dead hero");
+        }
+        std::map<RegionId, Region> regions;
+        std::size_t totalTrees = 0;
+        for (const auto& value : input.regions) {
+            if (regions.count(value.region) || value.trees.size() > 50'000 || value.trees.size() > 1'000'000 - totalTrees || value.revision < value.trees.size())
+                throw std::invalid_argument("invalid region snapshot");
+            totalTrees += value.trees.size();
+            Region region; region.revision = value.revision;
+            for (const auto& tree : value.trees) {
+                if (static_cast<unsigned>(tree.condition) > static_cast<unsigned>(TreeCondition::Dead) || !std::isfinite(tree.changedAt) || tree.changedAt < 0 ||
+                    !region.trees.emplace(tree.tree, tree).second) throw std::invalid_argument("invalid tree snapshot");
+            }
+            regions.emplace(value.region, std::move(region));
+        }
+        if (input.hero && (!active.count(input.hero->first) || active.at(input.hero->first) != input.hero->second)) throw std::invalid_argument("current hero missing active record");
+        for (const auto& value : input.active)
+            if (retained.count(value.first) && (!retained.at(value.first).active || retained.at(value.first).region != value.second))
+                throw std::invalid_argument("conflicting active and retained identity");
+        for (const auto& value : input.retained)
+            if (deadIds.count(value.id) && (value.alive || value.active)) throw std::invalid_argument("inconsistent retained dead hero");
+        StalthosState candidate(input.seed, input.retentionLimit);
+        candidate.active_ = std::move(active); candidate.retained_ = std::move(retained);
+        candidate.deadHeroes_ = std::move(dead); candidate.regions_ = std::move(regions);
+        if (input.hero) candidate.hero_ = input.hero->first;
+        return candidate;
     }
 private:
     std::map<Identity, RegionId> deadHeroes_; // Conspicuous exceptions; not remote biographies.

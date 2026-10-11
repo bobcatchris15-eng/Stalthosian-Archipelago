@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-lifecycle-review",
+  "status": "complete",
+  "base_revision": "28c1bdd0c468004c4c8c86096621a3f4f723b712",
+  "current_step": "Independent lifecycle review and correction",
+  "completed_steps": [
+    "Read task brief, project instructions, foundation TimeStep contract, and lifecycle implementation.",
+    "Validated profile values, transition logic, restoration, malformed inputs, overflow behavior, and state preservation.",
+    "Corrected physical time-step validation and pre-commit transition construction; strengthened Release-active tests and docs.",
+    "Compiled and ran standalone C++17 Release tests: 6/6 passed.",
+    "Wrote review receipt."
+  ],
+  "next_step": "Root integrates the three owned lifecycle files into CMake/host and performs integration checks.",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/lifecycle.hpp",
+    "stalthos-runtime/tests/lifecycle.cpp",
+    "stalthos-runtime/docs/lifecycle-draft.md"
+  ],
+  "validation": {
+    "evidence_path": ".clanker/tasks/luna-lifecycle-review/receipt.json",
+    "command": "MSVC C++17 optimized Release compile and standalone lifecycle test executable",
+    "passed": true
+  },
+  "blockers": [],
+  "assumptions": [
+    "physicalSeconds and calendarSeconds must both be finite and nonnegative."
+  ],
+  "receipt_path": ".clanker/tasks/luna-lifecycle-review/receipt.json",
+  "resume_instructions": "Review receipt.json and the three listed source files. Lifecycle unit tests passed in standalone MSVC Release mode. Root owns CMake/host integration; do not modify foundation, host, or CMake from this task.",
+  "updated": "2026-10-11T21:29:19Z"
+}

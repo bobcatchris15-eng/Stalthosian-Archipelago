@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "luna-snapshot-v2",
+  "status": "complete",
+  "base_revision": "28c1bdd0c468004c4c8c86096621a3f4f723b712",
+  "current_step": "implementation, Release validation, and receipt complete",
+  "completed_steps": [
+    "read brief and scoped ownership",
+    "read clinker role and schemas",
+    "inspect current domain and persistence implementation",
+    "implement SimCore physical accumulation and authoritative FoundationSnapshot export/transactional reconstruction",
+    "implement STL2 capture/write/read/restore bridge and STL1 compatibility reader",
+    "extend tests and documentation",
+    "configure and build DomainOnly Release with MSVC and pass CTest",
+    "write evidence and receipt"
+  ],
+  "next_step": "Root integrates the bounded source changes and runs host-level validation.",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/foundation.hpp",
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/tests/scenarios.cpp",
+    "stalthos-runtime/domain/README.md",
+    ".clanker/tasks/luna-snapshot-v2/task-state.json",
+    ".clanker/tasks/luna-snapshot-v2/evidence.md",
+    ".clanker/tasks/luna-snapshot-v2/receipt.json"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "cmake.exe --build var/build/luna-snapshot-v2 --config Release --parallel 4; ctest.exe --test-dir var/build/luna-snapshot-v2 -C Release --output-on-failure",
+    "evidence_path": ".clanker/tasks/luna-snapshot-v2/evidence.md"
+  },
+  "blockers": [],
+  "assumptions": [
+    "Legacy revision reconstruction counts each persisted tree override once because STL1 did not encode repeated updates to a tree.",
+    "HostPose camera mode accepts only unsigned values 0, 1, or 2."
+  ],
+  "receipt_path": ".clanker/tasks/luna-snapshot-v2/receipt.json",
+  "resume_instructions": "The bounded implementation is complete and Release CTest passed. Read receipt.json and evidence.md for exact acceptance and validation. Root owns integration and host-level save/load validation; do not modify root-owned host files from this worktree.",
+  "updated": "2026-10-11T21:25:00Z"
+}

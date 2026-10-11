@@ -1,0 +1,23 @@
+{
+  "task": "luna-runtime-review",
+  "base_head": "28c1bdd0c468004c4c8c86096621a3f4f723b712",
+  "source_hashes": {
+    "foundation_hpp": "e21204d4f7844f59bb8888b520b375efd8dd4d973e2a0cd2ca9886e711928e00",
+    "persistence_hpp": "f587c99594053458e0d2c789ca7fc9e118403858a1894c0876a89f43f289ed3d"
+  },
+  "validation": {
+    "compiler": "MSVC Visual Studio 2026 x64",
+    "flags": "/std:c++17 /EHsc /W4 /WX /permissive-",
+    "persistence": "8/8 passed",
+    "domain_scenarios": "7/7 passed",
+    "final_invariant_probe": "invalid enum and revision overflow rejected before mutation",
+    "actual_wicked_host": "not run by reviewer; root build pending"
+  },
+  "evidence": [
+    "var/review/luna-runtime-review/final_invariants.cpp",
+    "var/review/luna-runtime-review/final_invariants.exe",
+    "var/review/luna-runtime-review/persistence_final.exe",
+    "var/review/luna-runtime-review/scenarios_final.exe",
+    "var/review/luna-runtime-review/state_invariants.cpp"
+  ]
+}

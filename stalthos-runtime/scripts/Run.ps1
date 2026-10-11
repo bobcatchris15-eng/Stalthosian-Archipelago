@@ -1,5 +1,6 @@
 [CmdletBinding()]
-param([double]$Duration = 15, [string]$Plant = '', [switch]$Interactive)
+param([double]$Duration = 15, [string]$Plant = '', [switch]$Interactive,
+      [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $exe = Join-Path $root 'var/build/stalthos-runtime/Release/Stalthos.exe'
@@ -15,6 +16,22 @@ $start.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
 foreach ($arg in @('dx12','alwaysactive','--output',$output,'--duration',$Duration.ToString([Globalization.CultureInfo]::InvariantCulture))) { $start.ArgumentList.Add($arg) }
 if ($Plant) { $start.ArgumentList.Add('--plant'); $start.ArgumentList.Add((Resolve-Path $Plant).Path) }
 if ($Interactive) { $start.ArgumentList.Add('--interactive') }
+if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
+foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {
+    if (-not $stateOption[1]) { continue }
+    $statePath = [IO.Path]::GetFullPath($stateOption[1])
+    $stateRoot = [IO.Path]::GetFullPath((Join-Path $root 'var')).TrimEnd('\') + '\'
+    if (-not $statePath.StartsWith($stateRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Diagnostic save/load paths must stay inside this project var directory'
+    }
+    if ($stateOption[0] -eq '--load-state' -and -not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
+        throw "Load state is absent: $statePath"
+    }
+    if ($stateOption[0] -eq '--save-state') {
+        New-Item -ItemType Directory -Force (Split-Path $statePath) | Out-Null
+    }
+    $start.ArgumentList.Add($stateOption[0]); $start.ArgumentList.Add($statePath)
+}
 $process = [Diagnostics.Process]::Start($start)
 [ordered]@{process_id=$process.Id;executable=$exe;executable_sha256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant();evidence=$output;interactive=[bool]$Interactive;requested_seconds=$Duration} | ConvertTo-Json | Set-Content (Join-Path $output 'launch.json') -Encoding utf8
 Write-Output "Process $($process.Id); evidence $output"

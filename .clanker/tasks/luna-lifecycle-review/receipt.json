@@ -1,0 +1,65 @@
+{
+  "task_id": "luna-lifecycle-review",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "met": true,
+      "condition": "Five fictional profiles keyed by HeroSpecies expose explicit tunable defaults",
+      "how_checked": "Release console test compared all four durations and species key for all five profiles."
+    },
+    {
+      "met": true,
+      "condition": "Calendar progression, crossed transitions, terminal death, and physical/calendar separation",
+      "how_checked": "Release console tests covered accelerated calendar, unchanged physicalSeconds, one large jump through all four transitions, and repeated updates after death."
+    },
+    {
+      "met": true,
+      "condition": "Reject malformed profile/time and overflow without mutation",
+      "how_checked": "Release console tests rejected invalid enum construction, negative/nonfinite physical and calendar deltas, inconsistent restore, and same-instance age overflow while verifying state preservation."
+    },
+    {
+      "met": true,
+      "condition": "Validated restore with strong no-change-on-error",
+      "how_checked": "Release console test restored consistent adult state, rejected inconsistent age/stage pairs, then checked original species/age/stage remained intact."
+    },
+    {
+      "met": true,
+      "condition": "Reproduction, parenting, needs remain explicitly unfinished",
+      "how_checked": "Reviewed lifecycle.hpp stubs and lifecycle-draft.md unfinished section."
+    },
+    {
+      "met": true,
+      "condition": "Compile/run standalone offline tests in strict Release mode",
+      "how_checked": "MSVC developer environment: cl /nologo /std:c++17 /EHsc /W4 /O2 /DNDEBUG; executable output 6/6 tests passed."
+    },
+    {
+      "met": true,
+      "condition": "Keep changes within assigned files and provide integration-ready bounded result",
+      "how_checked": "git status --short shows only stalthos-runtime/docs/, domain/lifecycle.hpp, tests/lifecycle.cpp untracked from this task; no CMake, host, or foundation edits."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/lifecycle.hpp",
+    "stalthos-runtime/tests/lifecycle.cpp",
+    "stalthos-runtime/docs/lifecycle-draft.md"
+  ],
+  "evidence": [
+    "Release run output: PASS All Species Profiles Initialized; PASS Accelerated Calendar with physical seconds unchanged; PASS Big Jumps give all transitions exactly once; PASS Repeated Death is terminal; PASS Restored State validates age/stage; PASS Malformed Time and Overflow are rejected cleanly; 6/6 tests passed.",
+    "Compiler command: call \"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat\" >nul && cl /nologo /std:c++17 /EHsc /W4 /O2 /DNDEBUG /Fe:%TEMP%\\stalthos-lifecycle-review.exe \"E:\\Stalthosian Archipelago\\var\\worktrees\\jules-lifecycle-review\\stalthos-runtime\\tests\\lifecycle.cpp\" && %TEMP%\\stalthos-lifecycle-review.exe"
+  ],
+  "findings": [
+    "Lifecycle is still not wired to the native host or CMake; integration remains owned by root.",
+    "Jules source was initially untracked in this checkout; no semantic changes outside this bounded review were made."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Malformed physicalSeconds is rejected as an invalid TimeStep alongside calendarSeconds, consistent with the brief wording about invalid deltas.",
+    "An already-dead lifecycle ignores valid deltas and retains age; overflowing additions still reject before mutation."
+  ],
+  "cost": {
+    "tier": "medium Luna",
+    "retries": 1,
+    "wall_clock_s": 180,
+    "tokens": 0
+  }
+}

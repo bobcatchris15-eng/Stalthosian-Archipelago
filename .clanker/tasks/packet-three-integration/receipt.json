@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "task": "packet-three-integration",
+  "date": "2026-10-11",
+  "status": "reviewed and validated scoped construction packet",
+  "base_commit": "28c1bdd0c468004c4c8c86096621a3f4f723b712",
+  "worker_dispatches": 6,
+  "active_workers": 0,
+  "jules_session": "10020203100517924387",
+  "toolkit_tests": "1947 passed, 2 skipped in 490.94s; toolkit unchanged afterward",
+  "native_ctest": "4/4 passed in 0.16s",
+  "runtime_evidence": [
+    "20261011-162831-c61afcaa",
+    "20261011-162911-703ccf9d",
+    "20261011-163323-77453d7a",
+    "20261011-163334-01f8b546"
+  ],
+  "verified": [
+    "STL2 coherent foundation snapshots, independent clocks and exact region revision restore",
+    "actual two-process save/load continuity and horizontal pose preservation",
+    "actual corrupt load rejection with unchanged prior save SHA256",
+    "deterministic creek fixture with eight imported Softbough shrubs rendered in Wicked",
+    "isolated Jules lifecycle patch corrected, reviewed and tested locally",
+    "actual 74-joint neutral Smalltrotter export with zero animation clips"
+  ],
+  "remaining_acceptance": [
+    "animated creature gait/contact/deformation and Wicked playback",
+    "lifecycle host and save integration",
+    "needs, bonds, reproduction and ecology",
+    "five-life/four-island full draft",
+    "final scenery acceptance",
+    "external target-hardware 30 FPS capture"
+  ],
+  "save_scope": "diagnostic CLI clock/foundation/seed/horizontal marker pose/camera; excludes lifecycle age, needs and bonds",
+  "pose_vertical_policy": "recomputed terrain height; no vertical dynamics proof",
+  "next_task": "author/export Smalltrotter looping walk, verify animation channels/contact/loop then Wicked playback",
+  "artifacts": [
+    {
+      "path": "var/reports/toolkit-full-20261011-1608.log",
+      "sha256": "54e0f83360c9d4db4d6e89da8121226fbcff6b931b5b27b3bfd7f75aefb226c7",
+      "bytes": 2313
+    },
+    {
+      "path": "var/reports/runtime-packet-three-ctest.log",
+      "sha256": "041d2a30af2f430b37acd3579566396b6a199ac8fe9c0610bf2fa4d0750ebc8a",
+      "bytes": 562
+    },
+    {
+      "path": "var/reports/runtime-packet-three-build-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "var/reports/runtime-packet-three-continuity.json",
+      "sha256": "73a8ebad7935c084b97901f35f8d1b2f22668391ce709ca50d287297ec0036cc",
+      "bytes": 519
+    },
+    {
+      "path": "var/reports/runtime-packet-three-corrupt-load-receipt.json",
+      "sha256": "8335d0fb099fcc3e0dc2f009b14cd7a13b4fb8e9870aaa83f1a2d11c06bc9061",
+      "bytes": 168
+    },
+    {
+      "path": "var/reports/runtime/20261011-163323-77453d7a/draft-host.png",
+      "sha256": "22861585196cf34c06bd5f55055da46bc12f5febf5b868e657aa67da4cbfc036",
+      "bytes": 1126087
+    },
+    {
+      "path": "var/reports/jules-lifecycle-final.patch",
+      "sha256": "60842f553e0cebb406d50b5ac4727521953c9f2ded1becdcac1de4d48c27f74f",
+      "bytes": 14605
+    },
+    {
+      "path": "var/build/stalthos-runtime/build-receipt.json",
+      "sha256": "78d2832f28e21218a2cffcd2a7224adef6ff60d6576fe670cb22c6e52192f595",
+      "bytes": 695
+    }
+  ]
+}
