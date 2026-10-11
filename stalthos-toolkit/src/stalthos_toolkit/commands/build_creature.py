@@ -33,6 +33,7 @@ SUPPORTED_POSTURES = {"quadrupedal", "cursorial_quadruped"}
 def build_creature(ctx: Context) -> Status:
     status = ctx.new_status("build_creature")
     definition = ctx.load_definition(ctx.options.get("definition"))
+    PL.require_kind(definition, "creature", "build_creature")
     # A malformed definition is a usage error (exit 2), reported before the
     # external-tool check (exit 4); --dry-run never needs Blender at all.
     asset_id = ctx.options.get("asset_id") or definition.get("id") or "creature.unnamed"

@@ -105,6 +105,23 @@ def _stub_blender(tmp_path: Path, body: str) -> str:
     return str(launcher)
 
 
+#: commands whose definition must be of this kind (mirrors pipeline.require_kind)
+COMMAND_KIND = {
+    "generate_plant": "plant", "generate_plant_variants": "plant",
+    "build_creature": "creature", "rig_creature": "creature",
+    # the render/bake commands work from an existing master and accept either
+    "bake_materials": "plant", "render_turntable": "plant",
+    "render_growth_stages": "plant",
+}
+
+
+def definition_for(command: str, tmp_path: Path, name: str = "def.yaml") -> Path:
+    """The definition of the right *kind* for ``command`` (both validate)."""
+    if COMMAND_KIND.get(command) == "creature":
+        return FIXTURES.write(tmp_path / name, FIXTURES.creature_yaml())
+    return FIXTURES.write(tmp_path / name, FIXTURES.plant_yaml())
+
+
 # --------------------------------------------------------------------------- #
 # 1. Missing Blender -> exit 4, without Blender installed
 # --------------------------------------------------------------------------- #
@@ -112,7 +129,8 @@ def _stub_blender(tmp_path: Path, body: str) -> str:
     "generate_plant", "generate_plant_variants", "build_creature", "rig_creature",
     "bake_materials", "render_turntable", "render_growth_stages",
 ])
-def test_missing_blender_exits_4(command, workspace, definition, capsys):
+def test_missing_blender_exits_4(command, workspace, definition, tmp_path, capsys):
+    definition = definition_for(command, tmp_path)
     code = main(["--workspace", str(workspace.root), command,
                  "-d", str(definition), "--blender", MISSING_BLENDER])
     envelope = json.loads(capsys.readouterr().out)
@@ -489,6 +507,24 @@ def test_creature_shape_params_reads_schema_shares(workspace):
     assert juvenile["total_length_m"] / adult["total_length_m"] < 0.5
 
 
+@pytest.mark.parametrize("command,expected_kind", [
+    ("generate_plant", "plant"), ("generate_plant_variants", "plant"),
+    ("build_creature", "creature"), ("rig_creature", "creature"),
+])
+def test_wrong_definition_kind_is_exit_2(command, expected_kind, workspace, tmp_path, capsys):
+    """A creature definition must not silently become a plant (or vice versa)."""
+    other = "creature" if expected_kind == "plant" else "plant"
+    yaml = (FIXTURES.creature_yaml("creature.wrong.cr1") if other == "creature"
+            else FIXTURES.plant_yaml("plant.wrong.sp1"))
+    definition = FIXTURES.write(tmp_path / f"{other}.yaml", yaml)
+    code = main(["--workspace", str(workspace.root), command,
+                 "-d", str(definition), "--blender", MISSING_BLENDER])
+    envelope = json.loads(capsys.readouterr().out)
+    assert code == EXIT_USAGE, envelope
+    assert envelope["errors"][0]["kind"] == "UsageError"
+    assert expected_kind in envelope["errors"][0]["message"]
+
+
 def test_build_creature_exits_5_for_an_unsupported_posture(workspace, tmp_path, capsys):
     """A bipedal/serpentine plan is a declared contract with no implementation."""
     from stalthos_toolkit.core.errors import EXIT_NOT_IMPLEMENTED
@@ -579,7 +615,8 @@ def test_unimplemented_commands_still_exit_5():
 # 5. Dry-run planning never touches Blender or writes artifacts
 # --------------------------------------------------------------------------- #
 @pytest.mark.parametrize("command", ["generate_plant", "build_creature"])
-def test_dry_run_does_not_require_blender(command, workspace, definition, capsys):
+def test_dry_run_does_not_require_blender(command, workspace, definition, tmp_path, capsys):
+    definition = definition_for(command, tmp_path)
     code = main(["--workspace", str(workspace.root), command, "-d", str(definition),
                  "--blender", MISSING_BLENDER, "--dry-run"])
     envelope = json.loads(capsys.readouterr().out)

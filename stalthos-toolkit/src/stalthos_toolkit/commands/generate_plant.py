@@ -24,6 +24,7 @@ from ..core.status import Status
 def generate_plant(ctx: Context) -> Status:
     status = ctx.new_status("generate_plant")
     definition = ctx.load_definition(ctx.options.get("definition"))
+    PL.require_kind(definition, "plant", "generate_plant")
     # A malformed definition is a usage error (exit 2), reported before the
     # external-tool check (exit 4); --dry-run never needs Blender at all.
     asset_id = ctx.options.get("asset_id") or definition.get("id") or "plant.unnamed"

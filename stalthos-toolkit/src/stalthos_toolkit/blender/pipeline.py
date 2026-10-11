@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..core.contract import Context
-from ..core.errors import EXIT_EXTERNAL, ExternalToolFailed
+from ..core.errors import EXIT_EXTERNAL, ExternalToolFailed, UsageError
 from ..core.manifest import ArtifactRef, Manifest, Metric
 from ..core.status import Artifact, Status
 from . import params as P
@@ -20,6 +20,25 @@ from .runner import BlenderRun, blender_version, resolve_blender, run_blender
 
 #: Exit code used when Blender itself reports a structured failure.
 EXTERNAL = EXIT_EXTERNAL
+
+
+def require_kind(definition: dict, expected: str, command: str) -> str:
+    """Refuse a definition of the wrong kind.
+
+    The loader validates against whichever schema the file satisfies, so a
+    *creature* definition fed to ``generate_plant`` loads cleanly and would
+    otherwise be turned into a plausible-looking plant. That is a usage error
+    (exit 2), not something to paper over with defaults.
+    """
+    kind = str(definition.get("kind") or "").strip().lower()
+    if kind and kind != expected:
+        raise UsageError(
+            f"{command} expects a {expected} definition, but this one declares kind={kind!r}",
+            detail={"expected_kind": expected, "actual_kind": kind,
+                    "definition_id": definition.get("id")},
+            hint=f"pass a {expected} definition, or use the command that owns that kind",
+        )
+    return kind
 
 
 def require_blender(ctx: Context) -> str:
@@ -233,6 +252,7 @@ __all__ = [
     "prepare_outputs",
     "record_metrics",
     "require_blender",
+    "require_kind",
     "result_warnings",
     "run_script",
     "tool_versions",
