@@ -2,7 +2,7 @@
 param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
-      [switch]$InspectionCamera, [double]$CameraDistance = 8)
+      [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera)
 $ErrorActionPreference = 'Stop'
 if ($InspectionCamera -and -not $PSBoundParameters.ContainsKey('CameraDistance')) { $CameraDistance = 3 }
 if (-not [double]::IsFinite($CameraDistance) -or $CameraDistance -lt 2 -or $CameraDistance -gt 18) { throw 'CameraDistance must be 2..18 meters' }
@@ -52,6 +52,7 @@ $start.ArgumentList.Add('--camera-distance'); $start.ArgumentList.Add($CameraDis
 if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
 if ($DiagnosticReverseWalk) { $start.ArgumentList.Add('--diagnostic-reverse-walk') }
 if ($DiagnosticNeeds) { $start.ArgumentList.Add('--diagnostic-needs') }
+if ($DiagnosticCamera) { $start.ArgumentList.Add('--diagnostic-camera') }
 if ($SuccessorId) { $start.ArgumentList.Add('--successor-id'); $start.ArgumentList.Add($SuccessorId) }
 foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {
     if (-not $stateOption[1]) { continue }

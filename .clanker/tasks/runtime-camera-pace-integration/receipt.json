@@ -1,0 +1,25 @@
+{
+  "provisional_speed_m_s": 0.16128,
+  "status": "validated runtime integration",
+  "limitations": [
+    "Scripted probe bypasses actual mouse and keyboard input.",
+    "Full camera state persistence, audio, click raycast and TravelTo remain pending.",
+    "Slow authored stride is unsuitable for production traversal. Foot contact and reference appearance remain unaccepted."
+  ],
+  "schema_version": 1,
+  "idle_probe": "var/reports/runtime/20261012-155920-35b4a7f7/runtime-receipt.json",
+  "camera_probe": "var/reports/runtime/20261012-155808-1a96d620/runtime-receipt.json",
+  "performance_acceptance": false,
+  "reverse_probe": "var/reports/runtime/20261012-155855-49c12d1a/runtime-receipt.json",
+  "pace_worker_commit": "137001a6df23194800514e6cb9bc610cd767b85c",
+  "camera_probe_stage": 3,
+  "time": "2026-10-12T16:00:16.8441919-05:00",
+  "native_tests": "15/15 passed",
+  "visual_acceptance": false,
+  "interactive_input_acceptance": false,
+  "camera_worker_commits": [
+    "d7a6571",
+    "5269e1e"
+  ],
+  "detached_body_distance_m": 0.5524584650993347
+}

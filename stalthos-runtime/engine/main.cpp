@@ -7,6 +7,7 @@
 #include "domain/needs.hpp"
 #include "domain/reference_landscape.hpp"
 #include "domain/locomotion_clip.hpp"
+#include "domain/locomotion_pace.hpp"
 #include "domain/resource_ledger.hpp"
 #include "environment_scene.hpp"
 #include "shore_scene.hpp"
@@ -14,6 +15,7 @@
 #include "organic_rocks.hpp"
 #include "meadow_scene.hpp"
 #include "domain/camera_framing.hpp"
+#include "domain/hero_view_controller.hpp"
 #include <windows.h>
 #include <shellapi.h>
 #include <chrono>
@@ -96,20 +98,6 @@ stalthos::engine::TerrainSurfaceResult Terrain(wi::scene::Scene& scene) {
         scene.materials.GetComponent(subset.materialID)->SetUseVertexColors(true);
     return stalthos::engine::applyTerrainSurface(scene,ground,landscape,42);
 }
-void Camera(float x, float y, float z, int mode, double heading, double distance, bool inspection) {
-    using Framing=stalthos::domain::CameraFraming;
-    auto orbit=inspection?Framing::closeInspectionPreset(heading):Framing::followPreset(mode==1?Framing::kPi*.5:mode==2?0:Framing::kPi);
-    orbit.distance=distance;
-    const auto framing=Framing::computeFraming({x,y,z},heading,orbit,.8,[](double cx,double cz) {
-        if(!landscape.inBounds(cx,cz)) throw std::runtime_error("camera outside reference landscape");
-        return landscape.height(cx,cz);
-    });
-    XMVECTOR target = XMVectorSet(static_cast<float>(framing.target.x),static_cast<float>(framing.target.y),static_cast<float>(framing.target.z),1);
-    XMVECTOR eye = XMVectorSet(static_cast<float>(framing.eye.x),static_cast<float>(framing.eye.y),static_cast<float>(framing.eye.z),1);
-    auto view = XMMatrixLookAtLH(eye, target, XMVectorSet(0,1,0,0));
-    wi::scene::GetCamera().TransformCamera(XMMatrixInverse(nullptr, view));
-    wi::scene::GetCamera().UpdateCamera();
-}
 }
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     std::filesystem::path output = "run-evidence";
@@ -123,7 +111,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     double creatureSoleOffset = .652438;
     double cameraDistance = 8;
     bool inspectionCamera = false, cameraDistanceSpecified = false;
-    bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false;
+    bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -135,6 +123,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
             else if (key == L"--diagnostic-reverse-walk") diagnosticReverseWalk = true;
             else if (key == L"--diagnostic-needs") diagnosticNeeds = true;
+            else if (key == L"--diagnostic-camera") diagnosticCamera = true;
             else if (key == L"--output" && i+1 < argumentCount) output = argv[++i];
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
             else if (key == L"--creature" && i+1 < argumentCount) creature = argv[++i];
@@ -169,6 +158,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::SimCore clock;
         stalthos::StalthosState world(42);
         float x=12,z=0,yaw=0; int cameraMode=0;
+        stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
         stalthos::HeroSpecies heroSpecies=stalthos::HeroSpecies::Smalltrotter;
         std::optional<stalthos::Lifecycle> lifecycle;
@@ -187,7 +177,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             loadedPhysical = clock.physicalSeconds();
             if (data.pose) {
                 x=static_cast<float>(data.pose->position.x); z=static_cast<float>(data.pose->position.z);
-                yaw=static_cast<float>(data.pose->headingRadians); cameraMode=data.pose->cameraMode;
+                yaw=static_cast<float>(data.pose->headingRadians);
+                cameraMode=data.pose->cameraMode;
+                // HostPose cameraMode 0/1/2 represents legacy framing angles (0: behind, 1: broadside, 2: frontal).
+                // It does NOT indicate LocallyDetached mode. Full camera state (detached anchor, orbit, focus) is not persisted.
                 if (std::abs(x)>60 || std::abs(z)>60 || !std::isfinite(yaw))
                     throw std::runtime_error("saved pose is outside this diagnostic host's playable bounds");
             }
@@ -421,7 +414,39 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(creatureLoaded) creatureClip.emplace(creatureClipDuration,creatureStrideLength);
         double creaturePhase=0, creatureDistanceAccumulated=0, lastSignedBodyDistance=0, lastExpectedPhase=0;
 
-        bool previousInspectionKey = false;
+        bool previousInspectionKey = false, previousToggleKey = false;
+        uint64_t tetherTerrainConflictCount = 0;
+        int diagnosticCameraStage = 0;
+        uint64_t detachedCameraFrames = 0;
+        double detachedBodyDistance = 0;
+        {
+            auto state = viewController.getState();
+            if (inspectionCamera) {
+                state.orbit = stalthos::domain::CameraFraming::closeInspectionPreset(yaw);
+                state.orbit.distance = cameraDistance;
+            } else {
+                using Framing = stalthos::domain::CameraFraming;
+                state.orbit = Framing::followPreset(cameraMode==1 ? Framing::kPi*.5 : cameraMode==2 ? 0 : Framing::kPi);
+                if (cameraDistanceSpecified) state.orbit.distance = cameraDistance;
+            }
+            viewController.setState(state);
+        }
+        auto terrainSampler = [&](double cx, double cz) {
+            if (!landscape.inBounds(cx, cz)) throw std::runtime_error("camera outside reference landscape");
+            return landscape.height(cx, cz);
+        };
+        stalthos::domain::ControllerOutput cameraOut;
+        cameraOut.cameraState = stalthos::domain::CameraFraming::computeFraming(
+            {static_cast<double>(x), static_cast<double>(Ground(x, z)), static_cast<double>(z)},
+            yaw,
+            viewController.getState().orbit,
+            stalthos::domain::CameraFraming::kDefaultTargetHeight,
+            terrainSampler
+        );
+        cameraOut.currentFocus = viewController.getState().focus;
+        cameraOut.currentMode = viewController.getState().mode;
+        cameraOut.activeTravelDestination = std::nullopt;
+
         bool initialNeedsRecorded = false;
         double initialHunger = 0, initialThirst = 0, initialFatigue = 0;
         double initialCreekResource = getResourceRemaining(100), initialShrub0Resource = getResourceRemaining(200);
@@ -452,11 +477,37 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             float dt=static_cast<float>(std::min(.1,std::chrono::duration<double>(now-previous).count())); previous=now;
             if (!interactive && elapsed >= duration) break;
             bool focused=GetForegroundWindow()==window;
-            auto down=[&](int key){return focused && (GetAsyncKeyState(key)&0x8000)!=0;};
+            auto down=[&](int key){return interactive && focused && (GetAsyncKeyState(key)&0x8000)!=0;};
             if(down(VK_ESCAPE)) { userClosed=true; break; }
-            if(down(VK_F1)) cameraMode=0; if(down(VK_F2)) cameraMode=1; if(down(VK_F3)) cameraMode=2;
             bool heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
-            if(heroAlive && down('A')) yaw-=dt; if(heroAlive && down('D')) yaw+=dt;
+
+            const auto preFrameState = viewController.getState();
+            bool toggleKey = down(VK_F1);
+            if (toggleKey && !previousToggleKey) {
+                viewController.toggleDetachedMode({static_cast<double>(x), static_cast<double>(Ground(x, z)), static_cast<double>(z)});
+            }
+            previousToggleKey = toggleKey;
+            if (diagnosticCamera && elapsed >= 2 && diagnosticCameraStage == 0) {
+                viewController.applyOrbitInput(100, -20);
+                viewController.applyZoomInput(2);
+                diagnosticCameraStage = 1;
+            }
+            if (diagnosticCamera && elapsed >= 4 && diagnosticCameraStage == 1) {
+                viewController.toggleDetachedMode({x, Ground(x,z), z});
+                diagnosticCameraStage = 2;
+            }
+            if (diagnosticCamera && diagnosticCameraStage == 2) {
+                viewController.applyDetachedPan(1, 0, dt, {x, Ground(x,z), z});
+                if (elapsed >= 8) {
+                    viewController.toggleDetachedMode({x, Ground(x,z), z});
+                    diagnosticCameraStage = 3;
+                }
+            }
+
+            bool userSteering = viewController.getState().focus == stalthos::domain::InputFocus::BodySteering;
+            if (userSteering) {
+                if(heroAlive && down('A')) yaw-=dt; if(heroAlive && down('D')) yaw+=dt;
+            }
             const auto timeStep=clock.advance(dt,calendarScale);
             for(const auto transition:lifecycle->advance(timeStep)) {
                 const char* names[]={"hatchling","juvenile","adult","old","dead"};
@@ -464,7 +515,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<scene.animations.GetCount();++i) scene.animations[i].Pause(); }
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
-            bool walking = diagnosticWalk || diagnosticReverseWalk || down('W');
+            bool userWalk = userSteering && down('W');
+            bool userReverse = userSteering && down('S');
+            bool walking = diagnosticWalk || diagnosticReverseWalk || userWalk;
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
                 double targetX = x;
@@ -482,13 +535,36 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 while (diff < -pi) diff += 2 * pi;
                 yaw += static_cast<float>(diff * std::min(1.0, 5.0 * dt));
             }
-            heroIntent.setDirect(walking || down('S') || down('A') || down('D'));
-            float speed=heroAlive?(diagnosticReverseWalk?-2.f:walking?2.f:down('S')?-1.f:0.f):0.f;
-            auto forward=stalthos::BeastCore::bodyForward(yaw);
+            bool userSteerDirect = userSteering && (down('S') || down('A') || down('D') || down('W'));
+            heroIntent.setDirect(walking || userSteerDirect);
+            float speed = 0.f;
             const float previousX=x, previousZ=z;
-            x+=static_cast<float>(forward.x)*speed*dt; z+=static_cast<float>(forward.z)*speed*dt;
-            x=std::clamp(x,-60.f,60.f); z=std::clamp(z,-60.f,60.f);
+
+            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || userWalk;
+            const bool reverseIntent = diagnosticReverseWalk || (!forwardIntent && userReverse);
+            if (heroAlive && creatureLoaded) {
+                using Pace = stalthos::domain::LocomotionPace;
+                speed = static_cast<float>(Pace::calculate(creatureStrideLength, creatureClipDuration,
+                    reverseIntent ? Pace::Intent::Reverse : forwardIntent ? Pace::Intent::Forward : Pace::Intent::Idle).signedSpeed);
+            } else if (heroAlive) speed = reverseIntent ? -2.f : forwardIntent ? 2.f : 0.f;
+            if (speed != 0.f) {
+                auto forward=stalthos::BeastCore::bodyForward(yaw);
+                x+=static_cast<float>(forward.x)*speed*dt; z+=static_cast<float>(forward.z)*speed*dt;
+                x=std::clamp(x,-60.f,60.f); z=std::clamp(z,-60.f,60.f);
+            }
+            if (viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera) {
+                double panX = 0, panZ = 0;
+                if (down('W')) panZ -= 1.0;
+                if (down('S')) panZ += 1.0;
+                if (down('A')) panX -= 1.0;
+                if (down('D')) panX += 1.0;
+                viewController.applyDetachedPan(panX, panZ, dt, {static_cast<double>(x), static_cast<double>(Ground(x, z)), static_cast<double>(z)});
+            }
             const double actualDistance=std::hypot(static_cast<double>(x-previousX),static_cast<double>(z-previousZ));
+            if (viewController.getState().mode == stalthos::domain::CameraMode::LocallyDetached) {
+                ++detachedCameraFrames;
+                detachedBodyDistance += actualDistance;
+            }
             lastSignedBodyDistance=speed<0 ? -actualDistance : actualDistance;
             if(creatureClip) {
                 const auto advance=creatureClip->advance(creaturePhase,lastSignedBodyDistance);
@@ -518,13 +594,53 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     animation.timer=static_cast<float>(animation.start+creaturePhase);
                 } else if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
             }
-            if(interactive) {
+            if(interactive && focused) {
                 const bool inspectionKey=down('V');
-                if(inspectionKey && !previousInspectionKey) { inspectionCamera=!inspectionCamera; cameraDistance=inspectionCamera?3:8; }
+                if(inspectionKey && !previousInspectionKey) {
+                    inspectionCamera=!inspectionCamera;
+                    cameraDistance=inspectionCamera?3:8;
+                    auto state = viewController.getState();
+                    if (inspectionCamera) {
+                        state.orbit = stalthos::domain::CameraFraming::closeInspectionPreset(yaw);
+                    } else {
+                        using Framing = stalthos::domain::CameraFraming;
+                        state.orbit = Framing::followPreset(cameraMode==1 ? Framing::kPi*.5 : cameraMode==2 ? 0 : Framing::kPi);
+                    }
+                    state.orbit.distance = cameraDistance;
+                    viewController.setState(state);
+                }
                 previousInspectionKey=inspectionKey;
-                cameraDistance=stalthos::domain::CameraFraming::updateZoom(cameraDistance,wi::input::GetMouseState().delta_wheel);
+
+                auto mouseState = wi::input::GetMouseState();
+                if (mouseState.delta_wheel != 0) {
+                    viewController.applyZoomInput(mouseState.delta_wheel);
+                    cameraDistance = viewController.getState().orbit.distance;
+                }
+                if (mouseState.left_button_press) {
+                    viewController.applyOrbitInput(-mouseState.delta_position.x, mouseState.delta_position.y);
+                }
             }
-            Camera(x,y,z,cameraMode,yaw,cameraDistance,inspectionCamera); app.Run(); ++runCalls;
+
+            try {
+                auto terrainSampler = [&](double cx, double cz) {
+                    if (!landscape.inBounds(cx, cz)) throw std::runtime_error("camera outside reference landscape");
+                    return landscape.height(cx, cz);
+                };
+                stalthos::TimeStep viewDt{dt, dt * calendarScale};
+                cameraOut = viewController.update(viewDt, {static_cast<double>(x), static_cast<double>(y), static_cast<double>(z)}, yaw, terrainSampler);
+            } catch (const stalthos::domain::TetherTerrainConflictException&) {
+                ++tetherTerrainConflictCount;
+                viewController.setState(preFrameState);
+                // cameraOut preserves previous valid camera output
+            }
+
+            XMVECTOR target = XMVectorSet(static_cast<float>(cameraOut.cameraState.target.x), static_cast<float>(cameraOut.cameraState.target.y), static_cast<float>(cameraOut.cameraState.target.z), 1);
+            XMVECTOR eye = XMVectorSet(static_cast<float>(cameraOut.cameraState.eye.x), static_cast<float>(cameraOut.cameraState.eye.y), static_cast<float>(cameraOut.cameraState.eye.z), 1);
+            auto view = XMMatrixLookAtLH(eye, target, XMVectorSet(0, 1, 0, 0));
+            wi::scene::GetCamera().TransformCamera(XMMatrixInverse(nullptr, view));
+            wi::scene::GetCamera().UpdateCamera();
+
+            app.Run(); ++runCalls;
             if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
             if(!initialNeedsRecorded) {
                 initialNeedsRecorded = true;
@@ -692,15 +808,29 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"terrain_surface_applied",terrainSurface.applied()},{"terrain_surface_status",static_cast<int>(terrainSurface.status)},{"terrain_texture_width",terrainSurface.textureWidth},{"terrain_texture_bytes",terrainSurface.textureBytes},{"terrain_uv_vertices",terrainSurface.uvVertexCount},{"meadow_batch_objects",meadowCounts.batchObjectCount},{"meadow_tufts",meadowCounts.tuftCount},{"meadow_vertices",meadowCounts.vertexCount},{"meadow_triangles",meadowCounts.triangleCount},{"meadow_rejected_wet_samples",meadowCounts.rejectedWetSamples},{"organic_rock_objects",organicRockCounts.objectCount},{"organic_rock_triangles",organicRockCounts.triangleCount},{"inspection_camera",inspectionCamera},{"camera_distance_m",cameraDistance},
             {"shore_objects",shoreCounts.objectCount},{"shore_vertices",shoreCounts.vertexCount},{"shore_triangles",shoreCounts.triangleCount},{"shore_surface_triangles",shoreCounts.surfaceTriangleCount},{"shore_bed_triangles",shoreCounts.bedTriangleCount},{"shore_bank_triangles",shoreCounts.bankTriangleCount},
             {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
-            {"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
+            {"locomotion_pace_policy", "proposed one cycle per second, maximum one meter per second; proxy fallback two meters per second"},{"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},
-            {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected"},
+            {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected; full camera state (detached anchor, orbit, focus) not persisted in legacy host pose"},
             {"pose_vertical_policy","analytical ground projection; no saved vertical body dynamics"},
             {"save_path",saveState.u8string()},{"load_path",loadState.u8string()},
             {"host_pose",{{"x",x},{"z",z},{"heading_radians",yaw},{"camera_mode",cameraMode}}},
+            {"camera_mode", viewController.getState().mode == stalthos::domain::CameraMode::LocallyDetached ? "LocallyDetached" : "TetheredFollow"},
+            {"input_focus", viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera ? "FreeCamera" : "BodySteering"},
+            {"camera_eye", {{"x", wi::scene::GetCamera().Eye.x}, {"y", wi::scene::GetCamera().Eye.y}, {"z", wi::scene::GetCamera().Eye.z}}},
+            {"camera_requested_eye", {{"x", cameraOut.cameraState.eye.x}, {"y", cameraOut.cameraState.eye.y}, {"z", cameraOut.cameraState.eye.z}}},
+            {"camera_target", {{"x", cameraOut.cameraState.target.x}, {"y", cameraOut.cameraState.target.y}, {"z", cameraOut.cameraState.target.z}}},
+            {"camera_orbit_distance", viewController.getState().orbit.distance},
+            {"camera_tether_comfort_radius", viewController.getComfortRadius()},
+            {"camera_tether_hard_radius", viewController.getHardRadius()},
+            {"tether_terrain_conflicts", tetherTerrainConflictCount},
+            {"diagnostic_camera", diagnosticCamera}, {"diagnostic_camera_stage", diagnosticCameraStage},
+            {"detached_camera_frames", detachedCameraFrames}, {"body_distance_while_camera_detached_m", detachedBodyDistance},
+            {"pending_audio", "none"},
+            {"pending_travel_to", cameraOut.activeTravelDestination.has_value()},
+            {"pending_raycast", "none"},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","full camera controller state not persisted; audio, travel-to ground clicking and mouse raycast pending"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {
