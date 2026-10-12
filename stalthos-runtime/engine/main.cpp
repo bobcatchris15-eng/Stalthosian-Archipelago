@@ -9,6 +9,9 @@
 #include "domain/locomotion_clip.hpp"
 #include "environment_scene.hpp"
 #include "shore_scene.hpp"
+#include "terrain_surface.hpp"
+#include "organic_rocks.hpp"
+#include "domain/camera_framing.hpp"
 #include <windows.h>
 #include <shellapi.h>
 #include <chrono>
@@ -59,7 +62,7 @@ wi::ecs::Entity Box(wi::scene::Scene& scene, const std::string& name, XMFLOAT3 p
     transform->Scale(size); transform->Translate(position); transform->UpdateTransform();
     Color(scene, entity, color); return entity;
 }
-void Terrain(wi::scene::Scene& scene) {
+stalthos::engine::TerrainSurfaceResult Terrain(wi::scene::Scene& scene) {
     std::vector<XMFLOAT3> vertices;
     std::vector<uint32_t> indices;
     constexpr int count = 97;
@@ -89,20 +92,18 @@ void Terrain(wi::scene::Scene& scene) {
     groundMesh->CreateRenderData();
     for (auto& subset : groundMesh->subsets)
         scene.materials.GetComponent(subset.materialID)->SetUseVertexColors(true);
-    int rockIndex=0;
-    for (const auto& placement : landscape.placements()) {
-        using Kind=stalthos::domain::PlacementKind;
-        if (placement.kind!=Kind::Rock && placement.kind!=Kind::Boulder) continue;
-        float scale=static_cast<float>(placement.scale)*(placement.kind==Kind::Boulder?2.f:1.f);
-        Box(scene, "provisional outcrop rock " + std::to_string(rockIndex++),
-            {static_cast<float>(placement.x),static_cast<float>(placement.y)+scale*.4f,static_cast<float>(placement.z)},
-            {scale,scale*.4f,scale*.8f}, {.35f,.34f,.30f,1});
-    }
-
+    return stalthos::engine::applyTerrainSurface(scene,ground,landscape,42);
 }
-void Camera(float x, float y, float z, int mode) {
-    XMVECTOR target = XMVectorSet(x, y + 1.f, z, 1);
-    XMVECTOR eye = mode == 1 ? XMVectorSet(x+8,y+4,z,1) : mode == 2 ? XMVectorSet(x,y+4,z+8,1) : XMVectorSet(x,y+4,z-8,1);
+void Camera(float x, float y, float z, int mode, double heading, double distance, bool inspection) {
+    using Framing=stalthos::domain::CameraFraming;
+    auto orbit=inspection?Framing::closeInspectionPreset(heading):Framing::followPreset(mode==1?Framing::kPi*.5:mode==2?0:Framing::kPi);
+    orbit.distance=distance;
+    const auto framing=Framing::computeFraming({x,y,z},heading,orbit,.8,[](double cx,double cz) {
+        if(!landscape.inBounds(cx,cz)) throw std::runtime_error("camera outside reference landscape");
+        return landscape.height(cx,cz);
+    });
+    XMVECTOR target = XMVectorSet(static_cast<float>(framing.target.x),static_cast<float>(framing.target.y),static_cast<float>(framing.target.z),1);
+    XMVECTOR eye = XMVectorSet(static_cast<float>(framing.eye.x),static_cast<float>(framing.eye.y),static_cast<float>(framing.eye.z),1);
     auto view = XMMatrixLookAtLH(eye, target, XMVectorSet(0,1,0,0));
     wi::scene::GetCamera().TransformCamera(XMMatrixInverse(nullptr, view));
     wi::scene::GetCamera().UpdateCamera();
@@ -118,6 +119,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     double duration = 15;
     double calendarScale = 1.0;
     double creatureSoleOffset = .652438;
+    double cameraDistance = 8;
+    bool inspectionCamera = false, cameraDistanceSpecified = false;
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -125,6 +128,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         for (int i = 1; i < argumentCount; ++i) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
+            else if (key == L"--inspection-camera") inspectionCamera = true;
+            else if (key == L"--camera-distance" && i+1 < argumentCount) { cameraDistance=std::stod(argv[++i]); cameraDistanceSpecified=true; }
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
             else if (key == L"--diagnostic-reverse-walk") diagnosticReverseWalk = true;
             else if (key == L"--diagnostic-needs") diagnosticNeeds = true;
@@ -149,6 +154,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--duration" && i+1 < argumentCount) duration = std::stod(argv[++i]);
         }
         LocalFree(argv); argv = nullptr;
+        if(inspectionCamera && !cameraDistanceSpecified) cameraDistance=3;
+        if(!std::isfinite(cameraDistance) || cameraDistance<2 || cameraDistance>18) throw std::runtime_error("camera distance must be 2..18 meters");
         if (!std::isfinite(duration) || duration <= 0 || duration > 120) throw std::runtime_error("diagnostic duration must be 0..120 seconds");
         if (!std::isfinite(calendarScale) || calendarScale < 0 || calendarScale > 10000) throw std::runtime_error("calendar scale must be 0..10000");
         if (!std::isfinite(creatureSoleOffset) || creatureSoleOffset < 0 || creatureSoleOffset > 5) throw std::runtime_error("creature sole offset must be 0..5 meters");
@@ -244,7 +251,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         app.setFrameRateLock(false); app.setFrameSkip(false); app.SetWindow(window);
         app.Initialize(); wi::initializer::WaitForInitializationsToFinish();
         auto& scene = wi::scene::GetScene();
-        Terrain(scene);
+        const auto terrainSurface=Terrain(scene);
+        const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
         size_t importedObjects = 0, importedInstances = 0;
@@ -370,6 +378,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(creatureLoaded) creatureClip.emplace(creatureClipDuration,creatureStrideLength);
         double creaturePhase=0, creatureDistanceAccumulated=0, lastSignedBodyDistance=0, lastExpectedPhase=0;
 
+        bool previousInspectionKey = false;
         bool initialNeedsRecorded = false;
         double initialHunger = 0, initialThirst = 0, initialFatigue = 0;
         double initialCreekResource = creekResource, initialShrub0Resource = shrubResources.empty() ? 0 : shrubResources[0];
@@ -465,7 +474,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     animation.timer=static_cast<float>(animation.start+creaturePhase);
                 } else if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
             }
-            Camera(x,y,z,cameraMode); app.Run(); ++runCalls;
+            if(interactive) {
+                const bool inspectionKey=down('V');
+                if(inspectionKey && !previousInspectionKey) { inspectionCamera=!inspectionCamera; cameraDistance=inspectionCamera?3:8; }
+                previousInspectionKey=inspectionKey;
+                cameraDistance=stalthos::domain::CameraFraming::updateZoom(cameraDistance,wi::input::GetMouseState().delta_wheel);
+            }
+            Camera(x,y,z,cameraMode,yaw,cameraDistance,inspectionCamera); app.Run(); ++runCalls;
             if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
             if(!initialNeedsRecorded) {
                 initialNeedsRecorded = true;
@@ -606,6 +621,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"successor_selected",successorId.has_value()},{"successor_id",successorId.value_or(0)},
             {"successor_prior_dead_hero_id",successorPriorDeadId},{"successor_prior_death_truth_preserved",successorDeathTruthPreserved},
             {"successor_saved_prior_death_truth_preserved",successorSavedDeathTruthPreserved},{"saved_dead_hero_count",savedDeadHeroCount},
+            {"terrain_surface_applied",terrainSurface.applied()},{"terrain_surface_status",static_cast<int>(terrainSurface.status)},{"terrain_texture_width",terrainSurface.textureWidth},{"terrain_texture_bytes",terrainSurface.textureBytes},{"terrain_uv_vertices",terrainSurface.uvVertexCount},{"organic_rock_objects",organicRockCounts.objectCount},{"organic_rock_triangles",organicRockCounts.triangleCount},{"inspection_camera",inspectionCamera},{"camera_distance_m",cameraDistance},
             {"shore_objects",shoreCounts.objectCount},{"shore_vertices",shoreCounts.vertexCount},{"shore_triangles",shoreCounts.triangleCount},{"shore_surface_triangles",shoreCounts.surfaceTriangleCount},{"shore_bed_triangles",shoreCounts.bedTriangleCount},{"shore_bank_triangles",shoreCounts.bankTriangleCount},
             {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
             {"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},

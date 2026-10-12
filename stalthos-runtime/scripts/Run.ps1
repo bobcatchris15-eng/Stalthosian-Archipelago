@@ -1,8 +1,11 @@
 [CmdletBinding()]
 param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
-      [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk)
+      [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
+      [switch]$InspectionCamera, [double]$CameraDistance = 8)
 $ErrorActionPreference = 'Stop'
+if ($InspectionCamera -and -not $PSBoundParameters.ContainsKey('CameraDistance')) { $CameraDistance = 3 }
+if (-not [double]::IsFinite($CameraDistance) -or $CameraDistance -lt 2 -or $CameraDistance -gt 18) { throw 'CameraDistance must be 2..18 meters' }
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $exe = Join-Path $root 'var/build/stalthos-runtime/Release/Stalthos.exe'
 if (-not (Test-Path $exe)) { throw 'Runtime executable absent; run Build.ps1' }
@@ -44,6 +47,8 @@ if ($Creature) { $start.ArgumentList.Add('--walk-duration'); $start.ArgumentList
 if ($CalendarScale -ne 1) { $start.ArgumentList.Add('--calendar-scale'); $start.ArgumentList.Add($CalendarScale.ToString([Globalization.CultureInfo]::InvariantCulture)) }
 if ($Creature) { $start.ArgumentList.Add('--creature-sole-offset'); $start.ArgumentList.Add($CreatureSoleOffset.ToString([Globalization.CultureInfo]::InvariantCulture)) }
 if ($Interactive) { $start.ArgumentList.Add('--interactive') }
+if ($InspectionCamera) { $start.ArgumentList.Add('--inspection-camera') }
+$start.ArgumentList.Add('--camera-distance'); $start.ArgumentList.Add($CameraDistance.ToString([Globalization.CultureInfo]::InvariantCulture))
 if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
 if ($DiagnosticReverseWalk) { $start.ArgumentList.Add('--diagnostic-reverse-walk') }
 if ($DiagnosticNeeds) { $start.ArgumentList.Add('--diagnostic-needs') }

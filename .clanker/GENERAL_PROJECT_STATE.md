@@ -68,3 +68,27 @@ Ledger is foundation only: actual runtime resource save/restore is still missing
 All prior Jules sessions are integrated; do not reretrieve5999252246045191178.
 Next concrete tasks: persistent host resource ledger integration and visual
 refinement of creature proportions/surfacing and terrain/vegetation composition.
+
+## Reviewed runtime checkpoint — 2026-10-12 06:51 America/Chicago
+
+Native terrain surface, organic rocks and inspection framing are integrated locally.
+Release build passed and CTest passed 13/13. Actual capture:
+var/reports/runtime/20261012-064940-5472f335/draft-host.png;
+receipt confirms 512x512 terrain texture (1048576 bytes), 9409 UV vertices,
+14 organic rock objects / 1120 triangles, inspection distance 3 m, and signed
+animation phase matching distance. V toggles inspection and mouse wheel zooms;
+three existing direction modes remain. Continuous interactive orbit, detachment,
+tether/audio and full HeroView are not implemented. The single-mip terrain texture
+still requires distant shimmer assessment. No visual or performance acceptance.
+
+Smalltrotter candidate 49ae3f9 corrects inward ellipsoid winding and cream mask,
+preserving vertices and contact-pad indices. Actual Blender build/rig/render
+passed; full root toolkit regression is running (session28752, started06:49).
+Do not publish toolkit source until var/reports/packet-nine-form-full-result.json
+confirms exit0 and source hashes still match packet-nine-form-source-hashes.json.
+Current proxy seams, coarse skin patches and limbs remain major visual gaps.
+Jules17364966271135416495 remains pending STL5/resource host persistence;
+retrieve in isolation, review and merge its main.cpp changes without overwriting
+local camera/terrain/rock integration. Earlier Jules sessions are integrated.
+Five local scopes and one separate remote dispatch used this wake; one local
+review dispatch remains. Deadline07:01; preserve running regression if necessary.

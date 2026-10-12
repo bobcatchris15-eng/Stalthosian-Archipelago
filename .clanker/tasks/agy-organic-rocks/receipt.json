@@ -1,0 +1,55 @@
+{
+  "task_id": "agy-organic-rocks",
+  "worktree": "var/worktrees/agy-organic-rocks",
+  "branch": "codex/agy-organic-rocks",
+  "base_commit": "078c9d63316bd1c44f52794a3714429b83194e74",
+  "outcome": "implemented populateOrganicRocks procedural rock mesh generator consuming ReferenceLandscape Rock and Boulder placements with Wicked outward winding, shared EnvironmentPalette Rock PBR material, terrain contact grounding, and bounded counts; verified via minimal translation unit compilation",
+  "owned_paths": [
+    "stalthos-runtime/engine/organic_rocks.hpp",
+    "stalthos-runtime/docs/organic-rocks.md",
+    ".clanker/tasks/agy-organic-rocks/receipt.json"
+  ],
+  "implementation_details": {
+    "helper": "stalthos::engine::populateOrganicRocks(wi::scene::Scene&, const domain::ReferenceLandscape&, std::uint64_t seed = 1)",
+    "pascal_alias": "stalthos::engine::PopulateOrganicRocks",
+    "counts_struct": "stalthos::engine::OrganicRockCounts",
+    "geometry": {
+      "base": "Subdivided icosahedron with 4 sub-triangles per base face",
+      "vertices_per_mesh": 42,
+      "triangles_per_mesh": 80,
+      "silhouette": "Irregular, flattened oblate height with horizontal bedding plane asymmetry and radial perturbation, non-box",
+      "hard_cap_objects": 128,
+      "reference_patch_counts": {
+        "seed_1_objects": 22,
+        "seed_1_rocks": 17,
+        "seed_1_boulders": 5,
+        "seed_1_vertices": 924,
+        "seed_1_triangles": 1760
+      }
+    },
+    "winding_and_normals": "Reuses detail::addOrientedTriangle from engine/environment_scene.hpp to guarantee Wicked Engine outward winding convention cross(p2-p0, p1-p0); computes smooth normals via COMPUTE_NORMALS_SMOOTH_FAST with no zero-area pole degeneracy",
+    "ground_fit": "Uses detail::groundContactOffset and rotatePropVertex to sample terrain elevation across all rock vertices and seat the bottom stably on the reference ground",
+    "materials": {
+      "shared_material": "scenery_mat_organic_rock evaluated from domain::EnvironmentPalette::evaluate(SceneryMaterialRole::Rock, seed)",
+      "properties": "Non-metal dielectric (metalness 0.0), rough mineral texture (roughness 0.70-0.88), muted weathered mineral tones"
+    }
+  },
+  "verification": {
+    "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36243 for x64",
+    "mode": "Minimal translation unit compilation against actual Wicked Engine headers",
+    "command": "cl /c /EHsc /utf-8 /std:c++17 /arch:AVX /D_WINDOWS /DNDEBUG /DWICKED_CMAKE_BUILD /DUNICODE /D_UNICODE -Ivar/vendor/WickedEngine/WickedEngine -Ivar/vendor/WickedEngine/Editor -Istalthos-runtime",
+    "exit_code": 0
+  },
+  "source_sha256": {
+    "stalthos-runtime/engine/organic_rocks.hpp": "a0c19ea6c2dd0c26abcb1875e96717e215a0fc212dc06ca5cdaa0723290b2931",
+    "stalthos-runtime/docs/organic-rocks.md": "48ff4fe3f6a28da89633ba214a32c7eda8df584acf398d9c818e12e6214e23ab"
+  },
+  "root_wiring_instructions": "In engine/main.cpp, include engine/organic_rocks.hpp, remove the old provisional box rock loop in Terrain(), and invoke stalthos::engine::populateOrganicRocks(scene, landscape, world.worldSeed()).",
+  "limitations": [
+    "No final optics or photographic visual claims are made; primary reference is a natural rocky meadow.",
+    "No 30 FPS acceptance or runtime hardware benchmark claims are made; requires integration and capture by root.",
+    "Ground fit is exact at sampled vertices against the analytic ReferenceLandscape height function, not a continuous collision test.",
+    "Did not edit engine/main.cpp, Run.ps1, CMakeLists.txt, tests, or other headers.",
+    "Preserved unrelated work."
+  ]
+}

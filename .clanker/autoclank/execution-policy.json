@@ -23,7 +23,9 @@
   "max_active_local_workers": 3,
   "max_active_jules_workers": 3,
   "jules_daily_dispatch_ceiling": 100,
-  "pending_jules_sessions": [],
+  "pending_jules_sessions": [
+    "17364966271135416495"
+  ],
   "max_active_agy_workers": 3,
   "agy_dispatch_pool": "Separate Antigravity pool authorized by user 2026-10-11; up to three concurrent agy tasks, independent of native and Jules concurrency pools.",
   "agy_model_family": "Gemini 3.8 Flash",

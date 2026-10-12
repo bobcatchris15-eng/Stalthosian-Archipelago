@@ -1,0 +1,41 @@
+{
+  "task": "review-camera-framing",
+  "base": "078c9d6",
+  "result": "fixed front-three-quarter preset, overflow-safe interpolation and zoom, bounded height inputs, and explicit terrain sample failure; narrowed claims to provisional helper scope",
+  "findings": [
+    "closeInspectionPreset previously used heading + 0.75*pi, which computes behind the animal under the +Z-forward and (sin(azimuth), cos(azimuth)) convention; changed to +0.25*pi and tested positive forward dot product.",
+    "interpolateScalar previously formed current-target and overflowed for opposite extreme finite values; changed to weighted blend and tested DBL_MAX endpoints.",
+    "interpolateAngle now normalizes both finite inputs before subtraction, avoiding subtraction overflow; tested opposite extreme finite angles.",
+    "Target height and terrain clearance now have documented provisional bounds [0,20]m and [0,10]m and reject negatives/out-of-range values.",
+    "Non-finite or out-of-bounds terrain callback heights now fail explicitly instead of silently skipping the clearance claim.",
+    "Zoom rejects overflow in wheelDelta*zoomSpeed before clamping."
+  ],
+  "checks": [
+    {
+      "command": "cmd.exe /d /s /c 'call \"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && cl /nologo /std:c++17 /EHsc /O2 /W4 /WX /permissive- /DNDEBUG /I stalthos-runtime stalthos-runtime/tests/camera_framing.cpp'",
+      "result": "passed"
+    },
+    {
+      "command": "./camera_framing.exe",
+      "result": "passed: All CameraFraming tests passed successfully under active NDEBUG."
+    }
+  ],
+  "files": [
+    {
+      "path": "stalthos-runtime/domain/camera_framing.hpp",
+      "sha256": "1B97DC0BA9167C3A49C5C1B797F3EBED471BDBDBB46F383DDB6F0148F7F49544"
+    },
+    {
+      "path": "stalthos-runtime/tests/camera_framing.cpp",
+      "sha256": "6B13D697D915FB955C2A1527AAAF20EC4044E18EC734B985900E160798E24CA3"
+    },
+    {
+      "path": "stalthos-runtime/docs/camera-framing.md",
+      "sha256": "70841215FA89E16D1A526FD688DB062ED338D22AA07E767C46AB6E3A17411FE4"
+    }
+  ],
+  "limitations": [
+    "The helper remains unwired to the Wicked host; no integration or player-facing visual acceptance is claimed.",
+    "Terrain callback clearance only validates the sampled eye location; it does not provide raycast occlusion or mesh collision."
+  ]
+}
