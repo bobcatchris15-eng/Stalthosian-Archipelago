@@ -1,0 +1,28 @@
+{
+  "runtime_runs": [
+    "20261012-113703-3ea9fd55",
+    "20261012-113847-0aa96827"
+  ],
+  "artifact_hashes_verified": 18,
+  "command_statuses": [
+    "build oktrue exit0",
+    "rig oktrue exit0",
+    "render oktrue exit0"
+  ],
+  "fresh_workspace": "var/smalltrotter-connected-verified-asset",
+  "remaining": [
+    "foot cuffs/disc shape",
+    "torso joins",
+    "face/bristle shape",
+    "gait cadence",
+    "full draft",
+    "30 FPS"
+  ],
+  "focused": "10 passed",
+  "toolkit_full": "1985 passed, 2 skipped in 584.79s",
+  "task_id": "agy-anatomy-visual-correction",
+  "status": "reviewed validated incremental anatomy correction",
+  "visual_acceptance": "incremental disc removal verified; final creature parity unaccepted",
+  "source_commit": "58c1865",
+  "finished": "2026-10-12T11:46:42.8260292-05:00"
+}

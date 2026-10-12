@@ -226,7 +226,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     limb_chains: dict[str, dict[str, list[mathutils.Vector]]] = {}
     pad_bottoms: dict[str, float] = {}
     # fore at t=0.82 of the trunk, hind at t=0.16 (quadruped plan)
-    for label, t, is_fore in (("front_left", 0.80, True), ("front_right", 0.80, False),
+    for label, t, is_fore in (("front_left", 0.80, True), ("front_right", 0.80, True),
                               ("rear_left", 0.16, False), ("rear_right", 0.16, False)):
         anchor, depth, width = trunk_point(t)
         sign = 1.0 if label.endswith("left") else -1.0
@@ -240,25 +240,26 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         foot = ankle + mathutils.Vector((0.0, 0.0, -max(0.02, stance * 0.06)))
         limb_path = [hip, hip + upper_dir * upper * 0.5, knee, knee + (ankle - knee) * 0.5, ankle]
         if reference_form:
-            # Weight-bearing columns stay broad through the knee, then ease
-            # into the ankle instead of collapsing into a cone.
-            limb_r = [leg_r * 1.80, leg_r * 1.72, leg_r * 1.48, leg_r * 1.28, leg_r * 1.05]
+            # A single continuous skin sweep carries the mass from deep inside the trunk
+            # through the muscular shoulder/haunch and tapers gracefully to the ankle.
+            # The authored hip, knee, ankle, and pad vertices stay strictly unchanged.
+            embedded_root = anchor + side * 0.35 + mathutils.Vector((
+                trunk_len * (0.01 if is_fore else -0.02),
+                0.0,
+                depth * (0.04 if is_fore else 0.06),
+            ))
+            surface_path = [embedded_root, hip, hip + upper_dir * upper * 0.5, knee, knee + (ankle - knee) * 0.5, ankle]
+            if is_fore:
+                depth_r = [leg_r * 1.35, leg_r * 1.60, leg_r * 1.28, leg_r * 1.02, leg_r * 0.82, leg_r * 0.68]
+                width_r = [leg_r * 1.10, leg_r * 1.25, leg_r * 1.08, leg_r * 0.90, leg_r * 0.76, leg_r * 0.62]
+            else:
+                depth_r = [leg_r * 1.48, leg_r * 1.82, leg_r * 1.42, leg_r * 1.10, leg_r * 0.86, leg_r * 0.70]
+                width_r = [leg_r * 1.18, leg_r * 1.32, leg_r * 1.15, leg_r * 0.94, leg_r * 0.78, leg_r * 0.64]
+            REF.add_tapered_limb(body, surface_path, depth_r, width_r,
+                                 sides=max(12, sides - 2), samples_per_segment=4)
         else:
             limb_r = [leg_r * 1.25, leg_r * 1.12, leg_r * 0.95, leg_r * 0.7, leg_r * 0.6]
-        _elliptical_tube(body, limb_path, limb_r, [r * 0.92 for r in limb_r], sides=max(5, sides - 2))
-        if reference_form:
-            # Soft shoulder/haunch muscle bellies make the limb root flow into
-            # the trunk; a shorter distal mass retains a visible joint taper.
-            limb_axis = _unit(upper_dir)
-            across = mathutils.Vector((1.0, 0.0, 0.0))
-            depth_axis = _unit(limb_axis.cross(across))
-            muscle_axes = (tuple(limb_axis), tuple(across), tuple(depth_axis))
-            REF.add_ellipsoid(body, hip + upper_dir * (upper * 0.30),
-                              (upper * 0.30, leg_r * 1.80, leg_r * 1.65), axes=muscle_axes,
-                              segments=16, rings=12)
-            REF.add_ellipsoid(body, hip + upper_dir * (upper * 0.76),
-                              (upper * 0.20, leg_r * 1.38, leg_r * 1.30), axes=muscle_axes,
-                              segments=14, rings=10)
+            _elliptical_tube(body, limb_path, limb_r, [r * 0.92 for r in limb_r], sides=max(5, sides - 2))
         # foot pad
         pad_start = len(body.verts)
         if reference_form:

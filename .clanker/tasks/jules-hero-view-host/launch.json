@@ -1,0 +1,11 @@
+{
+  "owned_paths": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/docs/hero-view-host.md",
+    "stalthos-runtime/tests/hero_view_controller.cpp"
+  ],
+  "session_id": "9731068007906336510",
+  "status": "dispatched unvalidated",
+  "started": "2026-10-12T11:39:41.4483546-05:00",
+  "base": "4be6094"
+}

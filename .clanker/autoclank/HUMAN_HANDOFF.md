@@ -422,3 +422,38 @@ is written but NOTdispatched: 0.16128m/2s clip plus2m/s host speed can produce
 roughly12cycles/sec; mathematical phase matching is not natural gait acceptance.
 Five currentwake dispatches used; stop active work by11:11. No accepted full draft,
 referenceparity, or30FPS. No paidAPI/credential/release/deploy actions taken.
+## Verified anatomy promotion and active tasks — 2026-10-12 11:46 America/Chicago
+
+Collected AGY anatomy correction frozen58c1865. Parent independently rebuilt,
+rigged and rendered from isolated toolkit cwd PYTHONPATH=src into fresh
+var/smalltrotter-connected-verified-asset. All3commands oktrue/exit0; all18
+artifact hashes verified. Fresh090/front/opposite-side previews remove girdle
+discs and show tapered limbs. Remaining torso/foot seams, ankle cuffs/disc feet,
+face and bristle shape are provisional, not reference parity.
+Root full offline suite1985passed2skipped584.79s; tested3source hashes stayed
+frozen. Post-suite only trailingblankEOF cleanup in testfile/doc; focused10pass.
+Fresh native motion capture20261012-113703-3ea9fd55 imports exactnewGLB and
+phase expected/actual agree; idle20261012-113847-0aa96827 holds phase0.
+Rig finalfeature skin unassigned0 (initial auto-weight warning stale), source
+joint maxerror0, loop/root/contact/touchdown/GLB gatespassed;20mmunchanged.
+Cadence remains ~12.4cycles/sec at2m/s and0.16128mstride; visuallyunaccepted.
+Graph refreshed partial157zero-nodefiles/communitylabeldrift, notsemanticproof.
+
+Active isolated workers (4dispatches thiswake, deadline12:07Central):
+- Jules8626272896036565583: gaitcadence analysisonly, ownednewdoc. Collect in
+  isolation, distinguish source-derived suggestions from actualruntime evidence.
+- Jules9731068007906336510: HeroView hostintegration, ownedmain.cpp/doc/optional
+  existingcontrollertest. Must reviewthreeway againstlatestmain, nativebuild,
+  tests and realcontrols/runtime proof before anyintegration. Audio/TravelTo/
+  raycast remainpending. No automaticpromotion.
+- AGYagy-smalltrotter-foot-form, isolatedvar/worktrees/smalltrotter-foot-form,
+  base58c1865, Flashmedium. Owncreature.py/optionaltest/newfootdoc. Actualunique
+  workspacevar/smalltrotter-foot-form-asset. Deadline11:58/18minmax. Address
+  bootanklecuffs anddiscfeet, preservebonegraph/bodyheight/20mmgates. Collect
+  frozencommit, inspectrealnewrender/contactmetrics, fullroottests beforepublish.
+Native read-onlyLunalowreviewcomplete; itsfront_rightTruefindingwasincorrect
+(bothfrontlimbsnowcorrectlyuseTrue), parentrejectedthatfinding. Framefallback/
+both-axisbounds remaincoveragegaps, notobserved currentfailure. Noeditsfromreview.
+AlloldJules5999252246045191178/17364966271135416495/12663720658277222606
+alreadyintegrated: doNOTreretrieve. No full draft/referenceparity/30FPSacceptance.
+Planningreadonly; unrelateduntrackedpreserved. No paidAPI/credentials/release/deploy.
