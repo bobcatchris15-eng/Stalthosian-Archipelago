@@ -32,6 +32,7 @@ import _stalthos as S
 S.bootstrap()
 
 import _materials as MAT  # noqa: E402
+import _creature_materials as CREATURE_MAT  # noqa: E402
 import anatomy_pose as POSE  # noqa: E402
 import reference_anatomy as REF  # noqa: E402
 
@@ -492,29 +493,38 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         rig_source, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
     with report.time("materials"):
-        skin = MAT.build_procedural_material("creature_skin", "skin", seed=p["seed"],
-                                             subsurface=0.12)
-        MAT.assign(body_obj, skin)
-        if detail_obj.data.polygons:
-            MAT.assign(detail_obj, skin)
-        if eye_obj and eye_obj.data.polygons:
-            eye_mat = MAT.new_material("smalltrotter_dark_feature_blockout")
-            eye_bsdf = next((n for n in eye_mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
-            if eye_bsdf:
-                eye_bsdf.inputs["Base Color"].default_value = (0.025, 0.012, 0.006, 1.0)
-                eye_bsdf.inputs["Roughness"].default_value = 0.24
-            MAT.assign(eye_obj, eye_mat)
-        if ridge_obj and ridge_obj.data.polygons:
-            ridge_mat = MAT.build_procedural_material("smalltrotter_bristle_blockout", "bark",
-                                                       seed=p["seed"], subsurface=0.02)
-            ridge_bsdf = next((n for n in ridge_mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
-            if ridge_bsdf:
-                for link in list(ridge_mat.node_tree.links):
-                    if link.to_node == ridge_bsdf and link.to_socket == ridge_bsdf.inputs["Base Color"]:
-                        ridge_mat.node_tree.links.remove(link)
-                ridge_bsdf.inputs["Base Color"].default_value = (0.095, 0.040, 0.016, 1.0)
-                ridge_bsdf.inputs["Roughness"].default_value = 0.78
-            MAT.assign(ridge_obj, ridge_mat)
+        if reference_form:
+            stats["surfacing_export"] = CREATURE_MAT.assign_smalltrotter_export_materials(
+                body_obj, detail_obj, eye_obj, ridge_obj,
+                seed=p["seed"], params=p,
+            )
+        else:
+            # Preserve the legacy/default appearance for all non-reference
+            # creature profiles; the Smalltrotter-specific maps are scoped to
+            # the resolved anatomy profile only.
+            skin = MAT.build_procedural_material("creature_skin", "skin", seed=p["seed"],
+                                                 subsurface=0.12)
+            MAT.assign(body_obj, skin)
+            if detail_obj.data.polygons:
+                MAT.assign(detail_obj, skin)
+            if eye_obj and eye_obj.data.polygons:
+                eye_mat = MAT.new_material("smalltrotter_dark_feature_blockout")
+                eye_bsdf = next((n for n in eye_mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
+                if eye_bsdf:
+                    eye_bsdf.inputs["Base Color"].default_value = (0.025, 0.012, 0.006, 1.0)
+                    eye_bsdf.inputs["Roughness"].default_value = 0.24
+                MAT.assign(eye_obj, eye_mat)
+            if ridge_obj and ridge_obj.data.polygons:
+                ridge_mat = MAT.build_procedural_material("smalltrotter_bristle_blockout", "bark",
+                                                           seed=p["seed"], subsurface=0.02)
+                ridge_bsdf = next((n for n in ridge_mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
+                if ridge_bsdf:
+                    for link in list(ridge_mat.node_tree.links):
+                        if link.to_node == ridge_bsdf and link.to_socket == ridge_bsdf.inputs["Base Color"]:
+                            ridge_mat.node_tree.links.remove(link)
+                    ridge_bsdf.inputs["Base Color"].default_value = (0.095, 0.040, 0.016, 1.0)
+                    ridge_bsdf.inputs["Roughness"].default_value = 0.78
+                MAT.assign(ridge_obj, ridge_mat)
 
     with report.time("save_blend"):
         blend_path = S.save_blend(params["outputs"]["blend"])

@@ -1,0 +1,9 @@
+{
+  "task": "smalltrotter-material-export",
+  "model": "gpt-6-luna",
+  "base": "0c5b45a695cdc400047f3dc36c3aafebb3720d6b",
+  "status": "running unvalidated",
+  "effort": "medium",
+  "worktree": "E:/Stalthosian Archipelago/var/worktrees/smalltrotter-material-export",
+  "started": "2026-10-12T02:31:34.1117676-05:00"
+}

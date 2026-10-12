@@ -1,0 +1,101 @@
+{
+  "task": "host-distance-playback",
+  "branch": "codex/host-distance-playback",
+  "base": "0c5b45a",
+  "status": "implemented and compiled; ready for integration",
+  "scope": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/host-distance-playback.md",
+    ".clanker/tasks/host-distance-playback/receipt.json"
+  ],
+  "implementation": {
+    "metadata_required_for_creature": true,
+    "metadata_fields": ["duration_s", "stride_length_m"],
+    "imported_clip_length_tolerance": 0.05,
+    "aligned_actor_root_target": "creature_rig",
+    "aligned_actor_root_is_skin_bone": false,
+    "actor_root_translation_channels_removed": 1,
+    "preserved": ["root initial transform", "all bone translation channels", "all bone rotation channels", "scenery", "needs", "lifecycle", "save behavior"],
+    "distance_source": "signed horizontal body displacement measured after X/Z playable-bound clamps",
+    "paused_timer_evaluation": "confirmed in Wicked Scene animation update source; timer changes evaluate while paused and do not receive wall-clock advancement"
+  },
+  "aligned_source_evidence": {
+    "glb": "var/reports/ref-align-actual/test_smalltrotter_exports_walk0/var/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "metadata": "var/reports/ref-align-actual/test_smalltrotter_exports_walk0/var/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+    "metadata_duration_s": 2.0,
+    "metadata_stride_length_m": 0.16128,
+    "source_actor_root_translation_delta_m": [0.1612800062, 0.0, 0.0],
+    "source_actor_root_axis": "+X",
+    "imported_animation_length_s": 2.0416667461,
+    "length_difference_percent": 2.08334,
+    "root_transform_channel": "creature_rig scene node; not a skin bone",
+    "skin_root_bone": "spine_00; preserved"
+  },
+  "validation": {
+    "native_build": {
+      "result": "passed",
+      "command": "cmake --build var/build/stalthos-runtime --config Release --parallel 2",
+      "compiler": "MSVC 19.51; Visual Studio 18 2026; Release x64",
+      "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+      "engine_source": "E:/Stalthosian Archipelago/var/vendor/WickedEngine",
+      "pinned_release_cache": "E:/Stalthosian Archipelago/var/vendor/wicked-release-cache"
+    },
+    "native_ctest": {
+      "result": "passed",
+      "command": "cmake --build var/build/stalthos-runtime --config Release --target RUN_TESTS -- /m:2",
+      "passed": 11,
+      "failed": 0
+    },
+    "positive_playback": {
+      "result": "passed",
+      "evidence": "var/reports/runtime/20261012-023843-b75fd0a3/runtime-receipt.json",
+      "actual_phase_s": 0.3681184635,
+      "expected_phase_s": 0.3681184635,
+      "signed_distance_m": 4.5455250729,
+      "pose_delta": 0.6325407028,
+      "animation_playing_frames": 0
+    },
+    "reverse_playback": {
+      "result": "passed",
+      "evidence": "var/reports/runtime/20261012-024212-a4dc2ca4/runtime-receipt.json",
+      "actor_root_target": "creature_rig",
+      "removed_root_translation_channels": 1,
+      "signed_distance_m": -2.6272776084,
+      "actual_phase_s": 1.4196725144,
+      "expected_phase_s": 1.4196725144,
+      "pose_delta": 0.6324016452,
+      "animation_playing_frames": 0
+    },
+    "idle_pause": {
+      "result": "passed",
+      "evidence": "var/reports/runtime/20261012-024248-b26895a5/runtime-receipt.json",
+      "signed_distance_m": 0,
+      "actual_phase_s": 0,
+      "expected_phase_s": 0,
+      "animation_playing_frames": 0,
+      "pose_changed": false
+    },
+    "dead_pause": {
+      "result": "passed",
+      "evidence": "var/reports/runtime/20261012-024251-9d612a1a/runtime-receipt.json",
+      "lifecycle_stage": 4,
+      "hero_alive": false,
+      "animation_playing_frames": 0,
+      "actual_phase_s": 1.6421386118,
+      "expected_phase_s": 1.6421386118
+    },
+    "missing_metadata": {
+      "result": "rejected before process launch",
+      "message": "Creature requires CreatureAnimationMetadata with measured duration_s and stride_length_m"
+    }
+  },
+  "claims_not_established": ["foot locking", "tail clearance", "final visuals", "target-hardware performance", "full draft completion"],
+  "sha256": {
+    "stalthos-runtime/engine/main.cpp": "89a185c972093009d758046b6dfd87776d63ab914b4cb8fd86e03d948185de77",
+    "stalthos-runtime/scripts/Run.ps1": "94095df0bb244700be963186f32febf8ef0286e7daaa766cff833d3123938ccd",
+    "stalthos-runtime/docs/host-distance-playback.md": "e0af980d25d9f1e41a217308943c5a05da7b7165bd8a0774a4264ebaa6f22e5f",
+    "aligned_walk_cycle.glb": "1109a65d0324ee4cc14e6021f98f6a6e00b5ed08bb55d359c3bba605778e52e7",
+    "aligned_walk_cycle.json": "672c08a9d2709d844cd400d9227beaaaa81bcfcecec8712ce2fb4863390213c3"
+  }
+}

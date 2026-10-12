@@ -41,3 +41,30 @@ Two remaining Jules slots filled: host needs/physical contacts session8327281556
 Stable installed Jules CLI copy is var/tools/jules/jules.exe, SHA256 e241506fb0b8f082ee9ca7f7fad094ec28a3b560e52f5d6788256400f4b66a09. The npm run.cjs launcher extracts/deletes shared Local/Temp/jules_tmp/jules.exe and concurrent invocations caused ENOENT. Use stable binary to avoid that race. No credentials/global settings changed.
 
 Previous isolated leg-extension suite finished1958passed/2skipped in932.87sec. That candidate stays rejected for display quality despite tests; current pose worker preserves lengths instead. Six local task dispatches used this direct run. Resume existing tasks before new local dispatch, retain receipts/ownership and check HALT. Current source publication remains9829870; new dispatch records will be scoped-published, worker implementation not yet integrated. No full draft, visual, gait or FPS acceptance claim.
+
+## Integrated checkpoint — 2026-10-12 06:29 America/Chicago
+
+Completed the pending anatomy/material/native integration before any new dispatch.
+Surfacing full toolkit suite: 1979 passed, 2 skipped in 696.27 seconds; recorded
+source hashes match. Native root Release build and CTest 12/12 passed. Actual
+Wicked capture var/reports/runtime/20261012-062750-b0ddf0dd shows the surfaced
+Smalltrotter, distance-driven playback and reduced, rotated-ground-fitted props.
+The host removes one non-skin actor-root translation channel, preserves bones,
+and evaluates a paused manual timer from actual signed post-clamp body travel.
+Phase expected 1.5564564714628077 s vs actual 1.5564564714628075 s; bone pose changes.
+
+The clipped creek surface renders 1107 vertices / 1796 triangles. A first
+integration capture exposed bed/terrain depth interference. Duplicate wet-bed
+rendering is disabled; authoritative terrain provides the bed, with domain bed
+geometry retained for later joint terrain clipping. Final capture removes that
+checker artifact. No reference parity, foot locking, tail clearance, full draft
+or 30 FPS acceptance. Creature patches, seams, primitive bristles/conical limbs,
+plain terrain and sparse vegetation remain conspicuous visual gaps.
+
+Jules17601071180728413309 resource ledger was retrieved in isolation, reviewed,
+hardened and added to native CTest. Full DTO restore retains replay keys, caps
+4096 resources / 256 keys, no eviction; malformed restore preserves prior state.
+Ledger is foundation only: actual runtime resource save/restore is still missing.
+All prior Jules sessions are integrated; do not reretrieve5999252246045191178.
+Next concrete tasks: persistent host resource ledger integration and visual
+refinement of creature proportions/surfacing and terrain/vegetation composition.

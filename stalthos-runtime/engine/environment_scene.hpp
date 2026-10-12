@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -95,14 +96,46 @@ struct GeneratedMesh {
     float groundOffset = 0.0f; // Local Y offset so prop sits on terrain
 };
 
+// Match TransformComponent::RotateRollPitchYaw in wiScene_Components.cpp.
+inline XMFLOAT3 rotatePropVertex(const XMFLOAT3& p, float heading, float pitch, float roll) noexcept {
+    XMVECTOR quat = XMQuaternionIdentity();
+    const XMVECTOR x = XMQuaternionRotationRollPitchYaw(pitch, 0.0f, 0.0f);
+    const XMVECTOR y = XMQuaternionRotationRollPitchYaw(0.0f, heading, 0.0f);
+    const XMVECTOR z = XMQuaternionRotationRollPitchYaw(0.0f, 0.0f, roll);
+    quat = XMQuaternionMultiply(x, quat);
+    quat = XMQuaternionMultiply(quat, y);
+    quat = XMQuaternionMultiply(z, quat);
+    quat = XMQuaternionNormalize(quat);
+    XMFLOAT3 result;
+    XMStoreFloat3(&result, XMVector3Rotate(XMLoadFloat3(&p), quat));
+    return result;
+}
+
+inline float groundContactOffset(
+    const GeneratedMesh& mesh, const domain::ReferenceLandscape& landscape,
+    double worldX, double worldZ, float heading, float pitch, float roll
+) {
+    double required = -std::numeric_limits<double>::infinity();
+    for (const XMFLOAT3& vertex : mesh.positions) {
+        const XMFLOAT3 rotated = rotatePropVertex(vertex, heading, pitch, roll);
+        const double x = worldX + rotated.x;
+        const double z = worldZ + rotated.z;
+        if (!landscape.inBounds(x, z)) continue;
+        required = std::max(required, landscape.height(x, z) - rotated.y);
+    }
+    if (!std::isfinite(required)) return mesh.groundOffset;
+    return static_cast<float>(required - landscape.height(worldX, worldZ));
+}
+
 // Generates an organic, tapered, multi-segment faceted log (fallen tree trunk).
 inline GeneratedMesh createFallenLogMesh(double scale, std::uint64_t itemSeed) {
     GeneratedMesh mesh;
     const float s = static_cast<float>(std::clamp(scale, 0.4, 2.5));
 
     // Finite procedural scale parameters
-    const float length = s * (3.0f + 1.8f * hashUnitF(itemSeed + 10U));
-    const float baseRadius = s * (0.22f + 0.08f * hashUnitF(itemSeed + 11U));
+    // Calibrated against a 1.8 m juvenile: mostly branches, occasional larger wood.
+    const float length = s * (0.7f + 0.75f * hashUnitF(itemSeed + 10U));
+    const float baseRadius = s * (0.08f + 0.04f * hashUnitF(itemSeed + 11U));
     const float tipRadius = baseRadius * (0.45f + 0.18f * hashUnitF(itemSeed + 12U)); // Natural tapering
     const float bowAmount = length * 0.04f * (hashUnitF(itemSeed + 13U) - 0.5f);
 
@@ -374,6 +407,7 @@ inline wi::ecs::Entity createScenePropEntity(
     const std::string& name,
     GeneratedMesh&& mesh,
     wi::ecs::Entity sharedMaterialId,
+    const domain::ReferenceLandscape& landscape,
     double worldX,
     double groundY,
     double worldZ,
@@ -394,7 +428,7 @@ inline wi::ecs::Entity createScenePropEntity(
 
     object.meshID = entity;
 
-    meshComp.vertex_positions = std::move(mesh.positions);
+    meshComp.vertex_positions = mesh.positions;
     meshComp.indices = std::move(mesh.indices);
     if (!mesh.vertexColors.empty()) {
         meshComp.vertex_colors = std::move(mesh.vertexColors);
@@ -410,7 +444,9 @@ inline wi::ecs::Entity createScenePropEntity(
     }
 
     // Position prop on terrain with orientation
-    const float yPos = static_cast<float>(groundY) + mesh.groundOffset;
+    const float contactOffset = groundContactOffset(mesh, landscape, worldX, worldZ,
+        static_cast<float>(headingRad), static_cast<float>(pitchRad), static_cast<float>(rollRad));
+    const float yPos = static_cast<float>(groundY) + contactOffset;
     transform.ClearTransform();
     transform.RotateRollPitchYaw(XMFLOAT3(
         static_cast<float>(pitchRad),
@@ -468,7 +504,8 @@ inline EnvironmentSceneCounts populateEnvironmentScene(
     const wi::ecs::Entity clumpMatEntity = scene.Entity_CreateMaterial("scenery_mat_bank_clump");
     if (auto* mat = scene.materials.GetComponent(clumpMatEntity)) {
         const auto p = EnvironmentPalette::evaluate(SceneryMaterialRole::DryBank, seed);
-        mat->SetBaseColor(DirectX::XMFLOAT4(p.baseColor.r, p.baseColor.g, p.baseColor.b, p.baseColor.a));
+        // Preserve the clump's green vertex colors with a neutral shared tint.
+        mat->SetBaseColor(DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, p.baseColor.a));
         mat->SetRoughness(p.roughness);
         mat->SetMetalness(p.metalness);
         mat->SetUseVertexColors(true);
@@ -531,6 +568,7 @@ inline EnvironmentSceneCounts populateEnvironmentScene(
             prop.id,
             std::move(mesh),
             materialId,
+            landscape,
             prop.x,
             landscape.height(prop.x, prop.z),
             prop.z,

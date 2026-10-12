@@ -1,0 +1,42 @@
+{
+  "task_id": "agy-shore-renderer",
+  "worktree": "var/worktrees/agy-shore-renderer",
+  "branch": "codex/agy-shore-renderer",
+  "base_commit": "0c5b45a",
+  "commit": "7a148f043b7e1807f2ee8881c3707dd3cb39909a",
+  "outcome": "implemented populateShoreScene helper with material role splitting, winding reversal, and Wicked palette binding; verified via minimal translation unit compilation",
+  "owned_paths": [
+    "stalthos-runtime/engine/shore_scene.hpp",
+    "stalthos-runtime/docs/shore-scene.md",
+    ".clanker/tasks/agy-shore-renderer/receipt.json"
+  ],
+  "implementation_details": {
+    "helper": "stalthos::engine::populateShoreScene(wi::scene::Scene&, const domain::ReferenceLandscape&, double resolution = 2.0, std::uint64_t seed = 1)",
+    "pascal_alias": "stalthos::engine::PopulateShoreScene",
+    "counts_struct": "stalthos::engine::ShoreSceneCounts",
+    "role_splitting": "Partitions domain ShoreMesh by ShoreMaterial into separate RoleMeshBuilders using O(1) index remap tables, preventing unsafe indices or cross-role references",
+    "winding_reversal": "Reverses all domain triangle indices (u0, u1, u2) -> (u0, u2, u1) so that Wicked Engine's reversed cross-product normal convention (p2 - p0) x (p1 - p0) evaluates to upward (+Y) host normals for both water surface and bed substrate",
+    "materials": {
+      "water_surface": "Role WaterSurface evaluated from EnvironmentPalette; configured with SHADERTYPE_WATER, tinted linear base color, refraction, transmission, double-sided false, shadows disabled",
+      "wet_bed": "Role CreekBed evaluated from EnvironmentPalette; darker rough opaque PBR dielectric substrate with shadows enabled",
+      "wet_bank": "Role WetBank evaluated from EnvironmentPalette; darkened moist riparian sediment PBR dielectric substrate with shadows enabled"
+    },
+    "legacy_creek": "Flat legacy creek is unhandled here; root integrator will wire populateShoreScene and remove the legacy creek strip"
+  },
+  "verification": {
+    "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36243 for x64",
+    "mode": "Minimal translation unit compilation against pinned root Wicked Engine headers",
+    "command": "cl /c /EHsc /utf-8 /std:c++17 /arch:AVX /D_WINDOWS /DNDEBUG /DWICKED_CMAKE_BUILD /DUNICODE /D_UNICODE -Ivar/vendor/WickedEngine/WickedEngine -Ivar/vendor/WickedEngine/Editor -Istalthos-runtime",
+    "exit_code": 0
+  },
+  "source_sha256": {
+    "stalthos-runtime/engine/shore_scene.hpp": "5ce2cda4d991adef04c54c607fd0bbbbde55f5b67d3982794d23898f632ac2b8",
+    "stalthos-runtime/docs/shore-scene.md": "4be23374bbdc3d6f7ee25ddd5df9bcf2e98638ead0a65f3a0d419eb8792a41ad"
+  },
+  "limitations": [
+    "No final optics or photographic visual claims are made.",
+    "No 30 FPS acceptance or runtime hardware benchmark claims are made; requires integration and capture by root.",
+    "Did not edit engine/main.cpp, CMakeLists.txt, tests, or planning documents.",
+    "Preserved unrelated work."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "task": "review-resource-ledger",
+  "base": "0c5b45a",
+  "result": "reviewed and hardened",
+  "caps": {
+    "maxResources": 4096,
+    "maxHistory": 256,
+    "historyEviction": "none; fail when full"
+  },
+  "continuity": "continuationSnapshot/restore preserves session keys; quantity-only load begins a new history epoch",
+  "checks": [
+    {
+      "command": "MSVC cl /std:c++17 /EHsc /O2 /W4 /WX /permissive- /DNDEBUG stalthos-runtime/tests/resource_ledger.cpp",
+      "result": "passed: All ResourceLedger tests passed."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "files": [
+    {
+      "path": "stalthos-runtime/domain/resource_ledger.hpp",
+      "sha256": "97E35D3127C2909EAB760E6FAAF2936E6D866C8446BD7867973457E62075C1BA"
+    },
+    {
+      "path": "stalthos-runtime/tests/resource_ledger.cpp",
+      "sha256": "C9B085CDBEF82B207377BC9F13800C0D5674E6FD782529DB5B535AE3A4A80B06"
+    },
+    {
+      "path": "stalthos-runtime/docs/resource-ledger.md",
+      "sha256": "2C274AAE5FCA3CE707FDB9DB16D95989AE5750E438B0BAEE63C37C9DFED0EE38"
+    }
+  ]
+}

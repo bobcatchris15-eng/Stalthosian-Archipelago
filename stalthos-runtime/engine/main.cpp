@@ -6,7 +6,9 @@
 #include "domain/lifecycle.hpp"
 #include "domain/needs.hpp"
 #include "domain/reference_landscape.hpp"
+#include "domain/locomotion_clip.hpp"
 #include "environment_scene.hpp"
+#include "shore_scene.hpp"
 #include <windows.h>
 #include <shellapi.h>
 #include <chrono>
@@ -96,41 +98,7 @@ void Terrain(wi::scene::Scene& scene) {
             {static_cast<float>(placement.x),static_cast<float>(placement.y)+scale*.4f,static_cast<float>(placement.z)},
             {scale,scale*.4f,scale*.8f}, {.35f,.34f,.30f,1});
     }
-    vertices.clear(); indices.clear();
-    for (int iz=-48; iz<=48; ++iz) {
-        double z=iz*2.,left=0,right=0; bool found=false;
-        for (double x=-96; x<=96; x+=1) if (landscape.waterContains(x,z)) {
-            if (!found) left=x;
-            right=x; found=true;
-        }
-        if (!found) throw std::runtime_error("reference creek has no wetted cross-section");
-        double outside=left-1,inside=left;
-        for (int iteration=0; iteration<24; ++iteration) {
-            double middle=(outside+inside)*.5;
-            if (landscape.waterContains(middle,z)) inside=middle; else outside=middle;
-        }
-        left=inside; inside=right; outside=right+1;
-        for (int iteration=0; iteration<24; ++iteration) {
-            double middle=(outside+inside)*.5;
-            if (landscape.waterContains(middle,z)) inside=middle; else outside=middle;
-        }
-        right=inside;
-        float y=static_cast<float>(landscape.waterSurface(left,z));
-        vertices.push_back({static_cast<float>(left),y,static_cast<float>(z)});
-        vertices.push_back({static_cast<float>(right),y,static_cast<float>(z)});
-        if (iz>-48) {
-            uint32_t a=static_cast<uint32_t>(vertices.size()-4);
-            indices.insert(indices.end(),{a,a+1,a+2,a+1,a+3,a+2});
-        }
-    }
-    auto water=scene.Entity_CreateMeshFromData("provisional creek water",indices.size(),indices.data(),vertices.size(),vertices.data());
-    Color(scene,water,{.08f,.21f,.24f,.8f});
-    auto* waterMesh=scene.meshes.GetComponent(scene.objects.GetComponent(water)->meshID);
-    for (auto& subset : waterMesh->subsets) {
-        auto* material=scene.materials.GetComponent(subset.materialID);
-        material->shaderType=wi::scene::MaterialComponent::SHADERTYPE_WATER;
-        material->SetRefractionAmount(.05f); material->SetRoughness(.18f);
-    }
+
 }
 void Camera(float x, float y, float z, int mode) {
     XMVECTOR target = XMVectorSet(x, y + 1.f, z, 1);
@@ -144,12 +112,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     std::filesystem::path output = "run-evidence";
     std::filesystem::path plant;
     std::filesystem::path creature;
+    double creatureClipDuration = 0.0, creatureStrideLength = 0.0;
     std::filesystem::path loadState, saveState;
     std::optional<uint64_t> successorId;
     double duration = 15;
     double calendarScale = 1.0;
     double creatureSoleOffset = .652438;
-    bool interactive = false, diagnosticWalk = false, diagnosticNeeds = false;
+    bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -157,10 +126,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
+            else if (key == L"--diagnostic-reverse-walk") diagnosticReverseWalk = true;
             else if (key == L"--diagnostic-needs") diagnosticNeeds = true;
             else if (key == L"--output" && i+1 < argumentCount) output = argv[++i];
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
             else if (key == L"--creature" && i+1 < argumentCount) creature = argv[++i];
+            else if (key == L"--walk-duration" && i+1 < argumentCount) creatureClipDuration = std::stod(argv[++i]);
+            else if (key == L"--stride-length" && i+1 < argumentCount) creatureStrideLength = std::stod(argv[++i]);
             else if (key == L"--calendar-scale" && i+1 < argumentCount) calendarScale = std::stod(argv[++i]);
             else if (key == L"--creature-sole-offset" && i+1 < argumentCount) creatureSoleOffset = std::stod(argv[++i]);
             else if (key == L"--load-state" && i+1 < argumentCount) loadState = argv[++i];
@@ -180,6 +152,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (!std::isfinite(duration) || duration <= 0 || duration > 120) throw std::runtime_error("diagnostic duration must be 0..120 seconds");
         if (!std::isfinite(calendarScale) || calendarScale < 0 || calendarScale > 10000) throw std::runtime_error("calendar scale must be 0..10000");
         if (!std::isfinite(creatureSoleOffset) || creatureSoleOffset < 0 || creatureSoleOffset > 5) throw std::runtime_error("creature sole offset must be 0..5 meters");
+        if (!creature.empty() && (!std::isfinite(creatureClipDuration) || creatureClipDuration <= 0 ||
+            !std::isfinite(creatureStrideLength) || creatureStrideLength <= 0))
+            throw std::runtime_error("animated creature requires finite positive walk duration and stride length metadata");
         std::filesystem::create_directories(output);
         if (std::filesystem::exists(output / "runtime-receipt.json")) throw std::runtime_error("use a fresh evidence directory");
         stalthos::SimCore clock;
@@ -270,6 +245,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         app.Initialize(); wi::initializer::WaitForInitializationsToFinish();
         auto& scene = wi::scene::GetScene();
         Terrain(scene);
+        const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
         size_t importedObjects = 0, importedInstances = 0;
         if (!plant.empty()) {
@@ -302,6 +278,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         bool creatureLoaded=false;
         size_t creatureMeshes=0, creatureSkins=0, creatureAnimations=0, creatureChannels=0;
+        size_t removedActorRootTranslationChannels=0;
+        std::string actorRootTranslationTargetName;
+        double engineClipLength=0.0;
         wi::ecs::Entity heroMotionRoot=wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity hero=wi::ecs::INVALID_ENTITY;
         if (!creature.empty()) {
@@ -312,11 +291,49 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             creatureSkins=imported.armatures.GetCount();
             creatureAnimations=imported.animations.GetCount();
             for(size_t i=0;i<imported.animations.GetCount();++i) {
-                const auto& animation=imported.animations[i];
+                auto& animation=imported.animations[i];
+                const double importedLength=animation.GetLength();
+                if(!std::isfinite(importedLength) || importedLength<=0 ||
+                    std::abs(importedLength-creatureClipDuration)>creatureClipDuration*.05)
+                    throw std::runtime_error("walk metadata duration does not match imported animation length within 5 percent");
+                if(engineClipLength==0.0) engineClipLength=importedLength;
                 for(const auto& channel:animation.channels)
                     if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION ||
                        channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION ||
                        channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) ++creatureChannels;
+                // Find the one animated transform that is an ancestor of every other
+                // animated transform. On the aligned source this is creature_rig, the
+                // non-skin actor root above spine_00. Remove only its translation channel; all bone TRS
+                // channels and the imported root's initial transform remain intact.
+                wi::ecs::Entity animatedRoot=wi::ecs::INVALID_ENTITY;
+                for(const auto& candidate:animation.channels) {
+                    if(candidate.path!=wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) continue;
+                    bool isSkinBone=false;
+                    for(size_t armatureIndex=0;armatureIndex<imported.armatures.GetCount() && !isSkinBone;++armatureIndex)
+                        for(const auto bone:imported.armatures[armatureIndex].boneCollection)
+                            if(bone==candidate.target) { isSkinBone=true; break; }
+                    if(isSkinBone) continue;
+                    bool containsAll=true;
+                    for(const auto& other:animation.channels) {
+                        if(other.target!=candidate.target && !imported.Entity_IsDescendant(other.target,candidate.target)) {
+                            containsAll=false; break;
+                        }
+                    }
+                    if(containsAll) {
+                        if(animatedRoot!=wi::ecs::INVALID_ENTITY) throw std::runtime_error("creature animation has ambiguous actor-root translation channels");
+                        animatedRoot=candidate.target;
+                    }
+                }
+                if(animatedRoot==wi::ecs::INVALID_ENTITY)
+                    throw std::runtime_error("creature animation is missing an identifiable actor-root translation channel");
+                for(size_t channelIndex=0;channelIndex<animation.channels.size();) {
+                    const auto& channel=animation.channels[channelIndex];
+                    if(channel.target==animatedRoot && channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) {
+                        animation.channels.erase(animation.channels.begin()+channelIndex);
+                        ++removedActorRootTranslationChannels;
+                        if(const auto* name=imported.names.GetComponent(animatedRoot)) actorRootTranslationTargetName=name->name;
+                    } else ++channelIndex;
+                }
             }
             if(creatureMeshes==0 || creatureSkins==0 || creatureAnimations==0 || creatureChannels==0)
                 throw std::runtime_error("creature GLB requires mesh, skin and transform animation channels");
@@ -349,6 +366,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t runCalls=0; bool screenshot=false, userClosed=false, earlyScreenshot=false, lateScreenshot=false;
         std::vector<std::string> lifecycleTransitions;
         std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> channelPoseBaseline; float localBoneDelta=0, minimumAnimationTimer=std::numeric_limits<float>::infinity(), maximumAnimationTimer=0; uint64_t animationPlayingFrames=0;
+        std::optional<stalthos::domain::LocomotionClip> creatureClip;
+        if(creatureLoaded) creatureClip.emplace(creatureClipDuration,creatureStrideLength);
+        double creaturePhase=0, creatureDistanceAccumulated=0, lastSignedBodyDistance=0, lastExpectedPhase=0;
 
         bool initialNeedsRecorded = false;
         double initialHunger = 0, initialThirst = 0, initialFatigue = 0;
@@ -391,7 +411,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<scene.animations.GetCount();++i) scene.animations[i].Pause(); }
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
-            bool walking = diagnosticWalk || down('W');
+            bool walking = diagnosticWalk || diagnosticReverseWalk || down('W');
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
                 double targetX = x;
@@ -410,10 +430,19 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 yaw += static_cast<float>(diff * std::min(1.0, 5.0 * dt));
             }
             heroIntent.setDirect(walking || down('S') || down('A') || down('D'));
-            float speed=heroAlive?(walking?2.f:down('S')?-1.f:0.f):0.f;
+            float speed=heroAlive?(diagnosticReverseWalk?-2.f:walking?2.f:down('S')?-1.f:0.f):0.f;
             auto forward=stalthos::BeastCore::bodyForward(yaw);
+            const float previousX=x, previousZ=z;
             x+=static_cast<float>(forward.x)*speed*dt; z+=static_cast<float>(forward.z)*speed*dt;
             x=std::clamp(x,-60.f,60.f); z=std::clamp(z,-60.f,60.f);
+            const double actualDistance=std::hypot(static_cast<double>(x-previousX),static_cast<double>(z-previousZ));
+            lastSignedBodyDistance=speed<0 ? -actualDistance : actualDistance;
+            if(creatureClip) {
+                const auto advance=creatureClip->advance(creaturePhase,lastSignedBodyDistance);
+                creaturePhase=advance.phase;
+                creatureDistanceAccumulated+=lastSignedBodyDistance;
+                lastExpectedPhase=creatureClip->advance(0.0,std::fmod(creatureDistanceAccumulated,creatureStrideLength)).phase;
+            }
             float y=Ground(x,z);
             auto* transform=scene.transforms.GetComponent(heroMotionRoot); transform->ClearTransform();
             if(!creatureLoaded) {
@@ -429,7 +458,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             transform->UpdateTransform();
             for(size_t i=0;i<scene.animations.GetCount();++i) {
                 auto& animation=scene.animations[i];
-                if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
+                if(creatureClip) {
+                    // Wicked evaluates a changed timer even while paused, then skips
+                    // wall-clock advancement. This keeps phase distance-driven.
+                    animation.Pause();
+                    animation.timer=static_cast<float>(animation.start+creaturePhase);
+                } else if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
             }
             Camera(x,y,z,cameraMode); app.Run(); ++runCalls;
             if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
@@ -572,7 +606,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"successor_selected",successorId.has_value()},{"successor_id",successorId.value_or(0)},
             {"successor_prior_dead_hero_id",successorPriorDeadId},{"successor_prior_death_truth_preserved",successorDeathTruthPreserved},
             {"successor_saved_prior_death_truth_preserved",successorSavedDeathTruthPreserved},{"saved_dead_hero_count",savedDeadHeroCount},
+            {"shore_objects",shoreCounts.objectCount},{"shore_vertices",shoreCounts.vertexCount},{"shore_triangles",shoreCounts.triangleCount},{"shore_surface_triangles",shoreCounts.surfaceTriangleCount},{"shore_bed_triangles",shoreCounts.bedTriangleCount},{"shore_bank_triangles",shoreCounts.bankTriangleCount},
             {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
+            {"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},
             {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected"},

@@ -1,0 +1,28 @@
+{
+  "toolkit_source_hashes_verified": true,
+  "fps_acceptance": false,
+  "bed_resolution": "duplicate rendered bed disabled; terrain bed retained",
+  "source_sha256": {
+    "stalthos-runtime/engine/main.cpp": "1eceb00d10f16ccc03ec5967bc2e10a7d47f32f91dd25041c98cd78619eefca3",
+    "stalthos-runtime/engine/shore_scene.hpp": "4757d3b3629fb9cfa7d5837e45ae34030d89ddf7a63e91ff1d272d06d31b0706",
+    "stalthos-runtime/CMakeLists.txt": "55b15d7be2e86ec6b185f1454593a6ac078d069920eaa1cfb966663aed4d2e5a",
+    "stalthos-runtime/tests/resource_ledger.cpp": "a0e2ecf6f94de2da23676dfd28d56f8eea54027bf12fa90ac815153fd80628b5",
+    "stalthos-runtime/scripts/Run.ps1": "94095df0bb244700be963186f32febf8ef0286e7daaa766cff833d3123938ccd",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/_creature_materials.py": "ff43674b633b4a2aadfa90f477ade7b21f77fbba6fd849ce180282db6152f324",
+    "stalthos-runtime/domain/resource_ledger.hpp": "6773fceaab211d2d87be9462b6f99b516f57216f4e297f8817b920ec45443f3d",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/creature.py": "5a13d979a93739818ea6ed9d7a5dffb09f1b74f6ff85c8aef1d13281e5acd830",
+    "stalthos-toolkit/tests/test_reference_surfacing.py": "54fa8b4ae5a643290354ae7f2673fa8b905e0448f393e152578b583d48f03b18",
+    "stalthos-runtime/engine/environment_scene.hpp": "2024cc54f7f75b04a8444bce09418cb7f8d13f1b9972dd5d8c14f3bb21f48ba2"
+  },
+  "jules_session": "17601071180728413309",
+  "reference_visual_acceptance": false,
+  "full_draft_acceptance": false,
+  "native": "Release build and12/12 CTest passed",
+  "task": "packet-eight-integrated",
+  "corrected_visual_capture": "var/reports/runtime/20261012-062750-b0ddf0dd/draft-host.png",
+  "status": "validated draft integration",
+  "toolkit": "1979 passed, 2 skipped in696.27s",
+  "failed_bed_capture": "var/reports/runtime/20261012-024543-d22d7911/draft-host.png",
+  "ledger_runtime_persistence": false,
+  "runtime_receipt": "var/reports/runtime/20261012-062750-b0ddf0dd/runtime-receipt.json"
+}
