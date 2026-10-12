@@ -1,0 +1,48 @@
+{
+  "task": "reference-rig-alignment",
+  "branch": "codex/reference-rig-alignment",
+  "base_commit": "7f31738a30a2d1e00ecf675254835db9452938a3",
+  "status": "focused_pass_full_suite_pending",
+  "owned_paths": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/creature.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "stalthos-toolkit/tests/test_reference_rig_alignment.py",
+    "stalthos-toolkit/docs/reference-rig-alignment.md"
+  ],
+  "additional_authorized_path": "stalthos-toolkit/tests/test_blender.py",
+  "authorization": "Parent authorized updating the fixed pad-vertex-count assertion to validate actual nonempty generated pad indices and source metadata, preserving the 20 mm contact and touchdown thresholds and all other gates.",
+  "validation": {
+    "blender": "5.2.0",
+    "seed": 42,
+    "commands": [
+      "PYTHONPATH=src STALTHOS_TEST_BLENDER='C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe' python -m pytest -q tests/test_reference_rig_alignment.py tests/test_blender.py::test_smalltrotter_exports_walk_channels_and_contact_report",
+      "PYTHONPATH=src STALTHOS_TEST_BLENDER='C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe' python -m pytest -q tests/test_blender.py::test_smalltrotter_exports_walk_channels_and_contact_report --basetemp='E:\\Stalthosian Archipelago\\var\\reports\\ref-align-actual'"
+    ],
+    "focused_result": "2 passed in 19.34s; contact gate rerun 1 passed in 7.84s",
+    "measured": {
+      "profile": "smalltrotter_reference_v1",
+      "stride_length_m": 0.16128,
+      "serialized_joint_endpoint_max_error_m": 0.0,
+      "hind_pad_stance_samples_each": 31,
+      "hind_pad_max_abs_ground_distance_m": {
+        "left": 0.010162486,
+        "right": 0.010162508
+      },
+      "contact_tolerance_m": 0.02,
+      "touchdown_excursion_m": {
+        "left": 0.013251237,
+        "right": 0.013251177
+      },
+      "both_hind_pad_contact_and_touchdown_gates_passed": true,
+      "eye_and_ridge_unassigned_vertices": 0,
+      "eye_and_ridge_material_slots": 1
+    },
+    "full_suite": "not run in isolated task; root integration suite pending",
+    "runtime_or_visual_acceptance": "not established"
+  },
+  "limitations": [
+    "Generated reference anatomy is a speculative proxy, not measured fossil anatomy.",
+    "Image alignment remains subject to rendered visual review; the still reference does not establish gait fidelity.",
+    "The stride cap is profile-specific pending broader review of gait appearance and runtime integration."
+  ]
+}

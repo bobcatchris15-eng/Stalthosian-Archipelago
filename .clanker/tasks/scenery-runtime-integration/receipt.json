@@ -1,0 +1,22 @@
+{
+  "agy_result": "SUCCESS with empty response and incomplete source; root repaired",
+  "ctest": "11/11 passed",
+  "fps_accepted": false,
+  "vertices": 3809,
+  "release_build": "passed",
+  "outcome": "validated draft Wicked scenery",
+  "object_count": 163,
+  "logs": 23,
+  "visual_accepted": false,
+  "triangles": 4645,
+  "corrections": [
+    "Declared proposal iteration through dressing.proposals()",
+    "Removed debug stdout",
+    "Removed reversed duplicate foliage faces and enabled double-sided material"
+  ],
+  "bluff_accents": 28,
+  "bank_clumps": 48,
+  "capture": "var/reports/runtime/20261012-015245-480f21ed/draft-host.png",
+  "task_id": "scenery-runtime-integration",
+  "pebbles": 64
+}

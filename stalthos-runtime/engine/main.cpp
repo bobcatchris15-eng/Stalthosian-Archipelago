@@ -6,6 +6,7 @@
 #include "domain/lifecycle.hpp"
 #include "domain/needs.hpp"
 #include "domain/reference_landscape.hpp"
+#include "environment_scene.hpp"
 #include <windows.h>
 #include <shellapi.h>
 #include <chrono>
@@ -269,6 +270,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         app.Initialize(); wi::initializer::WaitForInitializationsToFinish();
         auto& scene = wi::scene::GetScene();
         Terrain(scene);
+        const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
         size_t importedObjects = 0, importedInstances = 0;
         if (!plant.empty()) {
             if (!std::filesystem::exists(plant)) throw std::runtime_error("plant import input does not exist");
@@ -544,6 +546,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
+            {"scenery_objects",sceneryCounts.objectCount},{"scenery_vertices",sceneryCounts.vertexCount},{"scenery_triangles",sceneryCounts.triangleCount},
+            {"scenery_logs",sceneryCounts.logCount},{"scenery_pebbles",sceneryCounts.pebbleCount},{"scenery_bank_clumps",sceneryCounts.bankClumpCount},{"scenery_bluff_accents",sceneryCounts.bluffAccentCount},
             {"screenshot_saved",screenshot},{"plant_import_objects",importedObjects},{"user_closed",userClosed},
             {"plant_import_instances",importedInstances},{"landscape_extent_meters",192},
             {"landscape_candidate_placements",landscape.placements().size()},

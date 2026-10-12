@@ -1,0 +1,43 @@
+{
+  "task": "smalltrotter-reference-anatomy",
+  "status": "committed_provisional_blockout",
+  "worktree": "E:\\Stalthosian Archipelago\\var\\worktrees\\smalltrotter-reference-anatomy",
+  "branch": "codex/smalltrotter-reference-anatomy",
+  "base_commit": "546eee0df088933553804c20893e1527d1b93262",
+  "commit": "7f31738a30a2d1e00ecf675254835db9452938a3",
+  "owned_files": {
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/creature.py": "BBE3BB22D5DDF30156C1D9BD8592802646856482D2869A199DABA5BAF9B52017",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/reference_anatomy.py": "48A15627EF7059D1BDB00B2BEDD2D249673D6E3618649D26D77C2CA51092A7E6",
+    "stalthos-toolkit/tests/test_reference_anatomy.py": "AC15D4625320F49B9ECB3DA3619A0171E30ECC2AA308775CE0562F9A94019612",
+    "stalthos-toolkit/docs/smalltrotter-reference-anatomy.md": "D1FA21924C49BE72397A39218E585AF9E09B71BE3F92BC1A97B90F6819C541EE"
+  },
+  "offline_tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_reference_anatomy.py tests/test_anatomy_pose.py",
+    "result": "8 passed in 0.06s",
+    "py_compile": "passed",
+    "git_diff_check": "passed"
+  },
+  "blender_build": {
+    "command": "python -m stalthos_toolkit.cli build_creature --definition species/creatures/smalltrotter.yaml --seed 42 --workspace '..\\var\\anatomy-final' --blender 'C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe'",
+    "status": "ok=true, exit_code=0",
+    "blender": "5.2.0 LTS",
+    "source_blend_sha256": "7FD5735448B55197B973F71C684474DA01F566F09A95EFBFC04280621E5B95D0",
+    "broadside_comparison_sha256": "BD45CD8CF4A1D2545059BA2465EA0175CB1DCCBB99C2CF92284FDCA3B014F71F",
+    "threequarter_comparison_sha256": "0C7BA784035E5FDEBA462188B3C3AACFFC0318684328550EE32EF21C4255D636"
+  },
+  "rig_export": {
+    "command": "python -m stalthos_toolkit.cli rig_creature --definition species/creatures/smalltrotter.yaml --seed 42 --workspace '..\\var\\anatomy-final' --blender 'C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe'",
+    "status": "ok=true, exit_code=0; neutral and walk_cycle GLBs exported; walk-cycle validation passed loop/root-motion/GLB structure but failed geometric contact and touchdown foot lock",
+    "walk_cycle_glb_sha256": "F48515B8067F745E790540441BE557CB685B2E9EA7BAA422D93F1B04EDF29587",
+    "hind_pad_selector_counts": {"bone:pes_foot_l": 10, "bone:pes_foot_r": 10},
+    "hind_pad_weight_groups": {"bone:pes_foot_l": "toe_rear_L", "bone:pes_foot_r": "toe_rear_R"},
+    "baseline_comparison": "Same seed-42 rig command on unmodified anatomy-baseline also warned geometric ground contact failed tolerance.",
+    "contact_minimum_ground_gap_m": [0.0067370, 0.0067372],
+    "touchdown_anchored_max_excursion_m": [0.0480182, 0.0480182]
+  },
+  "limitations": [
+    "Renders remain a rough proxy with visible seams, segmented limb masses, primitive ridge and unfinished shading.",
+    "Swatches are not beast/runtime/player-facing visual acceptance.",
+    "No rig, gait, material helper, definition, core, runtime, or geometry-node ownership changes were made."
+  ]
+}

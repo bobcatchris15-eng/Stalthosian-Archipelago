@@ -144,3 +144,29 @@ ready forpublication; actualWicked clipphase/root removal adapter stillpending.
 Do notmistake helpertests for runtimefootlocking. Sixlocaldispatches used;
 reference-rig-alignment andAGYsceneryrenderer remainactive; anatomyfullsuite
 session19876 hasfailure andmustfinishwithrawtracebeforefurtherpromotion.
+
+## Final wake checkpoint — 2026-10-12 01:55 America/Chicago
+
+Scenery root Release build+CTest11/11 and actualWicked capture passed.163props:
+23logs,64pebbles,48bankclumps,28bluffaccents;3809vertices,4645triangles. Root
+repaired incompleteAGY source and foliage-normal cancellation. Receipt:
+.clanker/tasks/scenery-runtime-integration/receipt.json. Visuals remain crude,
+logs/contact/scale and terrain/flora materials need refinement. No visual/FPS gate.
+
+Reference anatomy combined suite failed1test,1974passed,2skipped in605.35s:
+old test required8box-padvertices butrounded geometry yielded11. Subsequent
+isolated alignment99b79b4 serializes actualshape/jointgraph, skins eye/ridge meshes,
+uses explicitpadvertex metadata and conservative profile stride. Focused actual
+Blender tests passunchanged20mm gates: stance max10.163mm, touchdown13.2513mm,
+jointendpoint error0; featuremeshes boundwithno unassigned vertices.
+
+Those toolkit changes are copied into ROOT CANDIDATE but remainUNPUBLISHED.
+Final fullsuite isrunning execsession32043;logvar/reports/packet-seven-reference-aligned-full.log,
+resultvar/reports/packet-seven-reference-aligned-full-result.json. Sourcehashes:
+var/reports/packet-seven-reference-aligned-source-hashes.json. Resume/checkactual
+completion and hashmatch beforepublication; preserve failures. Nextconcretetask:
+publish validatedanatomy/rig candidate, actualWicked creaturecapture withmaterials,
+then locomotion phase/rootremoval adapter toresolve hostfoot sliding. Shore mesh
+contract remainsunwired. No furtherdispatchthiswake; sixlocal scopes used.
+Allworkerscompleted; finaltests continue independently. Reviewednative andmaterial
+support commits arepublished onmain; newanatomy source staysdirty intentionally.
