@@ -43,3 +43,15 @@ Two remaining Jules slots filled: host needs/physical contacts session8327281556
 Stable installed Jules CLI copy is var/tools/jules/jules.exe, SHA256 e241506fb0b8f082ee9ca7f7fad094ec28a3b560e52f5d6788256400f4b66a09. The npm run.cjs launcher extracts/deletes shared Local/Temp/jules_tmp/jules.exe and concurrent invocations caused ENOENT. Use stable binary to avoid that race. No credentials/global settings changed.
 
 Previous isolated leg-extension suite finished1958passed/2skipped in932.87sec. That candidate stays rejected for display quality despite tests; current pose worker preserves lengths instead. Six local task dispatches used this direct run. Resume existing tasks before new local dispatch, retain receipts/ownership and check HALT. Current source publication remains9829870; new dispatch records will be scoped-published, worker implementation not yet integrated. No full draft, visual, gait or FPS acceptance claim.
+
+### User primary Smalltrotter reference — 2026-10-11
+
+The user supplied `stalthos-toolkit/references/creatures/smalltrotter/user-primary.png`.
+Use adjacent `visual-direction.md` for the next anatomy and surfacing pass:
+deep rounded torso, substantial limbs and broad feet, long upright neck, blunt
+expressive head, low tapered tail, irregular brown bristle ridge, warm ochre
+mottling and cream underside. The completed neutral-pose correction predates
+this image and is not reference-fidelity acceptance. The stance worker received
+this steering. Inputs were copied into the active AGY surfacing worktree; its
+running inline prompt predates the image, so confirm reference use at review or
+resume that same task with the reference before integrating materials.
