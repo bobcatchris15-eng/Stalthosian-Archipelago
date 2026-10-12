@@ -401,3 +401,24 @@ AGY anatomyvisualcorrection resumes sameworktree, deadline11:05; collect newsour
 onlyafterfreeze, actualcontact/renderverification, then fullrootregression.
 Five currentwake dispatchesused; no further new scopes. Currentwake deadline11:11.
 No full draft, referenceparity or30FPSacceptance. Allfiveheroes/fourislandsremain.
+
+## Publication and next resume — 2026-10-12 11:09 America/Chicago
+
+Main/origin synchronized9b4c8c0. Native14/14pass and resource persistence/denser
+groundcover are published. Secret scan passed; structural graph remains partial
+(154zero-node files/community-label drift), not semantic acceptance.
+Only pendingworker is AGY anatomyvisualcorrection in isolatedsmalltrotter-connected-
+mesh worktree (start10:56,18minuteprinttimeout). It has not frozen a new commit.
+Root retains unpromoted43ed522 owned3sourcefiles plus connected-anatomydoc;
+do NOT stage them based on exit0 or tests alone. Fullsuite38983 was aborted for
+visible girdlebulges; no full-regression success exists for thiscandidate.
+Newest11:06 neutralimage stillshowsbulges although isolatedcreature.py no longer
+calls girdleoverlay: image/source mapping is unresolved. Once worker freezes,
+run actual build/rig/render FROM its toolkitcwd with PYTHONPATH=src into a NEW
+ignoredworkspace, verify sourcehashes and artifacts, review actualrender, then
+copyownedpaths and run fullrootoffline suite. Preserve raw43rejection image/log.
+No new worker needed before collecting thisexistingtask. New cadence reviewbrief
+is written but NOTdispatched: 0.16128m/2s clip plus2m/s host speed can produce
+roughly12cycles/sec; mathematical phase matching is not natural gait acceptance.
+Five currentwake dispatches used; stop active work by11:11. No accepted full draft,
+referenceparity, or30FPS. No paidAPI/credential/release/deploy actions taken.

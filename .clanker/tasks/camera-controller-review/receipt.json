@@ -1,8 +1,8 @@
 {
   "retrieved": true,
-  "next": "AGY corrective review when one slot frees; keep candidate isolated",
+  "next": "Integrate controller inputs/eye outputs into host with actual runtime probes; preserve movement authority",
   "evidence": "var/reports/camera-tether-probe.log",
-  "acceptance": "rejected pending corrective review",
+  "acceptance": "Corrected pure foundation integrated9b4c8c0; native14/14pass; host integration pending",
   "session": "12663720658277222606",
   "findings": [
     "Outward input in soft zone moves full5m; comfortradius unused",
