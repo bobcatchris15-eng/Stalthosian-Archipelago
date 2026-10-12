@@ -24,7 +24,9 @@
   "max_active_jules_workers": 3,
   "jules_daily_dispatch_ceiling": 100,
   "pending_jules_sessions": [
-    "15605854971730070819"
+    "15605854971730070819",
+    "8327281556040443846",
+    "8065357076113417676"
   ],
   "max_active_agy_workers": 3,
   "agy_dispatch_pool": "Separate Antigravity pool authorized by user 2026-10-11; up to three concurrent agy tasks, independent of native and Jules concurrency pools.",
@@ -36,5 +38,15 @@
   },
   "agy_default_model": "gemini-3.8-flash-low",
   "agy_default_effort": "low",
-  "agy_execution": "Isolated bounded tasks; explicit model/effort, print timeout and JSON receipt; inspect changes and validate before integration. Do not bypass permissions or use paid API fallback."
+  "agy_execution": "Isolated bounded tasks; explicit model/effort, print timeout and JSON receipt; inspect changes and validate before integration. Do not bypass permissions or use paid API fallback.",
+  "active_agy_tasks": [
+    "agy-environment-palette",
+    "agy-habitat-dressing",
+    "agy-creature-surfacing"
+  ],
+  "active_native_tasks": [
+    "creature_pose_revision",
+    "stance_walk_revision",
+    "needs_persistence_retrieval"
+  ]
 }

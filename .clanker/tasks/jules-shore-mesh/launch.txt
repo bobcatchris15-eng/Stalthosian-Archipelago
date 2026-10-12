@@ -1,0 +1,8 @@
+Session is created.
+ID: 8065357076113417676
+Task: One bounded creek environment mesh contract for the full draft. Read AGENTS.md, domain/reference_landscape.hpp and engine/main.cpp terrain/water construction. Own ONLY new stalthos-runtime/domain/shore_mesh.hpp, tests/shore_mesh.cpp and docs/shore-mesh-draft.md. No host/CMake/other domain/toolkit edits. Root will retrieve/review/compile/integrate and capture actual Wicked output.
+
+Implement a deterministic bounded terrain-conforming creek surface/shoreline mesh proposal using ReferenceLandscape queries. Avoid broad rectangle spill and shoreline staircase artifacts: clip wet cells to terrain/water intersections and generate continuous boundary vertices with consistent winding and shared coordinates across adjacent cells. Output plain C++ vertices/indices/material roles so host can consume it, no Wicked dependency. Distinguish surface geometry from wet bank/bed visual guidance. Validate finite extents/resolutions, overflow/budgets, no degenerate or invalid index triangles, stable bytes/numeric results, dry terrain exclusion and matching seam vertices. Meaningful Release tests must remain active under NDEBUG and run offline. Keep approximation simple/display-first; no real fluid solver or ecology system. Document units/axes, integration API, limitations and the required actual moving/rendered review before visual acceptance. No external paid APIs, credentials changes, deployment/release or push. Source base current main includes reference landscape and reviewed domain modules.
+
+
+URL: https://jules.google.com/session/8065357076113417676

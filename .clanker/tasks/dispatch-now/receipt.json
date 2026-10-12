@@ -1,0 +1,22 @@
+{
+  "task_id": "dispatch-now",
+  "native_tasks": [
+    "creature_pose_revision",
+    "stance_walk_revision",
+    "needs_persistence_retrieval"
+  ],
+  "agy_tasks": [
+    "agy-environment-palette",
+    "agy-habitat-dressing",
+    "agy-creature-surfacing"
+  ],
+  "jules_sessions": [
+    "15605854971730070819",
+    "8327281556040443846",
+    "8065357076113417676"
+  ],
+  "local_task_dispatches": 6,
+  "implementation_status": "running/reviewing; no results promoted",
+  "agy_retries": "same bounded scopes, explicit isolated projects and captured final JSON",
+  "paid_api_spend": 0
+}

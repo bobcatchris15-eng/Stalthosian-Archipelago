@@ -24,3 +24,22 @@ All six local dispatches are used and workers finished/released. Gait grounding 
 New Jules needs persistence session15605854971730070819 is the only pending remote task, owning persistence.hpp/tests/persistence.cpp/docs/needs-persistence.md. Retrieve/review in isolation before integration. No need to reretrieve prior completed/integrated sessions. Lowest capable model/effort and separate Jules3/100day policy remain authoritative.
 
 AGY worker addition: user authorized a separate three-concurrent Antigravity pool targeting Gemini3.8Flash. Installed agy CLI lists gemini-3.8-flash-low/medium/high; headless JSON smoke on low/low returned SUCCESS and AGY_READY. Default to low, increase only for bounded task needs; use isolated worktrees, explicit print timeout and reviewed receipts. Native3/Jules3/AGY3 concurrency pools are independent; keep existing wake time/dispatch bounds. Read tasks/agy-readiness/receipt.json and docs in .clanker/autoclank/agy-worker-pool.md.
+
+
+## Direct user dispatch - 2026-10-11 20:54 onward
+
+User explicitly requested immediate dispatch into available worker pools. Six bounded local tasks launched in isolated worktrees, respecting independent native3 and AGY3 pools:
+- Native creature_pose_revision (Luna medium): preserve authored leg lengths, correct body stance/tail pose; owns creature.py/commands build/new anatomy_pose.py/tests/new doc.
+- Native stance_walk_revision (Luna high): actual stance pinning/stride/contact math, rig.py/gait.py/test_gait and necessary walk test_blender assertions. Coordinate shared pose contract directly with creature worker.
+- Native needs_persistence_retrieval (Luna medium): retrieve/review Jules15605854971730070819 patch. CLI says Awaiting User Feedback, but patch was available. Two out-of-scope files (.gitignore and root persistence_full.cpp) excluded. Candidate retained hero species mismatch identified and fixed; tests/review ongoing.
+- AGY environment palette (3.8 Flash Low/low): new C++ palette header/tests/doc only.
+- AGY habitat dressing (3.8 Flash Low/low): new C++ clustered placement header/tests/doc only.
+- AGY creature surfacing (3.8 Flash Medium/medium): new Blender helper/offline tests/material lookdev doc only. No creature.py overlap.
+
+AGY initial runs made generation requests but no owned-file edits. Their exact recorded PIDs were stopped and the same tasks retried with --new-project, inline complete briefs and captured JSON/exit receipts, without permission bypass or credential changes. Retry runner IDs and raw logs are in tasks/agy-*/launch.json and ignored var/reports/agy-*; inspect process-result.json before claiming success. Cap remains3 concurrent AGY tasks; retries are the same bounded tasks, not new scope.
+
+Two remaining Jules slots filled: host needs/physical contacts session8327281556040443846 owns engine/main.cpp, scripts/Run.ps1 and new host-needs-contact.md; shore surface geometry session8065357076113417676 owns new shore_mesh.hpp/tests/shore_mesh.cpp/doc. Needs persistence15605854971730070819 remains the third remote slot pending review/feedback resolution. No files overlap among these remote jobs or the local/AGY owned source sets. Retrieve/review completed results in isolation before integration.
+
+Stable installed Jules CLI copy is var/tools/jules/jules.exe, SHA256 e241506fb0b8f082ee9ca7f7fad094ec28a3b560e52f5d6788256400f4b66a09. The npm run.cjs launcher extracts/deletes shared Local/Temp/jules_tmp/jules.exe and concurrent invocations caused ENOENT. Use stable binary to avoid that race. No credentials/global settings changed.
+
+Previous isolated leg-extension suite finished1958passed/2skipped in932.87sec. That candidate stays rejected for display quality despite tests; current pose worker preserves lengths instead. Six local task dispatches used this direct run. Resume existing tasks before new local dispatch, retain receipts/ownership and check HALT. Current source publication remains9829870; new dispatch records will be scoped-published, worker implementation not yet integrated. No full draft, visual, gait or FPS acceptance claim.
