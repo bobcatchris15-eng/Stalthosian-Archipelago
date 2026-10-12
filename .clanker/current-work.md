@@ -92,3 +92,24 @@ host8327281556040443846 is now under isolated review-jules-host-needs; preserve
 scope and verify actual contact/save/reload before integration. Needs persistence
 is already publisheda3f29a9; older5999252246045191178 was integrated previously.
 Three native reviewers active, independent AGY/Jules pools remain authorized.
+
+## Active review checkpoint — 2026-10-12 01:34 America/Chicago
+
+Reviewed shore mesh now passes root Release10/10 CTest suites. Practical cell/
+vertex/index budgets, canonical shared-edge crossings, diagonal topology and
+nonzero triangle areas are tested. Both bed and surface face upward under the
+domain convention; Wicked must reverse both index sets. Edge crossings remain
+approximate over stepped terrain. Actual host shore wiring and visual review
+are pending, so this establishes a tested mesh contract only.
+
+Material helper review completed; root reframed all three actual Blender sphere
+swatches to fix original cropping. The helper is a root toolkit candidate while
+full suite session69263/Python7248 runs, logvar/reports/packet-seven-toolkit-surfacing-full.log.
+No baking/UV/packing/glTF or creature assignment is implemented by this helper.
+
+Current native work: review-jules-host-needs; smalltrotter-reference-anatomy.
+Shore review complete. AGY scenery renderer started in isolated worktree using
+Gemini3.8FlashMedium/medium; only new environment_scene.hpp/doc owned. New Jules
+locomotion phase session16357908828939929627 owns only new locomotion_clip header/
+test/doc to address measured clip/host speed mismatch; no host overlap. Continue
+existing tasks before fresh dispatch. Wake started01:22; checkpoint by01:57.

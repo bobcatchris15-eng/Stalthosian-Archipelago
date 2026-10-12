@@ -1,0 +1,43 @@
+{
+  "task_id": "review-shore-mesh",
+  "outcome": "candidate corrected, winding semantics updated, and independently verified",
+  "worktree": "var/worktrees/review-shore-mesh",
+  "branch": "codex/review-shore-mesh",
+  "commit": "1022d8ef557aeaefa8fc4bb50643aeab8f673257",
+  "changed_paths": [
+    "stalthos-runtime/domain/shore_mesh.hpp",
+    "stalthos-runtime/tests/shore_mesh.cpp",
+    "stalthos-runtime/docs/shore-mesh-draft.md"
+  ],
+  "findings_and_fixes": [
+    "Replaced quadratic linear vertex lookup with deterministic canonical grid-vertex/edge-crossing keys and ordered caches.",
+    "Clips two triangles per cell; ambiguous diagonal wet-corner cases split along the dry diagonal to avoid fan bridges.",
+    "Rejects grids over 65,536 cells before sample allocation; hard caps output at 16 vertices and 24 indices per cell.",
+    "Uses 28 deterministic bisection steps per cached wet/dry edge crossing. This approximates the boolean wet boundary; it is not an analytic water/terrain intersection because ReferenceLandscape::height includes step noise.",
+    "Both the visible surface and bed use conventional +Y domain winding so the creek substrate remains visible from above. The Wicked adapter uses reversed normal cross-product order and must reverse indices for upward host-facing normals."
+  ],
+  "verification": {
+    "compiler": "MSVC 19.51, C++17",
+    "flags": "/O2 /W4 /WX /EHsc /permissive-",
+    "command": "cl /nologo /std:c++17 /O2 /W4 /WX /EHsc /permissive- /Fe:var\\tests\\review_shore_mesh.exe stalthos-runtime\\tests\\shore_mesh.cpp && var\\tests\\review_shore_mesh.exe",
+    "exit_code": 0,
+    "output": "shore_mesh: shoreline mesh suite passed at 4.0m and 0.75m (65,536-cell limit); 0.1m over-budget request rejected before allocation. Bed and surface both assert +Y domain winding. Output: shore mesh: winding, area, shared seams, diagonal topology, determinism, and finite budgets passed",
+    "coverage": [
+      "deterministic repeated topology",
+      "finite vertices, valid indices, in-patch bounds",
+      "nonzero 3D triangle area and surface/bed winding",
+      "matching surface and bed X/Z seam coordinate sets with no duplicate same-material vertices",
+      "synthetic diagonal wet-corner case confirms separate components do not share a fan triangle",
+      "resolution validation, early over-budget rejection, and maximum admitted grid output budgets"
+    ]
+  },
+  "source_sha256": {
+    "stalthos-runtime/domain/shore_mesh.hpp": "57a4462d26d086ded8c63a074e6e377b4105e1cd99865dc46800fa76d3336ae1",
+    "stalthos-runtime/docs/shore-mesh-draft.md": "eba9ffb2b1b4f770c59d3a15bb441cdf0e9dccbf337748138fefb3123c159991",
+    "stalthos-runtime/tests/shore_mesh.cpp": "0315784bbe1961716742b567b0553c6606b6ff6940a7ea6b1bb46f0c9700c816"
+  },
+  "limitations": [
+    "No Wicked host, CMake, root source, or planning files were edited.",
+    "The candidate is a bounded draft mesh only; no integrated rendering or visual acceptance evidence is claimed."
+  ]
+}

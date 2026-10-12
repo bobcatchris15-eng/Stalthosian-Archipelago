@@ -232,7 +232,7 @@ Store receipts by gate/run ID, with source revision plus dirty input hashes, too
 
 ## 9. Decisions still open
 
-- User-selected image references for final photographic/artistic quality.
+- Smalltrotter primary user image is Decided: `stalthos-toolkit/references/creatures/smalltrotter/user-primary.png`. Reference anatomy, materials and motion review remain To test; remaining species and environment image targets are still open.
 - Refine the selected Wicked/C++17 build/import workflow using M1 evidence.
 - Actual reference CPU/RAM/storage/driver, engine availability and build toolchain locations.
 - World scale, developmental and seasonal pacing, camera tether, activation budgets and retained-identity limits, resolved by representative tests.

@@ -1,0 +1,8 @@
+Session is created.
+ID: 16357908828939929627
+Task: One bounded locomotion contract for Stalthosian Archipelago. Read AGENTS.md and toolkit docs/stance-walk-revision.md, runtime foundation and engine/main.cpp (read only). Own ONLY NEW stalthos-runtime/domain/locomotion_clip.hpp, tests/locomotion_clip.cpp, docs/locomotion-clip.md. No host/CMake/toolkit/planning edits.
+Observed actual GLB walk: local duration2s, stride.162m, authored actor rootdelta.162m/cycle. Host still independently moves2m/s, creating sliding. Implement plainC++17 finite-validated locomotion phase/root displacement helpers driven by signed actual body distance: bounded cyclic phase advance from distance/stride, exact wrap counts/displacement accounting for reversals and multiple cycles, in-place root removal/composition avoiding duplicate movement. Preserve directplayer movement authority; helper cannot choose speed/path or allow camera steering. Frozen dead/rest distancezero stops. Reject zero/nonfinite stride/duration/displacement, overflow; negative distance supported. No unbounded loops for large finite deltas. Document how futureWicked adapter uses actual exported clipmetadata and removes sourceRoottranslation while retaining limbchannels; no fakeimport/runtimefootlock claim.
+Offline optimized C++ tests coverforward/back/reversal/exactloop/largefinite/zeroandNaN/Inf/consistentworldvsrootdisplacement. Use activechecks underNDEBUG. Root validatesnative later. No networkpaidAPIs/credentials/deployment. Receiptcommands/hashes actual; newfilesonly, no unrelatedrootartifacts. Keep taskbounded.
+
+
+URL: https://jules.google.com/session/16357908828939929627
