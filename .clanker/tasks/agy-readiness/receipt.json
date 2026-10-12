@@ -1,0 +1,22 @@
+{
+  "task_id": "agy-readiness",
+  "executable": "C:/Users/Chris/AppData/Local/agy/bin/agy.exe",
+  "model_listing": "gemini-3.8-flash-low/medium/high verified via agy models",
+  "headless_smoke": {
+    "conversation_id": "d8a3ae1e-d558-44e3-b800-1420fbcaf58b",
+    "status": "SUCCESS",
+    "response": "AGY_READY\n",
+    "duration_seconds": 3.0041943,
+    "num_turns": 1,
+    "usage": {
+      "input_tokens": 13954,
+      "output_tokens": 4,
+      "thinking_tokens": 0,
+      "cache_read_tokens": 0,
+      "total_tokens": 13958
+    }
+  },
+  "scope": "tool-free headless response only; editing/task implementation not yet tested",
+  "max_active_agy_workers": 3,
+  "raw_logs": "var/reports/agy-readiness"
+}
