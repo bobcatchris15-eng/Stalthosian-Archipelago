@@ -4,6 +4,7 @@
 #include "domain/foundation.hpp"
 #include "domain/persistence.hpp"
 #include "domain/lifecycle.hpp"
+#include "domain/needs.hpp"
 #include "domain/reference_landscape.hpp"
 #include <windows.h>
 #include <shellapi.h>
@@ -147,7 +148,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     double duration = 15;
     double calendarScale = 1.0;
     double creatureSoleOffset = .652438;
-    bool interactive = false, diagnosticWalk = false;
+    bool interactive = false, diagnosticWalk = false, diagnosticNeeds = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -155,6 +156,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
+            else if (key == L"--diagnostic-needs") diagnosticNeeds = true;
             else if (key == L"--output" && i+1 < argumentCount) output = argv[++i];
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
             else if (key == L"--creature" && i+1 < argumentCount) creature = argv[++i];
@@ -185,6 +187,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         double loadedCalendar=0, loadedPhysical=0;
         stalthos::HeroSpecies heroSpecies=stalthos::HeroSpecies::Smalltrotter;
         std::optional<stalthos::Lifecycle> lifecycle;
+        std::optional<stalthos::needs::NeedsCore> needs;
+        std::optional<stalthos::persistence::HeroNeedsSnapshot> loadedNeeds;
         uint64_t heroId=1; bool lifecycleSnapshotLoaded=false; double loadedLifecycleAge=0; int loadedLifecycleStage=-1;
         uint64_t successorPriorDeadId=0; bool successorDeathTruthPreserved=false;
         bool successorSavedDeathTruthPreserved=false; std::size_t savedDeadHeroCount=0;
@@ -203,6 +207,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (data.hero) {
                 if (successorId) throw std::runtime_error("successor selection requires a save with no current hero");
                 heroId=data.hero->id;
+                if (data.heroNeeds && data.heroNeeds->heroId == heroId) {
+                    loadedNeeds = data.heroNeeds;
+                    if (!data.heroLifecycle) heroSpecies = data.heroNeeds->species;
+                }
                 lifecycleSnapshotLoaded=data.heroLifecycle.has_value();
                 if(data.heroLifecycle) { loadedLifecycleAge=data.heroLifecycle->calendarAge; loadedLifecycleStage=static_cast<int>(data.heroLifecycle->stage); }
                 heroSpecies = data.heroLifecycle ? data.heroLifecycle->species : heroSpecies;
@@ -228,7 +236,25 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             world.setHero(1, 1);
         }
         if(!lifecycle) lifecycle.emplace(heroSpecies);
+        needs.emplace(heroSpecies);
+        if (loadedNeeds && loadedNeeds->species == heroSpecies)
+            needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
+        if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
+        stalthos::InteractionsCore interactions(256);
         landscape=stalthos::domain::ReferenceLandscape(world.worldSeed());
+
+        // Finite resource pools
+        double creekResource = 1000000.0;
+        std::vector<double> shrubResources(8, 2.0); // Allow up to 8 shrubs with 2.0 food each
+
+        // Cache closest shrubs for interaction
+        std::vector<stalthos::domain::Placement> cachedShrubs;
+        for (const auto& placement : landscape.placements())
+            if (placement.kind==stalthos::domain::PlacementKind::Shrub) cachedShrubs.push_back(placement);
+        auto distanceToPlant=[](const auto& p, double hx, double hz){return (p.x-hx)*(p.x-hx)+(p.z-hz)*(p.z-hz);};
+        std::stable_sort(cachedShrubs.begin(),cachedShrubs.end(),[&](const auto& a,const auto& b){return distanceToPlant(a,12,15)<distanceToPlant(b,12,15);});
+        if (cachedShrubs.size()>8) cachedShrubs.resize(8);
+
         wi::arguments::Parse(commandLine);
         SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
         WNDCLASSW cls{}; cls.hInstance = instance; cls.lpfnWndProc = WindowProc;
@@ -321,6 +347,24 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t runCalls=0; bool screenshot=false, userClosed=false, earlyScreenshot=false, lateScreenshot=false;
         std::vector<std::string> lifecycleTransitions;
         std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> channelPoseBaseline; float localBoneDelta=0, minimumAnimationTimer=std::numeric_limits<float>::infinity(), maximumAnimationTimer=0; uint64_t animationPlayingFrames=0;
+
+        bool initialNeedsRecorded = false;
+        double initialHunger = 0, initialThirst = 0, initialFatigue = 0;
+        double initialCreekResource = creekResource, initialShrub0Resource = shrubResources.empty() ? 0 : shrubResources[0];
+
+        bool eligibilityWater = false;
+        bool eligibilityShrub = false;
+
+        // Sequence state for diagnostic-needs
+        int diagnosticSequenceStage = 0;
+        double diagnosticTimer = 0.0;
+
+        uint64_t physicalInteractionSession = 1;
+        bool previousInteractDown = false;
+        uint64_t appliedDrinkContacts = 0, appliedBrowseContacts = 0;
+        uint64_t waterEligibleFrames = 0, shrubEligibleFrames = 0;
+        bool waterContactApplied = false, shrubContactApplied = false;
+
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
         while (true) {
@@ -346,6 +390,23 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
             bool walking = diagnosticWalk || down('W');
+            if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
+                walking = true;
+                double targetX = x;
+                double targetZ = z;
+                if (diagnosticSequenceStage == 0 && !cachedShrubs.empty()) {
+                    targetX = cachedShrubs.front().x;
+                    targetZ = cachedShrubs.front().z;
+                } else {
+                    targetX = 8.0 * std::sin(static_cast<double>(z) / 43.0) + 2.0 * std::sin(static_cast<double>(z) / 17.0);
+                    targetZ = static_cast<double>(z) + 4.0;
+                }
+                const double targetYaw = std::atan2(targetX - x, targetZ - z);
+                double diff = targetYaw - yaw;
+                while (diff > pi) diff -= 2 * pi;
+                while (diff < -pi) diff += 2 * pi;
+                yaw += static_cast<float>(diff * std::min(1.0, 5.0 * dt));
+            }
             heroIntent.setDirect(walking || down('S') || down('A') || down('D'));
             float speed=heroAlive?(walking?2.f:down('S')?-1.f:0.f):0.f;
             auto forward=stalthos::BeastCore::bodyForward(yaw);
@@ -370,6 +431,99 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             Camera(x,y,z,cameraMode); app.Run(); ++runCalls;
             if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
+            if(!initialNeedsRecorded) {
+                initialNeedsRecorded = true;
+                initialHunger = needs->hunger();
+                initialThirst = needs->thirst();
+                initialFatigue = needs->fatigue();
+                initialCreekResource = creekResource;
+                initialShrub0Resource = shrubResources.empty() ? 0 : shrubResources[0];
+            }
+
+            // Needs stop advancing after the terminal hero transition.
+            if (heroAlive) needs->advance(timeStep);
+
+            // Retrieve body-relative physical position for eligibility, independent of camera
+            XMFLOAT3 bodyPos;
+            if (auto* transform = scene.transforms.GetComponent(heroMotionRoot)) {
+                bodyPos = transform->GetPosition();
+            } else {
+                // If hero motion root is missing, the hero cannot physically interact.
+                // explicitly avoid falling back to camera location (x, y, z).
+                bodyPos = XMFLOAT3(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
+            }
+
+            // Interaction eligibility (plausible body-relative reach)
+            // Water: hero is within 3.0 meters of creek center and low enough
+            const bool bodyInLandscape = std::isfinite(bodyPos.x) && std::isfinite(bodyPos.y) && std::isfinite(bodyPos.z) && landscape.inBounds(bodyPos.x, bodyPos.z);
+            const double creekCenterX = bodyInLandscape ? 8.0 * std::sin(static_cast<double>(bodyPos.z) / 43.0) + 2.0 * std::sin(static_cast<double>(bodyPos.z) / 17.0) : 0.0;
+            const double surfaceY = bodyInLandscape ? landscape.waterSurface(bodyPos.x, bodyPos.z) : 0.0;
+            eligibilityWater = heroAlive && bodyInLandscape && std::abs(static_cast<double>(bodyPos.x) - creekCenterX) < 3.0 &&
+                landscape.waterContains(bodyPos.x, bodyPos.z) && static_cast<double>(bodyPos.y) - surfaceY < 1.0;
+            if (eligibilityWater) ++waterEligibleFrames;
+
+            // Shrub: hero is near one of the first 8 shrub placements
+            eligibilityShrub = false;
+            int nearbyShrubIndex = -1;
+            for (size_t i = 0; !plant.empty() && importedInstances > 0 && i < cachedShrubs.size(); i++) {
+                if (heroAlive && bodyInLandscape && std::abs(cachedShrubs[i].y - bodyPos.y) <= 1.5 && distanceToPlant(cachedShrubs[i], bodyPos.x, bodyPos.z) < 4.0) { // 2m horizontal reach and bounded vertical reach
+                    eligibilityShrub = true;
+                    nearbyShrubIndex = static_cast<int>(i);
+                    break;
+                }
+            }
+            if (eligibilityShrub) ++shrubEligibleFrames;
+
+            bool tryInteract = false;
+
+            if (diagnosticNeeds && heroAlive) {
+                diagnosticTimer += dt;
+                if (diagnosticSequenceStage == 0) {
+                    if (eligibilityShrub) {
+                        tryInteract = true;
+                        diagnosticSequenceStage = 1;
+                        diagnosticTimer = 0;
+                    }
+                } else if (diagnosticSequenceStage == 1) {
+                    if (diagnosticTimer > 1.0) {
+                        diagnosticSequenceStage = 2;
+                    }
+                } else if (diagnosticSequenceStage == 2) {
+                    if (eligibilityWater) {
+                        tryInteract = true;
+                        diagnosticSequenceStage = 3;
+                    }
+                }
+            }
+
+            bool interactDown = down('E') || tryInteract;
+            if (heroAlive && interactDown) {
+                // Ensure idempotence: holding E produces one session. Re-pressing increments session.
+                if (!previousInteractDown) {
+                    physicalInteractionSession++;
+                    interactions.beginSession(physicalInteractionSession);
+                }
+
+                if (eligibilityWater) {
+                    double drinkAmount = 0.5;
+                    // Provide a stable event ID per type during this session.
+                    if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, drinkAmount, creekResource)) {
+                        needs->drink(drinkAmount);
+                        ++appliedDrinkContacts; waterContactApplied = true;
+                    }
+                }
+
+                if (eligibilityShrub && nearbyShrubIndex >= 0) {
+                    double feedAmount = 0.5;
+                    // Using shrub index to ensure unique event ID for each shrub.
+                    if (interactions.applyContact(physicalInteractionSession, 200 + nearbyShrubIndex, eligibilityShrub, feedAmount, shrubResources[nearbyShrubIndex])) {
+                        needs->feed(feedAmount);
+                        ++appliedBrowseContacts; shrubContactApplied = true;
+                    }
+                }
+            }
+            previousInteractDown = interactDown;
+
             if(!earlyScreenshot && elapsed>=std::min(1.,duration*.25)) earlyScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-early.png").u8string());
             if(!lateScreenshot && elapsed>=std::min(1.35,duration*.75)) lateScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-late.png").u8string());
             if(!screenshot && elapsed>=std::min(5.,duration*.5)) screenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"draft-host.png").u8string());
@@ -378,6 +532,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             stalthos::persistence::HostPose pose{{x,Ground(x,z),z},yaw,static_cast<std::uint8_t>(cameraMode)};
             auto data=stalthos::persistence::captureSave(clock, world, pose);
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
+            if(data.hero) data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,data.hero->id);
             stalthos::persistence::writeSave(saveState,data);
             if(successorId) {
                 const auto saved=stalthos::persistence::readSave(saveState);
@@ -395,7 +550,18 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"calendar_seconds",clock.calendarSeconds()},{"domain_world_seed",world.worldSeed()},
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
             {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},
-            {"diagnostic_walk",diagnosticWalk},{"calendar_scale",calendarScale},
+            {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
+            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"calendar_scale",calendarScale},
+            {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
+            {"needs_final", {{"hunger", needs->hunger()}, {"thirst", needs->thirst()}, {"fatigue", needs->fatigue()}}},
+            {"resources_initial", {{"creek", initialCreekResource}, {"shrub0", initialShrub0Resource}}},
+            {"resources_final", {{"creek", creekResource}, {"shrub0", shrubResources.empty() ? 0 : shrubResources[0]}}},
+            {"resources_finite", std::isfinite(creekResource) && creekResource >= 0 && std::all_of(shrubResources.begin(), shrubResources.end(), [](double value) { return std::isfinite(value) && value >= 0; })},
+            {"eligibility_water", eligibilityWater}, {"eligibility_shrub", eligibilityShrub},
+            {"water_eligible_frames", waterEligibleFrames}, {"shrub_eligible_frames", shrubEligibleFrames},
+            {"water_contact_applied", waterContactApplied}, {"shrub_contact_applied", shrubContactApplied},
+            {"drink_contacts_applied", appliedDrinkContacts}, {"browse_contacts_applied", appliedBrowseContacts},
+            {"diagnostic_needs_stage", diagnosticSequenceStage},
             {"lifecycle_stage",static_cast<unsigned>(lifecycle->stage())},{"lifecycle_age_seconds",lifecycle->calendarAge()},{"lifecycle_transitions",lifecycleTransitions},
             {"lifecycle_snapshot_loaded",lifecycleSnapshotLoaded},{"loaded_lifecycle_age_seconds",loadedLifecycleAge},{"loaded_lifecycle_stage",loadedLifecycleStage},
             {"hero_alive",world.snapshot().hero.has_value()},{"hero_death_known",world.heroDeathKnown(heroId)},
@@ -405,7 +571,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},
-            {"save_scope","foundation inventories, clocks, diagnostic pose and current hero lifecycle; needs/bonds not connected"},
+            {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected"},
             {"pose_vertical_policy","analytical ground projection; no saved vertical body dynamics"},
             {"save_path",saveState.u8string()},{"load_path",loadState.u8string()},
             {"host_pose",{{"x",x},{"z",z},{"heading_radians",yaw},{"camera_mode",cameraMode}}},

@@ -198,3 +198,18 @@ for publication as authoring support only. Root inspected framed Blender spheres
 PNGhash9edfb21de008fa23c2594a4aad3f4c125e7fc72c9db3e49df82e166f13b05d2d.
 No mesh assignment/baking/glTF/runtime material acceptance. Reference anatomy,
 physical contact host and AGY sceneryrenderer remain isolated active tasks.
+
+Native needs integration root proof complete: Wicked Release build + CTest10/10,
+actual50second route imported8shrubs and appliedexactly1browse+1drink. Hunger
+.75→.25492896243079316, thirst.75→.2598579248615799; finite shrub2→1.5,
+creek1000000→999999.5. STL4 reload restored exact hunger/thirst/fatigue before
+advancing; corrupt load exitedwith rejection and preservedprior savehash.
+See .clanker/tasks/packet-seven-host-integration/receipt.json. Resourcepools remain
+run-local, headanimations absent, prescribedspeed/rootmotion mismatch unresolved.
+
+Reference anatomy7f31738 remains rootcandidateUNPUBLISHED: currentfullsuite
+session19876 has a failure. Root found rig rebuilds old shape/joints while mesh
+uses profiledimensions/Bezierneck, and separate eyes/bristles lack skinning.
+Existing stanceworker resumed as reference-rig-alignment in isolation toserialize
+actual jointgraph/shape andskin featuremeshes. Sixlocaldispatches usedthiswake;
+no additional scopes. Wakecheckpointdeadline01:57 America/Chicago.

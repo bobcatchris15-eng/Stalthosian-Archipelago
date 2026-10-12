@@ -1,0 +1,43 @@
+{
+  "exact_needs_reload": "passed",
+  "needs_before": {
+    "fatigue": 0.0,
+    "hunger": 0.75,
+    "thirst": 0.75
+  },
+  "release_build": "passed",
+  "outcome": "validated native host needs feasibility",
+  "failed_load_preserves_previous_save": "passed",
+  "resources_finite": true,
+  "source_session": "8327281556040443846",
+  "limitations": [
+    "Resource pools and contact ledger reset between runs",
+    "No browse or drink head animation",
+    "Host speed and clip root motion still mismatch",
+    "Reference anatomy candidate failed full tests and stays unpublished",
+    "No visual or FPS acceptance"
+  ],
+  "resources_after": {
+    "creek": 999999.5,
+    "shrub0": 1.5
+  },
+  "browse_contacts": 1,
+  "evidence": [
+    "var/reports/packet-seven-host-build.log",
+    "var/reports/packet-seven-host-ctest.log",
+    "var/reports/runtime/20261012-013905-976974eb/runtime-receipt.json",
+    "var/reports/runtime/20261012-014054-e85c9968/runtime-receipt.json",
+    "var/reports/packet-seven-invalid-load.log"
+  ],
+  "needs_after": {
+    "fatigue": 0.24644812153968912,
+    "hunger": 0.25492896243079316,
+    "thirst": 0.2598579248615799
+  },
+  "plant_instances": 8,
+  "diagnostic_stage": 3,
+  "drink_contacts": 1,
+  "diagnostic_seconds": 50,
+  "ctest": "10/10 passed",
+  "task_id": "packet-seven-host-integration"
+}

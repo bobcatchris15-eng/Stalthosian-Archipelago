@@ -1,0 +1,83 @@
+{
+  "task_id": "review-jules-host-needs",
+  "outcome": "completed",
+  "source_session": "8327281556040443846",
+  "source_session_url": "https://jules.google.com/session/8327281556040443846",
+  "source_base": "a3f29a99f8e1b1c8c36502a66cf61301ef3d40a6",
+  "branch": "codex/review-jules-host-needs",
+  "commit": "2f93dee148611ade67b956deb9a60e4917d99448",
+  "files": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/host-needs-contact.md"
+  ],
+  "review_corrections": [
+    "Replaced inaccessible ReferenceLandscape::creekCenter call with the fixture creek formula local to the host.",
+    "Moved diagnostic steering before host movement and kept normal player movement unchanged.",
+    "Required a successful plant import before shrub contacts can qualify.",
+    "Used wetted fixture membership plus body-relative creek distance and vertical limit for drinking.",
+    "Connected current hero needs to STL4 restore and save; older snapshots without needs retain zero defaults and successors start fresh.",
+    "Recorded contact eligibility and applied counts, before/after needs, finite resource balances, needs save/load flags, and diagnostic stage."
+  ],
+  "native_release_build": "passed using VS 18 2026, pinned Wicked revision/cache; source worktree and build output isolated under var/worktrees/review-jules-host-needs/var",
+  "native_diagnostic": {
+    "receipt": "var/worktrees/review-jules-host-needs/var/reports/runtime/20261012-013236-18e71dad/runtime-receipt.json",
+    "duration_seconds": 44.2503,
+    "diagnostic_stage": 3,
+    "plant_import_instances": 8,
+    "browse_contacts_applied": 1,
+    "drink_contacts_applied": 1,
+    "needs_initial": {
+      "thirst": 0.75,
+      "hunger": 0.75,
+      "fatigue": 0.0
+    },
+    "needs_final": {
+      "thirst": 0.2588500598597312,
+      "hunger": 0.2544250299298639,
+      "fatigue": 0.22125149649327813
+    },
+    "resources_initial": {
+      "shrub0": 2.0,
+      "creek": 1000000.0
+    },
+    "resources_final": {
+      "shrub0": 1.5,
+      "creek": 999999.5
+    },
+    "resources_finite": true,
+    "state_saved": true
+  },
+  "native_save_reload": {
+    "receipt": "var/worktrees/review-jules-host-needs/var/reports/runtime/20261012-013512-42c92a4f/runtime-receipt.json",
+    "state_loaded": true,
+    "needs_snapshot_loaded": true,
+    "needs_snapshot_saved": true,
+    "needs_at_load": {
+      "thirst": 0.2588500598597312,
+      "hunger": 0.2544250299298639,
+      "fatigue": 0.22125149649327813
+    },
+    "ok": true
+  },
+  "failed_load_save_protection": {
+    "rejected": true,
+    "existing_target_unchanged": true,
+    "sha256": "A2B2014EC95DF3AFC2606B6D91140657D8190A388C806BC533D81962374835FA",
+    "receipt": "var/worktrees/review-jules-host-needs/var/reports/runtime/20261012-013352-462d18a4/runtime-receipt.json"
+  },
+  "verification": {
+    "tests": "not run",
+    "full_draft_complete": false,
+    "diff_check": "passed",
+    "visual_accepted": false,
+    "frame_time_measured": false
+  },
+  "known_remaining": [
+    "No browsing or drinking head/neck animation.",
+    "Host gait speed remains prescribed at 2 m/s without imported root-motion extraction; keep separate from this task.",
+    "Resource pools and contact ledger are run-local and not persisted.",
+    "Native result is host feasibility only; no visual or frame-rate acceptance."
+  ],
+  "root_worktree_source": "unchanged"
+}
