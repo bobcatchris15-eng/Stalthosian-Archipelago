@@ -24,7 +24,6 @@
   "max_active_jules_workers": 3,
   "jules_daily_dispatch_ceiling": 100,
   "pending_jules_sessions": [
-    "8626272896036565583",
     "9731068007906336510"
   ],
   "max_active_agy_workers": 3,

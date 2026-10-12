@@ -218,3 +218,14 @@ both-axisbounds remaincoveragegaps, notobserved currentfailure. Noeditsfromrevie
 AlloldJules5999252246045191178/17364966271135416495/12663720658277222606
 alreadyintegrated: doNOTreretrieve. No full draft/referenceparity/30FPSacceptance.
 Planningreadonly; unrelateduntrackedpreserved. No paidAPI/credentials/release/deploy.
+## Cadence review collected — 2026-10-12 11:49 America/Chicago
+
+Jules8626272896036565583 completed and pulled isolated; patch onlyownednewdoc.
+Parent revised claims: matchingdistancephase does NOT prove renderedfootlocking,
+currentcontactgate samplinghindpadsonly, all4feetcoverage/motionneedverification.
+Reviewed stalthos-runtime/docs/gait-cadence-review.md linksactualrootruns and
+proposes provisional0.5-1.5cycles/s plus authoredstride/fastergait work. Thisis
+analysis, no paceimplementation. Avoidoverlappingmain.cpp while Julescamera9731068007906336510
+owns it. PendingpoolnowcameraJules+AGYfootform; native reviewer finished.
+Anatomypromotionpublished d59ad8f main/origin0/0; fullsuite1985passed2skip.
+Nextcollectfrozenfootasset actualrenders/gates; fullrootregressionbeforepromotion.

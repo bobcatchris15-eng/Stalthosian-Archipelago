@@ -1,0 +1,16 @@
+{
+  "task_id": "jules-gait-cadence-review",
+  "session_id": "8626272896036565583",
+  "owned_paths": [
+    "stalthos-runtime/docs/gait-cadence-review.md"
+  ],
+  "finished": "2026-10-12T11:48:58.6988763-05:00",
+  "status": "collected reviewed source-analysis only",
+  "parent_corrections": [
+    "phase equality does not prove host planted feet",
+    "contacts currently hind pads only",
+    "added source stride caps and actual local runs",
+    "pace policy pending camera ownership release"
+  ],
+  "implementation": false
+}
