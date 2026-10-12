@@ -132,3 +132,23 @@ this image and is not reference-fidelity acceptance. The stance worker received
 this steering. Inputs were copied into the active AGY surfacing worktree; its
 running inline prompt predates the image, so confirm reference use at review or
 resume that same task with the reference before integrating materials.
+
+## Packet six review — 2026-10-11 21:19 America/Chicago
+
+Merged candidate STL4 optional current-hero needs passed the root Wicked Release
+build and all seven CTest suites (packet-six-native-build/ctest logs under var/reports).
+Reviewed only the three assigned persistence files; unrelated Jules .gitignore
+and persistence_full.cpp additions were excluded. Identity/species consistency,
+normalized finite values, exact byte sizes, corrupt flags, legacy formats and
+prior-save preservation are covered. Host population/needs actions remain pending.
+Jules15605854971730070819 still reports Awaiting User Feedback; available patch
+was retrieved and reviewed, so do not repeatedly retrieve the same patch.
+
+Pose correction is a root toolkit candidate awaiting combined gait/full tests.
+The actual broadside remains a crude proxy far from the user Smalltrotter image.
+AGY palette, dressing and surfacing outputs are under two isolated native reviews;
+surfacing review caught swatch/source mismatch and overstated bake documentation.
+Jules shore8065357076113417676 completed; scoped patch is isolated at
+var/worktrees/review-shore-mesh. Root inspection rejects promotion pending practical
+budgets, removal of quadratic vertex search, winding/area/seam coverage and clipping
+review. Jules host8327281556040443846 remains In Progress.

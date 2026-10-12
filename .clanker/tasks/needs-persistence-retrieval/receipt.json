@@ -1,0 +1,59 @@
+{
+  "task_id": "needs-persistence-retrieval",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Review the pending Jules session and retrieve its patch without applying unrelated files.",
+      "met": true,
+      "how_checked": "Used stable jules.exe remote list --session and remote pull --session 15605854971730070819. Applied only stalthos-runtime/domain/persistence.hpp, stalthos-runtime/tests/persistence.cpp, and stalthos-runtime/docs/needs-persistence.md in var/worktrees/needs-persistence-review. Omitted .gitignore and persistence_full.cpp from the returned five-file diff."
+    },
+    {
+      "condition": "Write STL4 optional current-hero needs while preserving STL1/STL2/STL3 reads and existing APIs.",
+      "met": true,
+      "how_checked": "Reviewed the isolated candidate and ran the optimized standalone persistence executable; roundtrip, deterministic ordering, legacy fixtures, lifecycle, foundation, and needs scenarios passed. STL4 was added without changing captureSave or other existing API signatures."
+    },
+    {
+      "condition": "Validate needs identity/species, lifecycle and retained hero consistency, normalized values, flags, truncation/trailing bytes, and preserve prior saves on rejection.",
+      "met": true,
+      "how_checked": "Added retained-known-species cross-check after finding the submitted patch omitted it; tests exercise mismatched IDs, absent current hero, lifecycle and retained species mismatches, invalid values/species/resting flags, truncated/trailing payloads, and previous-save preservation."
+    },
+    {
+      "condition": "Check exact encoded sizes across all lifecycle/needs presence combinations and make optimized Release checks active under NDEBUG.",
+      "met": true,
+      "how_checked": "Four presence combinations assert encodedSize equals actual serialized byte count. Compiled with MSVC /std:c++17 /W4 /WX /EHsc /permissive- /O2 /DNDEBUG; the standalone check helper remains active. Output: var/reports/needs-persistence-review-test-run.log, 11/11 passed."
+    },
+    {
+      "condition": "Document STL4 additions, legacy defaults, tests/results, and missing host/player save integration.",
+      "met": true,
+      "how_checked": "Added stalthos-runtime/docs/needs-persistence.md with the wire record and legacy behavior, verified optimized test command/result, and explicit missing host/player integration boundary."
+    },
+    {
+      "condition": "Inspect any pending Jules user question; when the CLI cannot expose it, report the exact limitation and session link without marking the task complete.",
+      "met": false,
+      "how_checked": "Stable CLI remote list reports session 15605854971730070819 as Awaiting User Feedback. CLI help provides remote list/pull but no session-detail or feedback-question command; remote pull returns only a patch diff. Question content was not visible from these CLI surfaces. Session: https://jules.google.com/session/15605854971730070819. Candidate work is left partial and not integrated."
+    }
+  ],
+  "artifacts_changed": [
+    "var/worktrees/needs-persistence-review/stalthos-runtime/domain/persistence.hpp",
+    "var/worktrees/needs-persistence-review/stalthos-runtime/tests/persistence.cpp",
+    "var/worktrees/needs-persistence-review/stalthos-runtime/docs/needs-persistence.md",
+    "var/worktrees/needs-persistence-review commit 2f7b267cb21b076e9bf9c24212964da05b65cc09"
+  ],
+  "evidence": [
+    "var/reports/needs-persistence-jules-pull.txt SHA-256 0D16F2DF0ECA066E4321135DD30ABEFE08881236D3E798519F0C7BC3825881DA",
+    "var/reports/needs-persistence-review-test-run.log SHA-256 49A2D52546EA87FBCD69D6F7BE759202AB789DAE67AE03480CD8A95B34E1F6F4",
+    "stalthos-runtime/domain/persistence.hpp SHA-256 23ED6EF99689197BD91B1E906D6E7ED97730216BC32D297333AE7F04E8B19A6E",
+    "stalthos-runtime/tests/persistence.cpp SHA-256 89C0F9B3F95EB00690A1F5F30D6520C00A0613DD5E69E45363186B73D21112C0",
+    "stalthos-runtime/docs/needs-persistence.md SHA-256 7E69A74F5D098545C37281E312ED381AC44FD90346CF5FD309D62594147B7C87"
+  ],
+  "findings": [
+    "The submitted patch changed .gitignore and added an unowned root-level persistence_full.cpp; neither was applied to the review branch.",
+    "The submitted needs species validation compared against lifecycle but omitted a retained current hero when lifecycle was absent. The isolated review commit adds that check."
+  ],
+  "blockers": [
+    "The live Jules session remains Awaiting User Feedback. The CLI does not expose the pending question or a session detail view; report that state and limitation to the parent and do not mark the remote task complete."
+  ],
+  "assumptions_made": [
+    "The retained record matching the current hero identity is authoritative species evidence when lifecycle is absent; if lifecycle is present, existing validation already requires it to agree with the retained current hero."
+  ]
+}

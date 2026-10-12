@@ -130,17 +130,17 @@ void testMalformedFilesAndBounds() {
 
     data = SaveData{}; data.activeTransients = {{20, 1}, {21, 2}};
     writeSave(path, data);
-    // STL3 lifecycle presence adds one byte before the active list.
-    overwriteU64(path, 63, 20);
+    // STL4 lifecycle presence adds one byte, needs presence adds one byte before the active list.
+    overwriteU64(path, 64, 20);
     rejects([&] { (void)readSave(path); }, "duplicate or conflicting entity identity");
 
     data = SaveData{};
     data.retained.push_back({3, 4, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
     writeSave(path, data);
-    // The retained active flag follows the STL3 header and record fields at byte 70.
+    // The retained active flag follows the STL4 header and record fields at byte 71.
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(70); detail::write_u8(io, 2); io.flush();
+        io.seekp(71); detail::write_u8(io, 2); io.flush();
         check(io.good(), "failed to mutate retained boolean fixture");
     }
     rejects([&] { (void)readSave(path); }, "invalid retained boolean flag");
@@ -242,7 +242,8 @@ void testLegacyStl1Compatibility() {
     const auto path = std::filesystem::path("test_legacy_stl1.sav");
     std::ofstream out(path, std::ios::binary | std::ios::trunc);
     out.write("STL1", 4); detail::write_u32(out, 1); detail::write_double(out, 55);
-    detail::write_u64(out, 900); detail::write_u64(out, 4); detail::write_u8(out, 0);
+    detail::write_u64(out, 900); detail::write_u64(out, 4); detail::write_u8(out, 1);
+    detail::write_u64(out, 8); detail::write_u64(out, 2);
     detail::write_u32(out, 0); detail::write_u32(out, 0); detail::write_u32(out, 0);
     detail::write_u32(out, 2);
     detail::write_u64(out, 8); detail::write_u32(out, 0);
@@ -254,6 +255,10 @@ void testLegacyStl1Compatibility() {
         "STL1 physical default or fields changed");
     check(loaded.regions[0].revision == 0 && loaded.regions[1].revision == 1,
         "STL1 deterministic revision reconstruction changed");
+    const auto legacyNeeds = restoreHeroNeeds(loaded, HeroSpecies::Thistletail);
+    check(legacyNeeds.species() == HeroSpecies::Thistletail && legacyNeeds.hunger() == 0.0 &&
+        legacyNeeds.thirst() == 0.0 && legacyNeeds.fatigue() == 0.0 && legacyNeeds.injury() == 0.0 &&
+        !legacyNeeds.isResting(), "STL1 needs fallback was not explicit zero baseline");
     std::filesystem::remove(path);
 }
 
@@ -265,8 +270,8 @@ void testLifecycleStl3RoundtripAndValidation() {
     data.heroLifecycle = captureHeroLifecycle(source, data.hero->id);
     writeSave(path, data);
     const auto encoded = bytes(path);
-    check(encoded.size() == detail::encodedSize(data), "STL3 exact encoded size mismatch");
-    check(std::string(encoded.data(), encoded.data() + 4) == "STL3", "new save did not use STL3");
+    check(encoded.size() == detail::encodedSize(data), "STL4 exact encoded size mismatch");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL4", "new save did not use STL4");
     const auto loaded = readSave(path);
     check(loaded.heroLifecycle && loaded.heroLifecycle->heroId == 44 &&
         loaded.heroLifecycle->species == HeroSpecies::Reedcrest &&
@@ -275,8 +280,13 @@ void testLifecycleStl3RoundtripAndValidation() {
     const auto restored = restoreHeroLifecycle(loaded, HeroSpecies::Smalltrotter);
     check(restored.species() == HeroSpecies::Reedcrest && near(restored.calendarAge(), 4000.0) && restored.stage() == LifeStage::Adult,
         "captured lifecycle did not restore");
+    const auto legacyNeeds = restoreHeroNeeds(loaded, HeroSpecies::Smalltrotter);
+    check(legacyNeeds.species() == HeroSpecies::Reedcrest && legacyNeeds.hunger() == 0.0 &&
+        legacyNeeds.thirst() == 0.0 && legacyNeeds.fatigue() == 0.0 && legacyNeeds.injury() == 0.0,
+        "STL3 needs fallback did not use lifecycle species and zero baseline");
 
-    const auto previous = encoded;
+    writeSave(path, data);
+    const auto previous = bytes(path);
     auto rejectWrite = [&](SaveData invalid, const char* reason) {
         rejects([&] { writeSave(path, invalid); }, reason);
         check(bytes(path) == previous, "invalid lifecycle write changed previous save");
@@ -323,13 +333,17 @@ void testStl2MigrationAndStl3Corruption() {
     const auto migrated = restoreHeroLifecycle(old, HeroSpecies::Thistletail);
     check(migrated.species() == HeroSpecies::Thistletail && migrated.calendarAge() == 0.0 && migrated.stage() == LifeStage::Hatchling,
         "STL2 fallback did not use supplied species and age zero");
+    const auto legacyNeeds = restoreHeroNeeds(old, HeroSpecies::Thistletail);
+    check(legacyNeeds.species() == HeroSpecies::Thistletail && legacyNeeds.hunger() == 0.0 &&
+        legacyNeeds.thirst() == 0.0 && legacyNeeds.fatigue() == 0.0 && legacyNeeds.injury() == 0.0,
+        "STL2 needs fallback was not explicit zero baseline");
     old.retained.push_back({8, 2, HeroSpecies::Smalltrotter, RetentionReason::BondedPeer, true, true});
     const auto knownSpecies = restoreHeroLifecycle(old, HeroSpecies::Reedcrest);
     check(knownSpecies.species() == HeroSpecies::Smalltrotter && knownSpecies.calendarAge() == 0.0,
         "legacy fallback overrode the retained hero's known species");
     writeSave(path, old);
-    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '3',
-        "STL2 read/write migration did not emit STL3");
+    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '4',
+        "STL2 read/write migration did not emit STL4");
 
     SaveData data; data.hero = ActiveEntity{2, 3};
     data.heroLifecycle = HeroLifecycleSnapshot{2, HeroSpecies::Smalltrotter, 0.0, LifeStage::Hatchling};
@@ -348,7 +362,7 @@ void testStl2MigrationAndStl3Corruption() {
     writeSave(path, data);
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(4); detail::write_u32(io, 4); io.flush();
+        io.seekp(4); detail::write_u32(io, 5); io.flush();
     }
     rejects([&] { (void)readSave(path); }, "unsupported save version");
     std::filesystem::remove(path);
@@ -371,6 +385,109 @@ void testInvalidPhysicalTimeAndPose() {
     }
     std::filesystem::remove(path);
 }
+
+void testNeedsStl4RoundtripAndValidation() {
+    const auto path = std::filesystem::path("test_needs_stl4.sav");
+    SaveData data; data.hero = ActiveEntity{55, 8}; data.calendarSeconds = 12345;
+    needs::NeedsCore source(HeroSpecies::Brackenback);
+    source.restoreState(0.1, 0.2, 0.3, 0.4, true);
+    data.heroNeeds = captureHeroNeeds(source, data.hero->id);
+    writeSave(path, data);
+    const auto encoded = bytes(path);
+    check(encoded.size() == detail::encodedSize(data), "STL4 needs exact encoded size mismatch");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL4", "new save did not use STL4");
+
+    const auto loaded = readSave(path);
+    check(loaded.heroNeeds && loaded.heroNeeds->heroId == 55 &&
+        loaded.heroNeeds->species == HeroSpecies::Brackenback &&
+        near(loaded.heroNeeds->hunger, 0.1) && near(loaded.heroNeeds->thirst, 0.2) &&
+        near(loaded.heroNeeds->fatigue, 0.3) && near(loaded.heroNeeds->injury, 0.4) &&
+        loaded.heroNeeds->isResting == true,
+        "hero needs fields did not roundtrip");
+
+    const auto restored = restoreHeroNeeds(loaded, HeroSpecies::Smalltrotter);
+    check(restored.species() == HeroSpecies::Brackenback &&
+        near(restored.hunger(), 0.1) && near(restored.thirst(), 0.2) &&
+        near(restored.fatigue(), 0.3) && near(restored.injury(), 0.4) &&
+        restored.isResting() == true,
+        "captured needs did not restore");
+
+    // Needs and lifecycle records are independent optional fields in STL4.
+    for (const bool hasLifecycle : {false, true}) {
+        for (const bool hasNeeds : {false, true}) {
+            SaveData combination; combination.hero = data.hero;
+            if (hasLifecycle)
+                combination.heroLifecycle = HeroLifecycleSnapshot{55, HeroSpecies::Brackenback, 0.0, LifeStage::Hatchling};
+            if (hasNeeds) combination.heroNeeds = data.heroNeeds;
+            writeSave(path, combination);
+            const auto combinationBytes = bytes(path);
+            check(combinationBytes.size() == detail::encodedSize(combination),
+                "STL4 optional lifecycle/needs encoded size mismatch");
+            const auto roundtrip = readSave(path);
+            check(roundtrip.heroLifecycle.has_value() == hasLifecycle && roundtrip.heroNeeds.has_value() == hasNeeds,
+                "STL4 optional lifecycle/needs presence changed on roundtrip");
+        }
+    }
+
+    writeSave(path, data);
+    const auto previous = bytes(path);
+    auto rejectWrite = [&](SaveData invalid, const char* reason) {
+        rejects([&] { writeSave(path, invalid); }, reason);
+        check(bytes(path) == previous, "invalid needs write changed previous save");
+        check(!std::filesystem::exists(path.string() + ".tmp"), "invalid needs write left a temp file");
+    };
+
+    auto invalid = data; invalid.heroNeeds->heroId = 56;
+    rejectWrite(invalid, "needs identity");
+    invalid = data; invalid.hero.reset();
+    rejectWrite(invalid, "needs identity");
+    invalid = data; invalid.heroNeeds->hunger = 1.1;
+    rejectWrite(invalid, "invalid needs values");
+    invalid = data; invalid.heroNeeds->thirst = std::numeric_limits<double>::infinity();
+    rejectWrite(invalid, "invalid needs values");
+
+    // Conflicting species between lifecycle and needs
+    invalid = data;
+    invalid.heroLifecycle = HeroLifecycleSnapshot{invalid.hero->id, HeroSpecies::Smalltrotter, 0.0, LifeStage::Hatchling};
+    rejectWrite(invalid, "needs species does not match lifecycle species");
+    invalid = data;
+    invalid.retained.push_back({55, 8, HeroSpecies::Smalltrotter, RetentionReason::BondedPeer, true, true});
+    rejectWrite(invalid, "needs species does not match retained hero species");
+
+    // Corrupt presence flag
+    writeSave(path, data);
+    {
+        std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
+        io.seekp(58); detail::write_u8(io, 2); io.flush();
+    }
+    rejects([&] { (void)readSave(path); }, "lifecycle presence flag");
+
+    writeSave(path, data);
+    {
+        std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
+        io.seekp(59); detail::write_u8(io, 2); io.flush();
+    }
+    rejects([&] { (void)readSave(path); }, "needs presence flag");
+
+    auto corruptNeeds = [&](const std::function<void(std::fstream&)>& mutate, const char* message) {
+        writeSave(path, data);
+        std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
+        mutate(io); io.flush(); check(io.good(), "failed to corrupt needs fixture"); io.close();
+        rejects([&] { (void)readSave(path); }, message);
+    };
+    corruptNeeds([](std::fstream& io) { io.seekp(68); detail::write_u8(io, 255); }, "invalid needs species");
+    corruptNeeds([](std::fstream& io) { io.seekp(69); detail::write_double(io, std::numeric_limits<double>::quiet_NaN()); }, "invalid needs values");
+    corruptNeeds([](std::fstream& io) { io.seekp(77); detail::write_double(io, 1.01); }, "invalid needs values");
+    corruptNeeds([](std::fstream& io) { io.seekp(101); detail::write_u8(io, 2); }, "invalid resting flag");
+    writeSave(path, data);
+    { auto truncated = bytes(path); truncated.resize(101); std::ofstream io(path, std::ios::binary | std::ios::trunc); io.write(truncated.data(), static_cast<std::streamsize>(truncated.size())); }
+    rejects([&] { (void)readSave(path); }, "truncated");
+    writeSave(path, data);
+    { auto trailing = bytes(path); trailing.push_back('\0'); std::ofstream io(path, std::ios::binary | std::ios::trunc); io.write(trailing.data(), static_cast<std::streamsize>(trailing.size())); }
+    rejects([&] { (void)readSave(path); }, "trailing bytes");
+
+    std::filesystem::remove(path);
+}
 } // namespace
 
 int main() {
@@ -384,13 +501,14 @@ int main() {
         {"STL1 fixture compatibility", testLegacyStl1Compatibility},
         {"STL3 lifecycle roundtrip and validation", testLifecycleStl3RoundtripAndValidation},
         {"STL2 migration and STL3 corruption", testStl2MigrationAndStl3Corruption},
-        {"physical time and pose validation", testInvalidPhysicalTimeAndPose}
+        {"physical time and pose validation", testInvalidPhysicalTimeAndPose},
+        {"STL4 needs roundtrip and validation", testNeedsStl4RoundtripAndValidation}
     };
     int failed = 0;
     for (const auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (10 - failed) << "/10 tests passed\n";
+    std::cout << (11 - failed) << "/11 tests passed\n";
     return failed ? 1 : 0;
 }

@@ -2,6 +2,7 @@
 
 #include "foundation.hpp"
 #include "lifecycle.hpp"
+#include "needs.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -33,6 +34,15 @@ struct HeroLifecycleSnapshot {
     double calendarAge = 0.0;
     LifeStage stage = LifeStage::Hatchling;
 };
+struct HeroNeedsSnapshot {
+    Identity heroId;
+    HeroSpecies species;
+    double hunger = 0.0;
+    double thirst = 0.0;
+    double fatigue = 0.0;
+    double injury = 0.0;
+    bool isResting = false;
+};
 struct SaveData {
     double physicalSeconds = 0.0;
     double calendarSeconds = 0.0;
@@ -40,6 +50,7 @@ struct SaveData {
     std::size_t retentionLimit = 64;
     std::optional<ActiveEntity> hero;
     std::optional<HeroLifecycleSnapshot> heroLifecycle;
+    std::optional<HeroNeedsSnapshot> heroNeeds;
     std::vector<ActiveEntity> activeTransients;
     std::vector<RetainedEntity> retained;
     std::vector<DeadHero> deadHeroes;
@@ -119,6 +130,22 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
+    // STL4 header, times, seed, retention limit, identities, optional pose,
+    // the lifecycle presence byte plus its fixed-width payload,
+    // and the needs presence byte plus its fixed-width payload.
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
+        1 + (data.heroLifecycle ? 18 : 0) + 1 + (data.heroNeeds ? 42 : 0) + 4;
+    size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
+    size = checkedAdd(size, 4);
+    for (const auto& region : data.regions)
+        size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
+    if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
+    return size;
+}
+
+inline std::uint64_t encodedSizeStl3(const SaveData& data) {
     // STL3 header, times, seed, retention limit, identities, optional pose,
     // and the lifecycle presence byte plus its fixed-width payload.
     std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
@@ -129,7 +156,6 @@ inline std::uint64_t encodedSize(const SaveData& data) {
     size = checkedAdd(size, 4);
     for (const auto& region : data.regions)
         size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
-    if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
     return size;
 }
 
@@ -171,6 +197,26 @@ inline void validate(const SaveData& data) {
             checked.restoreState(life.species, life.calendarAge, life.stage);
         } catch (const std::exception&) {
             throw std::runtime_error("lifecycle profile, age, and stage are inconsistent");
+        }
+    }
+    if (data.heroNeeds) {
+        const auto& needs = *data.heroNeeds;
+        if (!data.hero || needs.heroId != data.hero->id)
+            throw std::runtime_error("needs identity does not match current hero");
+        if (!valid(needs.species)) throw std::runtime_error("invalid needs species");
+        // All available records for the current hero must agree on species.
+        if (data.heroLifecycle && needs.species != data.heroLifecycle->species)
+            throw std::runtime_error("needs species does not match lifecycle species");
+        const auto retainedHero = std::find_if(data.retained.begin(), data.retained.end(),
+            [&](const auto& retained) { return retained.id == data.hero->id; });
+        if (retainedHero != data.retained.end() && needs.species != retainedHero->species)
+            throw std::runtime_error("needs species does not match retained hero species");
+
+        if (!std::isfinite(needs.hunger) || needs.hunger < 0.0 || needs.hunger > 1.0 ||
+            !std::isfinite(needs.thirst) || needs.thirst < 0.0 || needs.thirst > 1.0 ||
+            !std::isfinite(needs.fatigue) || needs.fatigue < 0.0 || needs.fatigue > 1.0 ||
+            !std::isfinite(needs.injury) || needs.injury < 0.0 || needs.injury > 1.0) {
+            throw std::runtime_error("invalid needs values");
         }
     }
     if (data.retentionLimit > MAX_RETAINED) throw std::runtime_error("retention limit exceeds size bound");
@@ -241,8 +287,8 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL3", 4);
-    detail::write_u32(os, 3);
+    os.write("STL4", 4);
+    detail::write_u32(os, 4);
     detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
@@ -261,6 +307,17 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
         detail::write_u8(os, static_cast<std::uint8_t>(data.heroLifecycle->species));
         detail::write_double(os, data.heroLifecycle->calendarAge);
         detail::write_u8(os, static_cast<std::uint8_t>(data.heroLifecycle->stage));
+    }
+
+    detail::write_u8(os, data.heroNeeds ? 1 : 0);
+    if (data.heroNeeds) {
+        detail::write_u64(os, data.heroNeeds->heroId);
+        detail::write_u8(os, static_cast<std::uint8_t>(data.heroNeeds->species));
+        detail::write_double(os, data.heroNeeds->hunger);
+        detail::write_double(os, data.heroNeeds->thirst);
+        detail::write_double(os, data.heroNeeds->fatigue);
+        detail::write_double(os, data.heroNeeds->injury);
+        detail::write_u8(os, data.heroNeeds->isResting ? 1 : 0);
     }
 
     auto active = data.activeTransients;
@@ -318,9 +375,10 @@ inline SaveData readSave(const std::filesystem::path& path) {
     const bool legacy = std::strncmp(magic, "STL1", 4) == 0;
     const bool stl2 = std::strncmp(magic, "STL2", 4) == 0;
     const bool stl3 = std::strncmp(magic, "STL3", 4) == 0;
-    if (!legacy && !stl2 && !stl3) throw std::runtime_error("invalid magic or corrupt file");
+    const bool stl4 = std::strncmp(magic, "STL4", 4) == 0;
+    if (!legacy && !stl2 && !stl3 && !stl4) throw std::runtime_error("invalid magic or corrupt file");
     const auto version = detail::read_u32(is);
-    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3)) throw std::runtime_error("unsupported save version");
+    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
     if (!legacy) data.physicalSeconds = detail::read_double(is);
@@ -338,7 +396,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
         if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
     }
-    if (stl3) {
+    if (stl3 || stl4) {
         const auto hasLifecycle = detail::read_u8(is);
         if (hasLifecycle > 1) throw std::runtime_error("corrupt lifecycle presence flag");
         if (hasLifecycle) {
@@ -352,6 +410,25 @@ inline SaveData readSave(const std::filesystem::path& path) {
             if (stage > static_cast<std::uint8_t>(LifeStage::Dead)) throw std::runtime_error("invalid lifecycle stage");
             life.stage = static_cast<LifeStage>(stage);
             data.heroLifecycle = life;
+        }
+    }
+    if (stl4) {
+        const auto hasNeeds = detail::read_u8(is);
+        if (hasNeeds > 1) throw std::runtime_error("corrupt needs presence flag");
+        if (hasNeeds) {
+            HeroNeedsSnapshot needs;
+            needs.heroId = detail::read_u64(is);
+            const auto species = detail::read_u8(is);
+            if (species > static_cast<std::uint8_t>(HeroSpecies::Longstride)) throw std::runtime_error("invalid needs species");
+            needs.species = static_cast<HeroSpecies>(species);
+            needs.hunger = detail::read_double(is);
+            needs.thirst = detail::read_double(is);
+            needs.fatigue = detail::read_double(is);
+            needs.injury = detail::read_double(is);
+            const auto resting = detail::read_u8(is);
+            if (resting > 1) throw std::runtime_error("invalid resting flag");
+            needs.isResting = (resting == 1);
+            data.heroNeeds = needs;
         }
     }
 
@@ -427,9 +504,30 @@ inline SaveData readSave(const std::filesystem::path& path) {
         legacySize = detail::checkedAdd(legacySize, 4);
         for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
         if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
-    } else if ((stl3 ? detail::encodedSize(data) : detail::encodedSizeStl2(data)) != fileSize)
+    } else if ((stl4 ? detail::encodedSize(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data))) != fileSize)
         throw std::runtime_error("save size does not match encoded records");
     return data;
+}
+
+inline HeroNeedsSnapshot captureHeroNeeds(const needs::NeedsCore& n, Identity heroId) {
+    return {heroId, n.species(), n.hunger(), n.thirst(), n.fatigue(), n.injury(), n.isResting()};
+}
+
+inline needs::NeedsCore restoreHeroNeeds(const SaveData& data, HeroSpecies legacySpecies) {
+    detail::validate(data);
+    if (!data.hero) throw std::runtime_error("cannot restore needs without current hero");
+    // Old saves may already know this hero's species through retention.
+    auto species = legacySpecies;
+    for (const auto& retained : data.retained)
+        if (retained.id == data.hero->id) species = retained.species;
+    // Prefer lifecycle species if present
+    if (data.heroLifecycle) species = data.heroLifecycle->species;
+
+    needs::NeedsCore core(data.heroNeeds ? data.heroNeeds->species : species);
+    if (data.heroNeeds) {
+        core.restoreState(data.heroNeeds->hunger, data.heroNeeds->thirst, data.heroNeeds->fatigue, data.heroNeeds->injury, data.heroNeeds->isResting);
+    } // Without needs evidence: known species, defaults to zero.
+    return core;
 }
 
 inline HeroLifecycleSnapshot captureHeroLifecycle(const Lifecycle& lifecycle, Identity heroId) {
