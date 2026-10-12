@@ -190,3 +190,11 @@ Gemini3.8FlashMedium/medium; only new environment_scene.hpp/doc owned. New Jules
 locomotion phase session16357908828939929627 owns only new locomotion_clip header/
 test/doc to address measured clip/host speed mismatch; no host overlap. Continue
 existing tasks before fresh dispatch. Wake started01:22; checkpoint by01:57.
+
+Material helper final root validation:1970passed,2skipped in617.31seconds.
+Actual full-suite logvar/reports/packet-seven-toolkit-surfacing-full.log.
+Reviewed ochre/dark-mottle dorsal, cream underside and keratin helper now ready
+for publication as authoring support only. Root inspected framed Blender spheres;
+PNGhash9edfb21de008fa23c2594a4aad3f4c125e7fc72c9db3e49df82e166f13b05d2d.
+No mesh assignment/baking/glTF/runtime material acceptance. Reference anatomy,
+physical contact host and AGY sceneryrenderer remain isolated active tasks.

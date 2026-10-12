@@ -1,0 +1,57 @@
+{
+  "task": "Review AGY Smalltrotter creature surfacing",
+  "branch": "codex/agy-creature-surfacing",
+  "commit": "3f5f8e0",
+  "reviewed_files": [
+    {
+      "sha256": "DF0CBE5E426BA0310FBB12A63989491984E4568F5AB34B86660B474FC10C6329",
+      "path": "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/_creature_materials.py"
+    },
+    {
+      "sha256": "80B2F7ED1B3ACC3B00F4B0061088B31907F201CDC7D31F41B3301C7DB648ABDC",
+      "path": "stalthos-toolkit/tests/test_creature_materials.py"
+    },
+    {
+      "sha256": "B401EB24D739468BDC1E05C9B008DD5FBBE13009D74066933568BB26FFAD91C2",
+      "path": "stalthos-toolkit/docs/creature-surfacing-draft.md"
+    }
+  ],
+  "reference": "stalthos-toolkit/references/creatures/smalltrotter/user-primary.png",
+  "changes": [
+    "Shifted dorsal palette to warm ochre/tan with darker brown mottling and cream underside palette.",
+    "Reduced dorsal texture frequencies to expose broader mottling in the procedural swatch.",
+    "Rejected unknown Blender output modes with ValueError.",
+    "Documented that bake helper only builds emission target material; UV/image bake, normal bake, channel packing, and glTF validation are not implemented.",
+    "Added offline palette-direction assertions."
+  ],
+  "validation": [
+    {
+      "result": "8 passed in 0.13s",
+      "command": "python -m pytest -q tests/test_creature_materials.py"
+    },
+    {
+      "result": "11 passed in 0.14s",
+      "command": "python -m pytest -q tests/test_authored_material_channels.py tests/test_creature_materials.py"
+    },
+    {
+      "result": "passed",
+      "command": "git diff --check"
+    },
+    {
+      "result": "exit 0; RENDER_COMPLETED_SUCCESSFULLY; rendered using worktree _creature_materials.py",
+      "command": "Blender 5.2.0 LTS --background --python var/test-renders/creature-surfacing/render_swatches.py"
+    }
+  ],
+  "swatch": {
+    "png_bytes": 374731,
+    "blender": "5.2.0 LTS (fbe6228777e7)",
+    "visual_review": "Current rerender shows warm tan dorsal with broader brown mottles and pale cream underside sphere. Sphere swatches only; no beast, scene-lighting, glTF, or runtime acceptance.",
+    "blend_sha256": "97EB0236E74E2B6F4E756CB9DA5274323E6F7BEE3806E0C347F3357F21A4F7AB",
+    "blend": "var/test-renders/creature-surfacing/smalltrotter_swatches.blend",
+    "blend_bytes": 173661,
+    "png": "var/test-renders/creature-surfacing/smalltrotter_swatches.png",
+    "png_sha256": "07F1D2D5E7DFE506B2596AF5938BE316844B2751EF1B10626B0949F1FB525690"
+  },
+  "gltf_bake": "Helper constructs emission material graphs only. No bake operation, UV/image target, normal texture, channel packing, or export validation exists in scoped module.",
+  "ownership": "Only the three scoped files were committed. No core or geometry files were changed. Unrelated untracked .clanker/tasks/agy-creature-surfacing/ and stalthos-toolkit/references/ were left uncommitted."
+}
