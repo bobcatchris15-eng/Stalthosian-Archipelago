@@ -136,3 +136,11 @@ uses profiledimensions/Bezierneck, and separate eyes/bristles lack skinning.
 Existing stanceworker resumed as reference-rig-alignment in isolation toserialize
 actual jointgraph/shape andskin featuremeshes. Sixlocaldispatches usedthiswake;
 no additional scopes. Wakecheckpointdeadline01:57 America/Chicago.
+
+Jules locomotion16357908828939929627 retrieved in isolated review-locomotion-clip.
+Root corrected unsafe positive2^63 cycle-count cast and added signed-boundary
+regressions. Native Releasebuild+CTest11/11 passed. Newlocomotion contract is
+ready forpublication; actualWicked clipphase/root removal adapter stillpending.
+Do notmistake helpertests for runtimefootlocking. Sixlocaldispatches used;
+reference-rig-alignment andAGYsceneryrenderer remainactive; anatomyfullsuite
+session19876 hasfailure andmustfinishwithrawtracebeforefurtherpromotion.

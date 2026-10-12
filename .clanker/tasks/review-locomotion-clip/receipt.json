@@ -1,0 +1,17 @@
+{
+  "source_session": "16357908828939929627",
+  "evidence": [
+    "var/reports/packet-seven-locomotion-build.log",
+    "var/reports/packet-seven-locomotion-ctest.log",
+    "var/reports/packet-seven-locomotion-jules-pull.txt"
+  ],
+  "tests": "Root Release CTest11/11; boundary regression active under NDEBUG",
+  "task_id": "review-locomotion-clip",
+  "limitations": [
+    "No Wicked adapter wired",
+    "No runtime foot locking acceptance",
+    "Authored source root translation still needs removal"
+  ],
+  "correction": "Reject positive double 2^63 before signed integer cast; admit representable negative minimum",
+  "outcome": "reviewed bounded locomotion contract"
+}
