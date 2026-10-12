@@ -1,0 +1,14 @@
+{
+  "session_id": "9731068007906336510",
+  "integrated": false,
+  "status": "collected isolated; rejected before integration; AGY correction dispatched",
+  "source_commit": "d7a6571",
+  "task_id": "jules-hero-view-host",
+  "issues": [
+    "invalid qualified TimeStep",
+    "orbit and zoom reset everyframe",
+    "legacy save mode reinterpretation",
+    "initial zero camera fallback",
+    "diagnostic input incorrectly gated by focus"
+  ]
+}

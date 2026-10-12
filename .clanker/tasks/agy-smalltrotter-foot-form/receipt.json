@@ -1,0 +1,11 @@
+{
+  "task_id": "agy-smalltrotter-foot-form",
+  "focused": "11 passed",
+  "full_tests": "1986 passed, 2 skipped in 597.13s",
+  "source_commit": "4218e30",
+  "finished": "2026-10-12T15:46:32.3931532-05:00",
+  "status": "reviewed validated foot blockout correction",
+  "native_run": "20261012-115956-477ec565",
+  "visual_acceptance": "cuff removal verified; final reference parity unaccepted",
+  "workspace": "var/smalltrotter-foot-verified-asset"
+}

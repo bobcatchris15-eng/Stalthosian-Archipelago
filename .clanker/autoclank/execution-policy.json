@@ -23,9 +23,7 @@
   "max_active_local_workers": 3,
   "max_active_jules_workers": 3,
   "jules_daily_dispatch_ceiling": 100,
-  "pending_jules_sessions": [
-    "9731068007906336510"
-  ],
+  "pending_jules_sessions": [],
   "max_active_agy_workers": 3,
   "agy_dispatch_pool": "Separate Antigravity pool authorized by user 2026-10-11; up to three concurrent agy tasks, independent of native and Jules concurrency pools.",
   "agy_model_family": "Gemini 3.8 Flash",
@@ -38,7 +36,7 @@
   "agy_default_effort": "low",
   "agy_execution": "Isolated bounded tasks; explicit model/effort, print timeout and JSON receipt; inspect changes and validate before integration. Do not bypass permissions or use paid API fallback.",
   "active_agy_tasks": [
-    "agy-smalltrotter-foot-form"
+    "agy-hero-view-host-correction"
   ],
   "active_native_tasks": []
 }

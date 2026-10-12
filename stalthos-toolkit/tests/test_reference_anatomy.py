@@ -166,3 +166,20 @@ def test_tapered_limb_six_point_profile_smooths_and_tapers_continuously():
     root_dx = max(mesh.verts[i][0] for i in rings[0]) - min(mesh.verts[i][0] for i in rings[0])
     ankle_dx = max(mesh.verts[i][0] for i in rings[-1]) - min(mesh.verts[i][0] for i in rings[-1])
     assert root_dx > 2.0 * ankle_dx
+
+
+def test_tapered_limb_seven_point_distal_profile_preserves_closed_manifold():
+    mesh = MeshStub()
+    points = ((0, 0, 2.2), (0, 0, 2.0), (0, 0.05, 1.5), (0, 0.04, 1.0), (0, 0.02, 0.6), (0, 0, 0.2), (0, 0, 0.08))
+    dr = (0.50, 0.40, 0.32, 0.25, 0.20, 0.21, 0.22)
+    wr = (0.35, 0.30, 0.26, 0.22, 0.19, 0.20, 0.21)
+    rings = anatomy.add_tapered_limb(mesh, points, dr, wr, sides=12, samples_per_segment=3)
+    assert len(rings) == 6 * 3 + 1
+    assert len(mesh.verts) == 19 * 12
+    # Verify every edge has exactly two faces (closed manifold)
+    from collections import Counter
+    edge_counts = Counter()
+    for face in mesh.faces:
+        for a, b in zip(face, face[1:] + face[:1]):
+            edge_counts[tuple(sorted((a, b)))] += 1
+    assert set(edge_counts.values()) == {2}

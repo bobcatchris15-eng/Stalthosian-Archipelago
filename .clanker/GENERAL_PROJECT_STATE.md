@@ -229,3 +229,19 @@ analysis, no paceimplementation. Avoidoverlappingmain.cpp while Julescamera97310
 owns it. PendingpoolnowcameraJules+AGYfootform; native reviewer finished.
 Anatomypromotionpublished d59ad8f main/origin0/0; fullsuite1985passed2skip.
 Nextcollectfrozenfootasset actualrenders/gates; fullrootregressionbeforepromotion.
+## Resume collection — 2026-10-12 15:46 America/Chicago
+
+Root footcandidate4218e30 fullsuitecompleted12:05:27:1986passed2skip597.13s.
+Verified frozen2sourcehashes before post-suite trailingblankcleanup; focused11pass.
+Parent freshworkspacevar/smalltrotter-foot-verified-asset build/rig/render allok0,
+allartifacthashesmatch. Cuffremovalverifiedneutral090; remainingintersections/
+face/bristles/cadence notaccepted. Native20261012-115956-477ec565 loads thisGLB.
+Basketfernmaterialworker a55d92f actualchain succeeds, PBRbakedGLB nativeimports;
+shape is genericbranchingtree, ferncrown rejected. Next planttask needs correct
+familygenerator mapping and actualrachis/pinna crown, not material-onlypolish.
+CameraJules9731068007906336510 collectedisolatedoriginald7a6571, rejectedbefore
+integration. AGYcorrection5269e1e completed12:08:33, workerbuild/CTest14claimed;
+parent stillreviews beforecopy/nativebuild. Remainingreviewissues: initiallegacy
+framingnotactuallyapplied, preFrameState snapshot too late afterpan/toggle.
+AllJules tasks collected, no remote pending. No oldsessionretrieval needed.
+Currentwake starts15:44Central deadline16:19;0newdispatches. Preserveunrelateddirty.

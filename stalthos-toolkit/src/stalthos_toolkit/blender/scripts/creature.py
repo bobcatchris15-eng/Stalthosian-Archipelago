@@ -248,13 +248,21 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
                 0.0,
                 depth * (0.04 if is_fore else 0.06),
             ))
-            surface_path = [embedded_root, hip, hip + upper_dir * upper * 0.5, knee, knee + (ankle - knee) * 0.5, ankle]
+            surface_path = [
+                embedded_root,
+                hip,
+                hip + upper_dir * upper * 0.5,
+                knee,
+                knee + (ankle - knee) * 0.5,
+                ankle,
+                ankle + (foot - ankle) * 0.55,
+            ]
             if is_fore:
-                depth_r = [leg_r * 1.35, leg_r * 1.60, leg_r * 1.28, leg_r * 1.02, leg_r * 0.82, leg_r * 0.68]
-                width_r = [leg_r * 1.10, leg_r * 1.25, leg_r * 1.08, leg_r * 0.90, leg_r * 0.76, leg_r * 0.62]
+                depth_r = [leg_r * 1.35, leg_r * 1.60, leg_r * 1.28, leg_r * 1.05, leg_r * 0.88, leg_r * 0.92, leg_r * 0.98]
+                width_r = [leg_r * 1.10, leg_r * 1.25, leg_r * 1.08, leg_r * 0.95, leg_r * 0.82, leg_r * 0.86, leg_r * 0.92]
             else:
-                depth_r = [leg_r * 1.48, leg_r * 1.82, leg_r * 1.42, leg_r * 1.10, leg_r * 0.86, leg_r * 0.70]
-                width_r = [leg_r * 1.18, leg_r * 1.32, leg_r * 1.15, leg_r * 0.94, leg_r * 0.78, leg_r * 0.64]
+                depth_r = [leg_r * 1.48, leg_r * 1.82, leg_r * 1.42, leg_r * 1.12, leg_r * 0.90, leg_r * 0.94, leg_r * 1.00]
+                width_r = [leg_r * 1.18, leg_r * 1.32, leg_r * 1.15, leg_r * 0.98, leg_r * 0.84, leg_r * 0.88, leg_r * 0.94]
             REF.add_tapered_limb(body, surface_path, depth_r, width_r,
                                  sides=max(12, sides - 2), samples_per_segment=4)
         else:
@@ -264,29 +272,31 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         pad_start = len(body.verts)
         if reference_form:
             foot_length = max(head_len * 1.15, leg_r * 3.4)
-            foot_centre = foot + mathutils.Vector((foot_length * 0.12, 0.0, 0.0))
+            foot_centre = foot + mathutils.Vector((foot_length * 0.10, 0.0, 0.0))
             support_half_height = leg_r * 0.5
-            foot_z_radius = leg_r * 0.82
-            foot_centre.z += foot_z_radius - support_half_height
-            REF.add_ellipsoid(body, foot_centre,
-                              (foot_length * 0.52, leg_r * 1.55, foot_z_radius),
-                              segments=18, rings=10)
-            # Three overlapping toe pads and small claw tips replace the blocky
-            # rectangular proxy foot while preserving its lowest contact plane.
             foot_floor = foot.z - support_half_height
-            toe_z_radius = leg_r * 0.45
+            foot_z_radius = leg_r * 0.72
+            foot_centre.z = foot_floor + foot_z_radius
+            # Fleshy, compact sauropod main foot pad matching columnar limb width
+            REF.add_ellipsoid(body, foot_centre,
+                              (foot_length * 0.46, leg_r * 1.12, foot_z_radius),
+                              segments=18, rings=10)
+            # Fleshy digital lobes on the body mesh (continuous hide skin)
+            toe_z_radius = leg_r * 0.32
             toe_z = foot_floor + toe_z_radius
             for toe_index, toe_side in enumerate((-1.0, 0.0, 1.0)):
-                toe_centre = (foot.x + foot_length * 0.36 - toe_index * foot_length * 0.035,
-                              foot.y + toe_side * leg_r * 0.68,
+                toe_centre = (foot.x + foot_length * 0.32 - abs(toe_side) * foot_length * 0.03,
+                              foot.y + toe_side * leg_r * 0.52,
                               toe_z)
-                REF.add_ellipsoid(detail, toe_centre,
-                                  (foot_length * 0.25, leg_r * 0.50, toe_z_radius),
+                REF.add_ellipsoid(body, toe_centre,
+                                  (foot_length * 0.16, leg_r * 0.30, toe_z_radius),
                                   segments=12, rings=8)
-                claw_centre = (toe_centre[0] + foot_length * 0.20,
-                               toe_centre[1], toe_centre[2] - leg_r * 0.035)
-                REF.add_ellipsoid(detail, claw_centre,
-                                  (foot_length * 0.085, leg_r * 0.16, leg_r * 0.13),
+                # Subtle blunt toenails on detail mesh (dark keratin)
+                nail_z_radius = leg_r * 0.12
+                nail_centre = (toe_centre[0] + foot_length * 0.13,
+                               toe_centre[1], foot_floor + nail_z_radius * 0.9)
+                REF.add_ellipsoid(detail, nail_centre,
+                                  (foot_length * 0.065, leg_r * 0.13, nail_z_radius),
                                   segments=10, rings=6)
         else:
             body.add_box(foot + mathutils.Vector((head_len * 0.25, 0.0, 0.0)),
@@ -501,6 +511,13 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
                 body_obj, detail_obj, eye_obj, ridge_obj,
                 seed=p["seed"], params=p, joints=joints,
             )
+            # Reassign distal limb and foot polygons on body back to hide (slot 0)
+            # so the fleshy limb and foot maintain continuous anatomical skin down to the ground,
+            # matching user-primary.png, while subtle blunt toenails reside on detail with keratin.
+            for poly in body_obj.data.polygons:
+                if poly.material_index == 2:
+                    poly.material_index = 0
+            stats["surfacing_export"]["dark_foot_face_count"] = 0
         else:
             # Preserve the legacy/default appearance for all non-reference
             # creature profiles; the Smalltrotter-specific maps are scoped to
