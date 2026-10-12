@@ -1,11 +1,20 @@
 [CmdletBinding()]
 param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
-      [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk)
+      [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [string]$SuccessorId = '',
+      [double]$CreatureSoleOffset = .652438)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $exe = Join-Path $root 'var/build/stalthos-runtime/Release/Stalthos.exe'
 if (-not (Test-Path $exe)) { throw 'Runtime executable absent; run Build.ps1' }
 if (-not [double]::IsFinite($CalendarScale) -or $CalendarScale -lt 0 -or $CalendarScale -gt 10000) { throw 'CalendarScale must be 0..10000' }
+if (-not [double]::IsFinite($CreatureSoleOffset) -or $CreatureSoleOffset -lt 0 -or $CreatureSoleOffset -gt 5) { throw 'CreatureSoleOffset must be 0..5 meters' }
+if ($SuccessorId) {
+    [UInt64]$parsedSuccessorId = 0
+    if ($SuccessorId -notmatch '^[0-9]+$' -or -not [UInt64]::TryParse($SuccessorId, [ref]$parsedSuccessorId) -or $parsedSuccessorId -eq 0) {
+        throw 'SuccessorId must be an unsigned decimal identity greater than zero'
+    }
+    if (-not $LoadState) { throw 'SuccessorId requires LoadState of a save with recorded hero death' }
+}
 $id = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0,8)
 $output = Join-Path $root "var/reports/runtime/$id"
 New-Item -ItemType Directory -Force $output | Out-Null
@@ -18,8 +27,10 @@ foreach ($arg in @('dx12','alwaysactive','--output',$output,'--duration',$Durati
 if ($Plant) { $start.ArgumentList.Add('--plant'); $start.ArgumentList.Add((Resolve-Path $Plant).Path) }
 if ($Creature) { $start.ArgumentList.Add('--creature'); $start.ArgumentList.Add((Resolve-Path $Creature).Path) }
 if ($CalendarScale -ne 1) { $start.ArgumentList.Add('--calendar-scale'); $start.ArgumentList.Add($CalendarScale.ToString([Globalization.CultureInfo]::InvariantCulture)) }
+if ($Creature) { $start.ArgumentList.Add('--creature-sole-offset'); $start.ArgumentList.Add($CreatureSoleOffset.ToString([Globalization.CultureInfo]::InvariantCulture)) }
 if ($Interactive) { $start.ArgumentList.Add('--interactive') }
 if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
+if ($SuccessorId) { $start.ArgumentList.Add('--successor-id'); $start.ArgumentList.Add($SuccessorId) }
 foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {
     if (-not $stateOption[1]) { continue }
     $statePath = [IO.Path]::GetFullPath($stateOption[1])

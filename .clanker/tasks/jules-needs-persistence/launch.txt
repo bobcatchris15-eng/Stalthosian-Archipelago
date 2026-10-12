@@ -1,0 +1,10 @@
+Session is created.
+ID: 15605854971730070819
+Task: Read AGENTS.md, stalthos-runtime/domain/persistence.hpp, needs.hpp, lifecycle.hpp, tests/persistence.cpp and docs/lifecycle-persistence.md. Implement ONE bounded C++17 compatible optional current-hero needs persistence seam for the full first draft. Work only in domain/persistence.hpp, tests/persistence.cpp and new docs/needs-persistence.md. Do not edit host, CMake, needs/relationships/activation modules, toolkit, planning input or credentials. Root retrieves your patch in isolation and reviews/tests before integration.
+
+Extend the existing checked STL3 format to STL4 writes with optional current-hero needs data: matching hero identity/species, normalized hunger/thirst/fatigue/injury and resting flag. Keep STL1/STL2/STL3 read compatibility with explicit legacy baseline when no needs payload exists. Provide helpers captureHeroNeeds and restoreHeroNeeds around the existing NeedsCore; preserve existing public APIs through defaults/overloads. Reject needs without a current live hero, contradictory species/identity against lifecycle or retained known hero, NaN/infinite/out-of-range states, invalid flags/enums/truncation/trailing bytes, and preserve an existing save on any rejection. Checked bounded size must match presence/absence combinations exactly. Do not silently reset valid saved needs. No terminal death policy, ecological budgets or controller authority changes.
+
+Add meaningful standalone optimized Release checks (active under NDEBUG) for roundtrip, independent needs/lifecycle presence combinations, legacy formats, corrupt inputs and unchanged prior saves on rejected writes. Existing persistence/foundation/lifecycle/needs scenarios must continue passing offline without Wicked or network. Document exact format additions, legacy defaults, test commands/results and explicit missing host/player save integration. No fabricated metrics, paid APIs, releases/deployment or push. Source base should include reviewed cores commit 467ae07 or newer.
+
+
+URL: https://jules.google.com/session/15605854971730070819

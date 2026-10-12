@@ -1,0 +1,56 @@
+{
+  "task_id": "successor-host-draft",
+  "outcome": "diagnostic implementation verified",
+  "worker_base": "c93b264",
+  "root_native_build": "passed merged Wicked Release",
+  "root_ctest": "7/7 passed in 0.96s",
+  "root_runtime_save": "new ID2 hatchling, age3.048189303779509 after physical advancement; input calendar32737.063072854653 and physical3.2737063072854653 restored",
+  "root_runtime_reload": "loaded ID2 lifecycle age3.048189303779509/stage0 then advanced to4.954814708675258",
+  "old_death_truth": "ID1 preserved and checked after save readback",
+  "rejections": {
+    "prior_save_sha256": "E0303BD86D648AB704C30EF0A338E4F025D04F6C860D41C634C0AA9A9AC0B9ED",
+    "cases": [
+      {
+        "rejected": true,
+        "case": "implicit",
+        "save_unchanged": true
+      },
+      {
+        "rejected": true,
+        "case": "zero",
+        "save_unchanged": true
+      },
+      {
+        "rejected": true,
+        "case": "dead",
+        "save_unchanged": true
+      },
+      {
+        "rejected": true,
+        "case": "live",
+        "save_unchanged": true
+      }
+    ],
+    "invalid_sole_offset_rejected": true
+  },
+  "evidence": [
+    "var/reports/packet-five-native-build.log",
+    "var/reports/packet-five-native-ctest.log",
+    "var/reports/packet-five-successor.log",
+    "var/reports/packet-five-successor-reload.log",
+    "var/reports/packet-five-root-rejections.json",
+    "var/reports/packet-five-broadside.log"
+  ],
+  "root_addition": "finite 0..5m configurable creature sole offset; old default retained, corrected asset tested at0",
+  "source_sha256": {
+    "stalthos-runtime/engine/main.cpp": "52758e6617897d6aca50f2ab28d84fa2313e17516f428355ff44c9fe9f42a9e3",
+    "stalthos-runtime/scripts/Run.ps1": "c857ee2117d6773609056cc5ab34da115a9fd7ed89b71441eb285f166a71eee5",
+    "stalthos-runtime/docs/successor-host-draft.md": "b7dfb60d4c04a33f41d8d49bd46538fc344095a4a1d3b73f3913245f1f719b56"
+  },
+  "limits": [
+    "diagnostic new unused identity, no eligible population/birth chooser",
+    "greatest-ID death region not chronology",
+    "hatchling record still juvenile/adult proxy asset",
+    "no visual/gait/FPS/full draft acceptance"
+  ]
+}

@@ -21,4 +21,3 @@ Integration paths (copy from the reviewed worktree):
 - `stalthos-runtime/docs/relationships-draft.md` — SHA-256 `79FFB18FE2599D41825F3B43BDA9A6F0BE8309038F56D279D5AFB2C602695B01`
 
 The required `.clanker/mode/contracts/prelude.md` and `.clanker/mode/roles/clinker.md` paths were absent; the paths under `C:\Users\Chris\.codex\skills\clanker-mode\` were present and read. The authoritative ownership and acceptance brief was `.clanker/tasks/jules-relationships/brief.md`. No primary runtime source or CMake files were edited.
-

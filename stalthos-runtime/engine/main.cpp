@@ -143,8 +143,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     std::filesystem::path plant;
     std::filesystem::path creature;
     std::filesystem::path loadState, saveState;
+    std::optional<uint64_t> successorId;
     double duration = 15;
     double calendarScale = 1.0;
+    double creatureSoleOffset = .652438;
     bool interactive = false, diagnosticWalk = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -157,13 +159,24 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
             else if (key == L"--creature" && i+1 < argumentCount) creature = argv[++i];
             else if (key == L"--calendar-scale" && i+1 < argumentCount) calendarScale = std::stod(argv[++i]);
+            else if (key == L"--creature-sole-offset" && i+1 < argumentCount) creatureSoleOffset = std::stod(argv[++i]);
             else if (key == L"--load-state" && i+1 < argumentCount) loadState = argv[++i];
             else if (key == L"--save-state" && i+1 < argumentCount) saveState = argv[++i];
+            else if (key == L"--successor-id" && i+1 < argumentCount) {
+                const std::wstring value = argv[++i];
+                if (value.empty() || !std::all_of(value.begin(), value.end(), [](wchar_t c) { return c >= L'0' && c <= L'9'; }))
+                    throw std::runtime_error("successor ID must be an unsigned decimal identity");
+                std::size_t consumed = 0;
+                const auto parsed = std::stoull(value, &consumed, 10);
+                if (consumed != value.size() || parsed == 0) throw std::runtime_error("successor ID must be greater than zero");
+                successorId = parsed;
+            }
             else if (key == L"--duration" && i+1 < argumentCount) duration = std::stod(argv[++i]);
         }
         LocalFree(argv); argv = nullptr;
         if (!std::isfinite(duration) || duration <= 0 || duration > 120) throw std::runtime_error("diagnostic duration must be 0..120 seconds");
         if (!std::isfinite(calendarScale) || calendarScale < 0 || calendarScale > 10000) throw std::runtime_error("calendar scale must be 0..10000");
+        if (!std::isfinite(creatureSoleOffset) || creatureSoleOffset < 0 || creatureSoleOffset > 5) throw std::runtime_error("creature sole offset must be 0..5 meters");
         std::filesystem::create_directories(output);
         if (std::filesystem::exists(output / "runtime-receipt.json")) throw std::runtime_error("use a fresh evidence directory");
         stalthos::SimCore clock;
@@ -173,18 +186,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::HeroSpecies heroSpecies=stalthos::HeroSpecies::Smalltrotter;
         std::optional<stalthos::Lifecycle> lifecycle;
         uint64_t heroId=1; bool lifecycleSnapshotLoaded=false; double loadedLifecycleAge=0; int loadedLifecycleStage=-1;
+        uint64_t successorPriorDeadId=0; bool successorDeathTruthPreserved=false;
+        bool successorSavedDeathTruthPreserved=false; std::size_t savedDeadHeroCount=0;
         if (!loadState.empty()) {
             auto data = stalthos::persistence::readSave(loadState);
-            if (!data.hero) throw std::runtime_error("diagnostic host requires a live hero in the loaded snapshot");
             auto restored = stalthos::persistence::restoreSave(data);
-            heroId=data.hero->id;
-            lifecycleSnapshotLoaded=data.heroLifecycle.has_value();
-            if(data.heroLifecycle) { loadedLifecycleAge=data.heroLifecycle->calendarAge; loadedLifecycleStage=static_cast<int>(data.heroLifecycle->stage); }
-            heroSpecies = data.heroLifecycle ? data.heroLifecycle->species : heroSpecies;
-            lifecycle=stalthos::persistence::restoreHeroLifecycle(data,heroSpecies);
-            heroSpecies=lifecycle->species();
-            loadedLifecycleAge=lifecycle->calendarAge();
-            loadedLifecycleStage=static_cast<int>(lifecycle->stage());
             clock = std::move(restored.first); world = std::move(restored.second);
             loadedCalendar = clock.calendarSeconds();
             loadedPhysical = clock.physicalSeconds();
@@ -194,7 +200,33 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if (std::abs(x)>60 || std::abs(z)>60 || !std::isfinite(yaw))
                     throw std::runtime_error("saved pose is outside this diagnostic host's playable bounds");
             }
-        } else { world.setHero(1, 1); }
+            if (data.hero) {
+                if (successorId) throw std::runtime_error("successor selection requires a save with no current hero");
+                heroId=data.hero->id;
+                lifecycleSnapshotLoaded=data.heroLifecycle.has_value();
+                if(data.heroLifecycle) { loadedLifecycleAge=data.heroLifecycle->calendarAge; loadedLifecycleStage=static_cast<int>(data.heroLifecycle->stage); }
+                heroSpecies = data.heroLifecycle ? data.heroLifecycle->species : heroSpecies;
+                lifecycle=stalthos::persistence::restoreHeroLifecycle(data,heroSpecies);
+                heroSpecies=lifecycle->species();
+                loadedLifecycleAge=lifecycle->calendarAge();
+                loadedLifecycleStage=static_cast<int>(lifecycle->stage());
+            } else {
+                if (!successorId) throw std::runtime_error("loaded snapshot has no live hero; pass --successor-id explicitly to select a successor");
+                const auto snapshot=world.snapshot();
+                if(snapshot.deadHeroes.empty()) throw std::runtime_error("successor selection requires recorded hero death truth");
+                const auto dead=snapshot.deadHeroes.back();
+                if(world.excluded(*successorId)) throw std::runtime_error("successor ID conflicts with an existing live, retained, or dead identity");
+                successorPriorDeadId=dead.first;
+                heroId=*successorId;
+                world.setHero(heroId,dead.second);
+                successorDeathTruthPreserved=world.heroDeathKnown(successorPriorDeadId);
+                heroSpecies=stalthos::HeroSpecies::Smalltrotter;
+                lifecycle.emplace(heroSpecies);
+            }
+        } else {
+            if(successorId) throw std::runtime_error("--successor-id requires --load-state of a save with recorded hero death");
+            world.setHero(1, 1);
+        }
         if(!lifecycle) lifecycle.emplace(heroSpecies);
         landscape=stalthos::domain::ReferenceLandscape(world.worldSeed());
         wi::arguments::Parse(commandLine);
@@ -329,7 +361,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 // Blender's authored +X longitudinal axis is turned to the host's +Z forward axis at the motion parent.
                 // The provisional sole offset comes from the walk-cycle's measured rear-foot source bound; tail clearance remains unaccepted.
                 transform->RotateRollPitchYaw(XMFLOAT3(0,yaw-pi*.5f,0));
-                transform->Translate(XMFLOAT3(x,y-.652438f,z));
+                transform->Translate(XMFLOAT3(x,y-static_cast<float>(creatureSoleOffset),z));
             }
             transform->UpdateTransform();
             for(size_t i=0;i<scene.animations.GetCount();++i) {
@@ -347,6 +379,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto data=stalthos::persistence::captureSave(clock, world, pose);
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
             stalthos::persistence::writeSave(saveState,data);
+            if(successorId) {
+                const auto saved=stalthos::persistence::readSave(saveState);
+                savedDeadHeroCount=saved.deadHeroes.size();
+                successorSavedDeathTruthPreserved=std::any_of(saved.deadHeroes.begin(),saved.deadHeroes.end(),
+                    [&](const auto& dead) { return dead.id==successorPriorDeadId; });
+            }
         }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
@@ -361,7 +399,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"lifecycle_stage",static_cast<unsigned>(lifecycle->stage())},{"lifecycle_age_seconds",lifecycle->calendarAge()},{"lifecycle_transitions",lifecycleTransitions},
             {"lifecycle_snapshot_loaded",lifecycleSnapshotLoaded},{"loaded_lifecycle_age_seconds",loadedLifecycleAge},{"loaded_lifecycle_stage",loadedLifecycleStage},
             {"hero_alive",world.snapshot().hero.has_value()},{"hero_death_known",world.heroDeathKnown(heroId)},
-            {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?.652438f:0.f},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
+            {"successor_selected",successorId.has_value()},{"successor_id",successorId.value_or(0)},
+            {"successor_prior_dead_hero_id",successorPriorDeadId},{"successor_prior_death_truth_preserved",successorDeathTruthPreserved},
+            {"successor_saved_prior_death_truth_preserved",successorSavedDeathTruthPreserved},{"saved_dead_hero_count",savedDeadHeroCount},
+            {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},
             {"save_scope","foundation inventories, clocks, diagnostic pose and current hero lifecycle; needs/bonds not connected"},

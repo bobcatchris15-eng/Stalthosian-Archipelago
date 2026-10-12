@@ -90,3 +90,12 @@ Jules needs 4917980815644905444, relationships 7316297015894091861 and activatio
 ## Reviewed Jules domain checkpoint
 
 Final toolkit validation passed 1954 tests with two skips; walk-generator source is published in c93b264. The previous pending-toolkit statements are superseded. Three isolated reviewed Jules cores (needs, relationships, region activation) now pass root Release CTest 7/7. Resource contacts, parenting, persistence of these cores and actual Wicked region streaming remain unfinished. Gait grounding and explicit post-death successor loading are isolated current tasks. See current-work and packet-five receipt before continuation.
+
+
+## Final native successor checkpoint
+
+Reviewed Jules cores are published in 467ae07. Successor host implementation is now independently rebuilt and checked in the merged root: CTest7/7, explicit new ID2 preserves clock/death truth, next process restores exact hatchling age/stage and continues aging. Four invalid selections preserve the prior save. Finite configurable sole offset supports comparison of old/new assets. This remains a diagnostic hook without birth/population chooser or age-specific visual assets.
+
+All six local dispatches are used and workers finished/released. Gait grounding candidate stays isolated at var/worktrees/gait-grounding-correction pending full suite (exec97121, PythonPID25620, log var/reports/packet-five-gait-full.log) and display review. Broadside root capture var/reports/runtime/20261011-203542-6445ce15/draft-host.png shows the candidate in Wicked; neutral soles and tail clearance improved, but long thin legs/proxy anatomy and failed animated stance contact remain unaccepted. Do not promote based on tests alone. Next gait task should preserve authored proportions and improve body stance/tail pose before stride foot locking.
+
+New Jules needs persistence session15605854971730070819 is the only pending remote task, owning persistence.hpp/tests/persistence.cpp/docs/needs-persistence.md. Retrieve/review in isolation before integration. No need to reretrieve prior completed/integrated sessions. Lowest capable model/effort and separate Jules3/100day policy remain authoritative.

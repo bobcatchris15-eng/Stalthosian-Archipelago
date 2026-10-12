@@ -17,3 +17,6 @@ Example feasibility run:
 The Run script writes `runtime-receipt.json`, `draft-host.png`, `motion-early.png`, and `motion-late.png` into a fresh ignored `var/reports/runtime/<id>/` directory. Acceptance remains false in the receipt.
 
 Reverse movement also steps the provisional clip; reverse foot mechanics are not accepted. The host continues to reject no-current-hero loads; post-death continuation and ordinary successor selection remain a required full-draft capability.
+
+
+Sole alignment can be specified with `--creature-sole-offset` (Run `-CreatureSoleOffset`) in meters, finite 0..5. The default 0.652438 preserves the earlier diagnostic proxy. The isolated ground-aligned candidate is tested at 0. Choosing an offset does not establish foot locking, collision or terrain contact acceptance.

@@ -1,0 +1,43 @@
+{
+  "current_step": "Freeze source after weighted-ratio correction and focused Blender-backed verification",
+  "schema_version": 1,
+  "base_revision": "c93b264",
+  "touched_artifacts": [
+    "stalthos-toolkit/src/stalthos_toolkit/commands/build_creature.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "stalthos-toolkit/tests/test_gait.py",
+    "stalthos-toolkit/docs/gait-grounding-draft.md",
+    ".clanker/tasks/gait-grounding-correction/receipt.json",
+    ".clanker/tasks/gait-grounding-correction/source-hashes.json"
+  ],
+  "status": "complete",
+  "blockers": [
+    "Gait contact acceptance failed as recorded in receipt; it needs stride coupling and planted-foot constraint."
+  ],
+  "resume_instructions": "For continued gait work, start from codex/gait-grounding-correction in var/worktrees/gait-grounding-correction. Read the receipt and gait-grounding-draft.md. Baseline run files are under var/reports/gait-grounding-correction. Do not treat this draft as accepted. The next task should implement bounded actor stride coupling and hind-foot stance pinning, then measure deformed pad-ground distance and touchdown-anchored horizontal excursion.",
+  "receipt_path": ".clanker/tasks/gait-grounding-correction/receipt.json",
+  "validation": {
+    "evidence_path": ".clanker/tasks/gait-grounding-correction/receipt.json",
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_gait.py tests/test_blender.py::test_creature_build_and_rig tests/test_blender.py::test_smalltrotter_exports_walk_channels_and_contact_report: 12 passed; actual Blender 5.2 same-seed build and rig succeeded; git diff --check",
+    "passed": true
+  },
+  "assumptions": [
+    "The task is complete as an evidence-backed partial correction; validation.passed refers to successful execution of required checks, while the gait acceptance condition is separately marked unmet."
+  ],
+  "completed_steps": [
+    "Read all assigned instruction and prior evidence files",
+    "Created isolated worktree codex/gait-grounding-correction from main",
+    "Added shared neutral leg alignment for source build and rig",
+    "Added temporal evaluated tail clearance measurement and focused geometry test",
+    "Ran focused tests, actual Blender build/rig, and neutral-only compatibility fixture",
+    "Wrote review draft, source hashes, and partial receipt",
+    "Fixed vertical projection weighting by actual upper/lower ratio",
+    "Added 9:1 unequal-ratio endpoint and finite generic quadruped regressions",
+    "Reran 10 focused gait tests and same-seed actual Blender build and rig",
+    "Ran focused suite including two Blender-backed toolkit integration tests: 12 passed in 14.19s"
+  ],
+  "next_step": "Create a bounded follow-up for stride coupling and stance-phase hind-foot pinning; preserve current failed contact report as baseline.",
+  "updated": "2026-10-11T20:32:07.2836416-05:00",
+  "task_id": "gait-grounding-correction"
+}

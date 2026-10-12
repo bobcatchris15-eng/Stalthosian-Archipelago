@@ -1,0 +1,11 @@
+{
+  "session_id": "15605854971730070819",
+  "url": "https://jules.google.com/session/15605854971730070819",
+  "status": "created; not reviewed or integrated",
+  "ownership": [
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/docs/needs-persistence.md"
+  ],
+  "source_base": "467ae07"
+}

@@ -13,12 +13,15 @@
     "stalthos-runtime/domain/activation_plan.hpp": "04fa14ded0d57a4b999abf2088c6131a7e4cd1cd7b25b299e2029a00140a73ca",
     "stalthos-runtime/tests/activation_plan.cpp": "7f203be0d60747031c2e98eb075643f8bd231ab528352c131e16034bf4bd836c"
   },
-  "current_workers": [
-    "successor_host_draft",
-    "gait_grounding_correction"
-  ],
-  "publication": "pending coherent scoped module checkpoint",
+  "current_workers": [],
+  "publication": "reviewed modules published467ae07; successor native checkpoint pending scoped publication",
   "full_draft_complete": false,
   "visual_accepted": false,
-  "fps_accepted": false
+  "fps_accepted": false,
+  "native_successor_receipt": "tasks/successor-host-draft/receipt.json",
+  "local_dispatches_used": 6,
+  "gait_candidate": "isolated, source frozen; focused12passed, fullsuite pending; root broadside visual remains unaccepted",
+  "pending_jules": [
+    "15605854971730070819"
+  ]
 }

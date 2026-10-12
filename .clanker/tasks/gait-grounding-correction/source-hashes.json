@@ -1,0 +1,42 @@
+[
+  {
+    "path": "stalthos-toolkit/src/stalthos_toolkit/commands/build_creature.py",
+    "sha256": "0DB83ED13766E3324D89654148D880181F9F5D88C02FCDFE82AC68DD01F4BEDC"
+  },
+  {
+    "path": "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "sha256": "F4C217534EFA5257FBA9B331E4349A05CB20C0C29AFD524D01813862CBBD2855"
+  },
+  {
+    "path": "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+    "sha256": "510ECE9AFF212F97DF9C1C8191FE154EDC804649921F8DC10E98E969FC273BEE"
+  },
+  {
+    "path": "stalthos-toolkit/tests/test_gait.py",
+    "sha256": "B0D825315B9023547B79D5FB841B501AD9B0E84C8185F685C06C0323565FE603"
+  },
+  {
+    "path": "stalthos-toolkit/docs/gait-grounding-draft.md",
+    "sha256": "90C8A68EEF4B50923148A3184694A837318DC8B3F8E73124B0F15F14168E3E66"
+  },
+  {
+    "path": "var/reports/gait-grounding-correction/sources/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.blend",
+    "sha256": "7ADA51AB3D07015A769B7CF18E3694D861C304CC04AC9AEA804003269B7C4E06"
+  },
+  {
+    "path": "var/reports/gait-grounding-correction/sources/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.rig.blend",
+    "sha256": "7EDDA10057AE6D3B23FB0C26DD0CB02395AE8999C207BB67536792000455E3C8"
+  },
+  {
+    "path": "var/reports/gait-grounding-correction/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.neutral.glb",
+    "sha256": "85C35C757AB37CEB2D78C8AEDEEC47A33E9E610701391B8CE6CB304CE55E2AB5"
+  },
+  {
+    "path": "var/reports/gait-grounding-correction/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "sha256": "B41C4995158809EF58EC763F7ABB1994FBC81B7065D0F82E8C97336FA55DC907"
+  },
+  {
+    "path": "var/reports/gait-grounding-correction/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+    "sha256": "12DA8E408C8CDDE0FA17A82D168467D8368512781FE4FA5DA4D07438A9D38F90"
+  }
+]
