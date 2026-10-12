@@ -1,0 +1,64 @@
+{
+  "task_id": "stance-walk-revision",
+  "outcome": "partial",
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/gait.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "stalthos-toolkit/tests/test_gait.py",
+    "stalthos-toolkit/tests/test_blender.py",
+    "stalthos-toolkit/docs/stance-walk-revision.md"
+  ],
+  "ownership_note": "tests/test_blender.py was edited only for the parent-authorized walk-contact assertion and coverage; no other non-owned source files were edited.",
+  "implementation": [
+    "Added finite-checked deterministic root-motion, foot-trajectory, touchdown-excursion, and two-bone IK helpers with exact loop-boundary tests.",
+    "Built a staggered four-limb root-motion cycle; limb lengths remain authored, stride is capped conservatively, and each hind pad is rigidly weighted to its existing toe bone for actual deformed-pad measurements.",
+    "Measured touchdown-anchored pad-centroid excursion after adding the exported actor root translation, and retained per-selector height and excursion tolerances.",
+    "Copied the frozen anatomy_pose support-offset formula locally in rig.py after coordination with creature_pose_revision; no shared anatomy_pose.py or creature.py files were changed."
+  ],
+  "reference_alignment": {
+    "source": "stalthos-toolkit/references/creatures/smalltrotter/user-primary.png",
+    "observed_direction": [
+      "deep rounded torso",
+      "substantial limbs and broad feet",
+      "upright long neck",
+      "low tapered tail"
+    ],
+    "alignment": "The stride is conservative for the authored short-limbed, deep-bodied quadruped, preserves limb proportions, and keeps a staggered grounded support pattern. The still was not treated as gait evidence.",
+    "remaining_differences": "The current proxy remains simpler and less massive than the reference in torso volume, neck/head silhouette, folds, bristles, and foot/toe detail. Matching three-quarter and broadside captures plus visual gait review remain open."
+  },
+  "evidence": {
+    "blender": "5.2.0 LTS",
+    "compatible_source_commit": "b9939db3883265d851f6e703c35d6c59f522c085",
+    "compatible_source_blend_sha256": "51D5BF1CBD786E4A4352D093E0750DCFA2FE4D94BE5F51FE20A0EF9C72D72EB5",
+    "actual_rig_report": "var/reports/stance-walk-revision/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+    "actual_walk_glb": "var/reports/stance-walk-revision/runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "walk_glb_sha256": "43E08691B08C5F4716909D753EBE98484BAD5DEB4D0640B820FC250B2A5DDB48",
+    "report_sha256": "44C048B11D187E9D0E2D4E74A9B91AF87B720830F8FD521E9B62ACB545B157B1",
+    "metrics": {
+      "stride_length_m": 0.162,
+      "root_motion_delta_m": 0.162000000476837,
+      "limb_channel_loop_error": 0.0,
+      "stance_height_samples_per_hind_pad": 31,
+      "height_tolerance_m": 0.02,
+      "left_pad_stance_height_range_m": [0.003069944679737091, 0.009763248264789581],
+      "right_pad_stance_height_range_m": [0.003069920465350151, 0.009763168171048164],
+      "left_touchdown_excursion_m": 0.012640273636007619,
+      "right_touchdown_excursion_m": 0.012640253530053018,
+      "touchdown_excursion_tolerance_m": 0.02,
+      "glb_animation_validated": true,
+      "contact_validation_passed": true
+    },
+    "pure_tests": "PYTHONPATH=src python -m pytest -q tests/test_gait.py: 11 passed; compileall and git diff --check passed.",
+    "integration_test_limitation": "The fresh test_smalltrotter_exports_walk_channels_and_contact_report run against this worktree base fails before gait validation because its base build_creature source lacks the pad geometry from the separately owned creature-pose change. The direct Blender rig run used the compatible source built from that worker's committed candidate. Re-run the integration test after source integration."
+  },
+  "limitations": [
+    "The eventual runtime's root-motion extraction and playback are not verified.",
+    "The compatible-source direct Blender report passes geometric contact and touchdown-excursion tolerance, but the fresh end-to-end integration test needs the separate creature-pose source change merged into the same tree.",
+    "No rendered animation review was performed; the still reference is not evidence of animation fidelity."
+  ],
+  "no_changes_to": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/creature.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/anatomy_pose.py",
+    "host checkout or root-owned files"
+  ]
+}

@@ -31,6 +31,7 @@ import _stalthos as S
 S.bootstrap()
 
 import _materials as MAT  # noqa: E402
+import anatomy_pose as POSE  # noqa: E402
 
 
 def _unit(v: mathutils.Vector) -> mathutils.Vector:
@@ -44,6 +45,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     joints: dict[str, list[mathutils.Vector]] = {}
 
     stance = p["stance_height_m"]
+    support_offsets = POSE.support_offsets(p)
     trunk_len = p["trunk_length_m"]
     neck_len = p["neck_length_m"]
     tail_len = p["tail_length_m"]
@@ -62,7 +64,8 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         bulge = math.sin(math.pi * t) ** 0.7
         depth = p["trunk_depth_m"] * (0.45 + 0.55 * bulge)
         width = p["trunk_width_m"] * (0.5 + 0.5 * bulge)
-        z = stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+        z = (stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+             + POSE.offset_at(p, support_offsets, t))
         return mathutils.Vector((x, 0.0, z)), depth, width
 
     path, radii_d, radii_w, pts = [], [], [], []
@@ -125,18 +128,20 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     tdir = _unit(path[0] - path[1])
     tail_path, tail_r = [], []
     trng = S.rng(seed, "creature", "tail")
-    # the tail base is the rear of the trunk; keep a fraction of the tail above
-    # the ground at every stage by scaling the droop to the stance height
+    # the tail base follows the corrected rear support anchor; apply authored
+    # positive tail rise so the tip keeps clearance over the ground plane
     base_z = path[0].z
-    tail_droop = min(tail_len * tread, base_z * 0.55)
+    tail_lift = min(tail_len * tread, max(0.0, base_z * 0.55))
+    tail_vertex_start = len(body.verts)
     for i in range(tail_segs + 1):
         t = i / tail_segs
         droop = tdir * (tail_len * t)
-        lift = mathutils.Vector((0.0, 0.0, -tail_droop * t * t + base_z * 0.05 * t))
+        lift = mathutils.Vector((0.0, 0.0, tail_lift * t * t + base_z * 0.05 * t))
         wobble = mathutils.Vector((0.0, trng.uniform(-0.01, 0.01) * tail_len * math.sin(math.pi * t), 0.0))
         tail_path.append(path[0] + droop + lift + wobble)
         tail_r.append(max(radii_d[0] * 0.55 * (1.0 - 0.9 * t), tail_len * 0.012))
     _elliptical_tube(body, tail_path, tail_r, [r * 1.05 for r in tail_r], sides=max(5, sides - 2))
+    tail_clearance = min(v[2] for v in body.verts[tail_vertex_start:])
     joints["tail"] = tail_path
 
     # ---- four limbs -----------------------------------------------------
@@ -145,6 +150,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     spread = math.radians(p["leg_spread_deg"])
     leg_r = p["leg_diameter_m"] * 0.5
     limb_chains: dict[str, dict[str, list[mathutils.Vector]]] = {}
+    pad_bottoms: dict[str, float] = {}
     # fore at t=0.82 of the trunk, hind at t=0.16 (quadruped plan)
     for label, t, is_fore in (("front_left", 0.80, True), ("front_right", 0.80, False),
                               ("rear_left", 0.16, False), ("rear_right", 0.16, False)):
@@ -162,8 +168,10 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         limb_r = [leg_r * 1.25, leg_r * 1.12, leg_r * 0.95, leg_r * 0.7, leg_r * 0.6]
         _elliptical_tube(body, limb_path, limb_r, [r * 0.92 for r in limb_r], sides=max(5, sides - 2))
         # foot pad
+        pad_start = len(body.verts)
         body.add_box(foot + mathutils.Vector((head_len * 0.25, 0.0, 0.0)),
                      (head_len * 0.5, leg_r * 1.1, leg_r * 0.5))
+        pad_bottoms[label] = min(v[2] for v in body.verts[pad_start:])
         limb_chains[label] = {"chain": limb_path, "foot": foot, "knee": knee, "hip": hip}
     joints["limbs"] = limb_chains
 
@@ -183,6 +191,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
             pos = mathutils.Vector((rear_x + trunk_len * t,
                                     math.sin(ang) * width * 0.5,
                                     stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+                                    + POSE.offset_at(p, support_offsets, t)
                                     + math.cos(ang) * depth * 0.52))
             rr = max(depth * 0.05, 0.01) * ornge.uniform(0.6, 1.2)
             detail.add_uv_sphere(pos, rr, segments=6, rings=4)
@@ -198,6 +207,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
             pos = mathutils.Vector((rear_x + trunk_len * t,
                                     math.sin(a) * width * 0.52,
                                     stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+                                    + POSE.offset_at(p, support_offsets, t)
                                     + math.cos(a) * depth * 0.5))
             d = mathutils.Vector((0.0, math.sin(a), math.cos(a) * 0.9 + 0.4)).normalized()
             detail.add_tube([pos, pos + d * blen], [blen * 0.16, blen * 0.02], sides=3)
@@ -209,6 +219,11 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         "tail_segments": tail_segs,
         "limbs": 4,
         "stance_height_m": round(stance, 5),
+        "support_pose_offsets_m": {k: round(v, 6) for k, v in support_offsets.items()},
+        "neutral_pad_bottom_m": round(POSE.PAD_GROUND_Z_M, 6),
+        "source_pad_bottoms_m": {k: round(v, 6) for k, v in pad_bottoms.items()},
+        "tail_mesh_min_z_m": round(tail_clearance, 6),
+        "leg_segment_lengths_m": {"upper": round(upper, 6), "lower": round(lower, 6)},
         "osteoderms": osteoderms,
         "bristles": bristles,
         "proxy_disclaimer": ("anatomical proxy for pipeline verification; "

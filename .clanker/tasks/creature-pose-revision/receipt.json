@@ -1,0 +1,53 @@
+{
+  "task_id": "creature-pose-revision",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Create an isolated worktree from main and limit source edits to the assigned files plus the pose revision doc.",
+      "met": true,
+      "how_checked": "Created var/worktrees/creature-pose-revision on codex/creature-pose-revision from main at 9829870654b0fe5990628034f529aa4bce3352d0; committed only creature.py, new anatomy_pose.py, test_anatomy_pose.py, and creature-pose-revision.md in commits b9939db and 325c6ee."
+    },
+    {
+      "condition": "Correct Smalltrotter neutral body stance and tail pose while preserving authored limb segment lengths and compatible joint names/axes.",
+      "met": true,
+      "how_checked": "Pure helper support offsets lower the body axis at the existing t=0.16/0.80 support anchors and interpolate along +X; creature.py retains +X forward/+Z up, named spine/neck/tail/limbs chains, and exact leg lengths 0.270/0.234 m. Blender result reports unchanged dimensions in these segment inputs and computed offsets rear=-0.648438 m, fore=-0.667890 m."
+    },
+    {
+      "condition": "Report neutral true pad height, tail clearance, and proportions from an actual Blender build of independent_juvenile seed 42.",
+      "met": true,
+      "how_checked": "Blender 5.2.0 build_creature returned ok=true. It reports actual source pad-box vertex minima of 0.004 m for all four pads, tail mesh minimum Z 0.084270 m, and authored upper/lower segment lengths 0.270/0.234 m. See build-final.stdout.txt and build result/log under var/reports/creature-pose-revision-final."
+    },
+    {
+      "condition": "Render a broadside before/after comparison using actual Blender.",
+      "met": true,
+      "how_checked": "Before is the 90-degree image from the actual render_turntable command. After is the existing Blender render.py entrypoint with one angle (90), neutral lighting, fixed bbox camera, 512 px and 32 samples. Both are preserved under var/reports/creature-pose-revision-before and var/reports/creature-pose-revision-final. Visual review shows all four pads on the plane and the tail lifted clear; this is a proxy pose review, not photorealistic acceptance."
+    },
+    {
+      "condition": "Add focused pure anatomy-pose coverage and verify the final patch.",
+      "met": true,
+      "how_checked": "PYTHONPATH=src python -m pytest -q tests/test_anatomy_pose.py: 3 passed; git diff --check passed. Actual Blender seed-42 source build and both requested broadside captures completed."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/creature.py",
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/anatomy_pose.py",
+    "stalthos-toolkit/tests/test_anatomy_pose.py",
+    "stalthos-toolkit/docs/creature-pose-revision.md"
+  ],
+  "evidence": [
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-final/test-anatomy-pose.log",
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-final/build-final.stdout.txt",
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-final/sources/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.result.json",
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-final/preview/broadside-final/smalltrotter-independent-juvenile_neutral_090.png",
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-before/preview/creature.smalltrotter.st1/turntable/creature.smalltrotter.st1.independent_juvenile_neutral_090.png",
+    "var/worktrees/creature-pose-revision/stalthos-toolkit/var/reports/creature-pose-revision-final/broadside-final.result.json"
+  ],
+  "findings": [
+    "The shared box builder uses supplied box dimensions as half-extents. A first measured probe caught and corrected a half-height assumption; the final Blender vertex measurement confirms all four pads at +0.004 m."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "The proxy's authored stance_height_m remains source metadata; the support pose lowers and mildly slopes the body axis to fit the fixed authored limb segments to the proxy ground plane. This is a visual proxy correction and not a fossil measurement claim."
+  ],
+  "cost": {"tier": "local", "wall_clock_s": 900, "retries": 0}
+}

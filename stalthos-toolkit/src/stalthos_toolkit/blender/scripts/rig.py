@@ -34,6 +34,49 @@ def _unit(v: mathutils.Vector) -> mathutils.Vector:
     return v.normalized() if v.length > 1e-9 else mathutils.Vector((0.0, 0.0, 1.0))
 
 
+def _support_offsets(p: dict[str, Any]) -> tuple[float, float]:
+    """Local copy of anatomy_pose.support_offsets for trunk/rig alignment."""
+    stance = float(p["stance_height_m"])
+    trunk_len = float(p["trunk_length_m"])
+    depth = float(p["trunk_depth_m"])
+    arch = float(p["trunk_arch"])
+    spread = math.radians(float(p["leg_spread_deg"]))
+    foot_drop = max(0.02, stance * 0.06)
+    pad_half = (float(p["leg_diameter_m"]) * 0.5) * 0.5
+    upper, lower = float(p["leg_upper_m"]), float(p["leg_lower_m"])
+    lower_vertical = 1.0 / math.sqrt(1.0 + math.sin(spread * 0.35) ** 2)
+
+    def offset(t: float) -> float:
+        bulge = math.sin(math.pi * t) ** 0.7
+        hip_z = stance + depth * (0.45 + 0.55 * bulge) * 0.55
+        hip_z += arch * trunk_len * math.sin(math.pi * t)
+        raw_pad_bottom = hip_z - upper * math.cos(spread) - lower * lower_vertical
+        raw_pad_bottom -= foot_drop + pad_half
+        return 0.004 - raw_pad_bottom
+
+    return offset(0.16), offset(0.80)
+
+
+def _aim_bone(pb: bpy.types.PoseBone, desired_arm_direction: mathutils.Vector) -> None:
+    """Rotate a pose bone so its head-to-tail axis follows an armature-space vector."""
+    desired = _unit(desired_arm_direction)
+    if pb.parent:
+        parent_pose_rotation = pb.parent.matrix.to_3x3()
+        parent_rest_rotation = pb.parent.bone.matrix_local.to_3x3()
+        bone_rest_rotation = pb.bone.matrix_local.to_3x3()
+        relative_rest = parent_rest_rotation.inverted() @ bone_rest_rotation
+        desired_parent = parent_pose_rotation.inverted() @ desired
+        rest_parent = relative_rest @ mathutils.Vector((0.0, 1.0, 0.0))
+    else:
+        relative_rest = pb.bone.matrix_local.to_3x3()
+        desired_parent = desired
+        rest_parent = relative_rest @ mathutils.Vector((0.0, 1.0, 0.0))
+    delta = rest_parent.rotation_difference(desired_parent)
+    local_delta = relative_rest.inverted() @ delta.to_matrix().to_3x3() @ relative_rest
+    pb.rotation_mode = "QUATERNION"
+    pb.rotation_quaternion = local_delta.to_quaternion()
+
+
 def _axis_chain(arm_data, name: str, points, *, parent=None, connect: bool = False,
                 roll: float = 0.0):
     """Create a bone chain from a polyline of head positions.
@@ -78,6 +121,9 @@ def build_skeleton(arm: bpy.types.Object, p: dict[str, Any], stats: dict[str, An
         bulge = math.sin(math.pi * t) ** 0.7
         depth = p["trunk_depth_m"] * (0.45 + 0.55 * bulge)
         z = stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+        rear_support, front_support = _support_offsets(p)
+        blend = min(1.0, max(0.0, (t - 0.16) / (0.80 - 0.16)))
+        z += rear_support + (front_support - rear_support) * blend
         return mathutils.Vector((x, 0.0, z)), depth
 
     trunk_segs = p["trunk_segments"]
@@ -220,40 +266,81 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
                       shape: dict[str, Any],
                       seed: int, output_glb: str, metadata_path: str,
                       report: S.Reporter) -> tuple[str, dict[str, Any]]:
-    """Key a short cyclic limb action and measure its named toe contacts."""
+    """Author a root-motion walk cycle with two-bone targets and measured pads."""
     import json
     import os
 
-    from mathutils import Vector
+    from mathutils import Quaternion, Vector
 
     contact = next((c for c in contacts if c.get("id") == "walk_cycle"), {})
     targets = contact.get("targets", [])
-    tolerance = {t["selector"]: float(t["tolerance_m"]) for t in targets}
-    # The proxy's YAML selectors do not match its generated naming. Keep this
-    # explicit mapping in the emitted metadata so the proxy limitation is visible.
-    target_bones = {t["selector"]: GAIT.CONTACT_BONE_ALIASES[t["selector"]] for t in targets}
+    if not targets:
+        raise RuntimeError("walk_cycle contact definition has no targets")
+    target_bones = {}
+    tolerance = {}
+    for target in targets:
+        selector = target.get("selector")
+        if selector not in GAIT.CONTACT_BONE_ALIASES:
+            raise RuntimeError(f"unsupported walk_cycle contact selector: {selector!r}")
+        if selector in target_bones:
+            raise RuntimeError(f"duplicate walk_cycle contact selector: {selector}")
+        target_bones[selector] = GAIT.CONTACT_BONE_ALIASES[selector]
+        tolerance[selector] = float(target["tolerance_m"])
     body = bpy.data.objects.get("body_proxy")
     if body is None:
         raise RuntimeError("walk_cycle contact checks require body_proxy foot-pad geometry")
     head_len = float(shape["head_length_m"])
     stance_height = float(shape["stance_height_m"])
     leg_radius = float(shape["leg_diameter_m"]) * 0.5
+    foot_drop = max(0.02, stance_height * 0.06)
     pad_indices = {}
     for selector, bone_name in target_bones.items():
         bone = arm.pose.bones.get(bone_name)
         if bone is None:
-            continue
-        ankle = arm.matrix_world.inverted() @ bone.head
-        center = Vector((ankle.x + head_len * 0.25, ankle.y,
-                         ankle.z - max(0.02, stance_height * 0.06)))
+            raise RuntimeError(f"walk_cycle target bone is absent: {bone_name}")
+        ankle_world = arm.matrix_world @ bone.head
+        center_world = ankle_world + arm.matrix_world.to_3x3() @ Vector(
+            (head_len * 0.25, 0.0, -foot_drop))
+        center = body.matrix_world.inverted() @ center_world
         # creature.py's MeshBuilder.add_box `size` is a half extent.
         pad_indices[selector] = [v.index for v in body.data.vertices
             if abs(v.co.x - center.x) <= head_len * 0.5 + 1e-5
             and abs(v.co.y - center.y) <= leg_radius * 1.1 + 1e-5
             and abs(v.co.z - center.z) <= leg_radius * 0.5 + 1e-5]
+        if not pad_indices[selector]:
+            raise RuntimeError(f"no body_proxy foot-pad vertices found for {selector}")
+    # Foot-pad vertices are a separate, box-shaped proxy feature. Automatic
+    # weights can blend them into the adjacent trunk and upper-leg groups,
+    # making the evaluated pad lag far behind a correctly placed ankle. Keep
+    # each hind pad rigidly attached to its toe bone so contact measurements
+    # and the visible support surface follow the same articulated foot.
+    pad_weight_groups = {}
+    for selector, bone_name in target_bones.items():
+        group_name = bone_name
+        group = body.vertex_groups.get(group_name)
+        if group is None:
+            group = body.vertex_groups.new(name=group_name)
+        indices = pad_indices[selector]
+        for existing in body.vertex_groups:
+            existing.remove(indices)
+        group.add(indices, 1.0, "REPLACE")
+        pad_weight_groups[selector] = group_name
     duration_s, fps = 2.0, 24
     intervals = int(duration_s * fps)
     first_frame, last_frame = 1, intervals + 1
+    # Keep the translating step conservative for this deep-bodied, short-limbed
+    # form. The IK solver retains the authored segment lengths; stride is
+    # reduced before it can force a leg to its extension limit.
+    stride_length = min(float(shape["trunk_length_m"]) * 0.30,
+                        (float(shape["leg_upper_m"]) + float(shape["leg_lower_m"])) * 0.60)
+    stride_length = max(0.05, stride_length)
+    swing_lift = max(0.035, stance_height * 0.12)
+    duty_factor = 0.62
+    selector_limb = {selector: bone_name.removeprefix("toe_")
+                      for selector, bone_name in target_bones.items()}
+    limb_selector = {limb: selector for selector, limb in selector_limb.items()}
+    contact_correction_max = {selector: 0.0 for selector in target_bones}
+    contact_correction_history = {selector: [] for selector in target_bones}
     scene = bpy.context.scene
     scene.render.fps = fps
     scene.frame_start, scene.frame_end = first_frame, last_frame
@@ -262,36 +349,114 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     action = bpy.data.actions.new("Smalltrotter_WalkCycle")
     arm.animation_data_create()
     arm.animation_data.action = action
-    angles = {label: [] for label in GAIT.LATERAL_SEQUENCE_PHASES}
-    for label, phase_offset in GAIT.LATERAL_SEQUENCE_PHASES.items():
+    rest = {}
+    for label in GAIT.LATERAL_SEQUENCE_PHASES:
         upper = arm.pose.bones.get(f"leg_{label}_00")
         lower = arm.pose.bones.get(f"leg_{label}_01")
-        if upper is None or lower is None:
+        toe = arm.pose.bones.get(f"toe_{label}")
+        if upper is None or lower is None or toe is None:
             raise RuntimeError(f"walk cycle requires rig bones for {label}")
-        upper.rotation_mode = lower.rotation_mode = "XYZ"
-        for frame in range(first_frame, last_frame + 1):
-            phase = (frame - first_frame) / intervals
-            hip, knee, _ = GAIT.limb_angles(phase, phase_offset, 0.62)
-            upper.rotation_euler.x = hip
-            lower.rotation_euler.x = knee
-            upper.keyframe_insert(data_path="rotation_euler", index=0, frame=frame,
-                                  group=f"walk_{label}")
-            lower.keyframe_insert(data_path="rotation_euler", index=0, frame=frame,
-                                  group=f"walk_{label}")
-            angles[label].append((hip, knee))
-    # Blender 5.2 uses layered actions without the legacy Action.fcurves API.
-    # Keyed boundary values match exactly; consumers repeat this 2 s clip.
+        rest[label] = {"upper": upper, "lower": lower,
+                       "toe": toe, "hip": upper.head.copy(), "ankle": lower.tail.copy(),
+                       "toe_direction": toe.tail.copy() - toe.head.copy()}
+    pose_channels = {label: [] for label in GAIT.LATERAL_SEQUENCE_PHASES}
+    ik_samples = {label: [] for label in GAIT.LATERAL_SEQUENCE_PHASES}
+    root_channels = []
+    for frame in range(first_frame, last_frame + 1):
+        phase = (frame - first_frame) / intervals
+        arm.location.x = GAIT.root_motion_offset(phase, stride_length)
+        root_channels.append(float(arm.location.x))
+        for label, limb_phase in GAIT.LATERAL_SEQUENCE_PHASES.items():
+            upper, lower = rest[label]["upper"], rest[label]["lower"]
+            if phase == 1.0:
+                # Enforce an exact local-pose loop while the root-motion track
+                # carries the one-stride displacement at the boundary.
+                start_pose = pose_channels[label][0]
+                toe = rest[label]["toe"]
+                upper.rotation_mode = lower.rotation_mode = toe.rotation_mode = "QUATERNION"
+                upper.rotation_quaternion = Quaternion(start_pose[:4])
+                lower.rotation_quaternion = Quaternion(start_pose[4:8])
+                toe.rotation_quaternion = Quaternion(start_pose[8:12])
+                for bone in (upper, lower, toe):
+                    bone.keyframe_insert(data_path="rotation_quaternion", frame=frame,
+                                         group=f"walk_{label}")
+                pose_channels[label].append(start_pose)
+                bpy.context.view_layer.update()
+                continue
+            target = GAIT.foot_trajectory(phase, limb_phase, duty_factor,
+                                          stride_length, swing_lift_m=swing_lift)
+            ankle = rest[label]["ankle"] + Vector((target["x_m"], 0.0, target["z_m"]))
+            def apply_target(target_ankle):
+                knee, reachable_ankle = GAIT.solve_two_bone_ik(
+                    tuple(rest[label]["hip"]), tuple(target_ankle),
+                    float(shape["leg_upper_m"]), float(shape["leg_lower_m"]),
+                    (1.0, 0.0, 0.0))
+                knee_vec = Vector(knee)
+                _aim_bone(upper, knee_vec - rest[label]["hip"])
+                bpy.context.view_layer.update()
+                _aim_bone(lower, Vector(reachable_ankle) - knee_vec)
+                bpy.context.view_layer.update()
+                _aim_bone(rest[label]["toe"], rest[label]["toe_direction"])
+                bpy.context.view_layer.update()
 
+            apply_target(ankle)
+            selector = limb_selector.get(label)
+            if (selector is not None and
+                    GAIT.stance_fraction(phase, limb_phase, duty_factor) >= 0.0):
+                # Skinning blends the pad across nearby bones. Close the loop
+                # against its actual evaluated bottom instead of trusting the
+                # ideal two-bone endpoint as a proxy for surface contact.
+                residuals = []
+                for _ in range(8):
+                    body_eval = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+                    evaluated_mesh = body_eval.to_mesh()
+                    indices = pad_indices[selector]
+                    bottom = min((body_eval.matrix_world @ evaluated_mesh.vertices[i].co).z
+                                 for i in indices)
+                    body_eval.to_mesh_clear()
+                    correction = bottom - 0.004
+                    residuals.append(correction)
+                    contact_correction_max[selector] = max(
+                        contact_correction_max[selector], abs(correction))
+                    if abs(correction) < 0.001:
+                        break
+                    ankle.z -= correction
+                    apply_target(ankle)
+                contact_correction_history[selector].append(
+                    {"phase": phase, "pad_bottom_correction_sequence_m": residuals})
+            if GAIT.stance_fraction(phase, limb_phase, duty_factor) >= 0.0:
+                _, reachable_ankle = GAIT.solve_two_bone_ik(
+                    tuple(rest[label]["hip"]), tuple(ankle),
+                    float(shape["leg_upper_m"]), float(shape["leg_lower_m"]),
+                    (1.0, 0.0, 0.0))
+                actual_ankle = lower.tail.copy()
+                desired_ankle = Vector(reachable_ankle)
+                ik_samples[label].append({
+                    "phase": phase,
+                    "desired_ankle_armature_m": list(desired_ankle),
+                    "actual_ankle_armature_m": list(actual_ankle),
+                    "ankle_error_m": (actual_ankle - desired_ankle).length})
+            toe = rest[label]["toe"]
+            for bone in (upper, lower, toe):
+                bone.keyframe_insert(data_path="rotation_quaternion", frame=frame,
+                                     group=f"walk_{label}")
+            pose_channels[label].append(tuple(upper.rotation_quaternion) +
+                                        tuple(lower.rotation_quaternion) +
+                                        tuple(toe.rotation_quaternion))
+        arm.keyframe_insert(data_path="location", index=0, frame=frame,
+                            group="root_motion")
     loop_errors = {label: GAIT.loop_error(values[0], values[-1])
-                   for label, values in angles.items()}
+                   for label, values in pose_channels.items()}
     loop_ok = bool(loop_errors) and max(loop_errors.values()) <= 1e-7
+    root_motion_delta = root_channels[-1] - root_channels[0]
+    root_motion_ok = abs(root_motion_delta - stride_length) <= 1e-7
 
     ground_distances = {selector: [] for selector in target_bones}
     stance_distances = {selector: [] for selector in target_bones}
     stance_positions = {selector: [] for selector in target_bones}
-    target_limb = {"bone:pes_foot_l": "rear_L", "bone:pes_foot_r": "rear_R"}
-    sample_frames = sorted(set([first_frame, last_frame] +
-                               list(range(first_frame, last_frame, max(1, fps // 6)))))
+    stance_phases = {selector: [] for selector in target_bones}
+    stance_sample_details = {selector: [] for selector in target_bones}
+    sample_frames = list(range(first_frame, last_frame + 1))
     for frame in sample_frames:
         scene.frame_set(frame)
         bpy.context.view_layer.update()
@@ -309,11 +474,18 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
             center_x = sum(p[0] for p in world_xy) / len(world_xy)
             center_y = sum(p[1] for p in world_xy) / len(world_xy)
             phase = (frame - first_frame) / intervals
-            limb_phase = GAIT.LATERAL_SEQUENCE_PHASES[target_limb[selector]]
-            in_stance = GAIT.stance_fraction(phase, limb_phase, 0.62) >= 0.0
+            # Store the actor-local pad center. touchdown_excursion adds the
+            # root-motion path and wraps touchdown samples across cycle edges.
+            stance_positions[selector].append(
+                (center_x - GAIT.root_motion_offset(phase, stride_length), center_y, 0.0))
+            stance_phases[selector].append(phase)
+            limb_phase = GAIT.LATERAL_SEQUENCE_PHASES[selector_limb[selector]]
+            in_stance = GAIT.stance_fraction(phase, limb_phase, duty_factor) >= 0.0
             if in_stance:
                 stance_distances[selector].append(float(min(world_z)))
-                stance_positions[selector].append((center_x, center_y))
+                stance_sample_details[selector].append({
+                    "phase": phase, "pad_bottom_z_m": float(min(world_z)),
+                    "pad_center_world_xy_m": [center_x, center_y]})
         body_eval.to_mesh_clear()
     scene.frame_set(first_frame)
     body_z = None
@@ -338,43 +510,55 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
         row["samples"] > 0 and row["invalid_samples"] == 0 and
         row["within_tolerance"] == row["samples"]
         for row in stance_rows.values())
-    slip = {}
-    for selector, positions in stance_positions.items():
-        if len(positions) < 2:
-            slip[selector] = {"samples": len(positions), "max_displacement_m": None}
-            continue
-        origin = positions[0]
-        slip[selector] = {"samples": len(positions),
-            "max_displacement_m": max(math.hypot(x - origin[0], y - origin[1])
-                                      for x, y in positions)}
+    slip = {selector: GAIT.touchdown_excursion(
+                positions, stance_phases[selector],
+                GAIT.LATERAL_SEQUENCE_PHASES[selector_limb[selector]], duty_factor,
+                root_stride_m=stride_length)
+            for selector, positions in stance_positions.items()}
+    touchdown_lock_ok = bool(slip) and all(
+        slip[selector]["max_excursion_m"] is not None and
+        slip[selector]["max_excursion_m"] <= tolerance[selector]
+        for selector in slip)
     metadata = {
         "clip": "walk_cycle", "source_contact_id": contact.get("id"),
         "seed": int(seed), "duration_s": duration_s, "fps": fps,
         "frame_range": [first_frame, last_frame], "loop": {"passed": loop_ok,
             "max_channel_error": max(loop_errors.values()) if loop_errors else None,
-            "per_limb_error": loop_errors},
+            "per_limb_error": loop_errors,
+            "stance_ik_samples": ik_samples,
+            "root_motion_delta_m": root_motion_delta,
+            "root_motion_matches_stride": root_motion_ok,
+            "root_motion_is_extracted_per_cycle": True},
         "contacts": {**geometry, "nominal_stance_samples": stance_geometry,
             "each_target_all_stance_samples_within_tolerance": each_target_stance_ok,
-            "sampled_stance_position_spread": slip,
+            "touchdown_anchored_stance_excursion": slip,
+            "each_target_touchdown_excursion_within_tolerance": touchdown_lock_ok,
+            "stance_samples": stance_sample_details,
             "selector_to_bone_aliases": target_bones,
             "foot_pad_vertex_counts": {selector: len(indices) for selector, indices in pad_indices.items()},
-            "measurement": "evaluated, armature-deformed hind foot-pad bottom vertices against z=0"},
-        "terrain_contact_height": {"label": "in-place terrain contact height check",
-            "actor_stride_translation_included": False,
-            "horizontal_foot_lock_checked": False,
+            "foot_pad_weight_groups": pad_weight_groups,
+            "measurement": "every-frame evaluated armature-deformed hind foot-pad vertices against z=0; horizontal pad-centroid positions include the animated actor root transform"},
+        "terrain_contact_height": {"label": "root-motion stance contact and touchdown excursion",
+            "actor_stride_translation_included": True,
+            "horizontal_foot_lock_checked": True,
+            "stride_length_m": stride_length,
+            "max_ankle_correction_to_measured_pad_m": contact_correction_max,
+            "ankle_correction_history": contact_correction_history,
             "per_target_minimum_gap_m": {name: row["min_abs_ground_distance_m"]
                 for name, row in target_rows.items()},
-            "sampled_stance_position_spread_m": {
-                name: row["max_displacement_m"] for name, row in slip.items()}},
+            "touchdown_anchored_max_excursion_m": {
+                name: row["max_excursion_m"] for name, row in slip.items()}},
         "source_bounds_and_first_frame_pose": {"body_proxy_world_z_bounds_m": body_z,
             "toe_bone_endpoints_world_m": neutral_toes,
-            "grounding_note": "lowering whole proxy to support hind toes would place body_proxy below z=0"},
-        "validation": {"passed": loop_ok and each_target_stance_ok,
-            "loop_passed": loop_ok, "geometric_contact_passed": each_target_stance_ok},
+            "grounding_note": "contact is measured from actual deformed hind-pad vertices; body height and authored leg lengths are preserved"},
+        "validation": {"passed": loop_ok and root_motion_ok and each_target_stance_ok and touchdown_lock_ok,
+            "loop_passed": loop_ok, "root_motion_passed": root_motion_ok,
+            "geometric_contact_passed": each_target_stance_ok,
+            "touchdown_foot_lock_passed": touchdown_lock_ok},
         "limitations": ["YAML selector names do not exist in the proxy rig; explicit hind-toe aliases were used.",
-            "Foot-pad geometry is part of body_proxy, but this in-place cycle has no actor stride translation and does not prove horizontal foot lock.",
-            "Sampled stance position spread can span separate stance episodes; it is not a planted-foot slip measurement.",
-            "Proxy geometry and automatically weighted rig are not a final creature asset."],
+            "Root-motion extraction by the eventual runtime has not been verified.",
+            "Touchdown excursion is a sampled pad-centroid measure and retains a nonzero error within the authored 0.02 m tolerance.",
+            "Proxy geometry and its automatically weighted body outside the pads are not a final creature asset."],
     }
     os.makedirs(os.path.dirname(os.path.abspath(output_glb)), exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=os.path.abspath(output_glb), export_format="GLB",

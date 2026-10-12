@@ -748,8 +748,19 @@ def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspac
     assert gait["contacts"]["foot_pad_vertex_counts"] == {
         "bone:pes_foot_l": 8, "bone:pes_foot_r": 8,
     }
-    assert gait["terrain_contact_height"]["actor_stride_translation_included"] is False
-    assert gait["validation"]["geometric_contact_passed"] is False
+    terrain = gait["terrain_contact_height"]
+    assert terrain["actor_stride_translation_included"] is True
+    assert terrain["stride_length_m"] > 0.0
+    assert abs(gait["loop"]["root_motion_delta_m"] - terrain["stride_length_m"]) < 1e-7
+    assert gait["contacts"]["foot_pad_weight_groups"] == {
+        "bone:pes_foot_l": "toe_rear_L", "bone:pes_foot_r": "toe_rear_R",
+    }
+    assert terrain["horizontal_foot_lock_checked"] is True
+    assert gait["validation"]["geometric_contact_passed"] == \
+        gait["contacts"]["each_target_all_stance_samples_within_tolerance"]
+    assert gait["validation"]["touchdown_foot_lock_passed"] == \
+        gait["contacts"]["each_target_touchdown_excursion_within_tolerance"]
+    assert gait["validation"]["root_motion_passed"] is True
 
     neutral = next(a["path"] for a in rigged["artifacts"]
                    if a["path"].endswith(".neutral.glb"))

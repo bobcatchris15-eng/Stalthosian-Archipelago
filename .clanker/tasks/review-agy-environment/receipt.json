@@ -1,0 +1,52 @@
+{
+  "task_id": "review-agy-environment",
+  "outcome": "reviewed; habitat budget hardening committed",
+  "review_scope": [
+    "var/worktrees/agy-environment-palette",
+    "var/worktrees/agy-habitat-dressing"
+  ],
+  "guidance": {
+    "agents_md": "Read repository AGENTS.md before review.",
+    "clanker_prelude": "Read C:/Users/Chris/.codex/skills/clanker-mode/contracts/prelude.md; repository .clanker/contracts/prelude.md was absent."
+  },
+  "findings": [
+    "Environment palette roles, generated values, finite/unit checks, water/bed separation, seed repeatability, and documented limits passed independent source review and strict offline test.",
+    "Habitat dressing placements use deterministic seed mixing and enforce patch bounds, habitat filters, water exclusion for terrestrial kinds, finite positive scales, and per-kind budgets.",
+    "Found that caller-supplied SIZE_MAX budgets could overflow totalMax() and trigger an unbounded reserve before bounded candidate loops. Added saturating budget summation, capped reserve at the provable 322-candidate maximum, and a regression test."
+  ],
+  "verification": [
+    {
+      "worktree": "agy-environment-palette",
+      "command": "MSVC 19.51: cl /nologo /std:c++17 /O2 /W4 /WX /EHsc /permissive- /Fe:var\\tests\\review_environment_palette.exe stalthos-runtime\\tests\\environment_palette.cpp; then run executable",
+      "exit_code": 0,
+      "stdout": "[test] environment_palette standalone test starting...\\n[test] environment_palette standalone test passed successfully across all checks."
+    },
+    {
+      "worktree": "agy-habitat-dressing",
+      "command": "MSVC 19.51: cl /nologo /std:c++17 /O2 /W4 /WX /EHsc /permissive- /Fe:var\\tests\\review_habitat_dressing.exe stalthos-runtime\\tests\\habitat_dressing.cpp; then run executable",
+      "exit_code": 0,
+      "stdout": "habitat dressing: proposals=165 (logs=27, pebbles=64, bank_clumps=48, bluff_accents=26) determinism, bounds, exclusions, and budget passed"
+    }
+  ],
+  "commit": {
+    "branch": "codex/agy-habitat-dressing",
+    "sha": "08baef9ef5ae8fda0dd08f6736c66603abf23816",
+    "paths": [
+      "stalthos-runtime/domain/habitat_dressing.hpp",
+      "stalthos-runtime/tests/habitat_dressing.cpp",
+      "stalthos-runtime/docs/habitat-dressing.md"
+    ]
+  },
+  "source_sha256": {
+    "var/worktrees/agy-environment-palette/stalthos-runtime/domain/environment_palette.hpp": "cdb85337779752beaa77dfc947c6587757417d25e88eb548a9b2cca8d2852c36",
+    "var/worktrees/agy-environment-palette/stalthos-runtime/tests/environment_palette.cpp": "ab3e11ed3e2a97ca18de063b6b4a507a040ce150bedeceec7b9759c1250aa691",
+    "var/worktrees/agy-environment-palette/stalthos-runtime/docs/environment-palette.md": "6dc94230f9d54292ae06b7789a1013c699a64433a9a2f3ebd77e83518b1af662",
+    "var/worktrees/agy-habitat-dressing/stalthos-runtime/domain/habitat_dressing.hpp": "1ed2ea4fccc8da6270ea1ff8f3fece98a5e2130697ba1126288c06fadff73e8",
+    "var/worktrees/agy-habitat-dressing/stalthos-runtime/tests/habitat_dressing.cpp": "3a1a4171f026db37737fbbcf3ae8babbbe444ddbb401d3c306e06481293250927",
+    "var/worktrees/agy-habitat-dressing/stalthos-runtime/docs/habitat-dressing.md": "1e7c940e641016d14a06c5912bf7a5c718bcbe0e5186c8a8b3da5dcc1860cc93"
+  },
+  "limitations": [
+    "These checks establish deterministic bounded domain output only; no Wicked host wiring, integrated rendering, visual acceptance, or 30 FPS acceptance was tested.",
+    "No CMake or host files were edited."
+  ]
+}

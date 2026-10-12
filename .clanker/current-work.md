@@ -75,3 +75,20 @@ Jules shore8065357076113417676 completed; scoped patch is isolated at
 var/worktrees/review-shore-mesh. Root inspection rejects promotion pending practical
 budgets, removal of quadratic vertex search, winding/area/seam coverage and clipping
 review. Jules host8327281556040443846 remains In Progress.
+
+## Recovered validation — 2026-10-12 01:23 America/Chicago
+
+After the usage-limit interruption, preserved runs were checked: root combined
+pose+gait toolkit suite passed1962 tests, two skipped in631.06seconds, and native
+Release environment integration passed9/9 CTest suites. Root creature/anatomy/rig/
+gait source hashes match the reviewed isolated candidates. Toolkit logs are
+var/reports/packet-six-toolkit-full.log; native logs are packet-six-environment-*
+under var/reports. Publish these coherent tested foundation changes; the crude
+proxy anatomy still fails the user primary reference, and no runtime gait/visual/
+30FPS acceptance is established. Palette+dressing are contracts awaiting host wiring.
+
+Resume existing shore and surfacing reviews after interruption. Completed Jules
+host8327281556040443846 is now under isolated review-jules-host-needs; preserve
+scope and verify actual contact/save/reload before integration. Needs persistence
+is already publisheda3f29a9; older5999252246045191178 was integrated previously.
+Three native reviewers active, independent AGY/Jules pools remain authorized.
