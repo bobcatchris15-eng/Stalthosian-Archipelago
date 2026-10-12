@@ -34,7 +34,6 @@ User-authorized headless tasks ran on opencode/big-pickle and opencode/space-bun
 
 The generic skill checkpoint script stages the whole checkout. This repository had unrelated dirty work, so root adapted the checkpoint to an explicit owned-path list, verified all nine original hashes, checked the staged diff and ran the same built-in secret pattern. The source graph was refreshed synchronously; no fabricated prior structural delta is claimed. Only this packet is committed on codex/full-draft-wicked; no push is performed.
 
-
 ## Autonomous continuation authorization â€” 2026-10-11
 
 Human source, verbatim:
@@ -53,9 +52,7 @@ See current-work.md and tasks/packet-three-integration/receipt.json. The final o
 
 Six wake dispatches used; all slots released. Start the next wake by checking HALT and current receipts. Next concrete task is authored/exported walk animation with glTF channel/contact/loop checks and Wicked playback; lifecycle host/save integration can proceed in a non-overlapping isolated task. No full draft, scenery or 30 FPS acceptance is claimed. User-authorized validated publication is main on origin; earlier no-push statements and earlier validation/unfinished lists above are historical and superseded by synchronization authorization and this checkpoint. Keep unrelated logs and lifecycle.obj untouched.
 
-
 ## Fourth packet and latest user worker policy
-
 
 Updated 2026-10-11. Full first draft remains the target, Wicked Engine is selected, main is the synchronized branch. Planning Rauken-Archipelago remains read-only. Read tasks/packet-four-integration/receipt.json for the exact validation/publication status; historical packets and raw failed probes are retained.
 
@@ -68,9 +65,13 @@ The toolkit now authors a deterministic separate walk-cycle GLB, keeps neutral e
 Six local dispatches used this wake, all completed/released. User superseded the fixed-Luna preference: use the lowest available capable model and effort, escalating for task difficulty. Jules is a separate remote pool with at most three concurrent tasks and a 100/day ceiling; local concurrency remains three and local wake dispatch limit six. Stay within 35 active minutes, check HALT first, preserve unrelated logs/object files and keep explicit-path reviewed publication on main. No paid APIs/releases/deployment.
 
 Pending Jules sessions, all independently scoped to three new files and dispatched from f72f3b5:
+
 - Needs core: 4917980815644905444.
+
 - Relationship/retained-identity core: 7316297015894091861.
+
 - Region activation planner: 16396772999683175155.
+
 Resume these existing sessions before new remote dispatch. Retrieve completed patches in isolated worktrees, inspect scope, compile/run tests and independently review before integration. Earlier Jules sessions 5999252246045191178 and 10020203100517924387 are already integrated; do not retrieve them again.
 
 Next concrete local task: resolve Smalltrotter tail/sole geometry and stance foot locking with actor stride, then capture broadside movement evidence. Also implement post-death save reload/successor selection. Do not infer gait or performance acceptance from successful import. Review receipts identify the corrected host backward-playback and death-frame motion issues. Final full toolkit suite status is in the integration receipt; if unfinished, complete it before publishing toolkit changes.
@@ -78,3 +79,14 @@ Next concrete local task: resolve Smalltrotter tail/sole geometry and stance foo
 Publication boundary: native lifecycle/save/actor changes and worker policy are validated for main. Toolkit walk generation is a local candidate awaiting the final full suite, so leave those five toolkit source/test paths uncommitted until that gate passes. Tests may still run in background: full pytest PID 6768/session 80678, focused PID 15304/session 75129; check their scoped command lines and raw logs before restarting. Run tests offline; do not label either pending run passed. Six local dispatches used; no new worker in this wake.
 
 Final focused toolkit validation: 71 passed in 201.12 seconds. Native and worker-policy checkpoint aad26acbe924e2695917f66065a51228c767d27d is published and remote main verified identical. Full toolkit run remains pending in var/reports/toolkit-packet-four-final-full.log; scoped Python PID 6768 is the only continuing local test process. Preserve the five toolkit candidate files and complete that suite before publication.
+
+## Fifth packet — 2026-10-11
+
+The previously pending full toolkit suite completed: 1954 passed, two skipped in 771.82 seconds. Tested candidate hashes matched; walk-generator changes were published in c93b264. Earlier pending-publication/test statements are historical. The authored walk remains a diagnostic draft with failed ground contact, not an accepted gait.
+
+Jules needs 4917980815644905444, relationships 7316297015894091861 and activation 16396772999683175155 are completed remotely and now under isolated local review. Resume review-jules-needs, review-jules-relationships and review-jules-activation before new work. Scope/test receipts will determine integration. This wake started 18:16 America/Chicago, with a 35-minute cap and six local dispatch ceiling. Three local review dispatches used. The separate remote pool and lowest-capable-model policy remain authoritative.
+
+
+## Reviewed Jules domain checkpoint
+
+Final toolkit validation passed 1954 tests with two skips; walk-generator source is published in c93b264. The previous pending-toolkit statements are superseded. Three isolated reviewed Jules cores (needs, relationships, region activation) now pass root Release CTest 7/7. Resource contacts, parenting, persistence of these cores and actual Wicked region streaming remain unfinished. Gait grounding and explicit post-death successor loading are isolated current tasks. See current-work and packet-five receipt before continuation.

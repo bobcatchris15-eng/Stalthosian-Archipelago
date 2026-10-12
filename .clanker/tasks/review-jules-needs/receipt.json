@@ -1,0 +1,45 @@
+{
+  "artifacts_changed": [
+    "stalthos-runtime/domain/needs.hpp",
+    "stalthos-runtime/tests/needs.cpp",
+    "stalthos-runtime/docs/needs-draft.md"
+  ],
+  "acceptance": [
+    {
+      "met": true,
+      "how_checked": "Ran jules remote pull --help, then jules remote pull --session 4917980815644905444 with stdout saved to var/reports/review-jules-needs/jules.patch; git apply --stat showed exactly the three owned paths; applied patch only in worktree.",
+      "condition": "Retrieved Jules session 4917980815644905444 without applying it to the primary checkout, in isolated worktree var/worktrees/review-jules-needs on codex/review-jules-needs from main."
+    },
+    {
+      "met": true,
+      "how_checked": "Inspected all three files and removed the arbitrary max()/10 timestep rejection, documenting and testing acceptance of large finite deltas that yield finite needs results. Trimmed patch trailing whitespace.",
+      "condition": "Reviewed the assigned needs header, test, and draft documentation; fixed real defects within ownership."
+    },
+    {
+      "met": true,
+      "how_checked": "From stalthos-runtime in isolated worktree, called VS 18 vcvars64.bat then cl /nologo /std:c++17 /W4 /WX /EHsc /permissive- /Fo:<var report needs.obj> /Fe:<var report needs.exe> tests\\needs.cpp, then ran executable; output: 41 tests passed. 0 tests failed.",
+      "condition": "Compile and run offline C++17 tests using available Visual Studio compiler."
+    },
+    {
+      "met": true,
+      "how_checked": "Wrote receipt.json, task-state.json, and report.md under .clanker/tasks/review-jules-needs; report records SHA-256 for all three owned sources and links to patch and compile output.",
+      "condition": "Write root task receipt and report with results and tested source hashes."
+    }
+  ],
+  "evidence": [
+    "var/reports/review-jules-needs/jules.patch",
+    "var/reports/review-jules-needs/test-run.log",
+    "SHA-256: domain/needs.hpp 0277247930AF66D8132C30770423CD1B20F3B78949A0F7865D0087F6F42D7229",
+    "SHA-256: tests/needs.cpp D879433E520F58186A6AD1114E289D4009DCFA0D4505B40E0491B482CBF6BEEB",
+    "SHA-256: docs/needs-draft.md 54E855BBE780BFA2E4506C5C8011BC705081EA0093B1574C77B98A3BF84D422C"
+  ],
+  "task_id": "review-jules-needs",
+  "findings": [
+    "stalthos-runtime/CMakeLists.txt does not yet register tests/needs.cpp in CTest. This file was outside the ownership boundary, so the test was compiled and run directly."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "The assigned ownership set is exactly the three paths present in the Jules patch; no CMake changes were authorized."
+  ],
+  "outcome": "done"
+}

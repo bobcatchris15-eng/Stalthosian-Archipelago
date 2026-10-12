@@ -1,0 +1,26 @@
+{
+  "session_id": "7316297015894091861",
+  "outcome": "reviewed_passed_standalone_pending_integration",
+  "source_revision": "c93b264e5d2571b844ac8b0a0c6282c3c52ac2ab",
+  "branch": "codex/review-jules-relationships",
+  "worktree": "E:\\Stalthosian Archipelago\\var\\worktrees\\review-jules-relationships",
+  "raw_patch": "E:\\Stalthosian Archipelago\\var\\jules-patches\\review-jules-relationships.patch",
+  "test_command": "cl.exe /nologo /std:c++17 /O2 /DNDEBUG /EHsc /W4 /permissive- /D_HAS_EXCEPTIONS=1 stalthos-runtime\\tests\\relationships.cpp /Fe:var\\relationships-review-release.exe /Fo:var\\relationships-review-release.obj /Fd:var\\relationships-review-release.pdb",
+  "test_result": "Passed: All tests passed.",
+  "integration_paths": [
+    {
+      "sha256": "A7C8FD80D839197B64A6DA6EB615524F5842A033878785D59339FDA21B86C1ED",
+      "path": "stalthos-runtime/domain/relationships.hpp"
+    },
+    {
+      "sha256": "20BFBC4FAE7C0A54D8894DA9E1A48459BD3FD315B2B0791F268410BF2497C71A",
+      "path": "stalthos-runtime/tests/relationships.cpp"
+    },
+    {
+      "sha256": "79FFB18FE2599D41825F3B43BDA9A6F0BE8309038F56D279D5AFB2C602695B01",
+      "path": "stalthos-runtime/docs/relationships-draft.md"
+    }
+  ],
+  "report": "report.md"
+}
+

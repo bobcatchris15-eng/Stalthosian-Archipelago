@@ -1,0 +1,24 @@
+{
+  "task_id": "packet-five-integration",
+  "outcome": "partial",
+  "toolkit_final": "1954 passed, 2 skipped in 771.82s; unchanged tested source published c93b264",
+  "domain_release_ctest": "7/7 passed 0.80s",
+  "scope": "three isolated reviewed Jules modules and root CMake integration",
+  "source_sha256": {
+    "stalthos-runtime/CMakeLists.txt": "79a5962f30cdc19ea87f40e8669661ccbccd85426b2bc9ed5958fe0bb85a8f21",
+    "stalthos-runtime/domain/needs.hpp": "fefedd1b74af5ce29ac21f9bd5dd7fe7c249365dc9439953c40f94f380411f7d",
+    "stalthos-runtime/tests/needs.cpp": "d879433e520f58186a6ad1114e289d4009dcfa0d4505b40e0491b482cbf6beeb",
+    "stalthos-runtime/domain/relationships.hpp": "a7c8fd80d839197b64a6da6eb615524f5842a033878785d59339fda21b86c1ed",
+    "stalthos-runtime/tests/relationships.cpp": "20bfbc4fae7c0a54d8894da9e1a48459bd3fd315b2b0791f268410bf2497c71a",
+    "stalthos-runtime/domain/activation_plan.hpp": "04fa14ded0d57a4b999abf2088c6131a7e4cd1cd7b25b299e2029a00140a73ca",
+    "stalthos-runtime/tests/activation_plan.cpp": "7f203be0d60747031c2e98eb075643f8bd231ab528352c131e16034bf4bd836c"
+  },
+  "current_workers": [
+    "successor_host_draft",
+    "gait_grounding_correction"
+  ],
+  "publication": "pending coherent scoped module checkpoint",
+  "full_draft_complete": false,
+  "visual_accepted": false,
+  "fps_accepted": false
+}
