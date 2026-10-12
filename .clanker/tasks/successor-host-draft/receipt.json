@@ -45,7 +45,7 @@
   "source_sha256": {
     "stalthos-runtime/engine/main.cpp": "52758e6617897d6aca50f2ab28d84fa2313e17516f428355ff44c9fe9f42a9e3",
     "stalthos-runtime/scripts/Run.ps1": "c857ee2117d6773609056cc5ab34da115a9fd7ed89b71441eb285f166a71eee5",
-    "stalthos-runtime/docs/successor-host-draft.md": "b7dfb60d4c04a33f41d8d49bd46538fc344095a4a1d3b73f3913245f1f719b56"
+    "stalthos-runtime/docs/successor-host-draft.md": "564ba93f9b856534fcb9c7026de051102ef8da5700f384f787368337204b9957"
   },
   "limits": [
     "diagnostic new unused identity, no eligible population/birth chooser",

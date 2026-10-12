@@ -14,7 +14,7 @@
     "stalthos-runtime/tests/activation_plan.cpp": "7f203be0d60747031c2e98eb075643f8bd231ab528352c131e16034bf4bd836c"
   },
   "current_workers": [],
-  "publication": "reviewed modules published467ae07; successor native checkpoint pending scoped publication",
+  "publication": "core467ae07 and successor eb129e6 published to origin/main",
   "full_draft_complete": false,
   "visual_accepted": false,
   "fps_accepted": false,
