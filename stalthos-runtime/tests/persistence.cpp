@@ -131,7 +131,7 @@ void testMalformedFilesAndBounds() {
     data = SaveData{}; data.activeTransients = {{20, 1}, {21, 2}};
     writeSave(path, data);
     // STL4 lifecycle presence adds one byte, needs presence adds one byte before the active list.
-    overwriteU64(path, 64, 20);
+    overwriteU64(path, 65, 20);
     rejects([&] { (void)readSave(path); }, "duplicate or conflicting entity identity");
 
     data = SaveData{};
@@ -140,7 +140,7 @@ void testMalformedFilesAndBounds() {
     // The retained active flag follows the STL4 header and record fields at byte 71.
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(71); detail::write_u8(io, 2); io.flush();
+        io.seekp(72); detail::write_u8(io, 2); io.flush();
         check(io.good(), "failed to mutate retained boolean fixture");
     }
     rejects([&] { (void)readSave(path); }, "invalid retained boolean flag");
@@ -271,7 +271,7 @@ void testLifecycleStl3RoundtripAndValidation() {
     writeSave(path, data);
     const auto encoded = bytes(path);
     check(encoded.size() == detail::encodedSize(data), "STL4 exact encoded size mismatch");
-    check(std::string(encoded.data(), encoded.data() + 4) == "STL4", "new save did not use STL4");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL5", "new save did not use STL5");
     const auto loaded = readSave(path);
     check(loaded.heroLifecycle && loaded.heroLifecycle->heroId == 44 &&
         loaded.heroLifecycle->species == HeroSpecies::Reedcrest &&
@@ -342,14 +342,14 @@ void testStl2MigrationAndStl3Corruption() {
     check(knownSpecies.species() == HeroSpecies::Smalltrotter && knownSpecies.calendarAge() == 0.0,
         "legacy fallback overrode the retained hero's known species");
     writeSave(path, old);
-    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '4',
-        "STL2 read/write migration did not emit STL4");
+    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '5',
+        "STL2 read/write migration did not emit STL5");
 
     SaveData data; data.hero = ActiveEntity{2, 3};
     data.heroLifecycle = HeroLifecycleSnapshot{2, HeroSpecies::Smalltrotter, 0.0, LifeStage::Hatchling};
     writeSave(path, data);
     auto file = bytes(path);
-    file.resize(59 + 8 + 1 + 8); // Truncate the lifecycle stage byte itself.
+    file.resize(76); // Truncate the lifecycle stage byte itself.
     { std::ofstream out(path, std::ios::binary | std::ios::trunc); out.write(file.data(), static_cast<std::streamsize>(file.size())); }
     rejects([&] { (void)readSave(path); }, "truncated");
 
@@ -358,11 +358,11 @@ void testStl2MigrationAndStl3Corruption() {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
         io.seekp(58); detail::write_u8(io, 2); io.flush();
     }
-    rejects([&] { (void)readSave(path); }, "lifecycle presence");
+    rejects([&] { (void)readSave(path); }, "corrupt lifecycle presence flag");
     writeSave(path, data);
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(4); detail::write_u32(io, 5); io.flush();
+        io.seekp(4); detail::write_u32(io, 6); io.flush();
     }
     rejects([&] { (void)readSave(path); }, "unsupported save version");
     std::filesystem::remove(path);
@@ -386,6 +386,331 @@ void testInvalidPhysicalTimeAndPose() {
     std::filesystem::remove(path);
 }
 
+
+void testStl5RoundtripResources() {
+    const auto path = std::filesystem::path("test_resources_stl5.sav");
+    SaveData data;
+    ResourceLedger ledger;
+    ledger.load({{100, ResourceKind::Creek, 50.0, 0.0},
+                 {200, ResourceKind::Shrub, 5.0, 0.0}});
+    ledger.consume(44, 100, 10.0);
+    ledger.consume(45, 200, 2.0);
+    data.resourceLedger = captureResourceLedger(ledger);
+
+    writeSave(path, data);
+    const auto fileBytes = bytes(path);
+    check(std::string(fileBytes.data(), fileBytes.data() + 4) == "STL5", "new save did not use STL5");
+    check(fileBytes.size() == detail::encodedSize(data), "STL5 size mismatch");
+
+    auto loaded = readSave(path);
+    ResourceLedger restored;
+    restoreResourceLedger(loaded, restored);
+    auto snapshot = restored.snapshot();
+    check(snapshot.size() == 2, "restored resource count mismatch");
+    bool creekFound = false, shrubFound = false;
+    for (const auto& res : snapshot) {
+        if (res.id == 100) { creekFound = true; check(res.consumedQuantity == 10.0, "restored creek amount mismatch"); }
+        if (res.id == 200) { shrubFound = true; check(res.consumedQuantity == 2.0, "restored shrub amount mismatch"); }
+    }
+    check(creekFound && shrubFound, "missing restored resource");
+
+    // test replay
+    check(restored.consume(44, 100, 10.0), "failed to replay exact past consume");
+    check(!restored.consume(44, 100, 5.0), "allowed modified replay");
+
+    // test that next session ID is strictly greater than persisted max
+    uint64_t maxSession = 0;
+    for (const auto& s : loaded.resourceLedger->sessions) {
+        if (s.sessionId > maxSession) maxSession = s.sessionId;
+    }
+    check(maxSession == 45, "max session ID mismatch");
+    uint64_t nextSession = maxSession + 1;
+    check(restored.consume(nextSession, 100, 5.0), "failed to consume with fresh session ID");
+
+    // test history cap graceful exhaustion
+    for (uint64_t s = nextSession + 1; s < nextSession + 300; ++s) {
+        try {
+            if (!restored.consume(s, 100, 0.01)) break;
+        } catch (const std::runtime_error& e) {
+            check(std::string(e.what()).find("capacity exceeded") != std::string::npos, "unexpected exception on cap");
+            break;
+        }
+    }
+
+    std::filesystem::remove(path);
+}
+
+void testLegacyStl4Compatibility() {
+    const auto path = std::filesystem::path("test_legacy_stl4.sav");
+    SaveData data;
+    data.hero = ActiveEntity{33, 5};
+    data.heroNeeds = HeroNeedsSnapshot{33, HeroSpecies::Smalltrotter, 0.4, 0.5, 0.1, 0.0, false};
+    std::ofstream os(path, std::ios::binary | std::ios::trunc);
+    os.write("STL4", 4);
+    detail::write_u32(os, 4);
+    detail::write_double(os, data.physicalSeconds);
+    detail::write_double(os, data.calendarSeconds);
+    detail::write_u64(os, data.seed);
+    detail::write_u64(os, static_cast<std::uint64_t>(data.retentionLimit));
+    detail::write_u8(os, 1); // hero
+    detail::write_u64(os, data.hero->id); detail::write_u64(os, data.hero->region);
+    detail::write_u8(os, 0); // pose
+    detail::write_u8(os, 0); // lifecycle
+    detail::write_u8(os, 1); // needs
+    detail::write_u64(os, data.heroNeeds->heroId);
+    detail::write_u8(os, static_cast<std::uint8_t>(data.heroNeeds->species));
+    detail::write_double(os, data.heroNeeds->hunger);
+    detail::write_double(os, data.heroNeeds->thirst);
+    detail::write_double(os, data.heroNeeds->fatigue);
+    detail::write_double(os, data.heroNeeds->injury);
+    detail::write_u8(os, 0); // isResting
+    detail::write_u32(os, 0); // activeTransients
+    detail::write_u32(os, 0); // retained
+    detail::write_u32(os, 0); // deadHeroes
+    detail::write_u32(os, 0); // regions
+    os.close();
+    check(!os.fail(), "failed to write STL4 fixture");
+
+    const auto loaded = readSave(path);
+    check(!loaded.resourceLedger.has_value(), "STL4 save must lack resource ledger");
+    check(loaded.hero && loaded.hero->id == 33, "STL4 hero identity preserved");
+    check(loaded.heroNeeds && near(loaded.heroNeeds->hunger, 0.4), "STL4 hero needs preserved");
+
+    // Old save defaults pools only if lacks ledger
+    ResourceLedger ledger;
+    restoreResourceLedger(loaded, ledger);
+    check(ledger.snapshot().empty(), "restoreResourceLedger on save without ledger must reset to empty");
+
+    // Default pools can be loaded cleanly via load()
+    check(ledger.load({{100, ResourceKind::Creek, 1000000.0, 0.0},
+                       {200, ResourceKind::Shrub, 2.0, 0.0}}), "failed to load default pools for legacy save");
+    check(ledger.snapshot().size() == 2, "default pools size mismatch");
+
+    std::filesystem::remove(path);
+}
+
+void testCorruptResourceLedgerRollbackAndCaps() {
+    const auto path = std::filesystem::path("test_corrupt_resources.sav");
+    SaveData validData;
+    ResourceLedger validLedger;
+    validLedger.load({{100, ResourceKind::Creek, 50.0, 0.0}});
+    validData.resourceLedger = captureResourceLedger(validLedger);
+    writeSave(path, validData);
+    const auto baselineBytes = bytes(path);
+
+    auto preserved = [&](const SaveData& badData, const char* fragment) {
+        rejects([&] { writeSave(path, badData); }, fragment);
+        check(bytes(path) == baselineBytes, "failed writeSave modified prior valid save file");
+    };
+
+    // Invalid resource kind
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].kind = static_cast<ResourceKind>(99);
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Negative initial quantity
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].initialQuantity = -1.0;
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Non-finite initial quantity
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].initialQuantity = std::numeric_limits<double>::infinity();
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Consumed > Initial
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].consumedQuantity = 100.0;
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Negative consumed quantity
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].consumedQuantity = -5.0;
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Duplicate resource ID
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources.push_back({100, ResourceKind::Creek, 50.0, 0.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session ID 0
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->sessions.push_back({0, 100, 1.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session unknown resource ID
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->sessions.push_back({1, 999, 1.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session non-finite amount
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->sessions.push_back({1, 100, std::numeric_limits<double>::quiet_NaN()});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session negative amount
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->sessions.push_back({1, 100, -2.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Duplicate session key (sessionId, resourceId)
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].consumedQuantity = 10.0;
+        bad.resourceLedger->sessions.push_back({1, 100, 5.0});
+        bad.resourceLedger->sessions.push_back({1, 100, 5.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session total exceeding resource consumed quantity
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].consumedQuantity = 2.0;
+        bad.resourceLedger->sessions.push_back({1, 100, 5.0});
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Resource count exceeding 4096 cap
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources.clear();
+        for (std::uint64_t i = 1; i <= 4097; ++i) {
+            bad.resourceLedger->resources.push_back({i, ResourceKind::Shrub, 1.0, 0.0});
+        }
+        preserved(bad, "invalid resource ledger records");
+    }
+    // Session count exceeding 256 cap
+    {
+        SaveData bad = validData;
+        bad.resourceLedger->resources[0].initialQuantity = 1000.0;
+        bad.resourceLedger->resources[0].consumedQuantity = 257.0;
+        for (std::uint64_t s = 1; s <= 257; ++s) {
+            bad.resourceLedger->sessions.push_back({s, 100, 1.0});
+        }
+        preserved(bad, "invalid resource ledger records");
+    }
+
+    // Corrupt presence byte (> 1) via readSave
+    {
+        auto file = bytes(path);
+        file[44] = 2;
+        std::ofstream out(path, std::ios::binary | std::ios::trunc);
+        out.write(file.data(), static_cast<std::streamsize>(file.size()));
+        out.close();
+        rejects([&] { (void)readSave(path); }, "corrupt resource ledger presence flag");
+    }
+
+    // Trailing bytes at end of file
+    {
+        std::ofstream out(path, std::ios::binary | std::ios::trunc);
+        out.write(baselineBytes.data(), static_cast<std::streamsize>(baselineBytes.size()));
+        out.put('X');
+        out.close();
+        rejects([&] { (void)readSave(path); }, "trailing bytes at end of file");
+    }
+
+    std::filesystem::remove(path);
+}
+
+void testSavedDepletedQuantitiesRestoreAcrossLives() {
+    const auto path = std::filesystem::path("test_lives_depletion.sav");
+    SimCore sim;
+    StalthosState world(12345);
+    world.setHero(1, 1);
+
+    ResourceLedger ledger;
+    ledger.load({{100, ResourceKind::Creek, 1000000.0, 0.0},
+                 {200, ResourceKind::Shrub, 2.0, 0.0}});
+
+    // Hero 1 drinks from creek and browses from shrub in session 1
+    check(ledger.consume(1, 100, 0.5), "hero 1 failed to drink");
+    check(ledger.consume(1, 200, 1.5), "hero 1 failed to browse");
+
+    // Save state while Hero 1 is alive
+    auto data1 = captureSave(sim, world);
+    data1.resourceLedger = captureResourceLedger(ledger);
+    writeSave(path, data1);
+
+    // Verify encoded size and magic
+    const auto file1 = bytes(path);
+    check(std::string(file1.data(), file1.data() + 4) == "STL5", "save was not STL5");
+    check(file1.size() == detail::encodedSize(data1), "STL5 size mismatch");
+
+    // Hero 1 dies!
+    world.heroDied();
+    check(world.heroDeathKnown(1), "world did not record hero 1 death");
+    check(!world.snapshot().hero.has_value(), "dead hero still marked as active hero");
+
+    // Save world with dead hero (successor selection requires save with no current hero)
+    auto dataDead = captureSave(sim, world);
+    dataDead.resourceLedger = captureResourceLedger(ledger);
+    writeSave(path, dataDead);
+
+    // Successor selection: load save and assign successor ID 2
+    auto loadedDead = readSave(path);
+    check(!loadedDead.hero.has_value(), "loaded save should have no live hero");
+    check(loadedDead.deadHeroes.size() == 1 && loadedDead.deadHeroes[0].id == 1, "dead hero record missing");
+
+    auto restoredPair = restoreSave(loadedDead);
+    SimCore clock2 = std::move(restoredPair.first);
+    StalthosState world2 = std::move(restoredPair.second);
+    world2.setHero(2, 1);
+
+    ResourceLedger ledger2;
+    restoreResourceLedger(loadedDead, ledger2);
+
+    // Check depleted quantities persisted across hero death and successor instantiation
+    auto snap = ledger2.snapshot();
+    double creekRem = 0, shrubRem = 0;
+    for (const auto& r : snap) {
+        if (r.id == 100) creekRem = r.initialQuantity - r.consumedQuantity;
+        if (r.id == 200) shrubRem = r.initialQuantity - r.consumedQuantity;
+    }
+    check(near(creekRem, 999999.5), "creek depleted quantity did not restore across lives");
+    check(near(shrubRem, 0.5), "shrub depleted quantity did not restore across lives");
+
+    // Determine next session ID: strictly greater than persisted max
+    uint64_t maxPersisted = 0;
+    for (const auto& s : loadedDead.resourceLedger->sessions) {
+        if (s.sessionId > maxPersisted) maxPersisted = s.sessionId;
+    }
+    check(maxPersisted == 1, "persisted max session ID mismatch");
+    uint64_t successorSession = maxPersisted + 1; // session 2
+
+    // Same live hold cannot double consume
+    check(ledger2.consume(successorSession, 200, 0.5), "successor failed to consume remaining shrub");
+    check(ledger2.consume(successorSession, 200, 0.5), "same session replay failed"); // replay succeeds
+    // But cannot consume extra: shrub is now depleted (2.0 consumed out of 2.0)
+    uint64_t freshSession = successorSession + 1;
+    check(!ledger2.consume(freshSession, 200, 0.1), "allowed consuming from depleted shrub");
+
+    // Save successor state
+    auto dataSuccessor = captureSave(clock2, world2);
+    dataSuccessor.resourceLedger = captureResourceLedger(ledger2);
+    writeSave(path, dataSuccessor);
+
+    // Read back and confirm
+    auto finalLoaded = readSave(path);
+    ResourceLedger finalLedger;
+    restoreResourceLedger(finalLoaded, finalLedger);
+    auto finalSnap = finalLedger.snapshot();
+    for (const auto& r : finalSnap) {
+        if (r.id == 200) {
+            check(near(r.consumedQuantity, 2.0), "final shrub did not persist full depletion");
+        }
+    }
+
+    std::filesystem::remove(path);
+}
+
 void testNeedsStl4RoundtripAndValidation() {
     const auto path = std::filesystem::path("test_needs_stl4.sav");
     SaveData data; data.hero = ActiveEntity{55, 8}; data.calendarSeconds = 12345;
@@ -395,7 +720,7 @@ void testNeedsStl4RoundtripAndValidation() {
     writeSave(path, data);
     const auto encoded = bytes(path);
     check(encoded.size() == detail::encodedSize(data), "STL4 needs exact encoded size mismatch");
-    check(std::string(encoded.data(), encoded.data() + 4) == "STL4", "new save did not use STL4");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL5", "new save did not use STL5");
 
     const auto loaded = readSave(path);
     check(loaded.heroNeeds && loaded.heroNeeds->heroId == 55 &&
@@ -502,13 +827,17 @@ int main() {
         {"STL3 lifecycle roundtrip and validation", testLifecycleStl3RoundtripAndValidation},
         {"STL2 migration and STL3 corruption", testStl2MigrationAndStl3Corruption},
         {"physical time and pose validation", testInvalidPhysicalTimeAndPose},
-        {"STL4 needs roundtrip and validation", testNeedsStl4RoundtripAndValidation}
+        {"STL4 needs roundtrip and validation", testNeedsStl4RoundtripAndValidation},
+        {"STL4 legacy compatibility", testLegacyStl4Compatibility},
+        {"STL5 resource ledger roundtrip", testStl5RoundtripResources},
+        {"corrupt resource ledger rollback and size caps", testCorruptResourceLedgerRollbackAndCaps},
+        {"saved depleted quantities restore across lives", testSavedDepletedQuantitiesRestoreAcrossLives}
     };
     int failed = 0;
     for (const auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (11 - failed) << "/11 tests passed\n";
+    std::cout << (15 - failed) << "/15 tests passed\n";
     return failed ? 1 : 0;
 }

@@ -7,10 +7,12 @@
 #include "domain/needs.hpp"
 #include "domain/reference_landscape.hpp"
 #include "domain/locomotion_clip.hpp"
+#include "domain/resource_ledger.hpp"
 #include "environment_scene.hpp"
 #include "shore_scene.hpp"
 #include "terrain_surface.hpp"
 #include "organic_rocks.hpp"
+#include "meadow_scene.hpp"
 #include "domain/camera_framing.hpp"
 #include <windows.h>
 #include <shellapi.h>
@@ -175,8 +177,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t heroId=1; bool lifecycleSnapshotLoaded=false; double loadedLifecycleAge=0; int loadedLifecycleStage=-1;
         uint64_t successorPriorDeadId=0; bool successorDeathTruthPreserved=false;
         bool successorSavedDeathTruthPreserved=false; std::size_t savedDeadHeroCount=0;
+        std::optional<stalthos::persistence::SaveData> loadedSaveData;
         if (!loadState.empty()) {
-            auto data = stalthos::persistence::readSave(loadState);
+            loadedSaveData = stalthos::persistence::readSave(loadState);
+            const auto& data = *loadedSaveData;
             auto restored = stalthos::persistence::restoreSave(data);
             clock = std::move(restored.first); world = std::move(restored.second);
             loadedCalendar = clock.calendarSeconds();
@@ -224,11 +228,49 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
         stalthos::InteractionsCore interactions(256);
+        stalthos::ResourceLedger resourceLedger(4096, 256);
         landscape=stalthos::domain::ReferenceLandscape(world.worldSeed());
 
-        // Finite resource pools
-        double creekResource = 1000000.0;
-        std::vector<double> shrubResources(8, 2.0); // Allow up to 8 shrubs with 2.0 food each
+        if (loadedSaveData && loadedSaveData->resourceLedger.has_value()) {
+            stalthos::persistence::restoreResourceLedger(*loadedSaveData, resourceLedger);
+        } else {
+            resourceLedger.load({{100, stalthos::ResourceKind::Creek, 1000000.0, 0.0},
+                                 {200, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {201, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {202, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {203, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {204, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {205, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {206, stalthos::ResourceKind::Shrub, 2.0, 0.0},
+                                 {207, stalthos::ResourceKind::Shrub, 2.0, 0.0}});
+        }
+
+        uint64_t maxPersistedSessionId = 0;
+        if (loadedSaveData && loadedSaveData->resourceLedger.has_value()) {
+            for (const auto& s : loadedSaveData->resourceLedger->sessions) {
+                if (s.sessionId > maxPersistedSessionId) maxPersistedSessionId = s.sessionId;
+            }
+        }
+        if (maxPersistedSessionId == std::numeric_limits<uint64_t>::max()) {
+            throw std::runtime_error("resource ledger session id overflow");
+        }
+        uint64_t nextInteractionSession = maxPersistedSessionId + 1;
+
+        auto getResourceRemaining = [&](uint64_t id) -> double {
+            auto snapshot = resourceLedger.snapshot();
+            for (const auto& res : snapshot) {
+                if (res.id == id) return res.initialQuantity - res.consumedQuantity;
+            }
+            return 0.0;
+        };
+
+        auto getResourceFinite = [&]() -> bool {
+            auto snapshot = resourceLedger.snapshot();
+            for (const auto& res : snapshot) {
+                if (!std::isfinite(res.initialQuantity - res.consumedQuantity) || res.initialQuantity - res.consumedQuantity < 0.0) return false;
+            }
+            return true;
+        };
 
         // Cache closest shrubs for interaction
         std::vector<stalthos::domain::Placement> cachedShrubs;
@@ -253,6 +295,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         auto& scene = wi::scene::GetScene();
         const auto terrainSurface=Terrain(scene);
         const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
+        const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
         size_t importedObjects = 0, importedInstances = 0;
@@ -381,7 +424,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         bool previousInspectionKey = false;
         bool initialNeedsRecorded = false;
         double initialHunger = 0, initialThirst = 0, initialFatigue = 0;
-        double initialCreekResource = creekResource, initialShrub0Resource = shrubResources.empty() ? 0 : shrubResources[0];
+        double initialCreekResource = getResourceRemaining(100), initialShrub0Resource = getResourceRemaining(200);
 
         bool eligibilityWater = false;
         bool eligibilityShrub = false;
@@ -390,7 +433,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         int diagnosticSequenceStage = 0;
         double diagnosticTimer = 0.0;
 
-        uint64_t physicalInteractionSession = 1;
+        uint64_t physicalInteractionSession = 0;
+        uint64_t resourceLedgerCapExhaustions = 0;
         bool previousInteractDown = false;
         uint64_t appliedDrinkContacts = 0, appliedBrowseContacts = 0;
         uint64_t waterEligibleFrames = 0, shrubEligibleFrames = 0;
@@ -487,8 +531,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 initialHunger = needs->hunger();
                 initialThirst = needs->thirst();
                 initialFatigue = needs->fatigue();
-                initialCreekResource = creekResource;
-                initialShrub0Resource = shrubResources.empty() ? 0 : shrubResources[0];
+                initialCreekResource = getResourceRemaining(100);
+                initialShrub0Resource = getResourceRemaining(200);
             }
 
             // Needs stop advancing after the terminal hero transition.
@@ -551,25 +595,47 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (heroAlive && interactDown) {
                 // Ensure idempotence: holding E produces one session. Re-pressing increments session.
                 if (!previousInteractDown) {
-                    physicalInteractionSession++;
+                    if (nextInteractionSession == 0) throw std::runtime_error("interaction session ID overflow");
+                    physicalInteractionSession = nextInteractionSession++;
                     interactions.beginSession(physicalInteractionSession);
                 }
 
                 if (eligibilityWater) {
                     double drinkAmount = 0.5;
-                    // Provide a stable event ID per type during this session.
-                    if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, drinkAmount, creekResource)) {
-                        needs->drink(drinkAmount);
-                        ++appliedDrinkContacts; waterContactApplied = true;
+                    double available = getResourceRemaining(100);
+                    double actualDrink = std::min(drinkAmount, available);
+                    if (actualDrink > 0) {
+                        try {
+                            if (resourceLedger.consume(physicalInteractionSession, 100, actualDrink)) {
+                                double dummyResource = available;
+                                if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, actualDrink, dummyResource)) {
+                                    needs->drink(actualDrink);
+                                    ++appliedDrinkContacts; waterContactApplied = true;
+                                }
+                            }
+                        } catch (const std::exception&) {
+                            ++resourceLedgerCapExhaustions;
+                        }
                     }
                 }
 
                 if (eligibilityShrub && nearbyShrubIndex >= 0) {
                     double feedAmount = 0.5;
-                    // Using shrub index to ensure unique event ID for each shrub.
-                    if (interactions.applyContact(physicalInteractionSession, 200 + nearbyShrubIndex, eligibilityShrub, feedAmount, shrubResources[nearbyShrubIndex])) {
-                        needs->feed(feedAmount);
-                        ++appliedBrowseContacts; shrubContactApplied = true;
+                    uint64_t shrubId = 200 + nearbyShrubIndex;
+                    double available = getResourceRemaining(shrubId);
+                    double actualFeed = std::min(feedAmount, available);
+                    if (actualFeed > 0) {
+                        try {
+                            if (resourceLedger.consume(physicalInteractionSession, shrubId, actualFeed)) {
+                                double dummyResource = available;
+                                if (interactions.applyContact(physicalInteractionSession, shrubId, eligibilityShrub, actualFeed, dummyResource)) {
+                                    needs->feed(actualFeed);
+                                    ++appliedBrowseContacts; shrubContactApplied = true;
+                                }
+                            }
+                        } catch (const std::exception&) {
+                            ++resourceLedgerCapExhaustions;
+                        }
                     }
                 }
             }
@@ -584,6 +650,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto data=stalthos::persistence::captureSave(clock, world, pose);
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
             if(data.hero) data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,data.hero->id);
+            data.resourceLedger = stalthos::persistence::captureResourceLedger(resourceLedger);
             stalthos::persistence::writeSave(saveState,data);
             if(successorId) {
                 const auto saved=stalthos::persistence::readSave(saveState);
@@ -608,12 +675,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
             {"needs_final", {{"hunger", needs->hunger()}, {"thirst", needs->thirst()}, {"fatigue", needs->fatigue()}}},
             {"resources_initial", {{"creek", initialCreekResource}, {"shrub0", initialShrub0Resource}}},
-            {"resources_final", {{"creek", creekResource}, {"shrub0", shrubResources.empty() ? 0 : shrubResources[0]}}},
-            {"resources_finite", std::isfinite(creekResource) && creekResource >= 0 && std::all_of(shrubResources.begin(), shrubResources.end(), [](double value) { return std::isfinite(value) && value >= 0; })},
+            {"resources_final", {{"creek", getResourceRemaining(100)}, {"shrub0", getResourceRemaining(200)}}},
+            {"resources_finite", getResourceFinite()},
             {"eligibility_water", eligibilityWater}, {"eligibility_shrub", eligibilityShrub},
             {"water_eligible_frames", waterEligibleFrames}, {"shrub_eligible_frames", shrubEligibleFrames},
             {"water_contact_applied", waterContactApplied}, {"shrub_contact_applied", shrubContactApplied},
             {"drink_contacts_applied", appliedDrinkContacts}, {"browse_contacts_applied", appliedBrowseContacts},
+            {"resource_ledger_cap_exhaustions", resourceLedgerCapExhaustions},
             {"diagnostic_needs_stage", diagnosticSequenceStage},
             {"lifecycle_stage",static_cast<unsigned>(lifecycle->stage())},{"lifecycle_age_seconds",lifecycle->calendarAge()},{"lifecycle_transitions",lifecycleTransitions},
             {"lifecycle_snapshot_loaded",lifecycleSnapshotLoaded},{"loaded_lifecycle_age_seconds",loadedLifecycleAge},{"loaded_lifecycle_stage",loadedLifecycleStage},
@@ -621,7 +689,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"successor_selected",successorId.has_value()},{"successor_id",successorId.value_or(0)},
             {"successor_prior_dead_hero_id",successorPriorDeadId},{"successor_prior_death_truth_preserved",successorDeathTruthPreserved},
             {"successor_saved_prior_death_truth_preserved",successorSavedDeathTruthPreserved},{"saved_dead_hero_count",savedDeadHeroCount},
-            {"terrain_surface_applied",terrainSurface.applied()},{"terrain_surface_status",static_cast<int>(terrainSurface.status)},{"terrain_texture_width",terrainSurface.textureWidth},{"terrain_texture_bytes",terrainSurface.textureBytes},{"terrain_uv_vertices",terrainSurface.uvVertexCount},{"organic_rock_objects",organicRockCounts.objectCount},{"organic_rock_triangles",organicRockCounts.triangleCount},{"inspection_camera",inspectionCamera},{"camera_distance_m",cameraDistance},
+            {"terrain_surface_applied",terrainSurface.applied()},{"terrain_surface_status",static_cast<int>(terrainSurface.status)},{"terrain_texture_width",terrainSurface.textureWidth},{"terrain_texture_bytes",terrainSurface.textureBytes},{"terrain_uv_vertices",terrainSurface.uvVertexCount},{"meadow_batch_objects",meadowCounts.batchObjectCount},{"meadow_tufts",meadowCounts.tuftCount},{"meadow_vertices",meadowCounts.vertexCount},{"meadow_triangles",meadowCounts.triangleCount},{"meadow_rejected_wet_samples",meadowCounts.rejectedWetSamples},{"organic_rock_objects",organicRockCounts.objectCount},{"organic_rock_triangles",organicRockCounts.triangleCount},{"inspection_camera",inspectionCamera},{"camera_distance_m",cameraDistance},
             {"shore_objects",shoreCounts.objectCount},{"shore_vertices",shoreCounts.vertexCount},{"shore_triangles",shoreCounts.triangleCount},{"shore_surface_triangles",shoreCounts.surfaceTriangleCount},{"shore_bed_triangles",shoreCounts.bedTriangleCount},{"shore_bank_triangles",shoreCounts.bankTriangleCount},
             {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
             {"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
@@ -632,7 +700,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"save_path",saveState.u8string()},{"load_path",loadState.u8string()},
             {"host_pose",{{"x",x},{"z",z},{"heading_radians",yaw},{"camera_mode",cameraMode}}},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {

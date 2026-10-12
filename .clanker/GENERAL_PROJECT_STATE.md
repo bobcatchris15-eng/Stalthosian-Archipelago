@@ -117,3 +117,48 @@ drift; this is partial navigation evidence, not semantic coverage or validation.
 ## Resumed regression — 2026-10-12 07:33 America/Chicago
 
 Candidate49ae3f9 full root toolkit suite passed1981/2skipped in670.14s, finished07:00:34. Source hashes verified unchanged before promotion. Blender artifact/contact receipts retained. No visual acceptance; connected anatomy task is next. Jules17364966271135416495 still In Progress; old session5999252246045191178 already integrated.
+
+## Resumed interrupted work — 2026-10-12 10:40 America/Chicago
+
+Codex connected-anatomy worker exhausted usage quota with3dirtyownedfiles in its
+isolated worktree; preserve them, no result claimed. AGYmedium resumes that task
+in same worktree, requiring actual Blender/contact/render/focused checks.
+Groundcover577a404 lacks assigneddoc and collides with environment_detail kPi;
+AGYlow reviews/fixes and actual combined-header compile/probes before root wiring.
+Both Jules sessions completed and retrieved to ignoredvar patches. Resource patch
+contained numerous unassigned debug scripts/binary/gitignore; onlyassigned3source
+paths applied to isolatedbase078c9d6, AGYmedium reviewing STL5/host behavior.
+Camera candidate12663720658277222606 passed original MSVC tests, but root probe
+found unattenuated5m outward motion in softzone and actualeye57.7274m beyond50m
+hardanchor. Docs overclaim smoothness/overflow; candidate rejectedpendingfix.
+Three active AGY tasks, zero native/Jules active. Queue camera corrective task
+untilAGYslotfree. Current active wake10:36deadline11:11;3dispatchesused.
+Published main3ce40b1 contains fullytested toolkit1981passed2skipped; no additional
+source integrated yet. Preserve all planning/unrelated untracked work.
+
+## Validated runtime packet — 2026-10-12 11:05 America/Chicago
+
+Release build passed and rootCTest14/14 passed. Resource continuitySTL5 reviewed
+1b7db29 preserves olderSTL1-4, boundedfullledger and fresh interactionIDs across
+loads; old-save defaults fixed, history256 failsgracefully, noeviction. Actual
+Wicked fixtures consumed food2->1.5->1, water1000000->999999.5->999999 across
+runs105354-7f3bc9f0/105605-b78294c2. Idle reload105850-e0f08db3 retains1/999999.
+Receipt .clanker/tasks/packet-ten-integrated/receipt.json links rawevidence.
+Groundcover repaired71da4bf namespacecollision; root4xdensity renders3919tufts/
+70446triangles in3batches,425wet candidatesrejected. Final screenshot same105850.
+Originalworkerprobes were not independently recovered; root actualcombinedbuild,
+CTest and renderedcounts are the confirmed integration evidence.
+
+Camera foundationa08f5b2 includes AGYsoftoutward2.75mvsold5 and boundedactualeye
+49.9175vsold57.7274m. Root additional stepped-terrain test failedbefore finalguard
+and passedafter typedrollback guard. Module added toCTest; NOT hostintegrated,
+so fullorbit/detach/audio/HeroView remain open. BothJules sessions integrated;
+do NOTreretrieve5999252246045191178/17364966271135416495/12663720658277222606.
+
+Creature43ed522 remains dirty/unpublished inroot: neutralrender shows shoulder/
+hipbulges and hard seams, so parent rejectedvisualcandidate and abortedfullsuite
+session38983. Retain its rawlog/rejectedgirdle PNG and isolatedcommithistory.
+AGY anatomyvisualcorrection resumes sameworktree, deadline11:05; collect newsource
+onlyafterfreeze, actualcontact/renderverification, then fullrootregression.
+Five currentwake dispatchesused; no further new scopes. Currentwake deadline11:11.
+No full draft, referenceparity or30FPSacceptance. Allfiveheroes/fourislandsremain.

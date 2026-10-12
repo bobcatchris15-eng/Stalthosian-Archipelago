@@ -1,0 +1,72 @@
+{
+  "meadow_batches": 3,
+  "toolkit_published": "3ce40b1:1981passed2skipped",
+  "visual_accepted": false,
+  "persistence_review": "1b7db29",
+  "schema_version": 1,
+  "resource_runs": [
+    {
+      "browses": 1,
+      "receipt": "var/reports/runtime/20261012-105354-7f3bc9f0/runtime-receipt.json",
+      "saved": true,
+      "loaded": true,
+      "final": {
+        "creek": 999999.5,
+        "shrub0": 1.5
+      },
+      "initial": {
+        "creek": 1000000.0,
+        "shrub0": 2.0
+      },
+      "drinks": 1
+    },
+    {
+      "browses": 1,
+      "receipt": "var/reports/runtime/20261012-105605-b78294c2/runtime-receipt.json",
+      "saved": true,
+      "loaded": true,
+      "final": {
+        "creek": 999999.0,
+        "shrub0": 1.0
+      },
+      "initial": {
+        "creek": 999999.5,
+        "shrub0": 1.5
+      },
+      "drinks": 1
+    },
+    {
+      "browses": 0,
+      "receipt": "var/reports/runtime/20261012-105850-e0f08db3/runtime-receipt.json",
+      "saved": false,
+      "loaded": true,
+      "final": {
+        "creek": 999999.0,
+        "shrub0": 1.0
+      },
+      "initial": {
+        "creek": 999999.0,
+        "shrub0": 1.0
+      },
+      "drinks": 0
+    }
+  ],
+  "ctest": "14/14 passed",
+  "meadow_tufts": 3919,
+  "meadow_review": "71da4bf plus root density4",
+  "full_draft_accepted": false,
+  "final_capture": "var/reports/runtime/20261012-105850-e0f08db3/draft-host.png",
+  "connected_candidate": "43ed522 rejected for visible girdle bulges; fullsuite aborted; correction pending",
+  "limitations": [
+    "Camera controller pure foundation not host integrated",
+    "Creature limb seams and coarse skin remain",
+    "Single-mip ground texture and sparse habitat composition remain",
+    "Resource history max256/no eviction; visible plant depletion missing",
+    "All five heroes and four islands remain targets"
+  ],
+  "meadow_triangles": 70446,
+  "fps_accepted": false,
+  "wet_samples_rejected": 425,
+  "camera_review": "a08f5b2",
+  "native_build_exit": 0
+}

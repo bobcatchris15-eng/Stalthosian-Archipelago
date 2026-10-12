@@ -1,0 +1,8 @@
+{
+  "effort": "medium",
+  "model": "gemini-3.8-flash-medium",
+  "status": "running unvalidated",
+  "task_id": "agy-camera-correction",
+  "started": "2026-10-12T10:49:35.5114093-05:00",
+  "worktree": "E:/Stalthosian Archipelago/var/worktrees/camera-controller-review"
+}

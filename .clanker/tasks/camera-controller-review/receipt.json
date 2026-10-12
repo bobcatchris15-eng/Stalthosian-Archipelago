@@ -1,0 +1,14 @@
+{
+  "retrieved": true,
+  "next": "AGY corrective review when one slot frees; keep candidate isolated",
+  "evidence": "var/reports/camera-tether-probe.log",
+  "acceptance": "rejected pending corrective review",
+  "session": "12663720658277222606",
+  "findings": [
+    "Outward input in soft zone moves full5m; comfortradius unused",
+    "Rendered eye57.7274m from body despite50m hardanchor",
+    "No smooth moving envelope, configurable bounds or explicit independent focus API",
+    "State setter validates nothing; docs overstate update timestep and overflow safeguards"
+  ],
+  "msvc_original_tests": "passed"
+}

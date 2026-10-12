@@ -3,6 +3,7 @@
 #include "foundation.hpp"
 #include "lifecycle.hpp"
 #include "needs.hpp"
+#include "resource_ledger.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -56,6 +57,7 @@ struct SaveData {
     std::vector<DeadHero> deadHeroes;
     std::vector<RegionTrees> regions;
     std::optional<HostPose> pose;
+    std::optional<ResourceLedgerDto> resourceLedger;
 };
 
 constexpr std::size_t MAX_ACTIVE_TRANSIENTS = 500'000;
@@ -130,6 +132,26 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
+    // STL5 header, times, seed, retention limit, identities, optional pose,
+    // optional lifecycle, optional needs, and optional resource ledger.
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
+        1 + (data.heroLifecycle ? 18 : 0) + 1 + (data.heroNeeds ? 42 : 0) + 1;
+    if (data.resourceLedger) {
+        size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.resourceLedger->resources.size()) * 25);
+        size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.resourceLedger->sessions.size()) * 24);
+    }
+    size = checkedAdd(size, 4);
+    size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
+    size = checkedAdd(size, 4);
+    for (const auto& region : data.regions)
+        size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
+    if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
+    return size;
+}
+
+inline std::uint64_t encodedSizeStl4(const SaveData& data) {
     // STL4 header, times, seed, retention limit, identities, optional pose,
     // the lifecycle presence byte plus its fixed-width payload,
     // and the needs presence byte plus its fixed-width payload.
@@ -267,6 +289,10 @@ inline void validate(const SaveData& data) {
     }
     for (const auto& region : data.regions)
         if (region.revision < region.trees.size()) throw std::runtime_error("region revision below tree record count");
+    if (data.resourceLedger) {
+        ResourceLedger ledger;
+        if (!ledger.restore(*data.resourceLedger)) throw std::runtime_error("invalid resource ledger records");
+    }
     (void)encodedSize(data);
 }
 
@@ -287,8 +313,8 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL4", 4);
-    detail::write_u32(os, 4);
+    os.write("STL5", 4);
+    detail::write_u32(os, 5);
     detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
@@ -318,6 +344,31 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
         detail::write_double(os, data.heroNeeds->fatigue);
         detail::write_double(os, data.heroNeeds->injury);
         detail::write_u8(os, data.heroNeeds->isResting ? 1 : 0);
+    }
+
+    detail::write_u8(os, data.resourceLedger ? 1 : 0);
+    if (data.resourceLedger) {
+        auto ledgerDto = *data.resourceLedger;
+        std::sort(ledgerDto.resources.begin(), ledgerDto.resources.end(),
+            [](const auto& a, const auto& b) { return a.id < b.id; });
+        std::sort(ledgerDto.sessions.begin(), ledgerDto.sessions.end(),
+            [](const auto& a, const auto& b) {
+                if (a.sessionId != b.sessionId) return a.sessionId < b.sessionId;
+                return a.resourceId < b.resourceId;
+            });
+        detail::write_u32(os, static_cast<std::uint32_t>(ledgerDto.resources.size()));
+        for (const auto& res : ledgerDto.resources) {
+            detail::write_u64(os, res.id);
+            detail::write_u8(os, static_cast<std::uint8_t>(res.kind));
+            detail::write_double(os, res.initialQuantity);
+            detail::write_double(os, res.consumedQuantity);
+        }
+        detail::write_u32(os, static_cast<std::uint32_t>(ledgerDto.sessions.size()));
+        for (const auto& ses : ledgerDto.sessions) {
+            detail::write_u64(os, ses.sessionId);
+            detail::write_u64(os, ses.resourceId);
+            detail::write_double(os, ses.amount);
+        }
     }
 
     auto active = data.activeTransients;
@@ -376,9 +427,10 @@ inline SaveData readSave(const std::filesystem::path& path) {
     const bool stl2 = std::strncmp(magic, "STL2", 4) == 0;
     const bool stl3 = std::strncmp(magic, "STL3", 4) == 0;
     const bool stl4 = std::strncmp(magic, "STL4", 4) == 0;
-    if (!legacy && !stl2 && !stl3 && !stl4) throw std::runtime_error("invalid magic or corrupt file");
+    const bool stl5 = std::strncmp(magic, "STL5", 4) == 0;
+    if (!legacy && !stl2 && !stl3 && !stl4 && !stl5) throw std::runtime_error("invalid magic or corrupt file");
     const auto version = detail::read_u32(is);
-    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4)) throw std::runtime_error("unsupported save version");
+    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4) || (stl5 && version != 5)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
     if (!legacy) data.physicalSeconds = detail::read_double(is);
@@ -396,7 +448,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
         if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
     }
-    if (stl3 || stl4) {
+    if (stl3 || stl4 || stl5) {
         const auto hasLifecycle = detail::read_u8(is);
         if (hasLifecycle > 1) throw std::runtime_error("corrupt lifecycle presence flag");
         if (hasLifecycle) {
@@ -412,7 +464,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
             data.heroLifecycle = life;
         }
     }
-    if (stl4) {
+    if (stl4 || stl5) {
         const auto hasNeeds = detail::read_u8(is);
         if (hasNeeds > 1) throw std::runtime_error("corrupt needs presence flag");
         if (hasNeeds) {
@@ -429,6 +481,37 @@ inline SaveData readSave(const std::filesystem::path& path) {
             if (resting > 1) throw std::runtime_error("invalid resting flag");
             needs.isResting = (resting == 1);
             data.heroNeeds = needs;
+        }
+    }
+    if (stl5) {
+        const auto hasResourceLedger = detail::read_u8(is);
+        if (hasResourceLedger > 1) throw std::runtime_error("corrupt resource ledger presence flag");
+        if (hasResourceLedger) {
+            ResourceLedgerDto ledger;
+            auto count = detail::read_u32(is);
+            if (count > 4096 || static_cast<std::uint64_t>(count) * 25 > fileSize) throw std::runtime_error("resources exceed size bound");
+            ledger.resources.reserve(count);
+            for (std::uint32_t i = 0; i < count; ++i) {
+                ResourceDto res;
+                res.id = detail::read_u64(is);
+                const auto kind = detail::read_u8(is);
+                if (kind > static_cast<std::uint8_t>(ResourceKind::Creek)) throw std::runtime_error("invalid resource kind");
+                res.kind = static_cast<ResourceKind>(kind);
+                res.initialQuantity = detail::read_double(is);
+                res.consumedQuantity = detail::read_double(is);
+                ledger.resources.push_back(res);
+            }
+            count = detail::read_u32(is);
+            if (count > 256 || static_cast<std::uint64_t>(count) * 24 > fileSize) throw std::runtime_error("resource sessions exceed size bound");
+            ledger.sessions.reserve(count);
+            for (std::uint32_t i = 0; i < count; ++i) {
+                ResourceSessionDto ses;
+                ses.sessionId = detail::read_u64(is);
+                ses.resourceId = detail::read_u64(is);
+                ses.amount = detail::read_double(is);
+                ledger.sessions.push_back(ses);
+            }
+            data.resourceLedger = ledger;
         }
     }
 
@@ -504,7 +587,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         legacySize = detail::checkedAdd(legacySize, 4);
         for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
         if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
-    } else if ((stl4 ? detail::encodedSize(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data))) != fileSize)
+    } else if ((stl5 ? detail::encodedSize(data) : (stl4 ? detail::encodedSizeStl4(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data)))) != fileSize)
         throw std::runtime_error("save size does not match encoded records");
     return data;
 }
@@ -547,6 +630,22 @@ inline Lifecycle restoreHeroLifecycle(const SaveData& data, HeroSpecies legacySp
         lifecycle.restoreState(data.heroLifecycle->species, data.heroLifecycle->calendarAge, data.heroLifecycle->stage);
     } // Without lifecycle evidence: known retained species or supplied fallback, age zero.
     return lifecycle;
+}
+
+inline std::optional<ResourceLedgerDto> captureResourceLedger(const ResourceLedger& ledger) {
+    return ledger.continuationSnapshot();
+}
+
+inline void restoreResourceLedger(const SaveData& data, ResourceLedger& ledger) {
+    if (data.resourceLedger) {
+        if (!ledger.restore(*data.resourceLedger)) {
+            throw std::runtime_error("failed to restore resource ledger from save data");
+        }
+    } else {
+        // Fallback for older saves without resource ledger.
+        // It relies on main.cpp to populate initial pools via ledger.load.
+        ledger.reset();
+    }
 }
 
 inline SaveData captureSave(const SimCore& sim, const StalthosState& world, std::optional<HostPose> pose = std::nullopt) {
