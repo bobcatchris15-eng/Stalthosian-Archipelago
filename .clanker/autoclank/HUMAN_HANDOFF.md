@@ -319,3 +319,24 @@ retrieve in isolation, review and merge its main.cpp changes without overwriting
 local camera/terrain/rock integration. Earlier Jules sessions are integrated.
 Five local scopes and one separate remote dispatch used this wake; one local
 review dispatch remains. Deadline07:01; preserve running regression if necessary.
+
+## Wake checkpoint — 2026-10-12 06:59 America/Chicago
+
+Published runtime9db72a2 is synchronized main/origin. Six local bounded scopes
+used, plus one separate Jules dispatch. No active native/AGY worker remains.
+Resource reviewer checked pending Jules17364966271135416495; remote remains
+In Progress, no patch pulled. Resume retrieval/review on completion, base078c9d6,
+merging main.cpp resource changes with current camera/terrain/rock changes.
+
+Toolkit candidate49ae3f9 remains intentionally dirty/unpublished. Preserve its
+owned paths and ignored artifacts. Full suite process25196/session28752 started
+06:49:23 and was still running06:58:39; do NOT rerun or discard it. Read
+var/reports/packet-nine-form-full-result.json and full.log first next wake;
+require exit0 and unchanged packet-nine-form-source-hashes.json before promoting.
+The previous68824dc regression was aborted for a visually detected mask defect;
+its aborted log is retained. Candidate49ae3f9 actual Blender artifact hashes were
+verified, with outward normals and rig/contact gates passing. It is still a crude
+proxy, not an accepted Smalltrotter. Follow-on visual task is written in
+.clanker/tasks/smalltrotter-connected-mesh-next/brief.md but NOT dispatched.
+Structural graph refresh finished with136 zero-node files and community-label
+drift; this is partial navigation evidence, not semantic coverage or validation.

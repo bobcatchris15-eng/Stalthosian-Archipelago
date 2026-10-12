@@ -243,17 +243,17 @@ Store receipts by gate/run ID, with source revision plus dirty input hashes, too
 ## 10. Verified construction status — 2026-10-12
 
 This updates execution status; the full draft delivery contract remains the target.
-Main checkpoint 078c9d6 includes the reviewed native and toolkit work below.
+Main checkpoint 9db72a2 includes the reviewed native and toolkit work below.
 
 | Capability | Current evidence and coverage | Remaining work |
 |---|---|---|
-| Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 12/12 | Integrated target-hardware frame-time/visual acceptance |
+| Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 13/13 | Integrated target-hardware frame-time/visual acceptance |
 | Toolkit asset pipeline | Full root suite 1979 passed / 2 skipped; actual Smalltrotter build, rig and embedded PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
 | Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; forward/reverse/idle/dead probes | Terrain contact/IK, natural transitions, browse/drink/head behavior and visual gait review |
 | Ordinary needs | Physical body-based browse/drink contacts, finite per-run resources, STL4 hero needs continuity | Resource continuity adapter, visible plant depletion and interaction poses |
 | World continuity | Lifecycle/death/successor and needs foundation; reviewed bounded resource ledger DTO | Eligible populations/nests, parenting/bonds, actual resource persistence and visible exceptions |
-| Camera | Three diagnostic framing directions independent of body steering | Zoom/orbit/inspection, detachment/tether/recall, audio and documentary behavior |
-| Environment | One 192 m reference landscape; clipped creek water; grounded smaller debris and low vegetation proxies | Terrain materials, recognizable habitat composition, richer plants/rocks and all four islands |
+| Camera | Three diagnostic directions, bounded wheel zoom and V close inspection independent of body steering | Continuous orbit, detachment/tether/recall, audio and documentary behavior |
+| Environment | One 192 m reference landscape; clipped creek water, deterministic terrain texture, irregular rocks and low vegetation proxies | Richer terrain materials, recognizable habitat composition, dense plants and all four islands |
 | Full cast/life histories | Shared lifecycle/needs/relationships contracts and one provisional hero asset | All five complete playable species, NPC activity, parenting, reproduction and childhood |
 
 The current images remain far from the supplied artistic reference. Proxy seams,

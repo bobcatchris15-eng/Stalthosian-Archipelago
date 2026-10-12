@@ -1,0 +1,29 @@
+{
+  "toolkit_full_regression": "pending; session28752",
+  "toolkit_candidate": "49ae3f9",
+  "inspection_distance": 3.0,
+  "limitations": [
+    "Creature remains coarse proxy with seams and crude limb forms",
+    "Single-mip terrain texture; distant shimmer not accepted",
+    "Continuous orbit and full HeroView incomplete",
+    "Resource persistence not integrated",
+    "All five heroes and all four islands remain delivery requirements"
+  ],
+  "phase_expected": 0.6780018140109063,
+  "source_hashes": "var/reports/packet-nine-form-source-hashes.json",
+  "organic_rocks": 14,
+  "native_build_exit": 0,
+  "terrain_applied": true,
+  "full_draft_accepted": false,
+  "visual_accepted": false,
+  "phase_actual": 0.6780018140109072,
+  "capture": "var/reports/runtime/20261012-064940-5472f335/draft-host.png",
+  "fps_accepted": false,
+  "terrain_bytes": 1048576,
+  "native_ctest_total": 13,
+  "schema_version": 1,
+  "remote_pending": "17364966271135416495",
+  "native_ctest_passed": 13,
+  "runtime_receipt": "var/reports/runtime/20261012-064940-5472f335/runtime-receipt.json",
+  "native_commit": "9db72a2"
+}
