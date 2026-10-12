@@ -248,7 +248,7 @@ Main checkpoint 9db72a2 includes the reviewed native and toolkit work below.
 | Capability | Current evidence and coverage | Remaining work |
 |---|---|---|
 | Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 13/13 | Integrated target-hardware frame-time/visual acceptance |
-| Toolkit asset pipeline | Full root suite 1979 passed / 2 skipped; actual Smalltrotter build, rig and embedded PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
+| Toolkit asset pipeline | Full root suite 1981 passed / 2 skipped; actual Smalltrotter build, rig and embedded PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
 | Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; forward/reverse/idle/dead probes | Terrain contact/IK, natural transitions, browse/drink/head behavior and visual gait review |
 | Ordinary needs | Physical body-based browse/drink contacts, finite per-run resources, STL4 hero needs continuity | Resource continuity adapter, visible plant depletion and interaction poses |
 | World continuity | Lifecycle/death/successor and needs foundation; reviewed bounded resource ledger DTO | Eligible populations/nests, parenting/bonds, actual resource persistence and visible exceptions |

@@ -263,3 +263,7 @@ proxy, not an accepted Smalltrotter. Follow-on visual task is written in
 .clanker/tasks/smalltrotter-connected-mesh-next/brief.md but NOT dispatched.
 Structural graph refresh finished with136 zero-node files and community-label
 drift; this is partial navigation evidence, not semantic coverage or validation.
+
+## Resumed regression — 2026-10-12 07:33 America/Chicago
+
+Candidate49ae3f9 full root toolkit suite passed1981/2skipped in670.14s, finished07:00:34. Source hashes verified unchanged before promotion. Blender artifact/contact receipts retained. No visual acceptance; connected anatomy task is next. Jules17364966271135416495 still In Progress; old session5999252246045191178 already integrated.

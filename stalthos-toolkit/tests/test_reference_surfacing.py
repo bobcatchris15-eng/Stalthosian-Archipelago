@@ -18,6 +18,16 @@ def test_export_surface_samples_are_deterministic_and_seeded():
     assert a != cm._surface_sample("hide", 0.23, 0.71, 43)
 
 
+def test_hide_map_carries_continuous_ochre_and_dark_mottle_variation():
+    samples = [cm._surface_sample("hide", i / 20, j / 20, 42)[0]
+               for i in range(20) for j in range(20)]
+    assert len(set(samples)) > 100
+    assert min(c[0] for c in samples) < 0.20
+    assert max(c[0] for c in samples) > 0.30
+    assert samples == [cm._surface_sample("hide", i / 20, j / 20, 42)[0]
+                       for i in range(20) for j in range(20)]
+
+
 def test_smalltrotter_export_palette_separates_skin_and_features():
     dorsal, _ = cm._surface_sample("hide", 0.5, 0.5, 42)
     ventral, _ = cm._surface_sample("ventral", 0.5, 0.5, 42)

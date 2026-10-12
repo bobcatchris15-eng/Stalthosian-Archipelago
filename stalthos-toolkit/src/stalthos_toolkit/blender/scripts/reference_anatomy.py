@@ -35,8 +35,8 @@ def apply_profile(params: dict[str, Any], asset_id: str) -> dict[str, Any]:
         "trunk_width_m": total * 0.225,
         # Keep the upright neck long while reserving a compact, readable head.
         "neck_length_m": total * 0.30,
-        "head_length_m": total * 0.095,
-        "head_depth_m": total * 0.075,
+        "head_length_m": total * 0.12,
+        "head_depth_m": total * 0.085,
         "tail_length_m": total * 0.30,
         # Substantial limbs support broad grounded feet without changing bone lengths.
         "leg_diameter_m": total * 0.070,
@@ -73,7 +73,9 @@ def add_ellipsoid(
     for ri in range(rings):
         for si in range(segments):
             sj = (si + 1) % segments
-            builder.add_face((grid[ri][si], grid[ri][sj], grid[ri + 1][sj], grid[ri + 1][si]), smooth=True)
+            # The parameterization's theta/phi order is inward-facing; reverse
+            # it so Blender's polygon normals point away from the ellipsoid.
+            builder.add_face((grid[ri][si], grid[ri + 1][si], grid[ri + 1][sj], grid[ri][sj]), smooth=True)
 
 
 def bezier_point(points: Sequence[Sequence[float]], t: float) -> tuple[float, float, float]:
@@ -119,15 +121,17 @@ def add_irregular_ridge(
         t = rng.random()
         start = sample_polyline(points, t)
         jitter = rng.uniform(-0.10, 0.10)
-        direction = (back[0] + jitter, back[1] + rng.uniform(-0.16, 0.16), back[2] + rng.uniform(-0.14, 0.30))
+        direction = (back[0] + jitter, back[1] + rng.uniform(-0.12, 0.12), back[2] + rng.uniform(-0.08, 0.16))
         norm = math.sqrt(sum(v * v for v in direction)) or 1.0
         direction = tuple(v / norm for v in direction)
         taper = max(0.30, 1.0 - 0.68 * t) if length_falloff else 1.0
         length = max(0.015, max_length * taper * rng.uniform(0.55, 1.35))
-        bend = rng.uniform(0.08, 0.30)
+        bend = rng.uniform(0.02, 0.12)
         middle = tuple(start[k] + direction[k] * length * 0.55 + back[k] * length * bend for k in range(3))
         tip = tuple(start[k] + direction[k] * length + back[k] * length * bend for k in range(3))
-        builder.add_tube((start, middle, tip), (length * 0.095, length * 0.045, length * 0.008), sides=4, cap=True, smooth=True)
+        # A soft, hair-like base reads as a mane; avoid the needle-thin armor
+        # profile while retaining a fine tapered tip.
+        builder.add_tube((start, middle, tip), (length * 0.22, length * 0.12, length * 0.035), sides=5, cap=True, smooth=True)
     return count
 
 

@@ -142,24 +142,25 @@ def _surface_sample(surface: str, u: float, v: float, seed: int) -> tuple[tuple[
     fine = _periodic_noise(u, v, 109, seed ^ 0xAD90777D)
     rough_field = _periodic_noise(u, v, 53, seed ^ 0x7E95761E)
     if surface == "hide":
-        # Keep the UV atlas map locally quiet; broad irregular markings are
-        # assigned from mesh position below so Smart-UV island boundaries do
-        # not become conspicuous color blocks.
-        tint = (medium - 0.5) * 0.075 + (fine - 0.5) * 0.025
-        color = (0.43 + tint, 0.285 + tint * 0.76, 0.135 + tint * 0.43)
-        roughness = 0.57 + rough_field * 0.20
+        # Fine, continuous ochre skin with broken dark mottles in the packed
+        # UV map. This avoids polygon-sized color patches at Smart-UV seams.
+        field = coarse * 0.18 + medium * 0.82
+        mask = max(0.0, min(1.0, (field - 0.37) / 0.18))
+        mask = mask * mask * (3.0 - 2.0 * mask)
+        tint = (fine - 0.5) * 0.035
+        ochre = (0.39 + tint, 0.255 + tint * 0.72, 0.125 + tint * 0.42)
+        dark = (0.115 + tint * 0.18, 0.065 + tint * 0.12, 0.030 + tint * 0.08)
+        color = tuple(dark[i] * (1.0 - mask) + ochre[i] * mask for i in range(3))
+        roughness = 0.62 + rough_field * 0.15
     elif surface == "mottle":
         tint = (medium - 0.5) * 0.055
         color = (0.135 + tint, 0.070 + tint * 0.63, 0.032 + tint * 0.38)
         roughness = 0.61 + rough_field * 0.16
     elif surface == "ventral":
         field = coarse * 0.36 + medium * 0.64
-        palette = ((0.34, 0.245, 0.145), (0.51, 0.39, 0.245),
-                   (0.66, 0.535, 0.365), (0.74, 0.62, 0.445))
-        color = palette[0] if field < 0.13 else palette[1] if field < 0.29 else palette[2] if field < 0.86 else palette[3]
-        if fine > 0.97 and field < 0.55:
-            color = palette[0]
-        roughness = 0.52 + rough_field * 0.17
+        tint = (field - 0.5) * 0.045 + (fine - 0.5) * 0.018
+        color = (0.53 + tint, 0.405 + tint * 0.82, 0.275 + tint * 0.58)
+        roughness = 0.58 + rough_field * 0.14
     elif surface == "keratin":
         streak = (0.5 + 0.5 * math.sin(v * 2.0 * math.pi * 46.0 + coarse * 3.4))
         shade = 0.035 + 0.032 * (0.60 * streak + 0.40 * medium)
@@ -535,6 +536,7 @@ if _HAS_BPY:
         *,
         seed: int,
         params: dict[str, Any],
+        joints: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Assign image-backed PBR slots and UVs to the Smalltrotter proxy only.
 
@@ -549,6 +551,38 @@ if _HAS_BPY:
         neck_len = float(params["neck_length_m"])
         head_len = float(params["head_length_m"])
         stance = float(params["stance_height_m"])
+        spine = joints.get("spine", []) if joints else []
+        neck = joints.get("neck", []) if joints else []
+
+        def spine_height(x: float) -> float:
+            if not spine:
+                return stance + trunk_depth * 0.55
+            if x <= spine[0][0]:
+                return float(spine[0][2])
+            if x >= spine[-1][0]:
+                return float(spine[-1][2])
+            for a, b in zip(spine, spine[1:]):
+                if a[0] <= x <= b[0]:
+                    t = (x - a[0]) / max(1e-8, b[0] - a[0])
+                    return float(a[2]) * (1.0 - t) + float(b[2]) * t
+            return stance + trunk_depth * 0.55
+
+        def neck_surface(c, normal) -> bool:
+            if len(neck) < 2 or normal.x <= 0.20:
+                return False
+            for i, (a, b) in enumerate(zip(neck, neck[1:])):
+                ax, ay, az = (float(v) for v in a)
+                dx, dy, dz = (float(b[k]) - float(a[k]) for k in range(3))
+                length_sq = dx * dx + dy * dy + dz * dz
+                t = max(0.0, min(1.0, ((c.x-ax)*dx + (c.y-ay)*dy + (c.z-az)*dz) / max(length_sq, 1e-8)))
+                along = (i + t) / (len(neck) - 1)
+                if not 0.12 <= along <= 0.55 or c.z <= float(neck[0][2]) + 0.06:
+                    continue
+                distance = ((c.x - (ax + t*dx))**2 + (c.y - (ay + t*dy))**2 + (c.z - (az + t*dz))**2) ** 0.5
+                radius = max(head_len * 0.30, trunk_depth * 0.35) * (1.0 - 0.48 * along)
+                if distance <= radius * 1.35:
+                    return True
+            return False
         indices = []
         ventral_faces = 0
         keratin_faces = 0
@@ -560,24 +594,19 @@ if _HAS_BPY:
             c = poly.center
             foot = (c.z <= 0.24 and abs(c.y) >= trunk_width * 0.20 and
                     min(abs(c.x - front_foot_x), abs(c.x - rear_foot_x)) <= foot_x_radius)
-            trunk_underside = (-trunk_len * 0.56 <= c.x <= trunk_len * 0.56 and
-                               c.z <= stance + trunk_depth * 0.25 and poly.normal.z < -0.20)
-            lower_throat = (c.x >= trunk_len * 0.24 and c.x <= trunk_len * 0.95 and
-                            c.z <= stance + trunk_depth * 0.05 + neck_len * 0.13 and
-                            poly.normal.z < 0.0)
-            spot = (_spatial_noise_2d(c.x, c.z, 2.7, seed ^ 0x12AFD64D) * 0.68 +
-                    _spatial_noise_2d(c.x, c.z, 6.3, seed ^ 0x91E10DA5) * 0.32)
-            mottled = (c.x < trunk_len * 0.80 and c.z > stance - trunk_depth * 0.60 and
-                       not foot and spot < 0.68)
+            # Restrict cream to the bottom of the actual resolved spine path.
+            # This excludes upper shoulder caps and other low-looking geometry.
+            trunk_underside = (-trunk_len * 0.50 <= c.x <= trunk_len * 0.50 and
+                               c.z < spine_height(c.x) - trunk_depth * 0.35 and poly.normal.z < -0.80)
+            # The bib follows only forward-facing polygons close to the
+            # serialized neck chain and above its shoulder root.
+            lower_throat = neck_surface(c, poly.normal)
             if foot:
                 indices.append(2)
                 keratin_faces += 1
             elif trunk_underside or lower_throat:
                 indices.append(1)
                 ventral_faces += 1
-            elif mottled:
-                indices.append(3)
-                mottle_faces += 1
             else:
                 indices.append(0)
         _assign_slots(body, (mats["hide"], mats["ventral"], mats["keratin"], mats["mottle"]), indices)

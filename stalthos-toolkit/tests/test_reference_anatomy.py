@@ -59,6 +59,20 @@ def test_ellipsoid_helper_emits_smooth_closed_grid():
     assert max(xs) == pytest.approx(3.0)
 
 
+def test_ellipsoid_face_winding_points_outward():
+    mesh = MeshStub()
+    centre = (1.0, -2.0, 3.0)
+    anatomy.add_ellipsoid(mesh, centre, (2.0, 1.0, 0.5), segments=16, rings=12)
+    for face in mesh.faces:
+        p0, p1, p2 = (mesh.verts[i] for i in face[:3])
+        u = tuple(p1[i] - p0[i] for i in range(3))
+        v = tuple(p2[i] - p0[i] for i in range(3))
+        normal = (u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0])
+        midpoint = tuple(sum(mesh.verts[j][i] for j in face) / len(face) for i in range(3))
+        outward = tuple(midpoint[i] - centre[i] for i in range(3))
+        assert sum(normal[i] * outward[i] for i in range(3)) >= -1e-10
+
+
 def test_bezier_and_polyline_helpers_are_bounded_and_reproducible():
     controls = ((0, 0, 0), (1, 0, 1), (2, 0, 1), (3, 0, 0))
     assert anatomy.bezier_point(controls, 0) == pytest.approx(controls[0])
@@ -76,7 +90,7 @@ def test_irregular_ridge_is_seeded_and_tapers_toward_tail():
                                           rng=random.Random(42), length_falloff=True)
     assert count_a == count_b == 9
     assert first.faces == second.faces
-    lengths = [max(radii) / 0.095 for _, radii, *_ in first.faces]
+    lengths = [max(radii) / 0.22 for _, radii, *_ in first.faces]
     assert all(0.015 <= length <= 0.27 for length in lengths)
 
 

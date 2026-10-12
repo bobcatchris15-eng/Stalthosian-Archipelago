@@ -1,0 +1,40 @@
+{
+  "asset_id": "creature.smalltrotter.st1",
+  "seed": 42,
+  "stage": "independent_juvenile",
+  "blender": "5.2.0 LTS",
+  "triangles": 16332.0,
+  "ventral_face_count": 250,
+  "packed_images": 12,
+  "rig_validation": {
+    "passed": true,
+    "loop_passed": true,
+    "root_motion_passed": true,
+    "geometric_contact_passed": true,
+    "touchdown_foot_lock_passed": true,
+    "glb_animation_passed": true
+  },
+  "artifacts": {
+    "build_master": {
+      "path": "E:\\Stalthosian Archipelago\\var\\smalltrotter-form-refinement-asset\\sources\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.blend",
+      "sha256": "b304c0e18771ff471f4758ae5ea25f9c8479692df1bca6d962bbe13aa84c6f7c"
+    },
+    "neutral_glb": {
+      "path": "E:\\Stalthosian Archipelago\\var\\smalltrotter-form-refinement-asset\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.neutral.glb",
+      "sha256": "ad9d8596b4788a06c39ea092119480b719ec840b7517cbe378c62c7fb67f825e"
+    },
+    "walk_glb": {
+      "path": "E:\\Stalthosian Archipelago\\var\\smalltrotter-form-refinement-asset\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+      "sha256": "4aa8f5b85d4cf3ab951696d407a30d5b4306e66f30b06fe3dd2cf007a5945507"
+    },
+    "broadside": {
+      "path": "E:\\Stalthosian Archipelago\\var\\smalltrotter-form-refinement-asset\\preview\\creature.smalltrotter.st1\\turntable\\creature.smalltrotter.st1.independent_juvenile_neutral_090.png",
+      "sha256": "f4acc0f1c976a2158789f2ea761db5fc8eb434aa04d5568dee11077bccd41c8b"
+    },
+    "front": {
+      "path": "E:\\Stalthosian Archipelago\\var\\smalltrotter-form-refinement-asset\\preview\\creature.smalltrotter.st1\\turntable\\creature.smalltrotter.st1.independent_juvenile_neutral_000.png",
+      "sha256": "d7df0b1b63de4243367e913c2ed07d24eefa0c69d43307ba1c9d785f2b4f44f4"
+    }
+  },
+  "focused_tests": "10 passed; full root suite 1981 passed, 2 skipped in670.14s"
+}

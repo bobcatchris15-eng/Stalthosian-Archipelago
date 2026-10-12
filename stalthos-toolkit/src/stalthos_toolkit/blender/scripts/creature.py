@@ -240,7 +240,9 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         foot = ankle + mathutils.Vector((0.0, 0.0, -max(0.02, stance * 0.06)))
         limb_path = [hip, hip + upper_dir * upper * 0.5, knee, knee + (ankle - knee) * 0.5, ankle]
         if reference_form:
-            limb_r = [leg_r * 1.95, leg_r * 1.80, leg_r * 1.38, leg_r * 0.94, leg_r * 0.70]
+            # Weight-bearing columns stay broad through the knee, then ease
+            # into the ankle instead of collapsing into a cone.
+            limb_r = [leg_r * 1.80, leg_r * 1.72, leg_r * 1.48, leg_r * 1.28, leg_r * 1.05]
         else:
             limb_r = [leg_r * 1.25, leg_r * 1.12, leg_r * 0.95, leg_r * 0.7, leg_r * 0.6]
         _elliptical_tube(body, limb_path, limb_r, [r * 0.92 for r in limb_r], sides=max(5, sides - 2))
@@ -255,7 +257,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
                               (upper * 0.30, leg_r * 1.80, leg_r * 1.65), axes=muscle_axes,
                               segments=16, rings=12)
             REF.add_ellipsoid(body, hip + upper_dir * (upper * 0.76),
-                              (upper * 0.18, leg_r * 1.28, leg_r * 1.18), axes=muscle_axes,
+                              (upper * 0.20, leg_r * 1.38, leg_r * 1.30), axes=muscle_axes,
                               segments=14, rings=10)
         # foot pad
         pad_start = len(body.verts)
@@ -335,19 +337,19 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
             for i in range(max(1, int(tail_segs * 0.68)) + 1)
         ]
         ridge_bristles += REF.add_irregular_ridge(
-            ridge, neck_ridge, count=18, max_length=0.15,
+            ridge, neck_ridge, count=24, max_length=0.075,
             rng=S.rng(seed, "creature", "reference_ridge", "nape"),
             backward=(-0.85, 0.0, 0.52),
         )
         ridge_bristles += REF.add_irregular_ridge(
-            ridge, body_ridge, count=34, max_length=0.18,
+            ridge, body_ridge, count=46, max_length=0.085,
             rng=S.rng(seed, "creature", "reference_ridge", "back"),
-            backward=(-0.28, 0.0, 0.96),
+            backward=(-0.78, 0.0, 0.63),
         )
         ridge_bristles += REF.add_irregular_ridge(
-            ridge, tail_ridge, count=16, max_length=0.09,
+            ridge, tail_ridge, count=14, max_length=0.055,
             rng=S.rng(seed, "creature", "reference_ridge", "tail"),
-            backward=(-0.18, 0.0, 0.98), length_falloff=True,
+            backward=(-0.70, 0.0, 0.71), length_falloff=True,
         )
         bristles = ridge_bristles
     elif surf.get("bristle_density", 0.0) > 0.0:
@@ -496,7 +498,7 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         if reference_form:
             stats["surfacing_export"] = CREATURE_MAT.assign_smalltrotter_export_materials(
                 body_obj, detail_obj, eye_obj, ridge_obj,
-                seed=p["seed"], params=p,
+                seed=p["seed"], params=p, joints=joints,
             )
         else:
             # Preserve the legacy/default appearance for all non-reference
