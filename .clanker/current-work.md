@@ -170,3 +170,13 @@ then locomotion phase/rootremoval adapter toresolve hostfoot sliding. Shore mesh
 contract remainsunwired. No furtherdispatchthiswake; sixlocal scopes used.
 Allworkerscompleted; finaltests continue independently. Reviewednative andmaterial
 support commits arepublished onmain; newanatomy source staysdirty intentionally.
+
+## Validated anatomy checkpoint — 2026-10-12 02:28 America/Chicago
+
+The final combined Smalltrotter reference anatomy and rig suite completed:
+1976 passed, 2 skipped in 600.60 seconds. All recorded source hashes match.
+The prior failed fixed-pad-count assertion remains documented; the correction
+uses actual generated pad metadata and preserves the 20 mm contact thresholds.
+This checkpoint establishes toolkit regression and contact evidence, not visual
+acceptance or correct Wicked playback. Next work: distance-driven native clip
+playback, actual creature material assignment/export, and creek mesh rendering.

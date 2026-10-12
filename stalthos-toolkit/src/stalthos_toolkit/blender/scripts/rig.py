@@ -13,6 +13,7 @@ randomised here.
 from __future__ import annotations
 
 import math
+import json
 from typing import Any
 
 import bpy
@@ -28,6 +29,78 @@ import _stalthos as S
 
 S.bootstrap()
 import gait as GAIT
+
+
+RIG_SOURCE_PROPERTY = "stalthos_rig_source_v1"
+RIG_SOURCE_SCHEMA = "stalthos-creature-rig-source-v1"
+RIG_SHAPE_REQUIRED = (
+    "stance_height_m", "trunk_length_m", "trunk_depth_m", "trunk_width_m",
+    "trunk_arch", "trunk_segments", "neck_length_m", "neck_segments",
+    "tail_length_m", "tail_segments", "tail_rise_deg", "head_length_m",
+    "head_depth_m", "leg_spread_deg", "leg_upper_m", "leg_lower_m",
+    "leg_diameter_m",
+)
+RIG_LIMB_NAMES = ("front_left", "front_right", "rear_left", "rear_right")
+
+
+def _source_record(body: bpy.types.Object) -> dict[str, Any] | None:
+    """Load and validate the source's resolved shape/joint data; None is legacy."""
+    raw = body.get(RIG_SOURCE_PROPERTY)
+    if raw is None:
+        return None
+    try:
+        record = json.loads(str(raw))
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError(f"invalid {RIG_SOURCE_PROPERTY} JSON: {exc}") from exc
+    if not isinstance(record, dict) or record.get("schema") != RIG_SOURCE_SCHEMA:
+        raise RuntimeError(f"unsupported or malformed {RIG_SOURCE_PROPERTY} schema")
+    shape = record.get("shape")
+    graph = record.get("joints")
+    if not isinstance(shape, dict) or not isinstance(graph, dict):
+        raise RuntimeError(f"{RIG_SOURCE_PROPERTY} must contain shape and joints objects")
+    missing = [name for name in RIG_SHAPE_REQUIRED if name not in shape]
+    if missing:
+        raise RuntimeError(f"{RIG_SOURCE_PROPERTY} shape is missing: {', '.join(missing)}")
+    for name in RIG_SHAPE_REQUIRED:
+        try:
+            value = float(shape[name])
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} shape {name} is not numeric") from exc
+        if not math.isfinite(value):
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} shape {name} is non-finite")
+    for name in ("trunk_length_m", "neck_length_m", "tail_length_m", "head_length_m",
+                 "leg_upper_m", "leg_lower_m", "leg_diameter_m", "stance_height_m"):
+        if float(shape[name]) <= 0.0:
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} shape {name} must be positive")
+
+    def valid_chain(name: str, *, minimum: int = 2) -> None:
+        rows = graph.get(name)
+        if not isinstance(rows, list) or len(rows) < minimum:
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} joints.{name} must have at least {minimum} points")
+        for row in rows:
+            if (not isinstance(row, list) or len(row) != 3 or
+                    not all(isinstance(value, (int, float)) and math.isfinite(value) for value in row)):
+                raise RuntimeError(f"{RIG_SOURCE_PROPERTY} joints.{name} contains an invalid point")
+
+    for name in ("spine", "neck", "head", "tail"):
+        valid_chain(name)
+    limbs = graph.get("limbs")
+    if not isinstance(limbs, dict) or set(limbs) != set(RIG_LIMB_NAMES):
+        raise RuntimeError(f"{RIG_SOURCE_PROPERTY} must contain all four named limbs")
+    for name, row in limbs.items():
+        if not isinstance(row, dict):
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} joints.limbs.{name} must be an object")
+        for key in ("hip", "knee", "ankle", "foot"):
+            point = row.get(key)
+            if (not isinstance(point, list) or len(point) != 3 or
+                    not all(isinstance(value, (int, float)) and math.isfinite(value) for value in point)):
+                raise RuntimeError(f"{RIG_SOURCE_PROPERTY} joints.limbs.{name}.{key} is invalid")
+        pad_indices = row.get("pad_vertex_indices")
+        if (not isinstance(pad_indices, list) or not pad_indices or
+                any(not isinstance(index, int) or index < 0 for index in pad_indices) or
+                len(set(pad_indices)) != len(pad_indices)):
+            raise RuntimeError(f"{RIG_SOURCE_PROPERTY} joints.limbs.{name}.pad_vertex_indices is invalid")
+    return record
 
 
 def _unit(v: mathutils.Vector) -> mathutils.Vector:
@@ -102,8 +175,80 @@ def _axis_chain(arm_data, name: str, points, *, parent=None, connect: bool = Fal
     return bones, prev
 
 
-def build_skeleton(arm: bpy.types.Object, p: dict[str, Any], stats: dict[str, Any]) -> dict[str, Any]:
+def _build_skeleton_from_source(arm: bpy.types.Object, p: dict[str, Any],
+                                stats: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
+    """Build named bones directly on the source mesh's serialized joint graph."""
+    eb = arm.data.edit_bones
+    for bone in list(eb):
+        eb.remove(bone)
+
+    vectors = lambda name: [mathutils.Vector(point) for point in graph[name]]
+    spine_pts, neck_pts = vectors("spine"), vectors("neck")
+    head_pts, tail_pts = vectors("head"), vectors("tail")
+    spine, spine_tail = _axis_chain(arm.data, "spine", spine_pts)
+    for i in range(1, len(spine)):
+        spine[i].parent = spine[i - 1]
+        spine[i].use_connect = True
+
+    neck_parent = min(spine, key=lambda bone: (bone.head - neck_pts[0]).length)
+    neck, neck_tail = _axis_chain(arm.data, "neck", neck_pts,
+                                  parent=neck_parent, connect=False)
+    head, _ = _axis_chain(arm.data, "head", head_pts,
+                          parent=neck_tail, connect=False)
+    for chain in (neck, head):
+        for index in range(1, len(chain)):
+            chain[index].parent = chain[index - 1]
+            chain[index].use_connect = True
+    tail, _ = _axis_chain(arm.data, "tail", tail_pts, parent=spine[0])
+    for i in range(1, len(tail)):
+        tail[i].parent = tail[i - 1]
+        tail[i].use_connect = True
+
+    limbs = {}
+    name_map = (("front_left", "front_L"), ("front_right", "front_R"),
+                ("rear_left", "rear_L"), ("rear_right", "rear_R"))
+    for source_name, label in name_map:
+        row = graph["limbs"][source_name]
+        hip, knee, ankle = (mathutils.Vector(row[key]) for key in ("hip", "knee", "ankle"))
+        # Attach each limb to the closest generated spine segment. The actual
+        # hip/knee/ankle coordinates come from the source graph, not YAML.
+        parent_index = min(range(len(spine)),
+                           key=lambda index: (spine[index].head - hip).length)
+        parent_bone = spine[parent_index]
+        bones, lower_bone = _axis_chain(arm.data, f"leg_{label}", [hip, knee, ankle],
+                                         parent=parent_bone)
+        bones[1].parent = bones[0]
+        bones[1].use_connect = True
+        toe = arm.data.edit_bones.new(f"toe_{label}")
+        toe.head = ankle
+        toe.tail = ankle + mathutils.Vector((float(p["head_length_m"]) * 0.6,
+                                              0.0, -max(0.01, float(p["stance_height_m"]) * 0.04)))
+        toe.parent = lower_bone
+        toe.use_connect = True
+        limbs[label] = {"bones": 3, "chain": [hip, knee, ankle],
+                        "toe": toe.head.copy(), "pad_vertex_indices": row["pad_vertex_indices"]}
+
+    bpy.context.view_layer.objects.active = arm
+    arm.select_set(True)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    stats.update({
+        "bone_count": len(arm.data.bones), "spine_bones": len(spine),
+        "neck_bones": len(neck), "head_bones": len(head), "tail_bones": len(tail),
+        "limb_bones": sum(row["bones"] for row in limbs.values()),
+        "limb_chains": sorted(limbs),
+        "roots": [bone.name for bone in arm.data.bones if bone.parent is None],
+        "single_root": len([bone for bone in arm.data.bones if bone.parent is None]) == 1,
+        "rig_source_graph_used": True,
+    })
+    return {"spine": spine_pts, "neck": neck_pts, "head": head_pts,
+            "tail": tail_pts, "limbs": limbs, "trunk_segs": len(spine_pts) - 1}
+
+
+def build_skeleton(arm: bpy.types.Object, p: dict[str, Any], stats: dict[str, Any],
+                   joint_graph: dict[str, Any] | None = None) -> dict[str, Any]:
     """Deterministic quadruped skeleton: spine chain, neck, tail, 4 limb chains."""
+    if joint_graph is not None:
+        return _build_skeleton_from_source(arm, p, stats, joint_graph)
     eb = arm.data.edit_bones
     for bone in list(eb):
         eb.remove(bone)
@@ -207,11 +352,11 @@ def build_skeleton(arm: bpy.types.Object, p: dict[str, Any], stats: dict[str, An
 
 
 def skin(body: bpy.types.Object, detail: bpy.types.Object, arm: bpy.types.Object,
-         report: S.Reporter, stats: dict[str, Any]) -> None:
+         report: S.Reporter, stats: dict[str, Any], extras: tuple[bpy.types.Object, ...] = ()) -> None:
     """Automatic weights, with an explicit fallback if Blender refuses."""
     warnings = report.warnings
     bpy.ops.object.select_all(action="DESELECT")
-    targets = [o for o in (body, detail) if o and o.data.polygons]
+    targets = [o for o in (body, detail, *extras) if o and o.data.polygons]
     for obj in targets + [arm]:
         obj.select_set(True)
     bpy.context.view_layer.objects.active = arm
@@ -227,6 +372,9 @@ def skin(body: bpy.types.Object, detail: bpy.types.Object, arm: bpy.types.Object
         stats["weighting"] = "ARMATURE_FALLBACK"
     stats["deform_bones"] = len([b for b in arm.data.bones if b.use_deform])
     stats["vertices_weighted"] = sum(len(o.data.vertices) for o in targets)
+    stats["skinned_objects"] = [o.name for o in targets]
+    stats["skinned_feature_material_slots"] = {
+        obj.name: len(obj.material_slots) for obj in extras if obj and obj.data.polygons}
     for obj in targets:
         vg = obj.vertex_groups
         if not vg:
@@ -235,6 +383,91 @@ def skin(body: bpy.types.Object, detail: bpy.types.Object, arm: bpy.types.Object
             unassigned = sum(1 for v in obj.data.vertices if not any(v.groups))
             if unassigned:
                 warnings.append(f"{obj.name}: {unassigned} vertices carry no bone weight")
+
+
+def _joint_alignment_metrics(arm: bpy.types.Object, graph: dict[str, Any]) -> dict[str, Any]:
+    """Compare every rest-bone endpoint with the serialized source graph."""
+    rows = {}
+
+    def chain_error(prefix: str, points: list[list[float]]) -> float:
+        errors = []
+        for index in range(len(points) - 1):
+            bone = arm.data.bones.get(f"{prefix}_{index:02d}")
+            if bone is None:
+                return math.inf
+            errors.append((bone.head_local - mathutils.Vector(points[index])).length)
+            errors.append((bone.tail_local - mathutils.Vector(points[index + 1])).length)
+        return max(errors, default=0.0)
+
+    for chain_name in ("spine", "neck", "head", "tail"):
+        rows[chain_name] = chain_error(chain_name, graph[chain_name])
+    limb_names = (("front_left", "front_L"), ("front_right", "front_R"),
+                  ("rear_left", "rear_L"), ("rear_right", "rear_R"))
+    for source_name, label in limb_names:
+        source = graph["limbs"][source_name]
+        upper = arm.data.bones.get(f"leg_{label}_00")
+        lower = arm.data.bones.get(f"leg_{label}_01")
+        toe = arm.data.bones.get(f"toe_{label}")
+        if not upper or not lower or not toe:
+            rows[f"limbs.{source_name}"] = math.inf
+            continue
+        targets = ((upper.head_local, source["hip"]),
+                   (upper.tail_local, source["knee"]),
+                   (lower.tail_local, source["ankle"]),
+                   (toe.head_local, source["ankle"]))
+        rows[f"limbs.{source_name}"] = max(
+            (actual - mathutils.Vector(target)).length for actual, target in targets)
+    return {"max_error_m": max(rows.values(), default=0.0), "per_chain_error_m": rows}
+
+
+def _feature_skin_metrics(objects: tuple[bpy.types.Object, ...], arm: bpy.types.Object) -> dict[str, Any]:
+    rows = {}
+    for obj in objects:
+        if obj is None or obj.type != "MESH" or not obj.data.polygons:
+            continue
+        modifier = next((mod for mod in obj.modifiers
+                         if mod.type == "ARMATURE" and mod.object == arm), None)
+        bounds = [obj.matrix_world @ mathutils.Vector(corner) for corner in obj.bound_box]
+        rows[obj.name] = {
+            "armature_modifier_bound": modifier is not None,
+            "vertex_group_count": len(obj.vertex_groups),
+            "material_slots_preserved": len(obj.material_slots),
+            "vertex_count": len(obj.data.vertices),
+            "unassigned_vertex_count": sum(1 for vertex in obj.data.vertices if not vertex.groups),
+            "world_bounds_m": {
+                "min": [min(point[axis] for point in bounds) for axis in range(3)],
+                "max": [max(point[axis] for point in bounds) for axis in range(3)],
+            },
+        }
+    return rows
+
+
+def _bind_feature_to_nearest_bone(obj: bpy.types.Object, arm: bpy.types.Object,
+                                  prefixes: tuple[str, ...]) -> None:
+    """Rigidly bind an isolated feature mesh to its nearest anatomically relevant bone."""
+    vertices = list(range(len(obj.data.vertices)))
+    for group in obj.vertex_groups:
+        group.remove(vertices)
+    candidates = [bone for bone in arm.data.bones if bone.use_deform and
+                  bone.name.startswith(prefixes)]
+    if not candidates:
+        raise RuntimeError(f"no rig bones match feature binding prefixes {prefixes!r}")
+    groups = {bone.name: obj.vertex_groups.get(bone.name) or
+              obj.vertex_groups.new(name=bone.name) for bone in candidates}
+    arm_inverse = arm.matrix_world.inverted()
+    for vertex in obj.data.vertices:
+        point = arm_inverse @ (obj.matrix_world @ vertex.co)
+        best = None
+        best_distance = float("inf")
+        for bone in candidates:
+            start, end = bone.head_local, bone.tail_local
+            delta = end - start
+            length_sq = delta.length_squared
+            t = 0.0 if length_sq <= 1e-12 else max(0.0, min(1.0, (point - start).dot(delta) / length_sq))
+            distance = (point - (start + delta * t)).length_squared
+            if distance < best_distance:
+                best, best_distance = bone, distance
+        groups[best.name].add([vertex.index], 1.0, "REPLACE")
 
 
 def neutral_pose(arm: bpy.types.Object, report: S.Reporter) -> dict[str, Any]:
@@ -265,7 +498,8 @@ def export_neutral(path: str, report: S.Reporter) -> str:
 def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
                       shape: dict[str, Any],
                       seed: int, output_glb: str, metadata_path: str,
-                      report: S.Reporter) -> tuple[str, dict[str, Any]]:
+                      report: S.Reporter,
+                      source_joints: dict[str, Any] | None = None) -> tuple[str, dict[str, Any]]:
     """Author a root-motion walk cycle with two-bone targets and measured pads."""
     import json
     import os
@@ -294,19 +528,27 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     leg_radius = float(shape["leg_diameter_m"]) * 0.5
     foot_drop = max(0.02, stance_height * 0.06)
     pad_indices = {}
+    source_pad_names = {"bone:pes_foot_l": "rear_left", "bone:pes_foot_r": "rear_right"}
     for selector, bone_name in target_bones.items():
         bone = arm.pose.bones.get(bone_name)
         if bone is None:
             raise RuntimeError(f"walk_cycle target bone is absent: {bone_name}")
-        ankle_world = arm.matrix_world @ bone.head
-        center_world = ankle_world + arm.matrix_world.to_3x3() @ Vector(
-            (head_len * 0.25, 0.0, -foot_drop))
-        center = body.matrix_world.inverted() @ center_world
-        # creature.py's MeshBuilder.add_box `size` is a half extent.
-        pad_indices[selector] = [v.index for v in body.data.vertices
-            if abs(v.co.x - center.x) <= head_len * 0.5 + 1e-5
-            and abs(v.co.y - center.y) <= leg_radius * 1.1 + 1e-5
-            and abs(v.co.z - center.z) <= leg_radius * 0.5 + 1e-5]
+        if source_joints is not None:
+            pad_indices[selector] = list(
+                source_joints["limbs"][source_pad_names[selector]]["pad_vertex_indices"])
+            if max(pad_indices[selector]) >= len(body.data.vertices):
+                raise RuntimeError(f"serialized source pad indices exceed body_proxy vertices for {selector}")
+        else:
+            # Legacy source masters predate serialized pad/joint data. Keep
+            # their original geometric selector as a compatibility fallback.
+            ankle_world = arm.matrix_world @ bone.head
+            center_world = ankle_world + arm.matrix_world.to_3x3() @ Vector(
+                (head_len * 0.25, 0.0, -foot_drop))
+            center = body.matrix_world.inverted() @ center_world
+            pad_indices[selector] = [v.index for v in body.data.vertices
+                if abs(v.co.x - center.x) <= head_len * 0.5 + 1e-5
+                and abs(v.co.y - center.y) <= leg_radius * 1.1 + 1e-5
+                and abs(v.co.z - center.z) <= leg_radius * 0.5 + 1e-5]
         if not pad_indices[selector]:
             raise RuntimeError(f"no body_proxy foot-pad vertices found for {selector}")
     # Foot-pad vertices are a separate, box-shaped proxy feature. Automatic
@@ -331,9 +573,15 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     # Keep the translating step conservative for this deep-bodied, short-limbed
     # form. The IK solver retains the authored segment lengths; stride is
     # reduced before it can force a leg to its extension limit.
-    stride_length = min(float(shape["trunk_length_m"]) * 0.30,
-                        (float(shape["leg_upper_m"]) + float(shape["leg_lower_m"])) * 0.60)
-    stride_length = max(0.05, stride_length)
+    trunk_stride_cap = float(shape["trunk_length_m"]) * 0.30
+    leg_stride_ratio = 0.60
+    if shape.get("_reference_anatomy_profile") == "smalltrotter_reference_v1":
+        # The reference form has authored broad feet and a deep trunk. Its
+        # measured touchdown excursion needs a shorter root advance while
+        # retaining the same planted-pad geometry and contact tolerance.
+        leg_stride_ratio = 0.32
+    leg_stride_cap = (float(shape["leg_upper_m"]) + float(shape["leg_lower_m"])) * leg_stride_ratio
+    stride_length = max(0.05, min(trunk_stride_cap, leg_stride_cap))
     swing_lift = max(0.035, stance_height * 0.12)
     duty_factor = 0.62
     selector_limb = {selector: bone_name.removeprefix("toe_")
@@ -536,6 +784,7 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
             "stance_samples": stance_sample_details,
             "selector_to_bone_aliases": target_bones,
             "foot_pad_vertex_counts": {selector: len(indices) for selector, indices in pad_indices.items()},
+            "foot_pad_selector_source": "serialized generated joint graph" if source_joints is not None else "legacy geometric fallback",
             "foot_pad_weight_groups": pad_weight_groups,
             "measurement": "every-frame evaluated armature-deformed hind foot-pad vertices against z=0; horizontal pad-centroid positions include the animated actor root transform"},
         "terrain_contact_height": {"label": "root-motion stance contact and touchdown excursion",
@@ -589,6 +838,27 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
     detail = bpy.data.objects.get("integument_proxy")
     if body is None:
         raise RuntimeError("body_proxy not found: open a creature source .blend first")
+    source_record = _source_record(body)
+    source_joints = source_record["joints"] if source_record is not None else None
+    if source_record is not None:
+        # The resolved profile is authoritative for this source asset. Command
+        # parameters can be older/base values, especially for reference-only
+        # shape profiles and hand-curved joint paths.
+        p.update(source_record["shape"])
+        p["_reference_anatomy_profile"] = source_record.get("profile")
+        for limb_name, row in source_joints["limbs"].items():
+            if any(index >= len(body.data.vertices) for index in row["pad_vertex_indices"]):
+                raise RuntimeError(f"serialized source pad indices exceed body_proxy vertices: {limb_name}")
+        stats["rig_source"] = {
+            "kind": "serialized_generated_shape_and_joint_graph",
+            "profile": source_record.get("profile", "unknown"),
+            "schema": RIG_SOURCE_SCHEMA,
+        }
+    else:
+        stats["rig_source"] = {
+            "kind": "legacy_command_parameters",
+            "note": "source blend predates serialized resolved shape and joint graph; using the original parameter-based rig fallback",
+        }
 
     with report.time("build_armature"):
         arm_data = bpy.data.armatures.new("creature_rig")
@@ -597,11 +867,25 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         bpy.context.view_layer.objects.active = arm
         arm.select_set(True)
         bpy.ops.object.mode_set(mode="EDIT")
-        build_skeleton(arm, p, stats)
+        build_skeleton(arm, p, stats, source_joints)
         bpy.ops.object.mode_set(mode="OBJECT")
 
     with report.time("skin"):
-        skin(body, detail, arm, report, stats)
+        feature_objects = tuple(bpy.data.objects.get(name) for name in (
+            "smalltrotter_eye_and_nostril_blockout",
+            "smalltrotter_bristle_ridge_blockout"))
+        skin(body, detail, arm, report, stats, extras=feature_objects)
+        if source_joints is not None:
+            for obj, prefixes in zip(feature_objects, (("head_",), ("spine_", "neck_", "tail_"))):
+                if obj is not None and obj.type == "MESH" and obj.data.polygons:
+                    _bind_feature_to_nearest_bone(obj, arm, prefixes)
+        stats["skinned_feature_geometry"] = _feature_skin_metrics(feature_objects, arm)
+        stats["skinned_feature_geometry_passed"] = all(
+            row["armature_modifier_bound"] and row["vertex_group_count"] > 0 and
+            row["material_slots_preserved"] > 0 and row["unassigned_vertex_count"] == 0
+            for row in stats["skinned_feature_geometry"].values()) if source_joints is not None else True
+    if source_joints is not None:
+        stats["source_joint_alignment"] = _joint_alignment_metrics(arm, source_joints)
 
     with report.time("neutral_pose"):
         stats["pose"] = neutral_pose(arm, report)
@@ -614,7 +898,8 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         with report.time("author_walk_cycle"):
             animated_glb, gait_metadata = author_walk_cycle(
                 arm, params["gait_contacts"], p, params.get("gait_seed", p["seed"]),
-                params["outputs"]["walk_cycle"], params["outputs"]["motion_metadata"], report)
+                params["outputs"]["walk_cycle"], params["outputs"]["motion_metadata"], report,
+                source_joints=source_joints)
             artifacts.append({"path": animated_glb, "role": "runtime", "kind": "animated_glb"})
             artifacts.append({"path": _os.path.abspath(params["outputs"]["motion_metadata"]),
                               "role": "report", "kind": "motion_metadata"})

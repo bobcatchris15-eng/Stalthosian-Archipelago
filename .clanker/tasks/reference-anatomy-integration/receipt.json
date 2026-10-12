@@ -1,0 +1,10 @@
+{
+  "suite": "1976 passed, 2 skipped in 600.60s",
+  "runtime_playback_acceptance": false,
+  "source_hashes_verified": true,
+  "status": "validated",
+  "result": "var/reports/packet-seven-reference-aligned-full-result.json",
+  "visual_acceptance": false,
+  "source_hashes": "var/reports/packet-seven-reference-aligned-source-hashes.json",
+  "task": "reference-anatomy-integration"
+}

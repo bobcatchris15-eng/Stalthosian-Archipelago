@@ -745,9 +745,12 @@ def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspac
     assert gait["glb_animation"]["passed"] is True
     assert gait["glb_animation"]["animations"] == 1
     assert gait["glb_animation"]["channels"] > 0
-    assert gait["contacts"]["foot_pad_vertex_counts"] == {
-        "bone:pes_foot_l": 8, "bone:pes_foot_r": 8,
-    }
+    pad_counts = gait["contacts"]["foot_pad_vertex_counts"]
+    assert set(pad_counts) == {"bone:pes_foot_l", "bone:pes_foot_r"}
+    assert all(isinstance(count, int) and count > 0 for count in pad_counts.values())
+    assert gait["contacts"]["foot_pad_selector_source"] == "serialized generated joint graph"
+    assert all(gait["contacts"]["stance_samples"][selector]
+               for selector in pad_counts)
     terrain = gait["terrain_contact_height"]
     assert terrain["actor_stride_translation_included"] is True
     assert terrain["stride_length_m"] > 0.0
