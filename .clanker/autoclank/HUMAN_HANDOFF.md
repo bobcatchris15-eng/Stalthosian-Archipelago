@@ -484,3 +484,54 @@ parent stillreviews beforecopy/nativebuild. Remainingreviewissues: initiallegacy
 framingnotactuallyapplied, preFrameState snapshot too late afterpan/toggle.
 AllJules tasks collected, no remote pending. No oldsessionretrieval needed.
 Currentwake starts15:44Central deadline16:19;0newdispatches. Preserveunrelateddirty.
+
+## Camera, pace and fern checkpoint — 2026-10-12 16:09 America/Chicago
+
+Published `96eea02` to main; origin/main verified synchronized. Camera host now
+uses HeroViewController for persistent orbit/zoom and F1 detachment. Parent
+corrected legacy preset initialization, before-frame rollback and focus gating.
+Release build and 15 native tests passed. Scripted Wicked camera run
+20261012-155808-1a96d620 completes stage 3 and records 0.552458 m body movement
+while detached, zero tether conflicts. This is scripted renderer evidence; actual
+physical input acceptance and camera/audio/raycast/TravelTo persistence remain open.
+
+LocomotionPace worker corrected commit137001a6 is integrated: proposed 1 cycle/s,
+0.16128 m/s for current measured stride, animation phase remains displacement-driven.
+Forward, reverse and idle actual host probes passed mechanics checks; foot contact,
+reference appearance and useful traversal pace remain unaccepted. Longer needs
+routes need fixture starting positions/timing adjusted to the slower proposed pace;
+prior resource continuity receipts remain valid evidence of the prior implementation.
+
+Basketfern worker d8ddd8db is frozen and copied for parent review. Parent further
+scoped path initialization to crown profiles so generic ferns retain their original
+geometry. Earlier superseded full suites were intentionally stopped and logs kept.
+Final suite running in var/reports/packet-twelve-fern-validated-full.log; do not publish
+plant source until it completes and code hashes match. Fresh parent workspace
+var/basketfern-final-verified-asset generate/bake/render/export all succeeded, actual
+PBR export2materials6bindings. Native20261012-160706-ada921ce imports16objects8instances.
+Plant form is improved provisional fern, with dark undersides/plain support and
+incomplete silhouette/habitat acceptance. Generation manifest hash is superseded by
+bake enrichment; source artifacts and latest bake/render artifacts match hashes.
+
+This wake has used all six dispatch slots (two native starts, two corrections,
+one Jules start, one AGY start); no further dispatch. Deadline16:19 Central.
+- Jules18391627216232906812: four-foot contact diagnostics, owns rig.py/relevant
+  focused tests/new doc. Pending; inspect isolated patch and validate before integration.
+- AGYagy-smalltrotter-head-readability: Flash medium, isolated
+  var/worktrees/smalltrotter-head-readability, base96eea02, owns creature.py/relevant
+  existing test/new doc. Deadline16:16; frozen render review then full root tests
+  and fresh native evidence required, likely next wake. Do not promote from receipt alone.
+- Native workers finished. Do not retrieve old already-integrated Jules sessions.
+
+Next: finish final fern suite, inspect source hash stability, checkpoint explicit paths
+with secret scan and synchronize main. Then collect head candidate and Jules diagnostics
+before further dispatch; target actual four-foot terrain contact, coherent head/limbs,
+material details and dense habitat composition. No full draft or30FPS acceptance.
+
+## Final fern validation — 2026-10-12 16:16 America/Chicago
+
+Final suite completed: 1987 passed, 2 skipped in590.94s. Changed Python source
+and test hashes match their pre-suite snapshot. Parent fresh generate/bake/render,
+PBR export and Wicked import succeeded. Provisional fern source is reviewed for
+publication; visual acceptance remains open. Head AGY and four-foot Jules tasks
+are still isolated/pending and must be collected before new dispatch next wake.

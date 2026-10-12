@@ -75,7 +75,7 @@ FAMILY_ALIASES = {
 #: told a bracket fungus really is a shrub.
 GENERATOR_FAMILY: dict[str, tuple[str, bool]] = {
     "branching_tree": ("tree", True),
-    "tree_frond_crown": ("tree", True),
+    "tree_frond_crown": ("fern", True),
     "layered_shrub": ("shrub", True),
     "arching_shrub": ("shrub", True),
     "woody_rosette": ("rosette", True),
@@ -263,7 +263,7 @@ def plant_shape_params(definition: dict, family: str, *, stage: str | None = Non
             "leaf_shape": str(pick(definition, "leaf_shape", "elliptic", "leaf_outline")),
         }
     if family == "fern":
-        return {
+        params = {
             **common,
             "frond_count": int(clamp(num("frond_count", 7.0, "fronds", "crowns"), 1, 40)),
             "pinnae_per_side": int(clamp(num("pinnae_per_side", 11.0, "pinnae", "pinna_count"), 4, 40)),
@@ -273,6 +273,30 @@ def plant_shape_params(definition: dict, family: str, *, stage: str | None = Non
             "crozier": clamp(num("crozier", 0.35, "fiddlehead"), 0.0, 1.0),
             "narrowness": clamp(num("narrowness", 0.32, "pinna_width_ratio"), 0.05, 1.0),
         }
+        # This generator is an architectural fern profile, not the generic
+        # ground-level compound_frond form. Keep these additions scoped to its
+        # explicit generator so other fern definitions retain their behavior.
+        if str(pick(definition, "generator", "")) == "tree_frond_crown":
+            anatomy = definition.get("anatomy", {})
+            foliage = anatomy.get("foliage", {}) if isinstance(anatomy, dict) else {}
+            pinnation = foliage.get("pinnation", {}) if isinstance(foliage, dict) else {}
+            stem = anatomy.get("stem", {}) if isinstance(anatomy, dict) else {}
+            length = unit_m(foliage.get("length")) if isinstance(foliage, dict) else None
+            diameter = unit_m(stem.get("diameter_at_base")) if isinstance(stem, dict) else None
+            params.update({
+                "crown_trunk_height_m": height * 0.45,
+                "frond_length_m": length or height * 0.82,
+                "pinna_length_ratio": clamp(as_float(pinnation.get("pinna_length_ratio"), 0.42), 0.2, 0.8),
+                "trunk_diameter_m": max(trunk_d, diameter or trunk_d),
+                "frond_count": int(clamp(num("frond_count", 9.0, "crowns"), 5, 16)),
+                "pinnae_per_side": int(clamp(num("pinnae_per_side", 34.0, "pinna_count"), 8, 40)),
+                "pinna_span": 0.98,
+                "rachis_curve": 0.78,
+                "pinna_taper": 0.78,
+                "narrowness": 0.20,
+                "crozier": 0.0,
+            })
+        return params
     if family == "horsetail":
         return {
             **common,

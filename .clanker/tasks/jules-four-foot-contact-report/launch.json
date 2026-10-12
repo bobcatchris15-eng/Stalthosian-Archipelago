@@ -1,0 +1,16 @@
+{
+  "session_id": "18391627216232906812",
+  "integration_requirement": "Retrieve in isolation, inspect source scope, offline tests, fresh local Blender report and native evidence; no automatic promotion.",
+  "backend": "jules",
+  "base": "96eea02",
+  "task_id": "jules-four-foot-contact-report",
+  "status": "remote in progress, unvalidated",
+  "schema_version": 1,
+  "session_url": "https://jules.google.com/session/18391627216232906812",
+  "dispatch_time": "2026-10-12T16:00:45-05:00",
+  "owned_paths": [
+    "stalthos-toolkit/src/stalthos_toolkit/blender/scripts/rig.py",
+    "relevant focused rig report tests",
+    "stalthos-toolkit/docs/four-foot-contact-report.md"
+  ]
+}

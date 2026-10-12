@@ -1,0 +1,27 @@
+{
+  "export_result": "var/basketfern-final-verified-asset/exports/export.result.json",
+  "artifact_validation": "Latest bake/render artifacts and unchanged generation source/log/params match. Shared generation manifest was enriched by bake; its old digest is superseded.",
+  "parent_corrections": [
+    "Preserve generic fern length variation and original path start/iteration; changed crown geometry remains scoped to explicit tree_frond_crown.",
+    "Correct report counts: 612 individual pinnae, 306 pairs."
+  ],
+  "limitations": [
+    "Plain trunk support, coarse pinnae, dark backfaces and habitat composition remain unfinished.",
+    "Imported16objects8instances verifies material/import chain, not close-view native visual acceptance.",
+    "Superseded candidate suites were intentionally stopped; final frozen code suite is authoritative."
+  ],
+  "schema_version": 1,
+  "worker_commits": [
+    "09f5a9664b7e32cceb534f7414f039bc8ec65ee3",
+    "d8ddd8dbfb6d8811f1167e51e78fc5e054515504"
+  ],
+  "render_status": "var/reports/packet-twelve-fern-final-render.json",
+  "visual_acceptance": false,
+  "source_hashes": "var/reports/packet-twelve-fern-validated-source-hashes.json",
+  "bake_status": "var/reports/packet-twelve-fern-final-bake.json",
+  "offline_tests": "1987 passed, 2 skipped in590.94s; var/reports/packet-twelve-fern-validated-full.log",
+  "native_probe": "var/reports/runtime/20261012-160706-ada921ce/runtime-receipt.json",
+  "status": "reviewed provisional implementation, validated offline and actual Blender/Wicked import",
+  "workspace": "var/basketfern-final-verified-asset",
+  "generate_status": "var/reports/packet-twelve-fern-final-generate.json"
+}

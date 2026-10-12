@@ -36,3 +36,8 @@ Release build and 15 native tests passed. Actual Wicked runs:
 
 The images still show unresolved foot contact, angular limbs and provisional
 surfacing. These results establish cadence mechanics, not a visually accepted gait.
+
+Longer diagnostic needs routes now take longer at this provisional body speed.
+Adjust their fixture starting positions and duration before interpreting a missed
+contact as a ledger failure. The previous 2 m/s continuity runs remain historical
+validation of resource persistence, rather than current slow-pace traversal evidence.

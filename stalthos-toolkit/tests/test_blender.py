@@ -355,6 +355,28 @@ def test_resolve_family_handles_aliases():
     assert P.resolve_family({}) == "shrub"          # honest default, not a crash
 
 
+def test_tree_frond_crown_uses_architectural_fern_profile():
+    definition = {
+        "generator": "tree_frond_crown",
+        "anatomy": {
+            "stem": {"diameter_at_base": {"value": 0.55, "unit": "m"}},
+            "foliage": {
+                "length": {"value": 3.2, "unit": "m"},
+                "pinnation": {"pinna_length_ratio": 0.42},
+            },
+        },
+    }
+    assert P.resolve_family(definition) == "fern"
+    shape = P.plant_shape_params(definition, "fern")
+    assert shape["crown_trunk_height_m"] == pytest.approx(shape["height_m"] * 0.45)
+    assert shape["trunk_diameter_m"] >= 0.55
+    assert shape["frond_length_m"] == pytest.approx(3.2)
+    assert shape["pinnae_per_side"] == 34
+    assert shape["pinna_span"] == pytest.approx(0.98)
+    assert shape["pinna_length_ratio"] == pytest.approx(0.42)
+    assert "crown_trunk_height_m" not in P.plant_shape_params({}, "fern")
+
+
 def test_plant_shape_params_defaults_are_bounded():
     shape = P.plant_shape_params({}, "tree")
     assert shape["height_m"] > 0

@@ -193,21 +193,49 @@ def build_fern(p: dict[str, Any], rachis: S.MeshBuilder, blades: S.MeshBuilder,
     rachis_curve = p["rachis_curve"]
     narrow = p["narrowness"]
 
+    crown_height = float(p.get("crown_trunk_height_m", 0.0))
+    if crown_height > 0.0:
+        # Profile-only rhizome/trunk: a stout, short support with all frond
+        # rachises beginning around one elevated crown, never woody branches.
+        trunk_r = p["trunk_diameter_m"] * 0.5
+        trunk_path, trunk_radii = [], []
+        for i in range(9):
+            t = i / 8
+            trunk_path.append(mathutils.Vector((0.0, 0.0, crown_height * t)))
+            trunk_radii.append(trunk_r * (1.0 - 0.22 * t))
+        rachis.add_tube(trunk_path, trunk_radii, sides=sides)
+        stats["crown_trunk_height_m"] = round(crown_height, 4)
+
     total_pinnae = 0
     for f in range(fronds):
         r = S.rng(seed, "fern", "frond", f)
         az = 2 * math.pi * f / fronds + r.uniform(-0.12, 0.12)
         lean = math.radians(r.uniform(28.0, 58.0))
-        length = height * r.uniform(0.82, 1.08)
+        nominal_length = p.get("frond_length_m", height)
+        length = nominal_length * r.uniform(0.82, 1.08)
+        inner_frond = crown_height > 0.0 and f % 3 == 0
+        if crown_height > 0.0:
+            length *= 0.86 if inner_frond else 1.02
         crozier = p["crozier"] * (1.0 if f % 3 else 0.55)   # juvenile fiddleheads
         steps = 16
         path, radii = [], []
         dirv = mathutils.Vector((math.cos(az) * math.sin(lean), math.sin(az) * math.sin(lean), math.cos(lean)))
-        cur = mathutils.Vector((0.0, 0.0, 0.0))
-        for i in range(steps + 1):
+        cur = mathutils.Vector((math.cos(az) * crown_height * 0.04,
+                                math.sin(az) * crown_height * 0.04,
+                                crown_height - p["trunk_diameter_m"] * 0.22 if crown_height > 0.0 else 0.0))
+        if crown_height > 0.0:
+            path.append(cur.copy())  # rachis begins embedded just below the support cap
+            radii.append(length * 0.012)
+        for i in range(1 if crown_height > 0.0 else 0, steps + 1):
             t = i / steps
             # arch: rise then curve outward/down
-            pitch = lean * (1.0 - 1.35 * rachis_curve * t * t)
+            if crown_height > 0.0:
+                # Alternate upright inner fronds with broad outer arcs to form
+                # an open vase crown rather than a single flat umbrella.
+                pitch = (math.radians(18.0 + 48.0 * t) if inner_frond else
+                         math.radians(28.0 + 95.0 * t))
+            else:
+                pitch = lean * (1.0 - 1.35 * rachis_curve * t * t)
             horiz = mathutils.Vector((math.cos(az), math.sin(az), 0.0))
             dirv = _unit(horiz * math.sin(pitch) + mathutils.Vector((0.0, 0.0, math.cos(pitch))))
             step = length / steps
@@ -228,7 +256,9 @@ def build_fern(p: dict[str, Any], rachis: S.MeshBuilder, blades: S.MeshBuilder,
             anchor = path[idx]
             tdir = _unit(path[min(idx + 1, steps)] - path[max(idx - 1, 0)])
             shape = math.sin(math.pi * min(t / span, 1.0)) ** 0.65
-            plength = p["leaf_length_m"] * shape * p["pinna_taper"] * 2.6
+            plength = (length * p["pinna_length_ratio"] * shape
+                       if crown_height > 0.0 else
+                       p["leaf_length_m"] * shape * p["pinna_taper"] * 2.6)
             for sign in (-1.0, 1.0):
                 lateral = _unit(tdir.cross(mathutils.Vector((0.0, 0.0, 1.0))) * sign) if abs(tdir.z) < 0.98 \
                     else _unit(tdir.cross(mathutils.Vector((1.0, 0.0, 0.0))) * sign)
