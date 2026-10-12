@@ -535,3 +535,15 @@ and test hashes match their pre-suite snapshot. Parent fresh generate/bake/rende
 PBR export and Wicked import succeeded. Provisional fern source is reviewed for
 publication; visual acceptance remains open. Head AGY and four-foot Jules tasks
 are still isolated/pending and must be collected before new dispatch next wake.
+
+## Published checkpoint and launcher correction — 2026-10-12 16:18 Central
+
+Published17b4de7 after final1987/2 toolkit suite and source hash verification;
+main/origin synchronized. Initial AGY head launcher exited before starting work:
+unquoted script path with spaces. Failure retained in task launch-failure.json.
+Corrected quoted launcher28396 has verified live agy.exe child13044 and actual
+output/log files at16:17:22. Same bounded task, not a new work item. Allow its
+18-minute backend bound from corrected launch; collect frozen result next wake.
+Jules18391627216232906812 remains in progress. No further dispatch this wake.
+All project source changes validated/published; unrelated untracked preserved.
+Next wake resumes these isolated tasks before dispatch and checks .clanker/HALT.
