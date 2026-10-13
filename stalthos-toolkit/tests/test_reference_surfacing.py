@@ -22,8 +22,10 @@ def test_hide_map_carries_continuous_ochre_and_dark_mottle_variation():
     samples = [cm._surface_sample("hide", i / 20, j / 20, 42)[0]
                for i in range(20) for j in range(20)]
     assert len(set(samples)) > 100
-    assert min(c[0] for c in samples) < 0.20
-    assert max(c[0] for c in samples) > 0.30
+    # Natural restrained organic mottling: darkest mottle channels reach warm umber (< 0.30)
+    # while bright ochre reaches > 0.35, avoiding extreme black patches.
+    assert min(c[0] for c in samples) < 0.30
+    assert max(c[0] for c in samples) > 0.35
     assert samples == [cm._surface_sample("hide", i / 20, j / 20, 42)[0]
                        for i in range(20) for j in range(20)]
 

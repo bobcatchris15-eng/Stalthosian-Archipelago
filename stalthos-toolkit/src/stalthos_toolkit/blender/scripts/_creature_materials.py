@@ -135,32 +135,109 @@ def _spatial_noise_2d(x: float, y: float, frequency: float, seed: int) -> float:
     return (a * (1.0 - fx) + b * fx) * (1.0 - fy) + (c * (1.0 - fx) + d * fx) * fy
 
 
+def _precompute_voronoi_grid(cells: int, seed: int) -> list[list[tuple[float, float]]]:
+    """Precompute periodic jittered grid cell origins for deterministic F1 Voronoi."""
+    grid = []
+    for cy in range(cells):
+        row = []
+        for cx in range(cells):
+            px = _grid_value(cx, cy, cells, seed)
+            py = _grid_value(cx, cy, cells, seed ^ 0x6C8E9CF5)
+            row.append((px, py))
+        grid.append(row)
+    return grid
+
+
+def _periodic_voronoi_f1(u: float, v: float, cells: int, grid: list[list[tuple[float, float]]]) -> float:
+    """Evaluate periodic Voronoi F1 feature distance."""
+    cx = u * cells
+    cy = v * cells
+    ix = math.floor(cx)
+    iy = math.floor(cy)
+    fx = cx - ix
+    fy = cy - iy
+    min_dist_sq = 2.0
+    for di in (-1, 0, 1):
+        ni = (ix + di) % cells
+        for dj in (-1, 0, 1):
+            nj = (iy + dj) % cells
+            px, py = grid[nj][ni]
+            dx = (di + px) - fx
+            dy = (dj + py) - fy
+            d_sq = dx * dx + dy * dy
+            if d_sq < min_dist_sq:
+                min_dist_sq = d_sq
+    return math.sqrt(min_dist_sq)
+
+
+_VORONOI_CACHE: dict[int, list[list[tuple[float, float]]]] = {}
+
+
+def _get_voronoi_grid(cells: int, seed: int) -> list[list[tuple[float, float]]]:
+    key = (cells, seed)
+    if key not in _VORONOI_CACHE:
+        _VORONOI_CACHE[key] = _precompute_voronoi_grid(cells, seed)
+    return _VORONOI_CACHE[key]
+
+
 def _surface_sample(surface: str, u: float, v: float, seed: int) -> tuple[tuple[float, float, float], float]:
     """Sample a seeded UV color/roughness field in linear RGB for tests and maps."""
     coarse = _periodic_noise(u, v, 7, seed ^ 0xA341316C)
     medium = _periodic_noise(u, v, 27, seed ^ 0xC8013EA4)
     fine = _periodic_noise(u, v, 109, seed ^ 0xAD90777D)
     rough_field = _periodic_noise(u, v, 53, seed ^ 0x7E95761E)
+
+    # Scale rosette structure at coherent physical scale (precomputed grid cached per seed)
+    scale_grid = _get_voronoi_grid(36, seed ^ 0x4B3A19E2)
+    scale_dist = _periodic_voronoi_f1(u, v, 36, scale_grid)
+
     if surface == "hide":
-        # Fine, continuous ochre skin with broken dark mottles in the packed
-        # UV map. This avoids polygon-sized color patches at Smart-UV seams.
-        field = coarse * 0.18 + medium * 0.82
-        mask = max(0.0, min(1.0, (field - 0.37) / 0.18))
-        mask = mask * mask * (3.0 - 2.0 * mask)
-        tint = (fine - 0.5) * 0.035
-        ochre = (0.39 + tint, 0.255 + tint * 0.72, 0.125 + tint * 0.42)
-        dark = (0.115 + tint * 0.18, 0.065 + tint * 0.12, 0.030 + tint * 0.08)
-        color = tuple(dark[i] * (1.0 - mask) + ochre[i] * mask for i in range(3))
-        roughness = 0.62 + rough_field * 0.15
+        # Warm ochre/tan hide with restrained organic mottling.
+        # Mottling is a soft natural density variation, avoiding hard polygon-sized patches.
+        mottle_raw = coarse * 0.40 + medium * 0.60
+        mottle_fac = max(0.0, min(1.0, (mottle_raw - 0.38) / 0.24))
+        mottle_fac = mottle_fac * mottle_fac * (3.0 - 2.0 * mottle_fac)
+
+        # Scale rosette: rounded convex domes with interstitial grooved margins (cells=36)
+        scale_dome = max(0.0, min(1.0, 1.0 - scale_dist * 1.5))
+        scale_dome = scale_dome * scale_dome
+
+        # Fine wrinkle / skin fold striation
+        wrinkle = (fine - 0.5) * 0.08
+
+        # Ochre midtone (red > green > blue) and organic umber/brown mottles
+        ochre = (0.395 + wrinkle, 0.265 + wrinkle * 0.75, 0.135 + wrinkle * 0.45)
+        mottle = (0.170 + wrinkle * 0.3, 0.105 + wrinkle * 0.2, 0.052 + wrinkle * 0.1)
+
+        base_color = tuple(
+            mottle[i] * (0.35 * mottle_fac) + ochre[i] * (1.0 - 0.35 * mottle_fac)
+            for i in range(3)
+        )
+        # Scale dome relief modulation (+- 9% albedo contrast between scale centers and grooves)
+        scale_mod = (scale_dome - 0.32) * 0.09
+        color = tuple(
+            max(0.04, min(0.9, base_color[i] + scale_mod * (1.2 if i == 0 else (0.9 if i == 1 else 0.6))))
+            for i in range(3)
+        )
+
+        # Roughness: scale domes have tighter specular highlights (roughness ~0.52),
+        # while interstitial grooves and fine pores are rougher (~0.76)
+        roughness = 0.72 - scale_dome * 0.18 + (rough_field - 0.5) * 0.08
     elif surface == "mottle":
-        tint = (medium - 0.5) * 0.055
-        color = (0.135 + tint, 0.070 + tint * 0.63, 0.032 + tint * 0.38)
-        roughness = 0.61 + rough_field * 0.16
+        tint = (medium - 0.5) * 0.04
+        color = (0.165 + tint, 0.100 + tint * 0.65, 0.050 + tint * 0.40)
+        roughness = 0.64 + rough_field * 0.12
     elif surface == "ventral":
         field = coarse * 0.36 + medium * 0.64
+        scale_dome = max(0.0, min(1.0, 1.0 - scale_dist * 1.3))
+        scale_dome = scale_dome * scale_dome
         tint = (field - 0.5) * 0.045 + (fine - 0.5) * 0.018
-        color = (0.53 + tint, 0.405 + tint * 0.82, 0.275 + tint * 0.58)
-        roughness = 0.58 + rough_field * 0.14
+        color = (
+            0.54 + tint + scale_dome * 0.02,
+            0.42 + tint * 0.82 + scale_dome * 0.015,
+            0.285 + tint * 0.58 + scale_dome * 0.01,
+        )
+        roughness = 0.62 - scale_dome * 0.08 + rough_field * 0.08
     elif surface == "keratin":
         streak = (0.5 + 0.5 * math.sin(v * 2.0 * math.pi * 46.0 + coarse * 3.4))
         shade = 0.035 + 0.032 * (0.60 * streak + 0.40 * medium)

@@ -1,8 +1,13 @@
 {
-  "worktree": "var/worktrees/smalltrotter-skin-scale",
+  "artifact_check": "var/reports/packet-fifteen-skin-artifacts.json",
+  "native_probe": "var/reports/runtime/20261013-012924-33e7a641/runtime-receipt.json",
+  "asset_workspace": "var/smalltrotter-skin-verified-asset",
+  "notes": "Warm tan lower-contrast skin; geometry/stance/blockout limits remain.",
+  "source_hashes": "var/reports/packet-fifteen-skin-source-hashes.json",
+  "reference_parity": false,
+  "full_tests": "1988 passed,2 skipped in563.54s",
+  "status": "reviewed provisional skin integrated after parent validation",
   "worker_commit": "0ba585e7bc400ad1876f2ba5e318cdbeae82a873",
-  "integration_gate": "Inspect scoped4files/actualrenders, independently rebuild/rig, frozen fullroot toolkit suite and nativecapture. Do not promote from workerreceipt.",
-  "status": "frozen candidate collected, not integrated",
-  "worker_claims": "18focusedtests andactualBlender build/turntable; parent fullroot/native verification pending",
-  "schema_version": 1
+  "schema_version": 1,
+  "visual_acceptance": false
 }

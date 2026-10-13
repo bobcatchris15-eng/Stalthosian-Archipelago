@@ -629,3 +629,22 @@ Thiswake23:17–23:52:4dispatches, allAGY/Jules; no localagents. Pendingnextwake
 Resumeexisting beforedispatch. SkinAGYcompleted; otherAGYtasksintegrated aftertests.
 Preserveisolatedcamera.gitignore/test.orig debris; notintegrated. Planningreadonly,
 unrelateduntrackedpreserved, nofull draft/referenceparity/30FPSacceptance.
+
+## Skin validation — 2026-10-13 01:39 Central
+
+HALT absent. Skin0ba585e7 reviewed/copied; independent parentbuild/rig/render in
+var/smalltrotter-skin-verified-asset succeeded; all18artifacts hashed correctly.
+Fullroot1988passed2skipped563.54s andfrozen4source/doc hashes match.
+ActualWicked012924-33e7a641 loads newskin; tanmottling improved butblockout
+anatomy/stance/throatseams/referenceparity/visual/FPSacceptance remainopen.
+Jules14602822725229243780 completed/pulled isolatedneutral-idle-review; rawcandidate
+673a3a4 retained thenrebasedfe167c8. Originalidlepatch has oldactionAPI/unmeasured
+zero-root claim andNLA mixing risk; notintegrated.
+Currentwake01:25deadline02:00;2newAGYdispatches, no localagents:
+- agy-neutral-idle-host: Flashmedium, ownsrig/focusedtests/doc+main activeclip
+  selection; actualBlender5.2 names/duration/pads/root/export andnativebuild required.
+- agy-meadow-form-refinement: Flashmedium, ownsmeadow_scene.hpp/newdoc only,
+  preservewetmask/positions and4096tuft/80ktriangle/8batch caps, actualcapture.
+Collectfrozenbeforecopy. NonselectedpausedWicked tracks can evaluate changedtimers;
+review last_update_time/amount handling onstartup andidle/walk transitions. Full
+root suite must run again afteranyrigchanges. Preserveplanning/unrelatedwork.

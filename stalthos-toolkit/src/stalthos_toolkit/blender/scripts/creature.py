@@ -548,7 +548,8 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
             for poly in body_obj.data.polygons:
                 c = poly.center
                 on_upper_neck = (c.x > neck_root.x and c.z > neck_root.z + 0.12 and
-                                 abs(c.y) < hd * 0.40 and poly.normal.x > 0.08)
+                                 abs(c.y) < hd * 0.40 and poly.normal.x > 0.08 and
+                                 poly.normal.z < 0.20)
                 rel_head = c - neck_end
                 dist_tangent = rel_head.dot(tangent_v)
                 dist_vert = rel_head.dot(vertical_v)
