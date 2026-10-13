@@ -4,6 +4,7 @@
 #include "domain/reference_landscape.hpp"
 #include "domain/terrain_texture.hpp"
 
+#include <array>
 #include <cstdint>
 #include <mutex>
 #include <vector>
@@ -25,8 +26,8 @@ struct TerrainSurfaceResult {
     bool applied() const noexcept { return status == TerrainSurfaceStatus::Applied; }
 };
 
-// Applies one bounded, seed-stable repeating ground material. The near-neutral
-// albedo multiplies the habitat vertex colors already assigned to the terrain.
+// Applies one bounded, seed-stable repeating ground material with complete mip chain.
+// The near-neutral albedo multiplies the habitat vertex colors already assigned to the terrain.
 inline TerrainSurfaceResult applyTerrainSurface(
     wi::scene::Scene& scene,
     wi::ecs::Entity groundEntity,
@@ -37,7 +38,8 @@ inline TerrainSurfaceResult applyTerrainSurface(
     auto* object = scene.objects.GetComponent(groundEntity);
     auto* mesh = object ? scene.meshes.GetComponent(object->meshID) : nullptr;
     if (mesh == nullptr || mesh->vertex_positions.empty()) return {};
-    if (wi::graphics::GetDevice() == nullptr) {
+    auto* device = wi::graphics::GetDevice();
+    if (device == nullptr) {
         return {TerrainSurfaceStatus::GraphicsDeviceUnavailable, 0, 0, 0};
     }
 
@@ -57,9 +59,26 @@ inline TerrainSurfaceResult applyTerrainSurface(
     std::lock_guard<std::mutex> lock(cacheMutex);
     if (!cached || cachedSeed != seed || !cachedTexture.IsValid()) {
         const domain::TerrainTexture pixels = domain::makeTerrainTexture(seed);
+
+        wi::graphics::TextureDesc desc;
+        desc.width = domain::TerrainTexture::kBaseSize;
+        desc.height = domain::TerrainTexture::kBaseSize;
+        desc.mip_levels = domain::TerrainTexture::kMipLevels;
+        desc.array_size = 1;
+        desc.format = wi::graphics::Format::R8G8B8A8_UNORM_SRGB;
+        desc.sample_count = 1;
+        desc.bind_flags = wi::graphics::BindFlag::SHADER_RESOURCE;
+        desc.swizzle = {};
+
+        std::array<wi::graphics::SubresourceData, domain::TerrainTexture::kMipLevels> initData{};
+        for (std::uint32_t mip = 0; mip < domain::TerrainTexture::kMipLevels; ++mip) {
+            initData[mip].data_ptr = pixels.mipData(mip);
+            initData[mip].row_pitch = pixels.mipRowPitch(mip);
+            initData[mip].slice_pitch = static_cast<std::uint32_t>(pixels.mipBytes(mip));
+        }
+
         wi::graphics::Texture candidate;
-        if (!wi::texturehelper::CreateTexture(candidate, pixels.rgba.data(), domain::TerrainTexture::kSize,
-            domain::TerrainTexture::kSize, wi::graphics::Format::R8G8B8A8_UNORM_SRGB)) {
+        if (!device->CreateTexture(&desc, initData.data(), &candidate)) {
             return {TerrainSurfaceStatus::TextureCreationFailed, uvVertexCount, 0, 0};
         }
         cachedTexture = std::move(candidate);
@@ -78,8 +97,8 @@ inline TerrainSurfaceResult applyTerrainSurface(
         material->textures[wi::scene::MaterialComponent::BASECOLORMAP].uvset = 0;
     }
     mesh->CreateRenderData();
-    return {TerrainSurfaceStatus::Applied, uvVertexCount, domain::TerrainTexture::kSize,
-        domain::TerrainTexture::kMaxBytes};
+    return {TerrainSurfaceStatus::Applied, uvVertexCount, domain::TerrainTexture::kBaseSize,
+        domain::TerrainTexture::kTotalMipBytes};
 }
 
 } // namespace stalthos::engine

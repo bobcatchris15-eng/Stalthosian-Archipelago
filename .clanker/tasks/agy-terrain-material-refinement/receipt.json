@@ -1,0 +1,16 @@
+{
+  "worker_commit": "9bf533caa11a08848b93c36db0b7e45e61bde23f",
+  "status": "reviewed and validated provisional terrain material",
+  "native_probe": "var/reports/runtime/20261012-232120-28557694/runtime-receipt.json",
+  "test_log": "var/reports/packet-fourteen-terrain-ctest.log",
+  "tests": "16/16 native tests passed",
+  "texture_width": 512,
+  "schema_version": 1,
+  "mip_levels": 10,
+  "total_texture_bytes": 1398100,
+  "temporal_shimmer_acceptance": false,
+  "performance_acceptance": false,
+  "build_log": "var/reports/packet-fourteen-terrain-build.log",
+  "visual_acceptance": false,
+  "parent_correction": "Removed worker static-image claims of eliminated temporal shimmer; motion evidence required."
+}

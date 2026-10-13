@@ -502,3 +502,26 @@ Pending isolated tasks to collect BEFORE new dispatch next wake:
   owns texture/surface headers, focusedtest/doc. Correct quoted runner16004 has verified
   actual agy child11216. Inspect frozen scope, native build/tests/capture before integration.
 Planning read-only, unrelated untracked preserved; no full draft or30FPS acceptance.
+
+## Terrain collection — 2026-10-12 23:24 Central
+
+HALT absent; resumed all3pendingtasks before new dispatch. TerrainAGY9bf533c
+reviewed/copied; rootReleasebuild16/16CTest passed, actualWicked232120-28557694
+creates512px/10level/1398100byte material. Staticimage temporal-shimmer claims
+corrected; temporal/fullvisual/FPSacceptance remain open. Toolkit source unchanged.
+Julesbody7157747656425898948 completed/pulled isolatedbody-terrain-support,
+original84865db retained. Julescamera10097667138093804130 suppliedpatch despite
+AwaitingUserFeedback; pulled isolatedjules-camera-state. Reject .gitignore and
+persistence.cpp.orig debris outside task ownership; preserve in isolatedcheckout.
+
+Currentwake starts23:17Central deadline23:52;2newdispatches:
+- AGYagy-body-support-host, Flashmedium, isolatedbody-terrain-support. Ownnewhelper/
+  test/doc +main/CMake. Correct arithmetic/finite validation, then proposed support
+  orientation with --disable-terrain-support A/B flag. No foot-IK acceptance.
+- AGYagy-camera-save-review, Flashmedium, isolatedjules-camera-state. Ownpersistence
+  header/tests/newdoc only, no main. Reviewcodec version/backcompat/invalid values;
+  parenthostwiring remainsrequired.18minbounds from23:19start. Actualagychildrenverified.
+No localagents dispatched; prioritizeAGY/Jules to preserveCodexquota. Nextcollect
+frozen source, mergeCMake carefully to retainterrain_texture module, nativebuild/tests,
+actualsupportA/B andcamera save/load evidence beforepublication. Keepplanningreadonly,
+unrelateduntrackedpreserved; no full draft/FPS acceptance.

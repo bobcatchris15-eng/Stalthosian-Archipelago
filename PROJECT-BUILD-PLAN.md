@@ -247,13 +247,13 @@ Current published project checkpoints and the retained task receipts provide the
 
 | Capability | Current evidence and coverage | Remaining work |
 |---|---|---|
-| Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 15/15 | Integrated target-hardware frame-time/visual acceptance |
+| Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 16/16 | Integrated target-hardware frame-time/visual acceptance |
 | Toolkit asset pipeline | Full root suite 1988 passed / 2 skipped; actual Smalltrotter build/rig and provisional Basketfern frond generation/bake/PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
 | Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; provisional one-cycle/s body pace; forward/reverse/idle probes | Terrain contact/IK (bank slope currently separates support heights), explicit authored front contact schedules, natural transitions, browse/drink/head behavior and visual gait review |
 | Ordinary needs | Physical body-based browse/drink contacts, persistent finite resources, STL5 ledger and hero needs continuity | Visible plant depletion and interaction poses |
 | World continuity | Lifecycle/death/successor and needs foundation; reviewed bounded resource ledger DTO | Eligible populations/nests, parenting/bonds, visible exceptions and eligible population continuity |
 | Camera | HeroView host integration: continuous orbit/zoom, detached pan and return; actual scripted renderer probe, no tether conflicts | Actual mouse/keyboard acceptance, full camera state persistence, audio, raycast and TravelTo |
-| Environment | One 192 m reference landscape; clipped creek water, deterministic terrain texture, irregular rocks and 3919 batched groundcover tufts | Richer terrain materials, recognizable habitat composition, dense plants and all four islands |
+| Environment | One 192 m reference landscape; clipped creek water, seeded organic terrain texture with a10-level mip chain, irregular rocks and 3919 batched groundcover tufts | Richer terrain materials, recognizable habitat composition, dense plants and all four islands |
 | Full cast/life histories | Shared lifecycle/needs/relationships contracts and one provisional hero asset | All five complete playable species, NPC activity, parenting, reproduction and childhood |
 
 The current images remain far from the supplied artistic reference. Proxy seams,
