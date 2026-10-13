@@ -648,3 +648,22 @@ Currentwake01:25deadline02:00;2newAGYdispatches, no localagents:
 Collectfrozenbeforecopy. NonselectedpausedWicked tracks can evaluate changedtimers;
 review last_update_time/amount handling onstartup andidle/walk transitions. Full
 root suite must run again afteranyrigchanges. Preserveplanning/unrelatedwork.
+
+## Final checkpoint — 2026-10-13 01:59 Central
+
+Skin2f6e681 published; reviewed idle05451f1 includingparentnonselectedlast_update_time
+startup guard. Parent actualrig onnewskin exports2clips; allwalkgatespass, neutralidle
+root0 andall4flatpadexcursions0 measured. Fullcombined1988passed2skipped543.45s;
+all4sourcehashesmatch before trailingwhitespacecleanup; rigAST unchanged afterward.
+Native17/17passed. Idle014441-8e88aa5a has2clips,1410playingframes, bone delta7e-15,
+movement0. Walk014534-1d71d377 moves0.751765m, delta0.632511, expected/actualphase
+1.322481s. Sameprocess transitionprobe andbreathing/per-foot terrainacceptancepending.
+Meadow16759b37 reviewed/copied, parentexactcaprollback; actual015256-a97a54ec
+3919tufts49844tris3batches425wetrejections. Source/density/material/habitat stillprovisional.
+Optionalfocusedpytest49980 running afterwhitespace-onlycleanup; notrequiredgate and
+notclaimedpassed. Fullsuite/AST/native/actualasset evidence supports publication.
+Next: preserve NEWworkspace perassetgeneration (idle rerig updatedsame skinworkspace
+runtimeoutputs; older rawstatus/captures retained), verify transitions anditeratebody/
+foot/face/vegetation quality. Allbackendtaskscollected. Thiswake2dispatchesAGYonly,
+no localagents, deadline02:00. Planningreadonly/unrelateduntrackedpreserved.
+No full draft/referenceparity/FPSacceptance. Resume receipts before newdispatch.

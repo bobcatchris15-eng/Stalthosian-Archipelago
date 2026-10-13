@@ -18,6 +18,24 @@ from typing import Any
 
 import bpy
 import mathutils
+from mathutils import Quaternion, Vector
+
+
+def _get_action_fcurves(act: bpy.types.Action) -> list[bpy.types.FCurve]:
+    """Return all F-Curves in an action across Blender legacy and layered slot APIs."""
+    if hasattr(act, "fcurves") and len(act.fcurves) > 0:
+        return list(act.fcurves)
+    curves: list[bpy.types.FCurve] = []
+    if hasattr(act, "layers"):
+        for layer in act.layers:
+            for strip in layer.strips:
+                if hasattr(strip, "channelbags"):
+                    for cb in strip.channelbags:
+                        curves.extend(cb.fcurves)
+                elif hasattr(strip, "channelbag"):
+                    curves.extend(strip.channelbag.fcurves)
+    return curves
+
 
 import os as _os
 import sys as _sys
@@ -903,6 +921,126 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
             "Touchdown excursion is a sampled pad-centroid measure and retains a nonzero error within the authored 0.02 m tolerance.",
             "Proxy geometry and its automatically weighted body outside the pads are not a final creature asset."],
     }
+
+    # --- Author Neutral Idle Action ---
+    # Distinct clearly named neutral standing idle action/clip with all four feet
+    # in the neutral/rest support posture, no actor-root translation, and a validated
+    # seamless idle loop.
+    idle_action = bpy.data.actions.new("Smalltrotter_NeutralIdle")
+
+    # Switch active action to idle. No NLA tracks exist yet so zero NLA blending during authoring/evaluation.
+    arm.animation_data.action = idle_action
+
+    idle_first_frame, idle_last_frame = 1, int(fps * 2.0) + 1  # 2 second idle
+
+    # Reset all bones and root to neutral pose for the idle
+    for pb in arm.pose.bones:
+        pb.rotation_mode = "QUATERNION"
+        pb.rotation_quaternion = Quaternion((1.0, 0.0, 0.0, 0.0))
+        pb.location = Vector((0.0, 0.0, 0.0))
+
+    arm.location = Vector((0.0, 0.0, 0.0))
+    bpy.context.view_layer.update()
+
+    # Keyframe first and last frame to create a seamless loop
+    for frame in (idle_first_frame, idle_last_frame):
+        arm.keyframe_insert(data_path="location", frame=frame, group="root_motion")
+        for pb in arm.pose.bones:
+            pb.keyframe_insert(data_path="rotation_quaternion", frame=frame, group=pb.name)
+            pb.keyframe_insert(data_path="location", frame=frame, group=pb.name)
+
+    # Actually evaluate all 4 pads and actor root through frames without native terrain acceptance
+    idle_root_translations = []
+    idle_pad_z = {selector: [] for selector in target_bones}
+    idle_pad_xy = {selector: [] for selector in target_bones}
+    idle_front_z = {selector: [] for selector in diagnostic_limbs}
+    idle_front_xy = {selector: [] for selector in diagnostic_limbs}
+
+    for frame in range(idle_first_frame, idle_last_frame + 1):
+        scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        idle_root_translations.append(float(arm.location.length))
+        body_eval = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        evaluated_mesh = body_eval.to_mesh()
+        for selector in target_bones:
+            indices = pad_indices.get(selector, [])
+            if indices and max(indices) < len(evaluated_mesh.vertices):
+                wz = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co).z for i in indices]
+                idle_pad_z[selector].append(float(min(wz)))
+                wxy = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co)[:2] for i in indices]
+                idle_pad_xy[selector].append((sum(p[0] for p in wxy) / len(wxy), sum(p[1] for p in wxy) / len(wxy)))
+        for selector in diagnostic_limbs:
+            indices = diagnostic_limbs.get(selector, [])
+            if indices and max(indices) < len(evaluated_mesh.vertices):
+                wz = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co).z for i in indices]
+                idle_front_z[selector].append(float(min(wz)))
+                wxy = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co)[:2] for i in indices]
+                idle_front_xy[selector].append((sum(p[0] for p in wxy) / len(wxy), sum(p[1] for p in wxy) / len(wxy)))
+        body_eval.to_mesh_clear()
+
+    scene.frame_set(idle_first_frame)
+    idle_max_root_translation_m = max(idle_root_translations) if idle_root_translations else 0.0
+    idle_root_translation_zero = bool(idle_max_root_translation_m <= 1e-6)
+
+    idle_hind_excursions = {
+        s: (max(math.hypot(p[0] - idle_pad_xy[s][0][0], p[1] - idle_pad_xy[s][0][1]) for p in idle_pad_xy[s]) if idle_pad_xy[s] else 0.0)
+        for s in target_bones
+    }
+    idle_front_excursions = {
+        s: (max(math.hypot(p[0] - idle_front_xy[s][0][0], p[1] - idle_front_xy[s][0][1]) for p in idle_front_xy[s]) if idle_front_xy[s] else 0.0)
+        for s in diagnostic_limbs
+    }
+
+    # Validate seamless loop for idle via action F-curves
+    idle_loop_ok = True
+    idle_loop_errors = {}
+    for fcurve in _get_action_fcurves(idle_action):
+        start_val = fcurve.evaluate(idle_first_frame)
+        end_val = fcurve.evaluate(idle_last_frame)
+        err = abs(start_val - end_val)
+        if err > 1e-6:
+            idle_loop_ok = False
+            idle_loop_errors[fcurve.data_path] = max(idle_loop_errors.get(fcurve.data_path, 0.0), err)
+
+    metadata["idle"] = {
+        "clip": "Smalltrotter_NeutralIdle",
+        "duration_s": 2.0,
+        "fps": fps,
+        "frame_range": [idle_first_frame, idle_last_frame],
+        "validation": {
+            "loop_passed": idle_loop_ok,
+            "root_translation_zero": idle_root_translation_zero,
+            "root_translation_max_m": idle_max_root_translation_m,
+            "terrain_contact_asserted": False,
+            "note": "idle validation kept separate from walk cycle, does not assert native terrain contact"
+        },
+        "measured_support": {
+            "four_pads_evaluated": list(target_bones.keys()) + list(diagnostic_limbs.keys()),
+            "hind_pad_excursions_m": idle_hind_excursions,
+            "front_pad_excursions_m": idle_front_excursions,
+            "hind_pad_elevation_min_m": {s: min(idle_pad_z[s]) if idle_pad_z[s] else None for s in target_bones},
+            "front_pad_elevation_min_m": {s: min(idle_front_z[s]) if idle_front_z[s] else None for s in diagnostic_limbs},
+        }
+    }
+    if idle_loop_errors:
+        metadata["idle"]["loop_errors"] = idle_loop_errors
+
+    # Push both walk and idle actions to NLA tracks for export, assigning Blender 5.2 action slots
+    track_walk = arm.animation_data.nla_tracks.new()
+    track_walk.name = "WalkTrack"
+    strip_walk = track_walk.strips.new(action.name, int(action.frame_range[0]), action)
+    if hasattr(action, "slots") and len(action.slots) > 0 and hasattr(strip_walk, "action_slot"):
+        strip_walk.action_slot = action.slots[0]
+
+    track_idle = arm.animation_data.nla_tracks.new()
+    track_idle.name = "IdleTrack"
+    strip_idle = track_idle.strips.new(idle_action.name, int(idle_action.frame_range[0]), idle_action)
+    if hasattr(idle_action, "slots") and len(idle_action.slots) > 0 and hasattr(strip_idle, "action_slot"):
+        strip_idle.action_slot = idle_action.slots[0]
+
+    # Unlink active action so exporter uses NLA tracks, which guarantees both distinct clips are included
+    arm.animation_data.action = None
+
     os.makedirs(os.path.dirname(os.path.abspath(output_glb)), exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=os.path.abspath(output_glb), export_format="GLB",
                               export_animations=True, export_apply=True,

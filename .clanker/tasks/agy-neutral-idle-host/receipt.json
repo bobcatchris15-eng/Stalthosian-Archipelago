@@ -1,0 +1,13 @@
+{
+  "walk_probe": "var/reports/runtime/20261013-014534-1d71d377/runtime-receipt.json",
+  "full_tests": "1988passed2skipped543.45s,sourcehashesstable before whitespace-only cleanup; ASTequal afterward",
+  "idle_probe": "var/reports/runtime/20261013-014441-8e88aa5a/runtime-receipt.json",
+  "idle_root_translation_max_m": 0,
+  "parent_fix": "Nonselectedpaused tracks last_update_time equals timer to prevent startup bone overwrite.",
+  "native_tests": "17/17passed",
+  "status": "reviewed and validated neutralidle implementation",
+  "limits": "No breathing, sameprocess transition input probe or per-foot native terrain acceptance.",
+  "schema_version": 1,
+  "idle_four_pad_excursion_m": 0,
+  "final_probe": "var/reports/runtime/20261013-015256-a97a54ec/runtime-receipt.json"
+}

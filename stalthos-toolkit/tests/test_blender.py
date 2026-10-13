@@ -765,8 +765,13 @@ def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspac
     gait = rigged["metrics"]["walk_cycle"]
     assert gait["loop"]["passed"] is True
     assert gait["glb_animation"]["passed"] is True
-    assert gait["glb_animation"]["animations"] == 1
+    assert gait["glb_animation"]["animations"] == 2
     assert gait["glb_animation"]["channels"] > 0
+    assert "idle" in gait
+    assert gait["idle"]["clip"] == "Smalltrotter_NeutralIdle"
+    assert gait["idle"]["validation"]["loop_passed"] is True
+    assert gait["idle"]["validation"]["root_translation_zero"] is True
+    assert gait["idle"]["validation"]["terrain_contact_asserted"] is False
     pad_counts = gait["contacts"]["foot_pad_vertex_counts"]
     assert set(pad_counts) == {"bone:pes_foot_l", "bone:pes_foot_r"}
     assert all(isinstance(count, int) and count > 0 for count in pad_counts.values())
@@ -801,7 +806,10 @@ def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspac
                 if a["path"].endswith(".walk_cycle.glb"))
     from stalthos_toolkit.optimize.glb import GlbDocument
     assert GlbDocument.read(neutral).gltf.get("animations", []) == []
-    assert len(GlbDocument.read(walk).gltf.get("animations", [])) == 1
+    walk_anims = [a.get("name") for a in GlbDocument.read(walk).gltf.get("animations", [])]
+    assert len(walk_anims) == 2
+    assert "Smalltrotter_WalkCycle" in walk_anims
+    assert "Smalltrotter_NeutralIdle" in walk_anims
 
 
 @needs_blender

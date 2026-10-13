@@ -1,0 +1,13 @@
+{
+  "worker_commit": "16759b37cc43f6205c88e3e09b7900b8fce3b624",
+  "parent_fix": "Exact generated-triangle accounting with rollback ifnexttuft exceeds80k cap",
+  "triangles": 49844,
+  "probe": "var/reports/runtime/20261013-015256-a97a54ec/runtime-receipt.json",
+  "batches": 3,
+  "visual_acceptance": false,
+  "wet_rejections": 425,
+  "native_tests": "17/17passed",
+  "status": "reviewed and validated provisional meadow",
+  "tufts": 3919,
+  "schema_version": 1
+}

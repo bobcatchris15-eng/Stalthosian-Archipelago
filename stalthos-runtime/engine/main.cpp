@@ -330,6 +330,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         double engineClipLength=0.0;
         wi::ecs::Entity heroMotionRoot=wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity hero=wi::ecs::INVALID_ENTITY;
+        wi::ecs::Entity sceneWalkAnimEntity = wi::ecs::INVALID_ENTITY;
+        wi::ecs::Entity sceneIdleAnimEntity = wi::ecs::INVALID_ENTITY;
         if (!creature.empty()) {
             if (!std::filesystem::exists(creature)) throw std::runtime_error("creature import input does not exist");
             wi::scene::Scene imported;
@@ -339,11 +341,33 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             creatureAnimations=imported.animations.GetCount();
             for(size_t i=0;i<imported.animations.GetCount();++i) {
                 auto& animation=imported.animations[i];
+                const auto animEntity=imported.animations.GetEntity(i);
+                const auto* nameComp=imported.names.GetComponent(animEntity);
+                const std::string animName=nameComp ? nameComp->name : "";
                 const double importedLength=animation.GetLength();
-                if(!std::isfinite(importedLength) || importedLength<=0 ||
-                    std::abs(importedLength-creatureClipDuration)>creatureClipDuration*.05)
-                    throw std::runtime_error("walk metadata duration does not match imported animation length within 5 percent");
-                if(engineClipLength==0.0) engineClipLength=importedLength;
+
+                bool isWalk=false;
+                bool isIdle=false;
+                if(imported.animations.GetCount()==1) {
+                    isWalk=true;
+                } else if(animName.find("Walk")!=std::string::npos || animName.find("walk")!=std::string::npos) {
+                    isWalk=true;
+                } else if(animName.find("Idle")!=std::string::npos || animName.find("idle")!=std::string::npos) {
+                    isIdle=true;
+                } else {
+                    throw std::runtime_error("unknown creature animation clip: " + animName);
+                }
+
+                if(isWalk) {
+                    if(!std::isfinite(importedLength) || importedLength<=0 ||
+                        std::abs(importedLength-creatureClipDuration)>creatureClipDuration*.05)
+                        throw std::runtime_error("walk metadata duration does not match imported animation length within 5 percent");
+                    if(engineClipLength==0.0) engineClipLength=importedLength;
+                } else if(isIdle) {
+                    if(!std::isfinite(importedLength) || importedLength<=0)
+                        throw std::runtime_error("idle animation length must be positive and finite");
+                }
+
                 for(const auto& channel:animation.channels)
                     if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION ||
                        channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION ||
@@ -371,13 +395,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                         animatedRoot=candidate.target;
                     }
                 }
-                if(animatedRoot==wi::ecs::INVALID_ENTITY)
-                    throw std::runtime_error("creature animation is missing an identifiable actor-root translation channel");
+                if(isWalk && animatedRoot==wi::ecs::INVALID_ENTITY)
+                    throw std::runtime_error("creature walk animation is missing an identifiable actor-root translation channel");
                 for(size_t channelIndex=0;channelIndex<animation.channels.size();) {
                     const auto& channel=animation.channels[channelIndex];
-                    if(channel.target==animatedRoot && channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) {
+                    if(animatedRoot!=wi::ecs::INVALID_ENTITY && channel.target==animatedRoot && channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) {
                         animation.channels.erase(animation.channels.begin()+channelIndex);
-                        ++removedActorRootTranslationChannels;
+                        if(isWalk) ++removedActorRootTranslationChannels;
                         if(const auto* name=imported.names.GetComponent(animatedRoot)) actorRootTranslationTargetName=name->name;
                     } else ++channelIndex;
                 }
@@ -390,7 +414,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             scene.Component_Attach(hero,heroMotionRoot);
             for(size_t i=0;i<scene.animations.GetCount();++i) {
                 auto& animation=scene.animations[i];
-                animation.SetLooped(true); animation.Stop();
+                animation.SetLooped(true); animation.Stop(); animation.amount=0.0f;
+                const auto ent=scene.animations.GetEntity(i);
+                const auto* nameComp=scene.names.GetComponent(ent);
+                const std::string animName=nameComp ? nameComp->name : "";
+                if(scene.animations.GetCount()==1 || animName.find("Walk")!=std::string::npos || animName.find("walk")!=std::string::npos) {
+                    sceneWalkAnimEntity=ent;
+                } else if(animName.find("Idle")!=std::string::npos || animName.find("idle")!=std::string::npos) {
+                    sceneIdleAnimEntity=ent;
+                }
             }
             creatureLoaded=true;
         } else {
@@ -659,14 +691,48 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 transform->Translate(XMFLOAT3(x,y-static_cast<float>(creatureSoleOffset),z));
             }
             transform->UpdateTransform();
-            for(size_t i=0;i<scene.animations.GetCount();++i) {
-                auto& animation=scene.animations[i];
-                if(creatureClip) {
-                    // Wicked evaluates a changed timer even while paused, then skips
-                    // wall-clock advancement. This keeps phase distance-driven.
-                    animation.Pause();
-                    animation.timer=static_cast<float>(animation.start+creaturePhase);
-                } else if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
+            if (creatureLoaded) {
+                auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
+                auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
+                const bool isDisplaced = (actualDistance > 1e-5);
+
+                if (isDisplaced || idleAnim == nullptr) {
+                    if (walkAnim) {
+                        walkAnim->amount = 1.0f;
+                        if (creatureClip) {
+                            walkAnim->Pause();
+                            walkAnim->timer = static_cast<float>(walkAnim->start + creaturePhase);
+                        } else if (speed != 0 && heroAlive) {
+                            walkAnim->Play();
+                        } else {
+                            walkAnim->Pause();
+                        }
+                    }
+                    if (idleAnim) {
+                        idleAnim->amount = 0.0f;
+                        idleAnim->last_update_time = idleAnim->timer;
+                        idleAnim->Pause();
+                    }
+                } else {
+                    if (walkAnim) {
+                        walkAnim->amount = 0.0f;
+                        walkAnim->last_update_time = walkAnim->timer;
+                        walkAnim->Pause();
+                    }
+                    if (idleAnim) {
+                        idleAnim->amount = 1.0f;
+                        if (heroAlive) {
+                            idleAnim->Play();
+                        } else {
+                            idleAnim->Pause();
+                        }
+                    }
+                }
+            } else {
+                for(size_t i=0;i<scene.animations.GetCount();++i) {
+                    auto& animation=scene.animations[i];
+                    if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
+                }
             }
             if(interactive && focused) {
                 const bool inspectionKey=down('V');
