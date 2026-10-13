@@ -460,6 +460,105 @@ def _feature_skin_metrics(objects: tuple[bpy.types.Object, ...], arm: bpy.types.
     return rows
 
 
+def _bind_bristles_to_nearest_bone_by_component(obj: bpy.types.Object, arm: bpy.types.Object,
+                                                prefixes: tuple[str, ...]) -> int:
+    """Rigidly bind connected components (bristles) to the nearest eligible bone using centroid."""
+    if obj is None or arm is None or obj.type != "MESH" or obj.data is None:
+        raise ValueError("Invalid mesh or armature object for bristle component binding")
+    if not obj.data.vertices:
+        return 0
+
+    import bmesh
+    vertices = list(range(len(obj.data.vertices)))
+    for group in obj.vertex_groups:
+        group.remove(vertices)
+    candidates = sorted(
+        [bone for bone in arm.data.bones if bone.use_deform and bone.name.startswith(prefixes)],
+        key=lambda b: b.name,
+    )
+    if not candidates:
+        raise RuntimeError(f"no rig bones match feature binding prefixes {prefixes!r}")
+
+    for row in obj.matrix_world:
+        if not all(math.isfinite(val) for val in row):
+            raise ValueError(f"non-finite matrix_world on {obj.name}")
+    for row in arm.matrix_world:
+        if not all(math.isfinite(val) for val in row):
+            raise ValueError(f"non-finite matrix_world on {arm.name}")
+
+    det = arm.matrix_world.determinant()
+    if not math.isfinite(det) or abs(det) <= 1e-12:
+        raise ValueError(f"armature matrix_world is singular or non-finite (det={det})")
+    arm_inverse = arm.matrix_world.inverted()
+
+    groups = {bone.name: obj.vertex_groups.get(bone.name) or
+              obj.vertex_groups.new(name=bone.name) for bone in candidates}
+
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(obj.data)
+        bm.verts.index_update()
+        bm.verts.ensure_lookup_table()
+        bm.edges.ensure_lookup_table()
+
+        visited = set()
+        components = []
+        for v in bm.verts:
+            if v.index not in visited:
+                comp = []
+                stack = [v]
+                visited.add(v.index)
+                while stack:
+                    curr = stack.pop()
+                    comp.append(curr.index)
+                    for edge in sorted(curr.link_edges, key=lambda e: e.other_vert(curr).index, reverse=True):
+                        other = edge.other_vert(curr)
+                        if other.index not in visited:
+                            visited.add(other.index)
+                            stack.append(other)
+                components.append(sorted(comp))
+        components.sort(key=lambda c: c[0] if c else -1)
+
+        for comp in components:
+            centroid = mathutils.Vector((0.0, 0.0, 0.0))
+            for idx in comp:
+                co = obj.data.vertices[idx].co
+                if not all(math.isfinite(val) for val in co):
+                    raise ValueError(f"non-finite vertex co at index {idx} in {obj.name}")
+                centroid += co
+            centroid /= len(comp)
+            if not all(math.isfinite(val) for val in centroid):
+                raise ValueError(f"non-finite centroid computed for component in {obj.name}")
+
+            point = arm_inverse @ (obj.matrix_world @ centroid)
+            if not all(math.isfinite(val) for val in point):
+                raise ValueError(f"non-finite local point computed for component in {obj.name}")
+
+            best = None
+            best_key = (float("inf"), "")
+            for bone in candidates:
+                start, end = bone.head_local, bone.tail_local
+                delta = end - start
+                length_sq = delta.length_squared
+                t = 0.0 if length_sq <= 1e-12 else max(0.0, min(1.0, (point - start).dot(delta) / length_sq))
+                distance = (point - (start + delta * t)).length_squared
+                if not math.isfinite(distance):
+                    raise ValueError(f"non-finite bone distance computed for bone {bone.name}")
+                key = (distance, bone.name)
+                if key < best_key:
+                    best = bone
+                    best_key = key
+
+            if best is None:
+                raise RuntimeError(f"failed to find nearest bone for bristle component in {obj.name}")
+
+            groups[best.name].add(comp, 1.0, "REPLACE")
+
+        return len(components)
+    finally:
+        bm.free()
+
+
 def _bind_feature_to_nearest_bone(obj: bpy.types.Object, arm: bpy.types.Object,
                                   prefixes: tuple[str, ...]) -> None:
     """Rigidly bind an isolated feature mesh to its nearest anatomically relevant bone."""
@@ -1146,11 +1245,18 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
             "smalltrotter_eye_and_nostril_blockout",
             "smalltrotter_bristle_ridge_blockout"))
         skin(body, detail, arm, report, stats, extras=feature_objects)
+        bristle_components = 0
         if source_joints is not None:
             for obj, prefixes in zip(feature_objects, (("head_",), ("spine_", "neck_", "tail_"))):
                 if obj is not None and obj.type == "MESH" and obj.data.polygons:
-                    _bind_feature_to_nearest_bone(obj, arm, prefixes)
+                    if obj.name == "smalltrotter_bristle_ridge_blockout":
+                        bristle_components = _bind_bristles_to_nearest_bone_by_component(obj, arm, prefixes)
+                    else:
+                        _bind_feature_to_nearest_bone(obj, arm, prefixes)
         stats["skinned_feature_geometry"] = _feature_skin_metrics(feature_objects, arm)
+        if source_joints is not None and "smalltrotter_bristle_ridge_blockout" in stats["skinned_feature_geometry"]:
+            stats["skinned_feature_geometry"]["smalltrotter_bristle_ridge_blockout"]["connected_components_bound"] = bristle_components
+
         stats["skinned_feature_geometry_passed"] = all(
             row["armature_modifier_bound"] and row["vertex_group_count"] > 0 and
             row["material_slots_preserved"] > 0 and row["unassigned_vertex_count"] == 0

@@ -229,7 +229,11 @@ def write_manifest(root: Path, *, asset_id: str = ASSET_ID, kind: str = "plant",
 
 
 @pytest.fixture()
-def workspace(tmp_path: Path) -> Path:
+def workspace(tmp_path: Path, monkeypatch) -> Path:
+    # These synthetic command fixtures exercise the missing-tool fallback.
+    # Installed optional tools must not change their expected status/receipts;
+    # real-tool wiring has separate explicit stub and integration coverage.
+    monkeypatch.setattr(toolbox, "locate", lambda name: None)
     for name in ("sources", "intermediate", "runtime", "preview", "reports"):
         (tmp_path / name).mkdir(parents=True, exist_ok=True)
     return tmp_path
@@ -358,7 +362,8 @@ def test_lod0_is_never_claimed_to_have_been_optimized(tmp_path: Path):
     assert metrics["lod_optimizer_applied.lod0"]["measured"] is False
 
 
-def test_degraded_texture_keeps_its_real_container_suffix(tmp_path: Path):
+def test_degraded_texture_keeps_its_real_container_suffix(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(toolbox, "locate", lambda name: None)
     """An uncompressed PNG must never be written out under a .ktx2 name."""
     png = tmp_path / "albedo.png"
     png.write_bytes(_png())

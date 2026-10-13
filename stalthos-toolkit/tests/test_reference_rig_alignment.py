@@ -59,7 +59,7 @@ def test_smalltrotter_rig_uses_generated_shape_and_binds_reference_features(
         "smalltrotter_eye_and_nostril_blockout",
         "smalltrotter_bristle_ridge_blockout",
     }
-    for row in features.values():
+    for name, row in features.items():
         assert row["armature_modifier_bound"] is True
         assert row["material_slots_preserved"] > 0
         assert row["unassigned_vertex_count"] == 0
@@ -67,6 +67,10 @@ def test_smalltrotter_rig_uses_generated_shape_and_binds_reference_features(
         assert len(bounds["min"]) == len(bounds["max"]) == 3
         assert all(math.isfinite(v) and lo <= v
                    for lo, v in zip(bounds["min"], bounds["max"]))
+        if name == "smalltrotter_bristle_ridge_blockout":
+            assert "connected_components_bound" in row
+            assert isinstance(row["connected_components_bound"], int)
+            assert row["connected_components_bound"] > 0
 
     walk_path = next(Path(row["path"]) for row in rigged["artifacts"]
                      if row["path"].endswith(".walk_cycle.json"))
