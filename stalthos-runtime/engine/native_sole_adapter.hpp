@@ -3,6 +3,7 @@
 #include "WickedEngine.h"
 #include "foot_terrain_diagnostic.hpp"
 #include "../domain/reference_landscape.hpp"
+#include "../domain/rendered_ground_surface.hpp"
 
 #include <algorithm>
 #include <array>
@@ -17,17 +18,41 @@ namespace stalthos::engine {
 struct NativeSoleSample {
     FootId foot = FootId::FrontLeft;
     bool valid = false;
+    bool complete = false;
+    bool disjoint = true;
+    bool finite = true;
     uint32_t selectedVertexCount = 0;
-    double minClearanceMeters = 0.0;
+
+    // Clearances against analytical surface (ReferenceLandscape)
+    double minClearanceMeters = 0.0; // Preserved for backward compatibility (= analytical min)
     double maxClearanceMeters = 0.0;
     double meanClearanceMeters = 0.0;
+    double minAnalyticalClearanceMeters = 0.0;
+    double maxAnalyticalClearanceMeters = 0.0;
+    double meanAnalyticalClearanceMeters = 0.0;
+
+    // Clearances against rendered surface (exact triangle barycentric height)
+    double minRenderedClearanceMeters = 0.0;
+    double maxRenderedClearanceMeters = 0.0;
+    double meanRenderedClearanceMeters = 0.0;
+
+    // Height differences at the SAME sampled vertices (rendered - analytical)
+    double minHeightDifferenceMeters = 0.0;
+    double maxHeightDifferenceMeters = 0.0;
+    double meanHeightDifferenceMeters = 0.0;
+
     DirectX::XMFLOAT3 lowestVertexWorldPos{0.0f, 0.0f, 0.0f};
     DirectX::XMFLOAT3 highestVertexWorldPos{0.0f, 0.0f, 0.0f};
+    DirectX::XMFLOAT3 lowestRenderedVertexWorldPos{0.0f, 0.0f, 0.0f};
+    DirectX::XMFLOAT3 highestRenderedVertexWorldPos{0.0f, 0.0f, 0.0f};
     std::string issue;
 };
 
 struct NativeSoleReport {
     bool allValid = false;
+    bool strictComplete = false;
+    bool strictDisjoint = false;
+    bool strictFinite = false;
     std::string method = "native_body_proxy_skinned_surface";
     bool footContactAccepted = false; // Strictly false: diagnostic metric only
     std::array<NativeSoleSample, kFootCount> feet{};
@@ -246,7 +271,8 @@ public:
         report.method = "native_body_proxy_skinned_surface";
         report.footContactAccepted = false;
         report.limitations = {
-            "Evaluates actual CPU-skinned contact vertices from body_proxy via pinned wi::scene::SkinVertex against ReferenceLandscape.",
+            "Evaluates actual CPU-skinned contact vertices from body_proxy via pinned wi::scene::SkinVertex against ReferenceLandscape (analytical) and RenderedGroundSurface (cached rendered mesh).",
+            "Rendered ground height samples exact triangle barycentric elevation on displayed terrain mesh without bilinear or analytic reconstruction.",
             "Front limbs (manus) are kinematic diagnostics only; authored contact schedules apply only to hind limbs (pes).",
             "Clearance is instantaneous signed geometric elevation; terrain foot-locking, substrate friction, and soft-ground penetration are unmodelled.",
             "Kinematic surface diagnostic only; foot contact acceptance is strictly false."
@@ -260,6 +286,47 @@ public:
                 report.feet[f].issue = "NativeSoleAdapter uninitialized: " + m_errorMessage;
             }
             return report;
+        }
+
+        // Cache actual ground mesh vertices/indices with rendered object instance matrix after Scene update
+        if (!m_groundCached) {
+            wi::ecs::Entity groundEntity = wi::ecs::INVALID_ENTITY;
+            for (size_t i = 0; i < scene.objects.GetCount(); ++i) {
+                const auto entity = scene.objects.GetEntity(i);
+                const auto* name = scene.names.GetComponent(entity);
+                if (name && name->name == "draft reference ground") {
+                    groundEntity = entity;
+                    break;
+                }
+            }
+            if (groundEntity == wi::ecs::INVALID_ENTITY) {
+                m_groundErrorMessage = "'draft reference ground' object not found in scene";
+            } else {
+                const auto* object = scene.objects.GetComponent(groundEntity);
+                if (!object || object->meshID == wi::ecs::INVALID_ENTITY) {
+                    m_groundErrorMessage = "'draft reference ground' object has no valid meshID";
+                } else {
+                    const auto* groundMesh = scene.meshes.GetComponent(object->meshID);
+                    const size_t groundObjIndex = scene.objects.GetIndex(groundEntity);
+                    if (!groundMesh) {
+                        m_groundErrorMessage = "ground mesh component not found";
+                    } else if (groundObjIndex >= scene.matrix_objects.size()) {
+                        m_groundErrorMessage = "ground rendered object instance matrix not yet populated";
+                    } else {
+                        const auto& mat = scene.matrix_objects[groundObjIndex];
+                        domain::Matrix4x4 groundMatrix = domain::Matrix4x4::fromRowMajor(reinterpret_cast<const float*>(&mat));
+                        if (m_renderedGroundSurface.build(
+                                groundMesh->vertex_positions.data(), groundMesh->vertex_positions.size(),
+                                groundMesh->indices.data(), groundMesh->indices.size(),
+                                groundMatrix)) {
+                            m_groundCached = true;
+                            m_groundErrorMessage.clear();
+                        } else {
+                            m_groundErrorMessage = m_renderedGroundSurface.errorMessage();
+                        }
+                    }
+                }
+            }
         }
 
         const auto* mesh = scene.meshes.GetComponent(m_meshEntity);
@@ -290,17 +357,31 @@ public:
 
             if (indices.empty()) {
                 sample.valid = false;
+                sample.complete = false;
+                sample.finite = false;
                 sample.issue = "empty vertex selection";
                 allFeetValid = false;
                 continue;
             }
 
-            double minClear = std::numeric_limits<double>::infinity();
-            double maxClear = -std::numeric_limits<double>::infinity();
-            double sumClear = 0.0;
+            double minAnalyticalClear = std::numeric_limits<double>::infinity();
+            double maxAnalyticalClear = -std::numeric_limits<double>::infinity();
+            double sumAnalyticalClear = 0.0;
+
+            double minRenderedClear = std::numeric_limits<double>::infinity();
+            double maxRenderedClear = -std::numeric_limits<double>::infinity();
+            double sumRenderedClear = 0.0;
+
+            double minHeightDiff = std::numeric_limits<double>::infinity();
+            double maxHeightDiff = -std::numeric_limits<double>::infinity();
+            double sumHeightDiff = 0.0;
+
             size_t validCount = 0;
+            bool sampleFinite = true;
             DirectX::XMFLOAT3 lowestWorldPos{0.0f, 0.0f, 0.0f};
             DirectX::XMFLOAT3 highestWorldPos{0.0f, 0.0f, 0.0f};
+            DirectX::XMFLOAT3 lowestRenderedWorldPos{0.0f, 0.0f, 0.0f};
+            DirectX::XMFLOAT3 highestRenderedWorldPos{0.0f, 0.0f, 0.0f};
 
             for (uint32_t v_idx : indices) {
                 // Pinned Wicked Engine CPU skinning: returns position in armature local space
@@ -311,50 +392,124 @@ public:
                 DirectX::XMStoreFloat3(&worldPos, worldPosVec);
 
                 if (!std::isfinite(worldPos.x) || !std::isfinite(worldPos.y) || !std::isfinite(worldPos.z)) {
+                    sampleFinite = false;
                     continue;
                 }
 
-                if (landscape.inBounds(worldPos.x, worldPos.z)) {
-                    double terrainH = landscape.height(worldPos.x, worldPos.z);
-                    if (std::isfinite(terrainH)) {
-                        double clear = static_cast<double>(worldPos.y) - terrainH;
-                        if (std::isfinite(clear)) {
-                            ++validCount;
-                            sumClear += clear;
-                            if (clear < minClear) {
-                                minClear = clear;
-                                lowestWorldPos = worldPos;
-                            }
-                            if (clear > maxClear) {
-                                maxClear = clear;
-                                highestWorldPos = worldPos;
-                            }
-                        }
-                    }
+                if (!landscape.inBounds(worldPos.x, worldPos.z) || !m_groundCached || !m_renderedGroundSurface.inBounds(worldPos.x, worldPos.z)) {
+                    continue;
+                }
+
+                double analyticalH = landscape.height(worldPos.x, worldPos.z);
+                double renderedH = m_renderedGroundSurface.sampleHeight(worldPos.x, worldPos.z);
+
+                if (!std::isfinite(analyticalH) || !std::isfinite(renderedH)) {
+                    sampleFinite = false;
+                    continue;
+                }
+
+                double analyticalClear = static_cast<double>(worldPos.y) - analyticalH;
+                double renderedClear = static_cast<double>(worldPos.y) - renderedH;
+                double heightDiff = renderedH - analyticalH;
+
+                if (!std::isfinite(analyticalClear) || !std::isfinite(renderedClear) || !std::isfinite(heightDiff)) {
+                    sampleFinite = false;
+                    continue;
+                }
+
+                ++validCount;
+                sumAnalyticalClear += analyticalClear;
+                sumRenderedClear += renderedClear;
+                sumHeightDiff += heightDiff;
+
+                if (analyticalClear < minAnalyticalClear) {
+                    minAnalyticalClear = analyticalClear;
+                    lowestWorldPos = worldPos;
+                }
+                if (analyticalClear > maxAnalyticalClear) {
+                    maxAnalyticalClear = analyticalClear;
+                    highestWorldPos = worldPos;
+                }
+
+                if (renderedClear < minRenderedClear) {
+                    minRenderedClear = renderedClear;
+                    lowestRenderedWorldPos = worldPos;
+                }
+                if (renderedClear > maxRenderedClear) {
+                    maxRenderedClear = renderedClear;
+                    highestRenderedWorldPos = worldPos;
+                }
+
+                if (heightDiff < minHeightDiff) {
+                    minHeightDiff = heightDiff;
+                }
+                if (heightDiff > maxHeightDiff) {
+                    maxHeightDiff = heightDiff;
                 }
             }
 
-            if (validCount == indices.size() && validCount > 0) {
+            sample.disjoint = true;
+            sample.complete = (validCount == indices.size() && validCount > 0);
+            sample.finite = sampleFinite && (validCount == indices.size());
+
+            if (sample.complete && sample.finite) {
                 sample.valid = true;
-                sample.minClearanceMeters = minClear;
-                sample.maxClearanceMeters = maxClear;
-                sample.meanClearanceMeters = sumClear / static_cast<double>(validCount);
+                sample.minClearanceMeters = minAnalyticalClear;
+                sample.maxClearanceMeters = maxAnalyticalClear;
+                sample.meanClearanceMeters = sumAnalyticalClear / static_cast<double>(validCount);
+
+                sample.minAnalyticalClearanceMeters = minAnalyticalClear;
+                sample.maxAnalyticalClearanceMeters = maxAnalyticalClear;
+                sample.meanAnalyticalClearanceMeters = sumAnalyticalClear / static_cast<double>(validCount);
+
+                sample.minRenderedClearanceMeters = minRenderedClear;
+                sample.maxRenderedClearanceMeters = maxRenderedClear;
+                sample.meanRenderedClearanceMeters = sumRenderedClear / static_cast<double>(validCount);
+
+                sample.minHeightDifferenceMeters = minHeightDiff;
+                sample.maxHeightDifferenceMeters = maxHeightDiff;
+                sample.meanHeightDifferenceMeters = sumHeightDiff / static_cast<double>(validCount);
+
                 sample.lowestVertexWorldPos = lowestWorldPos;
                 sample.highestVertexWorldPos = highestWorldPos;
+                sample.lowestRenderedVertexWorldPos = lowestRenderedWorldPos;
+                sample.highestRenderedVertexWorldPos = highestRenderedWorldPos;
             } else {
                 sample.valid = false;
-                sample.issue = "incomplete or invalid sole clearance samples";
+                if (!m_groundCached) {
+                    sample.issue = "rendered ground cache uninitialized: " + m_groundErrorMessage;
+                } else if (!sample.complete) {
+                    sample.issue = "incomplete sole clearance samples";
+                } else {
+                    sample.issue = "nonfinite sole clearance samples";
+                }
                 allFeetValid = false;
             }
         }
 
+        bool strictComplete = allFeetValid;
+        bool strictDisjoint = true;
+        bool strictFinite = allFeetValid;
+        for (const auto& f : report.feet) {
+            if (!f.complete) strictComplete = false;
+            if (!f.disjoint) strictDisjoint = false;
+            if (!f.finite) strictFinite = false;
+        }
+
         report.allValid = allFeetValid;
+        report.strictComplete = strictComplete;
+        report.strictDisjoint = strictDisjoint;
+        report.strictFinite = strictFinite;
         return report;
     }
 
     bool isInitialized() const noexcept { return m_initialized; }
     const std::string& getErrorMessage() const noexcept { return m_errorMessage; }
     const std::array<std::vector<uint32_t>, kFootCount>& getCachedIndices() const noexcept { return m_cachedIndices; }
+
+    bool isGroundCached() const noexcept { return m_groundCached; }
+    const std::string& getGroundErrorMessage() const noexcept { return m_groundErrorMessage; }
+    const domain::RenderedGroundSurface& getRenderedGroundSurface() const noexcept { return m_renderedGroundSurface; }
 
 private:
     bool m_initialized = false;
@@ -363,6 +518,10 @@ private:
     wi::ecs::Entity m_meshEntity = wi::ecs::INVALID_ENTITY;
     wi::ecs::Entity m_armatureEntity = wi::ecs::INVALID_ENTITY;
     std::array<std::vector<uint32_t>, kFootCount> m_cachedIndices{};
+
+    mutable domain::RenderedGroundSurface m_renderedGroundSurface;
+    mutable bool m_groundCached = false;
+    mutable std::string m_groundErrorMessage;
 };
 
 } // namespace stalthos::engine

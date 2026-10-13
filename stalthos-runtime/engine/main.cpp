@@ -1287,18 +1287,37 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         };
         if (latestNativeSoleDiagnostic) {
             nativeSoleDiagnosticJson["all_valid"] = latestNativeSoleDiagnostic->allValid;
+            nativeSoleDiagnosticJson["strict_complete"] = latestNativeSoleDiagnostic->strictComplete;
+            nativeSoleDiagnosticJson["strict_disjoint"] = latestNativeSoleDiagnostic->strictDisjoint;
+            nativeSoleDiagnosticJson["strict_finite"] = latestNativeSoleDiagnostic->strictFinite;
+            nativeSoleDiagnosticJson["rendered_ground_cached"] = nativeSoleAdapter.isGroundCached();
+            nativeSoleDiagnosticJson["rendered_ground_issue"] = nativeSoleAdapter.getGroundErrorMessage();
             nativeSoleDiagnosticJson["limitations"] = latestNativeSoleDiagnostic->limitations;
             nativeSoleDiagnosticJson["feet"] = json::array();
             for (const auto& sample : latestNativeSoleDiagnostic->feet) {
                 nativeSoleDiagnosticJson["feet"].push_back({
                     {"foot", stalthos::engine::footIdToString(sample.foot)},
                     {"valid", sample.valid},
+                    {"complete", sample.complete},
+                    {"disjoint", sample.disjoint},
+                    {"finite", sample.finite},
                     {"selected_vertex_count", sample.selectedVertexCount},
                     {"min_clearance_m", sample.minClearanceMeters},
                     {"max_clearance_m", sample.maxClearanceMeters},
                     {"mean_clearance_m", sample.meanClearanceMeters},
+                    {"min_clearance_analytical_m", sample.minAnalyticalClearanceMeters},
+                    {"max_clearance_analytical_m", sample.maxAnalyticalClearanceMeters},
+                    {"mean_clearance_analytical_m", sample.meanAnalyticalClearanceMeters},
+                    {"min_clearance_rendered_m", sample.minRenderedClearanceMeters},
+                    {"max_clearance_rendered_m", sample.maxRenderedClearanceMeters},
+                    {"mean_clearance_rendered_m", sample.meanRenderedClearanceMeters},
+                    {"min_height_difference_m", sample.minHeightDifferenceMeters},
+                    {"max_height_difference_m", sample.maxHeightDifferenceMeters},
+                    {"mean_height_difference_m", sample.meanHeightDifferenceMeters},
                     {"lowest_world_pos_m", {sample.lowestVertexWorldPos.x, sample.lowestVertexWorldPos.y, sample.lowestVertexWorldPos.z}},
                     {"highest_world_pos_m", {sample.highestVertexWorldPos.x, sample.highestVertexWorldPos.y, sample.highestVertexWorldPos.z}},
+                    {"lowest_rendered_world_pos_m", {sample.lowestRenderedVertexWorldPos.x, sample.lowestRenderedVertexWorldPos.y, sample.lowestRenderedVertexWorldPos.z}},
+                    {"highest_rendered_world_pos_m", {sample.highestRenderedVertexWorldPos.x, sample.highestRenderedVertexWorldPos.y, sample.highestRenderedVertexWorldPos.z}},
                     {"issue", sample.issue}
                 });
             }
