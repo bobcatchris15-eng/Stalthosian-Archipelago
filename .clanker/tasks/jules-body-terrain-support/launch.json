@@ -1,0 +1,9 @@
+{
+  "task_id": "jules-body-terrain-support",
+  "base": "71abfc8",
+  "status": "remote in progress, unvalidated",
+  "integration": "Retrieve in isolation, review owned scope, actual offline/native checks and required host wiring before publication.",
+  "session_id": "7157747656425898948",
+  "schema_version": 1,
+  "dispatch_date": "2026-10-12T21:34:15.5813547-05:00"
+}

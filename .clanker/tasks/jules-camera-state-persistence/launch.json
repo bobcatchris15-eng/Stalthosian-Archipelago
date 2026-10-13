@@ -1,0 +1,9 @@
+{
+  "task_id": "jules-camera-state-persistence",
+  "base": "71abfc8",
+  "status": "remote in progress, unvalidated",
+  "integration": "Retrieve in isolation, review owned scope, actual offline/native checks and required host wiring before publication.",
+  "session_id": "10097667138093804130",
+  "schema_version": 1,
+  "dispatch_date": "2026-10-12T21:34:15.5687768-05:00"
+}

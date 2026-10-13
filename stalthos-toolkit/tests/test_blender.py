@@ -770,9 +770,17 @@ def test_smalltrotter_exports_walk_channels_and_contact_report(blender, workspac
     pad_counts = gait["contacts"]["foot_pad_vertex_counts"]
     assert set(pad_counts) == {"bone:pes_foot_l", "bone:pes_foot_r"}
     assert all(isinstance(count, int) and count > 0 for count in pad_counts.values())
+
+    diag = gait["contacts"]["diagnostic_unaccepted_front_limbs"]
+    assert diag["metric_scope"] == "kinematic diagnostic only; does not affect authored hind-contact validation"
+    assert "inferred" in diag["schedule_source"] and "not an authored" in diag["schedule_source"]
+    assert "foot_pad_vertex_counts" in diag
+    assert set(diag["foot_pad_vertex_counts"]) == {"diagnostic:manus_hand_l", "diagnostic:manus_hand_r"}
+    assert all(row["available"] for row in diag["coverage"].values())
+    assert "do not participate in validation" in diag["note"]
     assert gait["contacts"]["foot_pad_selector_source"] == "serialized generated joint graph"
     assert all(gait["contacts"]["stance_samples"][selector]
-               for selector in pad_counts)
+               for selector in {"bone:pes_foot_l", "bone:pes_foot_r"})
     terrain = gait["terrain_contact_height"]
     assert terrain["actor_stride_translation_included"] is True
     assert terrain["stride_length_m"] > 0.0

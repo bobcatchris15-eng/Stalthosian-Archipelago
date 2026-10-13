@@ -1,0 +1,22 @@
+{
+  "actual_rig": "var/reports/head-parent-rig.json",
+  "source_hash_snapshot": "var/reports/packet-thirteen-source-hashes.json",
+  "actual_render": "var/reports/head-parent-render.json",
+  "notes": [
+    "AGY head commit0f9b833 reviewed; parent changed UV region selection to local tangent-space distances. Skeleton skull path and limbs preserved.",
+    "Jules18391627216232906812 collected in isolation; native correction8bcbbae adds availability and explicit kinematic-only scope.",
+    "Actual front pads each522vertices49samples; inferred stance gap2.425–11.066mm, all-cycle swingmax116.493mm. Zero-tolerance summary rows are diagnostic, not a front acceptance gate.",
+    "Native body signed movement1.094296m expected/actualphase1.570139s; engine loaded actual rebuilt GLB.",
+    "Creek-bank lateral heightdifference108.1mm over0.5m; flat authored gates do not prove per-foot native terrain contact."
+  ],
+  "parent_asset_workspace": "var/smalltrotter-head-verified-asset",
+  "artifact_check": "var/reports/packet-thirteen-artifact-check.json",
+  "native_probe": "var/reports/runtime/20261012-212633-fab76a21/runtime-receipt.json",
+  "visual_acceptance": false,
+  "status": "reviewed and validated provisional integration",
+  "actual_build": "var/reports/head-parent-build.json",
+  "offline_test_log": "var/reports/packet-thirteen-full.log",
+  "terrain_contact_acceptance": false,
+  "schema_version": 1,
+  "offline_tests": "1988 passed, 2 skipped in690.71s; frozen four changed source/test hashes match"
+}

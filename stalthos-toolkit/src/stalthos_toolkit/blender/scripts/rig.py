@@ -529,6 +529,32 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     foot_drop = max(0.02, stance_height * 0.06)
     pad_indices = {}
     source_pad_names = {"bone:pes_foot_l": "rear_left", "bone:pes_foot_r": "rear_right"}
+    front_pad_names = {"diagnostic:manus_hand_l": "front_left", "diagnostic:manus_hand_r": "front_right"}
+    front_bone_aliases = {"diagnostic:manus_hand_l": "toe_front_L", "diagnostic:manus_hand_r": "toe_front_R"}
+    diagnostic_limbs = {}
+    diagnostic_coverage = {}
+
+    if source_joints is not None:
+        for selector, limb_key in front_pad_names.items():
+            limbs = source_joints.get("limbs") if isinstance(source_joints, dict) else None
+            row = limbs.get(limb_key) if isinstance(limbs, dict) else None
+            indices = row.get("pad_vertex_indices") if isinstance(row, dict) else None
+            issue = None
+            if not isinstance(indices, list):
+                issue = "missing serialized front pad indices"
+            elif not indices:
+                issue = "serialized front pad indices are empty"
+            elif any(not isinstance(index, int) or isinstance(index, bool) or
+                     index < 0 or index >= len(body.data.vertices) for index in indices):
+                issue = "serialized front pad indices are invalid for body_proxy"
+            if issue is None:
+                diagnostic_limbs[selector] = list(indices)
+            diagnostic_coverage[selector] = {
+                "available": issue is None,
+                "vertex_count": len(indices) if issue is None else 0,
+                "reason_unavailable": issue,
+            }
+
     for selector, bone_name in target_bones.items():
         bone = arm.pose.bones.get(bone_name)
         if bone is None:
@@ -704,6 +730,13 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     stance_positions = {selector: [] for selector in target_bones}
     stance_phases = {selector: [] for selector in target_bones}
     stance_sample_details = {selector: [] for selector in target_bones}
+
+    diag_ground_distances = {selector: [] for selector in diagnostic_limbs}
+    diag_stance_distances = {selector: [] for selector in diagnostic_limbs}
+    diag_stance_positions = {selector: [] for selector in diagnostic_limbs}
+    diag_stance_phases = {selector: [] for selector in diagnostic_limbs}
+    diag_stance_sample_details = {selector: [] for selector in diagnostic_limbs}
+
     sample_frames = list(range(first_frame, last_frame + 1))
     for frame in sample_frames:
         scene.frame_set(frame)
@@ -734,8 +767,46 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
                 stance_sample_details[selector].append({
                     "phase": phase, "pad_bottom_z_m": float(min(world_z)),
                     "pad_center_world_xy_m": [center_x, center_y]})
+
+        for selector, indices in list(diagnostic_limbs.items()):
+            if not diagnostic_coverage[selector]["available"]:
+                continue
+            if not indices or max(indices) >= len(evaluated_mesh.vertices):
+                diagnostic_coverage[selector].update({
+                    "available": False,
+                    "reason_unavailable": "front pad indices exceed evaluated mesh coverage",
+                })
+                continue
+            world_z = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co).z
+                       for i in indices]
+            diag_ground_distances[selector].append(float(min(world_z)))
+            world_xy = [(body_eval.matrix_world @ evaluated_mesh.vertices[i].co)[:2]
+                        for i in indices]
+            center_x = sum(p[0] for p in world_xy) / len(world_xy)
+            center_y = sum(p[1] for p in world_xy) / len(world_xy)
+            phase = (frame - first_frame) / intervals
+            diag_stance_positions[selector].append(
+                (center_x - GAIT.root_motion_offset(phase, stride_length), center_y, 0.0))
+            diag_stance_phases[selector].append(phase)
+            bone_name = front_bone_aliases[selector]
+            limb_key = bone_name.removeprefix("toe_")
+            limb_phase = GAIT.LATERAL_SEQUENCE_PHASES[limb_key]
+            in_stance = GAIT.stance_fraction(phase, limb_phase, duty_factor) >= 0.0
+            if in_stance:
+                diag_stance_distances[selector].append(float(min(world_z)))
+                diag_stance_sample_details[selector].append({
+                    "phase": phase, "pad_bottom_z_m": float(min(world_z)),
+                    "pad_center_world_xy_m": [center_x, center_y]})
         body_eval.to_mesh_clear()
     scene.frame_set(first_frame)
+    for selector, coverage in diagnostic_coverage.items():
+        if not coverage["available"]:
+            diagnostic_limbs.pop(selector, None)
+            diag_ground_distances.pop(selector, None)
+            diag_stance_distances.pop(selector, None)
+            diag_stance_positions.pop(selector, None)
+            diag_stance_phases.pop(selector, None)
+            diag_stance_sample_details.pop(selector, None)
     body_z = None
     if body is not None:
         body_z = {
@@ -767,6 +838,28 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
         slip[selector]["max_excursion_m"] is not None and
         slip[selector]["max_excursion_m"] <= tolerance[selector]
         for selector in slip)
+
+    diag_geometry = GAIT.contact_summary(diag_ground_distances, 0.0)
+    diag_stance_geometry = GAIT.contact_summary(diag_stance_distances, 0.0)
+    diag_slip = {selector: GAIT.touchdown_excursion(
+                positions, diag_stance_phases[selector],
+                GAIT.LATERAL_SEQUENCE_PHASES[front_bone_aliases[selector].removeprefix("toe_")], duty_factor,
+                root_stride_m=stride_length)
+            for selector, positions in diag_stance_positions.items()}
+
+    diagnostic_unaccepted_front_limbs = {
+        "metric_scope": "kinematic diagnostic only; does not affect authored hind-contact validation",
+        "schedule_source": "inferred from the existing kinematic gait phase sequence; not an authored front contact schedule",
+        "selector_to_bone_aliases": front_bone_aliases,
+        "coverage": diagnostic_coverage,
+        "foot_pad_vertex_counts": {selector: len(indices) for selector, indices in diagnostic_limbs.items()},
+        "ground_geometry": diag_geometry,
+        "nominal_stance_samples": diag_stance_geometry,
+        "touchdown_anchored_stance_excursion": diag_slip,
+        "stance_samples": diag_stance_sample_details,
+        "note": "front metrics use an inferred kinematic schedule and do not participate in validation or authored contact checks because no front target schedule is defined"
+    } if source_joints is not None else {}
+
     metadata = {
         "clip": "walk_cycle", "source_contact_id": contact.get("id"),
         "seed": int(seed), "duration_s": duration_s, "fps": fps,
@@ -786,7 +879,8 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
             "foot_pad_vertex_counts": {selector: len(indices) for selector, indices in pad_indices.items()},
             "foot_pad_selector_source": "serialized generated joint graph" if source_joints is not None else "legacy geometric fallback",
             "foot_pad_weight_groups": pad_weight_groups,
-            "measurement": "every-frame evaluated armature-deformed hind foot-pad vertices against z=0; horizontal pad-centroid positions include the animated actor root transform"},
+            "measurement": "every-frame evaluated armature-deformed hind foot-pad vertices against z=0; horizontal pad-centroid positions include the animated actor root transform",
+            "diagnostic_unaccepted_front_limbs": diagnostic_unaccepted_front_limbs},
         "terrain_contact_height": {"label": "root-motion stance contact and touchdown excursion",
             "actor_stride_translation_included": True,
             "horizontal_foot_lock_checked": True,

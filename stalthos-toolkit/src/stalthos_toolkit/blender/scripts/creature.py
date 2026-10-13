@@ -150,29 +150,46 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         axes = (tuple(tangent), tuple(lateral), tuple(vertical))
         head_centre = neck_path[-1] + tangent * (head_len * 0.10)
         muzzle_centre = head_centre + tangent * (head_len * 0.57)
-        REF.add_ellipsoid(body, head_centre, (head_len * 0.42, hd * 0.46, hd * 0.48), axes=axes,
-                          segments=sides, rings=14)
-        REF.add_ellipsoid(body, muzzle_centre, (head_len * 0.34, hd * 0.34, hd * 0.31), axes=axes,
-                          segments=sides, rings=12)
-        jaw_centre = head_centre + tangent * (head_len * 0.34) - vertical * (hd * 0.30)
-        REF.add_ellipsoid(body, jaw_centre, (head_len * 0.34, hd * 0.34, hd * 0.17), axes=axes,
+
+        # One coherent gently tapered head sweep from neck base to snout
+        head_sweep_path = [
+            neck_path[-1] - tangent * (head_len * 0.08),
+            neck_path[-1] + tangent * (head_len * 0.16) + vertical * (hd * 0.05),
+            neck_path[-1] + tangent * (head_len * 0.46) + vertical * (hd * 0.02),
+            neck_path[-1] + tangent * (head_len * 0.76) - vertical * (hd * 0.01),
+            neck_path[-1] + tangent * (head_len * 0.94) - vertical * (hd * 0.03),
+        ]
+        head_w = [neck_r[-1] * 0.84, hd * 0.46, hd * 0.42, hd * 0.38, hd * 0.35]
+        head_d = [neck_r[-1] * 0.96, hd * 0.50, hd * 0.42, hd * 0.35, hd * 0.27]
+        _elliptical_tube(body, head_sweep_path, head_w, head_d, sides=sides)
+
+        # Gentle cranial dome softening the braincase top and blending into neck
+        cranium_dome = neck_path[-1] + tangent * (head_len * 0.18) + vertical * (hd * 0.07)
+        REF.add_ellipsoid(body, cranium_dome, (head_len * 0.24, hd * 0.44, hd * 0.32), axes=axes,
                           segments=sides, rings=10)
+
+        # Broad rounded muzzle cap rounding off the snout tip
+        snout_tip = head_sweep_path[-1] + tangent * (head_len * 0.02)
+        REF.add_ellipsoid(body, snout_tip, (head_len * 0.18, hd * 0.36, hd * 0.27), axes=axes,
+                          segments=sides, rings=12)
+
         skull_path = [neck_path[-1] - tangent * head_len * 0.12,
                       head_centre, muzzle_centre,
                       muzzle_centre + tangent * head_len * 0.34]
-        # Large eye sockets and brows read in silhouette; the separate dark
-        # eye beads remain a simple blockout volume, not finished facial detail.
+
+        # Readable warm lateral eyes, smooth orbital contour, and subtle flush nostrils
+        eye_station = neck_path[-1] + tangent * (head_len * 0.38) + vertical * (hd * 0.14)
         for sign in (-1.0, 1.0):
-            brow_centre = head_centre + tangent * (head_len * 0.06) + vertical * (hd * 0.20) + lateral * (sign * hd * 0.39)
-            REF.add_ellipsoid(body, brow_centre, (head_len * 0.16, hd * 0.14, hd * 0.13), axes=axes,
+            orbit_centre = eye_station + lateral * (sign * hd * 0.36)
+            REF.add_ellipsoid(body, orbit_centre, (head_len * 0.14, hd * 0.09, head_len * 0.13), axes=axes,
                               segments=14, rings=10)
             if eyes is not None:
-                eye_centre = head_centre + tangent * (head_len * 0.06) + vertical * (hd * 0.15) + lateral * (sign * hd * 0.47)
-                REF.add_ellipsoid(eyes, eye_centre, (head_len * 0.12, hd * 0.055, hd * 0.10), axes=axes,
-                                  segments=14, rings=10)
-                nostril_centre = muzzle_centre + tangent * (head_len * 0.20) + vertical * (hd * 0.07) + lateral * (sign * hd * 0.23)
-                REF.add_ellipsoid(eyes, nostril_centre, (head_len * 0.045, hd * 0.025, hd * 0.035), axes=axes,
-                                  segments=10, rings=7)
+                eye_centre = eye_station + lateral * (sign * hd * 0.39)
+                REF.add_ellipsoid(eyes, eye_centre, (head_len * 0.10, hd * 0.075, head_len * 0.10), axes=axes,
+                                  segments=16, rings=12)
+                nostril_centre = neck_path[-1] + tangent * (head_len * 0.88) + vertical * (hd * 0.08) + lateral * (sign * hd * 0.15)
+                REF.add_ellipsoid(eyes, nostril_centre, (head_len * 0.022, hd * 0.014, head_len * 0.018), axes=axes,
+                                  segments=8, rings=6)
     else:
         skull_path = [
             neck_path[-1] - head_dir * head_len * 0.1,
@@ -518,6 +535,110 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
                 if poly.material_index == 2:
                     poly.material_index = 0
             stats["surfacing_export"]["dark_foot_face_count"] = 0
+
+            # Extend pale ventral throat and chin coverage to match user reference
+            neck_pts = joints.get("neck", [])
+            neck_end = neck_pts[-1] if neck_pts else mathutils.Vector((0, 0, 0))
+            neck_root = neck_pts[0] if neck_pts else mathutils.Vector((0, 0, 0))
+            hd = float(p.get("head_depth_m", 0.15))
+            head_dir_v = _unit(neck_pts[-1] - neck_pts[-2]) if len(neck_pts) >= 2 else mathutils.Vector((1, 0, 0))
+            tangent_v = _unit(head_dir_v)
+            vertical_v = _unit(mathutils.Vector((-tangent_v.z, 0.0, tangent_v.x)))
+            head_len_m = float(p.get("head_length_m", 0.216))
+            for poly in body_obj.data.polygons:
+                c = poly.center
+                on_upper_neck = (c.x > neck_root.x and c.z > neck_root.z + 0.12 and
+                                 abs(c.y) < hd * 0.40 and poly.normal.x > 0.08)
+                rel_head = c - neck_end
+                dist_tangent = rel_head.dot(tangent_v)
+                dist_vert = rel_head.dot(vertical_v)
+                under_jaw = (-0.05 <= dist_tangent <= head_len_m * 0.85 and
+                             dist_vert <= 0.01 and
+                             abs(c.y) < hd * 0.38 and
+                             poly.normal.dot(vertical_v) < 0.20)
+                if on_upper_neck or under_jaw:
+                    poly.material_index = 1
+            stats["surfacing_export"]["ventral_face_count"] = sum(
+                1 for poly in body_obj.data.polygons if poly.material_index == 1)
+
+            # Eliminate dark patchwork on the dorsal head/snout by centering head hide UVs
+            # in the clean, warm ochre region of the hide texture map (away from mottle cuts)
+            if body_obj.data.uv_layers.active:
+                uv_data = body_obj.data.uv_layers.active.data
+                for poly in body_obj.data.polygons:
+                    if poly.material_index == 0 and -0.04 <= (poly.center - neck_end).dot(tangent_v) <= head_len_m * 1.2:
+                        for li in poly.loop_indices:
+                            orig_u, orig_v = uv_data[li].uv
+                            # Map cleanly into the warm ochre sanctuary [0.46, 0.54]
+                            uv_data[li].uv = (0.50 + (orig_u % 0.06 - 0.03),
+                                              0.48 + (orig_v % 0.06 - 0.03))
+
+            # Author readable warm lateral eyes in the export eye material
+            eye_mat = bpy.data.materials.get("MAT_Smalltrotter_Eye_PBR")
+            if eye_mat and eye_mat.node_tree:
+                base_node = next((n for n in eye_mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.name == "Export_BaseColor"), None)
+                rough_node = next((n for n in eye_mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.name == "Export_Roughness"), None)
+                if base_node and base_node.image and rough_node and rough_node.image:
+                    size = base_node.image.size[0]
+                    from array import array as _array
+                    base_pixels = _array("f")
+                    rough_pixels = _array("f")
+                    for yi in range(size):
+                        v_coord = (yi + 0.5) / size
+                        for xi in range(size):
+                            u_coord = (xi + 0.5) / size
+                            dx, dy = u_coord - 0.5, v_coord - 0.5
+                            rad = math.sqrt(dx * dx + dy * dy)
+                            if rad < 0.17:
+                                # Dark pupil
+                                col = (0.015, 0.012, 0.010)
+                                r_val = 0.06
+                            elif rad < 0.40:
+                                # Warm golden-amber iris with subtle radial striations
+                                t_iris = (rad - 0.17) / 0.23
+                                angle = math.atan2(dy, dx)
+                                streak = 0.5 + 0.5 * math.sin(angle * 16.0)
+                                col = (0.46 - 0.10 * t_iris + 0.03 * streak,
+                                       0.29 - 0.09 * t_iris + 0.02 * streak,
+                                       0.11 - 0.04 * t_iris)
+                                r_val = 0.08
+                            else:
+                                # Dark limbal ring
+                                col = (0.035, 0.022, 0.014)
+                                r_val = 0.12
+                            srgb = tuple(CREATURE_MAT._linear_to_srgb(c) for c in col)
+                            base_pixels.extend((srgb[0], srgb[1], srgb[2], 1.0))
+                            rough_pixels.extend((r_val, r_val, r_val, 1.0))
+                    base_node.image.pixels.foreach_set(base_pixels)
+                    rough_node.image.pixels.foreach_set(rough_pixels)
+                    base_node.image.pack()
+                    rough_node.image.pack()
+
+            # Align lateral eye UVs to display the centered pupil and warm iris cleanly
+            if eye_obj and eye_obj.data.uv_layers.active:
+                eye_uv = eye_obj.data.uv_layers.active.data
+                head_dir_vec = _unit(neck_pts[-1] - neck_pts[-2]) if len(neck_pts) >= 2 else mathutils.Vector((1, 0, 0))
+                tangent_unit = _unit(head_dir_vec)
+                lateral_unit = mathutils.Vector((0.0, 1.0, 0.0))
+                vert_unit = _unit(mathutils.Vector((-tangent_unit.z, 0.0, tangent_unit.x)))
+                head_len_val = float(p.get("head_length_m", 0.216))
+                eye_station_pos = neck_end + tangent_unit * (head_len_val * 0.40) + vert_unit * (hd * 0.14)
+                for poly in eye_obj.data.polygons:
+                    c = poly.center
+                    if (c - neck_end).dot(tangent_unit) < head_len_val * 0.70:
+                        # Eye faces: project centered pupil and iris from lateral view
+                        sign_side = 1.0 if c.y >= 0 else -1.0
+                        eye_ref = eye_station_pos + lateral_unit * (sign_side * hd * 0.40)
+                        for li in poly.loop_indices:
+                            v_co = eye_obj.data.vertices[eye_obj.data.loops[li].vertex_index].co
+                            rel = v_co - eye_ref
+                            dt = rel.dot(tangent_unit) / max(1e-4, head_len_val * 0.24)
+                            dv = rel.dot(vert_unit) / max(1e-4, head_len_val * 0.24)
+                            eye_uv[li].uv = (0.5 + dt, 0.5 + dv)
+                    else:
+                        # Nostril faces: map to pupil dark zone
+                        for li in poly.loop_indices:
+                            eye_uv[li].uv = (0.50, 0.50)
         else:
             # Preserve the legacy/default appearance for all non-reference
             # creature profiles; the Smalltrotter-specific maps are scoped to

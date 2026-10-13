@@ -470,3 +470,35 @@ output/log files at16:17:22. Same bounded task, not a new work item. Allow its
 Jules18391627216232906812 remains in progress. No further dispatch this wake.
 All project source changes validated/published; unrelated untracked preserved.
 Next wake resumes these isolated tasks before dispatch and checks .clanker/HALT.
+
+## Reviewed head and four-foot diagnostic checkpoint — 2026-10-12 21:39 Central
+
+Resumed and collected both prior tasks before dispatch. AGY head0f9b833 reviewed;
+parent corrected local tangent-space UV classification. Jules18391627216232906812
+pulled isolated, native correction8bcbbae fixes coverage and kinematic-only scope.
+Parent fresh head asset build/render/rig all oktrue exit0; all18 artifact hashes
+match. Existing hind/loop/root-motion/glb gates passed. Fronts have522vertices49
+samples each; inferred stance gap2.425–11.066mm, swingmax116.493mm, horizontal
+excursion1.811mm. Front diagnostics are not authored acceptance.
+Fullroot1988passed2skipped690.71s; all4 changed source/test hashes frozen.
+Actual Wicked20261012-212633-fab76a21 newasset loads, moves1.094296m,
+expected/actualphase1.570139s. Head appearance improved but remains blockout.
+
+Native grounding review: rendered terrain and analytical ground agree at anchor;
+creek-bank transverse support changes108.1mm over0.5m. Flat gait gates do not
+prove terrain contact. GLB actor-root track has49samples with Y/Z exactly0 and
+X0..0.16128m, so root-motion removal is not a vertical-offset source here.
+
+Direct user preference saved in automation prompt and execution-policy: prioritize
+AGY/Jules implementation to preserve Codex quota; local agents only materially
+useful focused review. Lowest capable model/effort. Six dispatches used thiswake;
+no further dispatch. Currentwake deadline21:57 Central.
+Pending isolated tasks to collect BEFORE new dispatch next wake:
+- Jules10097667138093804130: optional camera DTO persistence, existing formats
+  backward-compatible; owns persistence header/tests/doc, parent host wiring pending.
+- Jules7157747656425898948: bounded pure C++ terrain support frame, newheader/test/doc,
+  no host wiring yet. Approximate body tilt is not per-foot IK acceptance.
+- AGYagy-terrain-material-refinement: Flashmedium, isolatedterrain-material-refinement,
+  owns texture/surface headers, focusedtest/doc. Correct quoted runner16004 has verified
+  actual agy child11216. Inspect frozen scope, native build/tests/capture before integration.
+Planning read-only, unrelated untracked preserved; no full draft or30FPS acceptance.

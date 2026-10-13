@@ -243,13 +243,13 @@ Store receipts by gate/run ID, with source revision plus dirty input hashes, too
 ## 10. Verified construction status — 2026-10-12
 
 This updates execution status; the full draft delivery contract remains the target.
-Published toolkit checkpoint3ce40b1 and reviewed packet-ten runtime source provide the evidence below.
+Current published project checkpoints and the retained task receipts provide the evidence below.
 
 | Capability | Current evidence and coverage | Remaining work |
 |---|---|---|
 | Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 15/15 | Integrated target-hardware frame-time/visual acceptance |
-| Toolkit asset pipeline | Full root suite 1987 passed / 2 skipped; actual Smalltrotter build/rig and provisional Basketfern frond generation/bake/PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
-| Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; provisional one-cycle/s body pace; forward/reverse/idle probes | Terrain contact/IK, natural transitions, browse/drink/head behavior and visual gait review |
+| Toolkit asset pipeline | Full root suite 1988 passed / 2 skipped; actual Smalltrotter build/rig and provisional Basketfern frond generation/bake/PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
+| Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; provisional one-cycle/s body pace; forward/reverse/idle probes | Terrain contact/IK (bank slope currently separates support heights), explicit authored front contact schedules, natural transitions, browse/drink/head behavior and visual gait review |
 | Ordinary needs | Physical body-based browse/drink contacts, persistent finite resources, STL5 ledger and hero needs continuity | Visible plant depletion and interaction poses |
 | World continuity | Lifecycle/death/successor and needs foundation; reviewed bounded resource ledger DTO | Eligible populations/nests, parenting/bonds, visible exceptions and eligible population continuity |
 | Camera | HeroView host integration: continuous orbit/zoom, detached pan and return; actual scripted renderer probe, no tether conflicts | Actual mouse/keyboard acceptance, full camera state persistence, audio, raycast and TravelTo |

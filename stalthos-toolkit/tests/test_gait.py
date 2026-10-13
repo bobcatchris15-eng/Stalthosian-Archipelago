@@ -129,6 +129,27 @@ def test_contact_summary_preserves_each_selectors_tolerance():
     assert result["targets"]["right"]["within_tolerance"] == 1
 
 
+def test_front_kinematic_diagnostic_metrics_keep_empty_coverage_explicit():
+    # Front phase offsets are an existing kinematic schedule, not authored
+    # contact targets. Empty source coverage must stay visibly unsampled.
+    assert LATERAL_SEQUENCE_PHASES["front_L"] == 0.25
+    assert LATERAL_SEQUENCE_PHASES["front_R"] == 0.75
+    missing = contact_summary({"diagnostic:manus_hand_l": []}, 0.0)
+    row = missing["targets"]["diagnostic:manus_hand_l"]
+    assert row["samples"] == 0
+    assert row["min_abs_ground_distance_m"] is None
+    assert missing["all_targets_sampled"] is False
+
+    # A planted-window drift metric is diagnostic data. Its value does not
+    # turn the selector into an authored contact target or validation gate.
+    phases = [0.25, 0.30, 0.35]
+    positions = [(0.0, 0.0, 0.0), (-0.04, 0.0, 0.0), (-0.08, 0.0, 0.0)]
+    drift = touchdown_excursion(positions, phases, 0.25, 0.62,
+                                root_stride_m=0.8)
+    assert drift["samples"] == 3
+    assert drift["max_excursion_m"] < 1e-12
+
+
 def test_malformed_animated_glb_is_rejected_despite_present_channels(tmp_path):
     import pytest
     # A valid generated channel fixture with just its target corrupted exercises
