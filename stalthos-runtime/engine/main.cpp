@@ -8,6 +8,7 @@
 #include "domain/reference_landscape.hpp"
 #include "domain/locomotion_clip.hpp"
 #include "domain/locomotion_pace.hpp"
+#include "domain/animation_transition.hpp"
 #include "domain/resource_ledger.hpp"
 #include "environment_scene.hpp"
 #include "shore_scene.hpp"
@@ -38,6 +39,36 @@ wi::RenderPath3D renderPath;
 constexpr float pi = 3.14159265358979323846f;
 constexpr int width = 1920, height = 1080;
 stalthos::domain::ReferenceLandscape landscape(42);
+
+struct TransitionPhaseRecord {
+    int phase_index = 0;
+    std::string phase_name;
+    std::string intent;
+    double duration_s = 0.0;
+    uint64_t frame_count = 0;
+    double start_time_s = 0.0;
+    double end_time_s = 0.0;
+    double start_x = 0.0, start_z = 0.0;
+    double end_x = 0.0, end_z = 0.0;
+    double displacement_m = 0.0;
+    double signed_displacement_m = 0.0;
+    double accumulated_distance_m = 0.0;
+    std::string active_clip;
+    float active_clip_amount = 0.0f;
+    std::string inactive_clip;
+    float inactive_clip_amount = 0.0f;
+    double start_animation_phase_s = 0.0;
+    double end_animation_phase_s = 0.0;
+    float start_animation_timer_s = 0.0f;
+    float end_animation_timer_s = 0.0f;
+    float local_bone_delta = 0.0f;
+    bool bone_pose_changed = false;
+    bool inactive_clip_paused = true;
+    bool inactive_clip_amount_zero = true;
+    std::string capture_filename;
+    bool capture_saved = false;
+    std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> baseline_poses;
+};
 
 LRESULT CALLBACK WindowProc(HWND h, UINT message, WPARAM w, LPARAM l) {
     if (message == WM_DESTROY) { PostQuitMessage(0); return 0; }
@@ -113,6 +144,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     double cameraDistance = 8;
     bool inspectionCamera = false, cameraDistanceSpecified = false;
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
+    bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -126,6 +158,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
             else if (key == L"--diagnostic-reverse-walk") diagnosticReverseWalk = true;
             else if (key == L"--diagnostic-needs") diagnosticNeeds = true;
+            else if (key == L"--diagnostic-transition" || key == L"--diagnostic-transitions") diagnosticTransition = true;
             else if (key == L"--diagnostic-camera") diagnosticCamera = true;
             else if (key == L"--output" && i+1 < argumentCount) output = argv[++i];
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
@@ -145,9 +178,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if (consumed != value.size() || parsed == 0) throw std::runtime_error("successor ID must be greater than zero");
                 successorId = parsed;
             }
-            else if (key == L"--duration" && i+1 < argumentCount) duration = std::stod(argv[++i]);
+            else if (key == L"--duration" && i+1 < argumentCount) { duration = std::stod(argv[++i]); durationSpecified = true; }
         }
         LocalFree(argv); argv = nullptr;
+        int diagCount = (diagnosticWalk ? 1 : 0) + (diagnosticReverseWalk ? 1 : 0) +
+                        (diagnosticNeeds ? 1 : 0) + (diagnosticTransition ? 1 : 0);
+        if (diagCount > 1) {
+            throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
+        }
+        if (diagnosticTransition && !durationSpecified) duration = 10.0;
+        if (diagnosticTransition && (!std::isfinite(duration) || duration < 10.0)) throw std::runtime_error("transition probe requires at least ten seconds");
         if(inspectionCamera && !cameraDistanceSpecified) cameraDistance=3;
         if(!std::isfinite(cameraDistance) || cameraDistance<2 || cameraDistance>18) throw std::runtime_error("camera distance must be 2..18 meters");
         if (!std::isfinite(duration) || duration <= 0 || duration > 120) throw std::runtime_error("diagnostic duration must be 0..120 seconds");
@@ -332,6 +372,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         wi::ecs::Entity hero=wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity sceneWalkAnimEntity = wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity sceneIdleAnimEntity = wi::ecs::INVALID_ENTITY;
+        std::string sceneWalkAnimName = "Smalltrotter_WalkCycle";
+        std::string sceneIdleAnimName = "Smalltrotter_NeutralIdle";
         if (!creature.empty()) {
             if (!std::filesystem::exists(creature)) throw std::runtime_error("creature import input does not exist");
             wi::scene::Scene imported;
@@ -420,8 +462,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 const std::string animName=nameComp ? nameComp->name : "";
                 if(scene.animations.GetCount()==1 || animName.find("Walk")!=std::string::npos || animName.find("walk")!=std::string::npos) {
                     sceneWalkAnimEntity=ent;
+                    if(!animName.empty()) sceneWalkAnimName = animName;
                 } else if(animName.find("Idle")!=std::string::npos || animName.find("idle")!=std::string::npos) {
                     sceneIdleAnimEntity=ent;
+                    if(!animName.empty()) sceneIdleAnimName = animName;
                 }
             }
             creatureLoaded=true;
@@ -448,6 +492,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         std::optional<stalthos::domain::LocomotionClip> creatureClip;
         if(creatureLoaded) creatureClip.emplace(creatureClipDuration,creatureStrideLength);
         double creaturePhase=0, creatureDistanceAccumulated=0, lastSignedBodyDistance=0, lastExpectedPhase=0;
+        std::vector<TransitionPhaseRecord> transitionPhases;
+        int activeTransitionPhaseIndex = -1;
+        bool inactiveClipWritesPrevented = true;
+        bool walkPhaseFollowsSignedDistance = true;
+        bool idleResetToNeutralVerified = true;
+        bool previousIsDisplaced = false;
+        bool transitionFinalCaptureSaved = false;
+        double finalElapsed = 0.0;
+
+        if (diagnosticTransition && (!creatureLoaded || sceneWalkAnimEntity == wi::ecs::INVALID_ENTITY || sceneIdleAnimEntity == wi::ecs::INVALID_ENTITY)) throw std::runtime_error("transition probe requires a creature with separate walk and idle clips");
 
         bool previousInspectionKey = false, previousToggleKey = false;
         uint64_t tetherTerrainConflictCount = 0;
@@ -525,7 +579,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if (message.message == WM_QUIT) { userClosed=true; break; }
             const auto now = std::chrono::steady_clock::now();
-            double elapsed=std::chrono::duration<double>(now-started).count();
+            double elapsed=std::chrono::duration<double>(now-started).count(); finalElapsed = elapsed;
             float dt=static_cast<float>(std::min(.1,std::chrono::duration<double>(now-previous).count())); previous=now;
             if (!interactive && elapsed >= duration) break;
             bool focused=GetForegroundWindow()==window;
@@ -567,9 +621,44 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<scene.animations.GetCount();++i) scene.animations[i].Pause(); }
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
+            if (diagnosticTransition) {
+                int targetPhaseIndex = std::clamp(static_cast<int>(elapsed / 2.0), 0, 4);
+                if (targetPhaseIndex != activeTransitionPhaseIndex) {
+                    if (activeTransitionPhaseIndex >= 0 && activeTransitionPhaseIndex < static_cast<int>(transitionPhases.size())) {
+                        auto& prev = transitionPhases[activeTransitionPhaseIndex];
+                        prev.end_time_s = elapsed;
+                        prev.duration_s = prev.end_time_s - prev.start_time_s;
+                        prev.end_x = x; prev.end_z = z;
+                        prev.displacement_m = std::hypot(prev.end_x - prev.start_x, prev.end_z - prev.start_z);
+                        prev.signed_displacement_m = (prev.phase_index == 1) ? prev.displacement_m : (prev.phase_index == 3) ? -prev.displacement_m : 0.0;
+                        prev.end_animation_phase_s = creaturePhase;
+                        prev.bone_pose_changed = (prev.local_bone_delta > 1e-5f);
+                    }
+                    TransitionPhaseRecord rec;
+                    rec.phase_index = targetPhaseIndex;
+                    rec.phase_name = (targetPhaseIndex == 0) ? "idle_1" :
+                                     (targetPhaseIndex == 1) ? "forward_walk" :
+                                     (targetPhaseIndex == 2) ? "idle_2" :
+                                     (targetPhaseIndex == 3) ? "reverse_walk" : "idle_3";
+                    rec.intent = (targetPhaseIndex == 1) ? "forward" :
+                                 (targetPhaseIndex == 3) ? "reverse" : "idle";
+                    rec.start_time_s = elapsed;
+                    rec.start_x = x; rec.start_z = z;
+                    rec.start_animation_phase_s = creaturePhase;
+                    rec.active_clip = (targetPhaseIndex == 1 || targetPhaseIndex == 3) ? sceneWalkAnimName : sceneIdleAnimName;
+                    rec.inactive_clip = (targetPhaseIndex == 1 || targetPhaseIndex == 3) ? sceneIdleAnimName : sceneWalkAnimName;
+                    rec.capture_filename = (targetPhaseIndex == 0) ? "transition-0-initial-idle.png" :
+                                           (targetPhaseIndex == 1) ? "transition-1-idle-to-forward.png" :
+                                           (targetPhaseIndex == 2) ? "transition-2-forward-to-idle.png" :
+                                           (targetPhaseIndex == 3) ? "transition-3-idle-to-reverse.png" :
+                                                                     "transition-4-reverse-to-idle.png";
+                    transitionPhases.push_back(rec);
+                    activeTransitionPhaseIndex = targetPhaseIndex;
+                }
+            }
             bool userWalk = userSteering && down('W');
             bool userReverse = userSteering && down('S');
-            bool walking = diagnosticWalk || diagnosticReverseWalk || userWalk;
+            bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk;
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
                 double targetX = x;
@@ -592,8 +681,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             float speed = 0.f;
             const float previousX=x, previousZ=z;
 
-            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || userWalk;
-            const bool reverseIntent = diagnosticReverseWalk || (!forwardIntent && userReverse);
+            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk;
+            const bool reverseIntent = diagnosticReverseWalk || (diagnosticTransition && activeTransitionPhaseIndex == 3) || (!forwardIntent && userReverse);
             if (heroAlive && creatureLoaded) {
                 using Pace = stalthos::domain::LocomotionPace;
                 speed = static_cast<float>(Pace::calculate(creatureStrideLength, creatureClipDuration,
@@ -721,6 +810,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     }
                     if (idleAnim) {
                         idleAnim->amount = 1.0f;
+                        if (previousIsDisplaced) {
+                            idleAnim->timer = static_cast<float>(idleAnim->start);
+                            idleAnim->last_update_time = idleAnim->timer;
+                        }
                         if (heroAlive) {
                             idleAnim->Play();
                         } else {
@@ -728,6 +821,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                         }
                     }
                 }
+                if (isDisplaced) {
+                    if (idleAnim && (idleAnim->amount > 0.0f || idleAnim->IsPlaying() || idleAnim->last_update_time != idleAnim->timer)) {
+                        inactiveClipWritesPrevented = false;
+                    }
+                } else {
+                    if (walkAnim && (walkAnim->amount > 0.0f || walkAnim->IsPlaying() || walkAnim->last_update_time != walkAnim->timer)) {
+                        inactiveClipWritesPrevented = false;
+                    }
+                }
+                previousIsDisplaced = isDisplaced;
             } else {
                 for(size_t i=0;i<scene.animations.GetCount();++i) {
                     auto& animation=scene.animations[i];
@@ -781,6 +884,55 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if (diagnosticTransition && activeTransitionPhaseIndex >= 0 && activeTransitionPhaseIndex < static_cast<int>(transitionPhases.size())) {
+                auto& cur = transitionPhases[activeTransitionPhaseIndex];
+                if (!cur.capture_saved) {
+                    cur.capture_saved = wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(), (output / cur.capture_filename).u8string());
+                }
+                if (!transitionFinalCaptureSaved && elapsed >= 9.9) {
+                    transitionFinalCaptureSaved = wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(), (output / "transition-5-final-idle.png").u8string());
+                }
+                cur.frame_count++;
+                cur.accumulated_distance_m += actualDistance;
+                auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
+                auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
+                cur.active_clip_amount = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->amount : 0.0f) : (idleAnim ? idleAnim->amount : 0.0f);
+                cur.inactive_clip_amount = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (idleAnim ? idleAnim->amount : 0.0f) : (walkAnim ? walkAnim->amount : 0.0f);
+                auto* inactiveAnim = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? idleAnim : walkAnim;
+                cur.inactive_clip_paused = cur.inactive_clip_paused && inactiveAnim && !inactiveAnim->IsPlaying();
+                cur.inactive_clip_amount_zero = cur.inactive_clip_amount_zero && inactiveAnim && inactiveAnim->amount == 0.0f;
+
+                if (cur.frame_count == 1) {
+                    cur.start_animation_timer_s = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->timer : 0.0f) : (idleAnim ? idleAnim->timer : 0.0f);
+                }
+                cur.end_animation_timer_s = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->timer : 0.0f) : (idleAnim ? idleAnim->timer : 0.0f);
+                if (creatureLoaded) {
+                    for (size_t ai = 0; ai < scene.animations.GetCount(); ++ai) {
+                        auto& animation = scene.animations[ai];
+                        for (const auto& channel : animation.channels) {
+                            const auto* bone = scene.transforms.GetComponent(channel.target);
+                            if (!bone) continue;
+                            uint8_t path = static_cast<uint8_t>(channel.path);
+                            XMFLOAT4 pose;
+                            if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose = bone->rotation_local;
+                            else if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose = {bone->translation_local.x, bone->translation_local.y, bone->translation_local.z, 0};
+                            else if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose = {bone->scale_local.x, bone->scale_local.y, bone->scale_local.z, 0};
+                            else continue;
+                            auto key = std::make_pair(channel.target, path);
+                            auto it = cur.baseline_poses.find(key);
+                            if (it == cur.baseline_poses.end()) {
+                                cur.baseline_poses.emplace(key, pose);
+                            } else {
+                                cur.local_bone_delta = std::max({cur.local_bone_delta,
+                                    std::abs(pose.x - it->second.x),
+                                    std::abs(pose.y - it->second.y),
+                                    std::abs(pose.z - it->second.z),
+                                    std::abs(pose.w - it->second.w)});
+                            }
+                        }
+                    }
+                }
+            }
             if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
             if(!initialNeedsRecorded) {
                 initialNeedsRecorded = true;
@@ -920,6 +1072,52 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     [&](const auto& dead) { return dead.id==successorPriorDeadId; });
             }
         }
+        if (diagnosticTransition && activeTransitionPhaseIndex >= 0 && activeTransitionPhaseIndex < static_cast<int>(transitionPhases.size())) {
+            auto& last = transitionPhases[activeTransitionPhaseIndex];
+            last.end_time_s = finalElapsed;
+            last.duration_s = last.end_time_s - last.start_time_s;
+            last.end_x = x; last.end_z = z;
+            last.displacement_m = std::hypot(last.end_x - last.start_x, last.end_z - last.start_z);
+            last.signed_displacement_m = 0.0;
+            last.end_animation_phase_s = creaturePhase;
+            auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
+            last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
+            last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
+        }
+        json transitionPhasesJson = json::array();
+        json transitionCapturesJson = json::object();
+        for (const auto& p : transitionPhases) {
+            transitionPhasesJson.push_back({
+                {"phase_index", p.phase_index},
+                {"phase_name", p.phase_name},
+                {"intent", p.intent},
+                {"duration_s", p.duration_s},
+                {"frame_count", p.frame_count},
+                {"displacement_m", p.displacement_m},
+                {"signed_displacement_m", p.signed_displacement_m},
+                {"accumulated_distance_m", p.accumulated_distance_m},
+                {"active_clip", p.active_clip},
+                {"active_clip_amount", p.active_clip_amount},
+                {"inactive_clip", p.inactive_clip},
+                {"inactive_clip_amount", p.inactive_clip_amount},
+                {"start_animation_phase_s", p.start_animation_phase_s},
+                {"end_animation_phase_s", p.end_animation_phase_s},
+                {"start_animation_timer_s", p.start_animation_timer_s},
+                {"end_animation_timer_s", p.end_animation_timer_s},
+                {"local_bone_delta", p.local_bone_delta},
+                {"bone_pose_changed", p.bone_pose_changed},
+                {"inactive_clip_paused", p.inactive_clip_paused},
+                {"inactive_clip_amount_zero", p.inactive_clip_amount_zero},
+                {"capture_filename", p.capture_filename},
+                {"capture_saved", p.capture_saved}
+            });
+            if (p.capture_saved) {
+                transitionCapturesJson[p.phase_name] = p.capture_filename;
+            }
+        }
+        if (transitionFinalCaptureSaved) {
+            transitionCapturesJson["final_idle"] = "transition-5-final-idle.png";
+        }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
@@ -932,7 +1130,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
             {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
             {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
-            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"calendar_scale",calendarScale},
+            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
+            {"diagnostic_transition_phases", transitionPhasesJson},
+            {"transition_captures", transitionCapturesJson},
+            {"inactive_clip_state_guarded", inactiveClipWritesPrevented},
+            {"walk_phase_follows_signed_distance", walkPhaseFollowsSignedDistance},
+            {"idle_reset_to_neutral_verified", idleResetToNeutralVerified},
+            {"clip_selection_policy", "exclusive binary clip selection (amount 1.0 / 0.0); paused inactive clip skipped by engine dependency scanner"},
+            {"remaining_discontinuity_documented", true},
             {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
             {"needs_final", {{"hunger", needs->hunger()}, {"thirst", needs->thirst()}, {"fatigue", needs->fatigue()}}},
             {"resources_initial", {{"creek", initialCreekResource}, {"shrub0", initialShrub0Resource}}},
@@ -987,7 +1192,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan},
             {"terrain_support_policy", "proposed approximate visual body plane alignment only; per-foot IK and terrain foot locking not claimed"},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {

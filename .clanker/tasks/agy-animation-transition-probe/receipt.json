@@ -1,0 +1,19 @@
+{
+  "status": "reviewed and parent validated diagnostic",
+  "tests": "parent combined Release and19/19CTest",
+  "parent_corrections": [
+    "Per-phase inactive state sampled each frame",
+    "Two distinct clips and minimum ten seconds required",
+    "Global telemetry labels state guard rather than counted writes",
+    "Huge finite elapsed clamps before integer conversion"
+  ],
+  "probe": "var/reports/runtime/20261013-034421-70c17a94/runtime-receipt.json",
+  "phase_formula_verified": true,
+  "schema_version": 1,
+  "visual_acceptance": false,
+  "idle_phases_stationary": true,
+  "reverse_distance_m": -0.250418,
+  "forward_distance_m": 0.2418349,
+  "worker_commit": "d9997ee1bec87348dff06cc7c6a2bdfad7e663ba",
+  "limits": "Binary selection still snaps; no direct job instrumentation, physical input or terrain contact acceptance"
+}

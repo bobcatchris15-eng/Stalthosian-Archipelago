@@ -1,0 +1,12 @@
+{
+  "worker_commit": "51da9016f823ed825eaad582ee5ce69a4396e77f",
+  "findings": [
+    "finite clearance overflow/tolerance",
+    "identity validation",
+    "partial cloud validity/cap",
+    "proxy geometry labels"
+  ],
+  "status": "candidate reviewed; defects deferred to bounded correction; not integrated",
+  "schema_version": 1,
+  "next_task": "agy-foot-diagnostic-hardening"
+}

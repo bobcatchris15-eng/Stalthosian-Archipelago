@@ -2,8 +2,16 @@
 param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
-      [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport)
+      [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
+      [switch]$DiagnosticTransition)
 $ErrorActionPreference = 'Stop'
+$diagnosticModes = @($DiagnosticWalk, $DiagnosticReverseWalk, $DiagnosticNeeds, $DiagnosticTransition) | Where-Object { $_ }
+if ($diagnosticModes.Count -gt 1) {
+    throw 'Conflicting diagnostic modes specified: only one of DiagnosticWalk, DiagnosticReverseWalk, DiagnosticNeeds, or DiagnosticTransition may be active'
+}
+if ($DiagnosticTransition -and -not $PSBoundParameters.ContainsKey('Duration')) { $Duration = 10 }
+if ($DiagnosticTransition -and (-not [double]::IsFinite($Duration) -or $Duration -lt 10)) { throw 'DiagnosticTransition requires at least ten seconds' }
+if ($DiagnosticTransition -and -not $Creature) { throw 'DiagnosticTransition requires a two-clip Creature' }
 if ($InspectionCamera -and -not $PSBoundParameters.ContainsKey('CameraDistance')) { $CameraDistance = 3 }
 if (-not [double]::IsFinite($CameraDistance) -or $CameraDistance -lt 2 -or $CameraDistance -gt 18) { throw 'CameraDistance must be 2..18 meters' }
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -53,6 +61,7 @@ $start.ArgumentList.Add('--camera-distance'); $start.ArgumentList.Add($CameraDis
 if ($DiagnosticWalk) { $start.ArgumentList.Add('--diagnostic-walk') }
 if ($DiagnosticReverseWalk) { $start.ArgumentList.Add('--diagnostic-reverse-walk') }
 if ($DiagnosticNeeds) { $start.ArgumentList.Add('--diagnostic-needs') }
+if ($DiagnosticTransition) { $start.ArgumentList.Add('--diagnostic-transition') }
 if ($DiagnosticCamera) { $start.ArgumentList.Add('--diagnostic-camera') }
 if ($SuccessorId) { $start.ArgumentList.Add('--successor-id'); $start.ArgumentList.Add($SuccessorId) }
 foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {

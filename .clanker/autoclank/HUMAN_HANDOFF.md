@@ -670,3 +670,6 @@ No full draft/referenceparity/FPSacceptance. Resume receipts before newdispatch.
 
 ## Wake checkpoint — 2026-10-13 03:38 Central
 ParentReleasebuild+18/18CTest passed. Bankform revision matchedcapture033624-afbfed4d improves broadspikes; sparseplainenvironment/footfloat stillopen. Resourcepresentation helpertestedbutnotwiredtoscene. PendingAGYtransition/footdiagnostic; Jules6161869236613976869livingidle; allotherremotecompletedcollected.5dispatch, deadline03:56. Toolkit unchangedthiswake; prior1988/2 andfocused78pass remainvalid. NoFPS/full draft/physicalinputacceptance.
+
+## Transition checkpoint — 2026-10-13 03:46 Central
+Parent19/19CTest andactual034421-70c17a94 fivephaseprobe pass focuseddiagnosticchecks. Moving+0.241835m/-0.250418m usespausedwalktimer following signedphaseformula; 3idlephases0distance/stablepose. Inactivepaused/zero-weight measuredperphase; no directbone-writeinstrumentationclaim. Snaptransitions remainopen. PendingAGYfootdiagnostic hardening (started03:39, original51da901notintegrated); Jules6161869236613976869livingidle (requiresNEWworkspaceBlender+fullsuite/native beforepromotion). Sixdispatchused; stopnewworkby03:56. Toolkitunchangedroot. Nextwirevalidatedfootproxy onlywithexplicitlimits, thenactualsole/IK grounding; wireledger-derivedfoliagefraction to importedfern_foliage preservingstructure. NoFPS/full draft/referenceparity.
