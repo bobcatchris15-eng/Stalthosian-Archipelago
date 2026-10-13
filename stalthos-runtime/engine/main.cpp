@@ -594,9 +594,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         scene.weather.SetRealisticSkyHighQuality(false);
         scene.weather.ambient = {.24f,.24f,.24f}; scene.weather.sunDirection = {-.48f,.8f,-.36f};
         auto sun = scene.Entity_CreateLight("draft sun",{0,30,0},{1,.96f,.9f},5,1000,wi::scene::LightComponent::DIRECTIONAL);
+        if (auto* sunLight = scene.lights.GetComponent(sun)) {
+            sunLight->SetCastShadow(true);
+        }
         scene.transforms.GetComponent(sun)->RotateRollPitchYaw(XMFLOAT3(.6751f,-.9273f,0));
         renderPath.init(app.canvas); renderPath.Load();
-        renderPath.setAO(wi::RenderPath3D::AO_DISABLED); renderPath.setSSREnabled(false);
+        renderPath.setAO(wi::RenderPath3D::AO_MSAO);
+        renderPath.setSSREnabled(false);
         renderPath.setSSGIEnabled(false); renderPath.setFSREnabled(false); renderPath.setFSR2Enabled(false);
         renderPath.setEyeAdaptionEnabled(false); renderPath.setMotionBlurEnabled(false); renderPath.setDepthOfFieldEnabled(false);
         renderPath.setShadowsEnabled(true); app.ActivatePath(&renderPath);
