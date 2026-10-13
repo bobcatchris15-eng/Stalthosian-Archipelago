@@ -248,3 +248,6 @@ Currentwake starts15:44Central deadline16:19;0newdispatches. Preserveunrelateddi
 
 ## Current verified state — 2026-10-13 03:30 Central
 Main/origin e897610 at wake start. Latestcombinedtoolkit1988passed2skipped543.45s; optionalpostwhitespacefocused78passed146.50s nowcomplete. Native17groupspass. Skin+neutralidle+meadowpublished. Two-clips actualidle/walkprobes acceptedonlyasdiagnostics; bankfootfloat andblockout anatomy visiblein015256capture. Meadow3919tufts49844tris3batches, broadbankclumps needseparateformrefinement. Active/pendingbackendIDs nowinexecution-policyandcurrent-work; oldercollectedsessions mustnotberetrieved. Sourceinputsread-only, unrelateduntrackedpreserved. No full draft/referenceparity/FPS orphysicalinputacceptance.
+
+## Current verified state — 2026-10-13 03:52 Central
+Native20/20CTest; bankformmatchedcaptures andsame-session5phaseprobevalidatedaslimiteddiagnostics. Fourtoe proxyclearances117/32/128/46mm at035126withassumed20mmsoleoffset; exactsolecontact/IK unresolved. Resourcepresentationhelperofflinepassedbutnotfoliagehostwired. AllAGYcollected; Jules6161869236613976869livingidle pending. No full draft/reference/FPSacceptance.

@@ -11,6 +11,7 @@
 #include "domain/animation_transition.hpp"
 #include "domain/resource_ledger.hpp"
 #include "environment_scene.hpp"
+#include "foot_terrain_diagnostic.hpp"
 #include "shore_scene.hpp"
 #include "terrain_surface.hpp"
 #include "organic_rocks.hpp"
@@ -503,6 +504,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
         if (diagnosticTransition && (!creatureLoaded || sceneWalkAnimEntity == wi::ecs::INVALID_ENTITY || sceneIdleAnimEntity == wi::ecs::INVALID_ENTITY)) throw std::runtime_error("transition probe requires a creature with separate walk and idle clips");
 
+        std::optional<stalthos::engine::FourFootDiagnosticReport> latestFootDiagnostic;
+        std::array<wi::ecs::Entity, stalthos::engine::kFootCount> footLandmarks{};
+        footLandmarks.fill(wi::ecs::INVALID_ENTITY);
+        if (creatureLoaded) for (size_t i = 0; i < footLandmarks.size(); ++i)
+            footLandmarks[i] = scene.Entity_FindByName(stalthos::engine::kWickedFootLandmarks[i].boneName, heroMotionRoot);
+
         bool previousInspectionKey = false, previousToggleKey = false;
         uint64_t tetherTerrainConflictCount = 0;
         int diagnosticCameraStage = 0;
@@ -884,6 +891,19 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if (creatureLoaded) {
+                std::array<stalthos::engine::FootBoneProxyInput, stalthos::engine::kFootCount> inputs{};
+                bool resolved = true;
+                for (size_t i = 0; i < inputs.size(); ++i) {
+                    const auto* bone = scene.transforms.GetComponent(footLandmarks[i]);
+                    if (!bone) { resolved = false; break; }
+                    const auto pos = bone->GetPosition();
+                    const auto& spec = stalthos::engine::kWickedFootLandmarks[i];
+                    inputs[i] = {spec.foot, {pos.x, pos.y, pos.z}, spec.defaultSoleThicknessMeters};
+                }
+                if (resolved) latestFootDiagnostic = stalthos::engine::evaluateFourFeetOnLandscapeFromBoneProxies(inputs, 0.02, landscape);
+                else latestFootDiagnostic.reset();
+            }
             if (diagnosticTransition && activeTransitionPhaseIndex >= 0 && activeTransitionPhaseIndex < static_cast<int>(transitionPhases.size())) {
                 auto& cur = transitionPhases[activeTransitionPhaseIndex];
                 if (!cur.capture_saved) {
@@ -1118,6 +1138,17 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (transitionFinalCaptureSaved) {
             transitionCapturesJson["final_idle"] = "transition-5-final-idle.png";
         }
+        json footDiagnosticJson = {{"resolved", latestFootDiagnostic.has_value()}, {"method", "bone_proxy"},
+            {"assumed_vertical_sole_offset_m", 0.02}, {"foot_contact_accepted", false}};
+        if (latestFootDiagnostic) {
+            footDiagnosticJson["all_valid"] = latestFootDiagnostic->allValid;
+            footDiagnosticJson["limitations"] = latestFootDiagnostic->limitations;
+            footDiagnosticJson["feet"] = json::array();
+            for (const auto& sample : latestFootDiagnostic->feet) footDiagnosticJson["feet"].push_back({
+                {"foot", stalthos::engine::footIdToString(sample.foot)}, {"valid", sample.valid},
+                {"world_position_m", {sample.worldPosition.x, sample.worldPosition.y, sample.worldPosition.z}},
+                {"terrain_height_m", sample.terrainHeight}, {"vertical_clearance_m", sample.clearanceMeters}, {"issue", sample.issue}});
+        }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
@@ -1130,7 +1161,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
             {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
             {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
-            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
+            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
             {"diagnostic_transition_phases", transitionPhasesJson},
             {"transition_captures", transitionCapturesJson},
             {"inactive_clip_state_guarded", inactiveClipWritesPrevented},

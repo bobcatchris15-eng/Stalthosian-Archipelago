@@ -1,0 +1,23 @@
+{
+  "limits": "Final-frame toe joint estimates only; no actual skinned sole surface or gait phase/IK acceptance",
+  "worker_commit": "14c8bf6",
+  "tests": "parentRelease20/20CTest",
+  "parent_corrections": [
+    "Opposite-sign safe finite mean and regression",
+    "Actual Wicked Entity_FindByName API scoped to hero",
+    "Post-Run four named toe-world queries and receipt"
+  ],
+  "foot_contact_accepted": false,
+  "status": "reviewed corrected helper and native proxy diagnostic validated",
+  "probe": "var/reports/runtime/20261013-035126-dcce92de/runtime-receipt.json",
+  "clearance_m": [
+    0.1170579,
+    0.0317569,
+    0.1275697,
+    0.0455502
+  ],
+  "original_commit": "51da9016f823ed825eaad582ee5ce69a4396e77f",
+  "assumed_vertical_sole_offset_m": 0.02,
+  "schema_version": 1,
+  "method": "bone_proxy"
+}
