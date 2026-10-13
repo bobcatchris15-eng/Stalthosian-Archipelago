@@ -1,0 +1,19 @@
+{
+  "limits": "No terrainsole/footIK/reference/FPS acceptance;1260unweighted bristleproxyvertices warning retained",
+  "native_idle_signed_distance_m": 0,
+  "effort": "medium",
+  "schema_version": 1,
+  "worker_model": "gpt-6-luna",
+  "status": "reviewed and validated",
+  "native_idle_pose_delta": 0.0032687525,
+  "idle_probe": "20261013-055553-10a485f1",
+  "worker_commit": "27a816a",
+  "source_workspace": "var/worktrees/living-idle-review",
+  "parent_asset_artifacts_verified": 18,
+  "transition_probe": "20261013-055616-a6b1f65d",
+  "parent_asset_workspace": "var/living-idle-parent-verified-20261013",
+  "fullsuite": "var/reports/packet-seventeen-toolkit-full.log",
+  "fullsuite_result": "1988passed2skipped541.22s",
+  "source_hashes_verified": true,
+  "post_suite_cleanup": "AST-equivalent trailing whitespace only"
+}

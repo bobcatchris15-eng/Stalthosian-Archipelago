@@ -1,0 +1,12 @@
+{
+  "correction_task": "agy-living-idle-validation",
+  "schema_version": 1,
+  "worker_commit": "f842a4c",
+  "session_id": "6161869236613976869",
+  "status": "collected candidate; not integrated",
+  "findings": [
+    "All-spine rotation accumulates and may move feet",
+    "Fabricated metadata test proves no command output",
+    "Doc claims unsupported exact lock"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "status": "incomplete after18min despite tool SUCCESS; no source correction",
+  "schema_version": 1,
+  "superseded_by": "local living_idle_correction27a816a",
+  "limits": "Worker only ran baseline commands and did not deliver assigned edits; preserve candidate workspace as diagnostic",
+  "original_commit": "f842a4c"
+}

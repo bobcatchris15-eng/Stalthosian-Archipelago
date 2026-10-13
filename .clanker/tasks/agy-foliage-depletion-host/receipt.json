@@ -1,0 +1,18 @@
+{
+  "full_probe": "20261013-055248-437d1dd9",
+  "instances": 8,
+  "worker_commit": "4dca758",
+  "visual_scope": "Coarse foliage shrinking/hiding measured and visible; woody structure retained. Not individual bite geometry or browse-pose acceptance.",
+  "parent_corrections": [
+    "Capture actual original local scales after placement",
+    "Mark transforms dirty",
+    "Keep hidden transforms nonsingular",
+    "Refresh cache from ledger to preserve idempotence",
+    "Preserve unknown objects instead of guessing foliage"
+  ],
+  "half_probe": "20261013-055256-099c4fc0",
+  "status": "incomplete worker candidate reviewed and corrected by parent; native validated",
+  "schema_version": 1,
+  "empty_probe": "20261013-055304-0cddfcd6",
+  "tests": "ParentRelease20/20CTest and3matched native loaded-ledger fixtures"
+}

@@ -1,0 +1,5 @@
+# Ledger-driven foliage presentation
+
+Proposed draft appearance: each of the eight imported shrub instances maps to its existing resource ID (200+i). Named foliage objects scale from their saved original local scale by the authoritative remaining fraction; exhaustion hides foliage while preserving structure. Unknown objects are preserved instead of guessing a foliage identity. Snapshot refresh occurs only after successful ledger consumption, preserving idempotent ledger quantities. Loaded snapshots apply immediately.
+
+Parent review corrects the incomplete worker candidate: original local scale is captured after placement transforms, direct scale writes mark transforms dirty, exhausted objects retain nonsingular transforms, and cached quantities refresh from the ledger instead of independently accumulating consumed amounts. This is coarse whole-frond shrinkage, not individual bite geometry or accepted browse animation. Native full/half/empty fixtures and visual inspection remain required.

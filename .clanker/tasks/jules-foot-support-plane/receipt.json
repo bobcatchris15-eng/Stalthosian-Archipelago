@@ -1,0 +1,8 @@
+{
+  "limits": "Needs focused numerical conditioning review and coupling to actual sole measurements; no native grounding acceptance",
+  "status": "collected isolated prototype; not integrated",
+  "parent_tests": "MSVCoptimizedRelease sevengroups pass",
+  "session_id": "17011071841838049720",
+  "schema_version": 1,
+  "worker_commit": "5b3546d"
+}

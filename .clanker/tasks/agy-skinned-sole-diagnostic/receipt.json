@@ -1,0 +1,12 @@
+{
+  "status": "frozen candidate reviewed; not integrated",
+  "schema_version": 1,
+  "worker_commit": "22d9bc5",
+  "findings": [
+    "Native doc memcpy from float matrices into double arrays overreads and corrupts data",
+    "Missing toe joint defaults to index0",
+    "Skinning silently drops missing weighted joints then renormalizes",
+    "No actual native selected-sole evidence yet"
+  ],
+  "next": "Correct real Wicked adapter, validate actual four sole selections/world conversion and bounds before native wiring"
+}

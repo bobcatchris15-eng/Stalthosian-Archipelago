@@ -103,7 +103,13 @@ def _stub_blender(tmp_path: Path, body: str) -> str:
     script = tmp_path / "stub_blender_body.py"
     script.write_text(body, encoding="utf-8")
     launcher = tmp_path / "stub_blender.cmd"
-    launcher.write_text(f'@echo off\r\n"{sys.executable}" "{script}" %*\r\n', encoding="utf-8")
+    import os
+    if sys.platform != "win32":
+        launcher = tmp_path / "stub_blender.cmd"
+        launcher.write_text(f'#!/bin/sh\n"{sys.executable}" "{script}" "$@"\n', encoding="utf-8")
+        os.chmod(str(launcher), 0o755)
+    else:
+        launcher.write_text(f'@echo off\r\n"{sys.executable}" "{script}" %*\r\n', encoding="utf-8")
     return str(launcher)
 
 

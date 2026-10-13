@@ -251,3 +251,6 @@ Main/origin e897610 at wake start. Latestcombinedtoolkit1988passed2skipped543.45
 
 ## Current verified state — 2026-10-13 03:52 Central
 Native20/20CTest; bankformmatchedcaptures andsame-session5phaseprobevalidatedaslimiteddiagnostics. Fourtoe proxyclearances117/32/128/46mm at035126withassumed20mmsoleoffset; exactsolecontact/IK unresolved. Resourcepresentationhelperofflinepassedbutnotfoliagehostwired. AllAGYcollected; Jules6161869236613976869livingidle pending. No full draft/reference/FPSacceptance.
+
+## Current verified state — 2026-10-13 06:01 Central
+Livingidle head/neckmotion withstationaryroot actualWickedverified; fulltoolkit1988/2 in541.22s and18parentartifacthashes. Foliageledgercoarseshrink/hide loaded1/.5/0fractionsover8instances verifiedmatchednativecaptures; structurekept. Native20/20tests. Pendingreviewsole22d9, plane5b3546d, bristle8b0b642isolated, noactivebackend. Full draft/reference/FPS/terrainfootacceptance remainopen.

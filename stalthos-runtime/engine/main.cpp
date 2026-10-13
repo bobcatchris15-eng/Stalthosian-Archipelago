@@ -10,6 +10,8 @@
 #include "domain/locomotion_pace.hpp"
 #include "domain/animation_transition.hpp"
 #include "domain/resource_ledger.hpp"
+#include "domain/resource_presentation.hpp"
+#include <cctype>
 #include "environment_scene.hpp"
 #include "foot_terrain_diagnostic.hpp"
 #include "shore_scene.hpp"
@@ -293,17 +295,22 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         uint64_t nextInteractionSession = maxPersistedSessionId + 1;
 
+        std::map<uint64_t, stalthos::ResourceDto> cachedResourceDtos;
+        for (const auto& res : resourceLedger.snapshot()) {
+            cachedResourceDtos[res.id] = res;
+        }
+
         auto getResourceRemaining = [&](uint64_t id) -> double {
-            auto snapshot = resourceLedger.snapshot();
-            for (const auto& res : snapshot) {
-                if (res.id == id) return res.initialQuantity - res.consumedQuantity;
+            auto it = cachedResourceDtos.find(id);
+            if (it != cachedResourceDtos.end()) {
+                return it->second.initialQuantity - it->second.consumedQuantity;
             }
             return 0.0;
         };
 
         auto getResourceFinite = [&]() -> bool {
-            auto snapshot = resourceLedger.snapshot();
-            for (const auto& res : snapshot) {
+            for (const auto& kv : cachedResourceDtos) {
+                const auto& res = kv.second;
                 if (!std::isfinite(res.initialQuantity - res.consumedQuantity) || res.initialQuantity - res.consumedQuantity < 0.0) return false;
             }
             return true;
@@ -335,33 +342,140 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
+        struct ShrubFoliageRef {
+            wi::ecs::Entity entity = wi::ecs::INVALID_ENTITY;
+            XMFLOAT3 originalScale{1.0f, 1.0f, 1.0f};
+            std::string objectName;
+            std::string meshName;
+        };
+        struct ShrubStructureRef {
+            wi::ecs::Entity entity = wi::ecs::INVALID_ENTITY;
+            std::string objectName;
+            std::string meshName;
+        };
+        struct ShrubInstanceVisualRecord {
+            size_t instanceIndex = 0;
+            uint64_t resourceId = 0;
+            stalthos::domain::Placement placement;
+            std::vector<ShrubFoliageRef> foliage;
+            std::vector<ShrubStructureRef> structure;
+            stalthos::ShrubVisualState visualState{false, true, 1.0, 4};
+            double appliedFraction = 1.0;
+        };
+        std::vector<ShrubInstanceVisualRecord> shrubVisualInstances;
+        shrubVisualInstances.reserve(8);
+
         size_t importedObjects = 0, importedInstances = 0;
         if (!plant.empty()) {
             if (!std::filesystem::exists(plant)) throw std::runtime_error("plant import input does not exist");
-            // Upstream importer indexes meshes from zero and converts the whole
-            // supplied scene's axes. Import into a fresh scene before merging.
-            std::vector<stalthos::domain::Placement> shrubs;
-            for (const auto& placement : landscape.placements())
-                if (placement.kind==stalthos::domain::PlacementKind::Shrub) shrubs.push_back(placement);
-            auto distance=[](const auto& p){return (p.x-12)*(p.x-12)+(p.z-15)*(p.z-15);};
-            std::stable_sort(shrubs.begin(),shrubs.end(),[&](const auto& a,const auto& b){return distance(a)<distance(b);});
-            if (shrubs.size()>8) shrubs.resize(8);
-            for (const auto& placement : shrubs) {
+            for (size_t shrubIdx = 0; shrubIdx < cachedShrubs.size(); ++shrubIdx) {
+                const auto& placement = cachedShrubs[shrubIdx];
+                uint64_t shrubResourceId = 200 + shrubIdx;
+
                 wi::scene::Scene imported;
                 ImportModel_GLTF(plant.u8string(), imported);
-                if (imported.objects.GetCount()==0) throw std::runtime_error("plant import produced no objects");
-                importedObjects+=imported.objects.GetCount(); ++importedInstances;
+                if (imported.objects.GetCount() == 0) throw std::runtime_error("plant import produced no objects");
+                importedObjects += imported.objects.GetCount();
+                ++importedInstances;
+
+                ShrubInstanceVisualRecord record;
+                record.instanceIndex = shrubIdx;
+                record.resourceId = shrubResourceId;
+                record.placement = placement;
+
+                auto toLower = [](std::string s) {
+                    for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+                    return s;
+                };
+
+                for (size_t k = 0; k < imported.objects.GetCount(); ++k) {
+                    const auto entity = imported.objects.GetEntity(k);
+                    const auto* object = &imported.objects[k];
+                    const auto* nameComp = imported.names.GetComponent(entity);
+                    const auto* meshNameComp = object ? imported.names.GetComponent(object->meshID) : nullptr;
+                    std::string objName = nameComp ? nameComp->name : "";
+                    std::string meshName = meshNameComp ? meshNameComp->name : "";
+
+                    std::string lowObj = toLower(objName);
+                    std::string lowMesh = toLower(meshName);
+
+                    bool isFoliage = (lowObj.find("foliage") != std::string::npos || lowMesh.find("foliage") != std::string::npos ||
+                                      lowObj.find("frond") != std::string::npos || lowMesh.find("frond") != std::string::npos ||
+                                      lowObj.find("leaf") != std::string::npos || lowMesh.find("leaf") != std::string::npos);
+                    bool isStructure = (lowObj.find("structure") != std::string::npos || lowMesh.find("structure") != std::string::npos ||
+                                        lowObj.find("stem") != std::string::npos || lowMesh.find("stem") != std::string::npos ||
+                                        lowObj.find("trunk") != std::string::npos || lowMesh.find("trunk") != std::string::npos ||
+                                        lowObj.find("wood") != std::string::npos || lowMesh.find("wood") != std::string::npos);
+
+                    float scale = static_cast<float>(placement.scale);
+                    if (isFoliage) {
+                        record.foliage.push_back({entity, XMFLOAT3(scale, scale, scale), objName, meshName});
+                    } else if (isStructure) {
+                        record.structure.push_back({entity, objName, meshName});
+                    } else {
+                        // Unrecognized object is preserved; never guess the first mesh is foliage.
+                        record.structure.push_back({entity, objName, meshName});
+                    }
+                }
+
                 for (size_t i = 0; i < imported.transforms.GetCount(); ++i) {
                     const auto entity = imported.transforms.GetEntity(i);
                     if (imported.hierarchy.GetComponent(entity) == nullptr) {
-                        float scale=static_cast<float>(placement.scale);
-                        imported.transforms[i].Scale(XMFLOAT3(scale,scale,scale));
-                        imported.transforms[i].RotateRollPitchYaw(XMFLOAT3(0,static_cast<float>(placement.headingRadians),0));
-                        imported.transforms[i].Translate(XMFLOAT3(static_cast<float>(placement.x),static_cast<float>(placement.y),static_cast<float>(placement.z)));
+                        float scale = static_cast<float>(placement.scale);
+                        imported.transforms[i].Scale(XMFLOAT3(scale, scale, scale));
+                        imported.transforms[i].RotateRollPitchYaw(XMFLOAT3(0, static_cast<float>(placement.headingRadians), 0));
+                        imported.transforms[i].Translate(XMFLOAT3(static_cast<float>(placement.x), static_cast<float>(placement.y), static_cast<float>(placement.z)));
                         imported.transforms[i].UpdateTransform();
                     }
                 }
+
+                for (auto& ref : record.foliage) {
+                    const auto* original = imported.transforms.GetComponent(ref.entity);
+                    if (original) ref.originalScale = original->scale_local;
+                }
                 scene.Merge(imported);
+                shrubVisualInstances.push_back(std::move(record));
+            }
+        }
+
+        auto applyShrubVisual = [&](ShrubInstanceVisualRecord& rec, const stalthos::ResourceDto& dto) {
+            rec.visualState = stalthos::ShrubPresentation::evaluate(dto, rec.visualState.valid ? std::make_optional(rec.visualState) : std::nullopt);
+            rec.appliedFraction = rec.visualState.foliageFraction;
+            float factor = static_cast<float>(rec.visualState.foliageFraction);
+            bool visible = rec.visualState.valid && rec.visualState.foliageFraction > 0.0;
+
+            for (const auto& foliageRef : rec.foliage) {
+                auto* obj = scene.objects.GetComponent(foliageRef.entity);
+                if (obj) {
+                    obj->SetRenderable(visible);
+                }
+                auto* trans = scene.transforms.GetComponent(foliageRef.entity);
+                if (trans) {
+                    if (visible) {
+                        trans->scale_local = XMFLOAT3(
+                            foliageRef.originalScale.x * factor,
+                            foliageRef.originalScale.y * factor,
+                            foliageRef.originalScale.z * factor
+                        );
+                    } else {
+                        trans->scale_local = foliageRef.originalScale;
+                    }
+                    trans->SetDirty();
+                    trans->UpdateTransform();
+                }
+            }
+            for (const auto& structRef : rec.structure) {
+                auto* obj = scene.objects.GetComponent(structRef.entity);
+                if (obj) {
+                    obj->SetRenderable(rec.visualState.woodyStemVisible);
+                }
+            }
+        };
+
+        for (auto& inst : shrubVisualInstances) {
+            auto it = cachedResourceDtos.find(inst.resourceId);
+            if (it != cachedResourceDtos.end()) {
+                applyShrubVisual(inst, it->second);
             }
         }
         bool creatureLoaded=false;
@@ -1035,6 +1149,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     if (actualDrink > 0) {
                         try {
                             if (resourceLedger.consume(physicalInteractionSession, 100, actualDrink)) {
+                                for (const auto& res : resourceLedger.snapshot()) cachedResourceDtos[res.id] = res;
                                 double dummyResource = available;
                                 if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, actualDrink, dummyResource)) {
                                     needs->drink(actualDrink);
@@ -1055,6 +1170,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     if (actualFeed > 0) {
                         try {
                             if (resourceLedger.consume(physicalInteractionSession, shrubId, actualFeed)) {
+                                for (const auto& res : resourceLedger.snapshot()) cachedResourceDtos[res.id] = res;
+                                if (nearbyShrubIndex >= 0 && nearbyShrubIndex < static_cast<int>(shrubVisualInstances.size())) {
+                                    applyShrubVisual(shrubVisualInstances[nearbyShrubIndex], cachedResourceDtos[shrubId]);
+                                }
                                 double dummyResource = available;
                                 if (interactions.applyContact(physicalInteractionSession, shrubId, eligibilityShrub, actualFeed, dummyResource)) {
                                     needs->feed(actualFeed);
@@ -1149,6 +1268,45 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"world_position_m", {sample.worldPosition.x, sample.worldPosition.y, sample.worldPosition.z}},
                 {"terrain_height_m", sample.terrainHeight}, {"vertical_clearance_m", sample.clearanceMeters}, {"issue", sample.issue}});
         }
+        json foliageDepletionJson = json::array();
+        for (const auto& inst : shrubVisualInstances) {
+            json foliageEntitiesJson = json::array();
+            for (const auto& f : inst.foliage) {
+                foliageEntitiesJson.push_back({
+                    {"entity_id", static_cast<uint64_t>(f.entity)},
+                    {"object_name", f.objectName},
+                    {"mesh_name", f.meshName},
+                    {"original_scale", {f.originalScale.x, f.originalScale.y, f.originalScale.z}}
+                });
+            }
+            json structureEntitiesJson = json::array();
+            for (const auto& s : inst.structure) {
+                structureEntitiesJson.push_back({
+                    {"entity_id", static_cast<uint64_t>(s.entity)},
+                    {"object_name", s.objectName},
+                    {"mesh_name", s.meshName}
+                });
+            }
+            foliageDepletionJson.push_back({
+                {"instance_index", inst.instanceIndex},
+                {"resource_id", inst.resourceId},
+                {"placement", {
+                    {"x", inst.placement.x},
+                    {"y", inst.placement.y},
+                    {"z", inst.placement.z},
+                    {"scale", inst.placement.scale},
+                    {"heading_radians", inst.placement.headingRadians}
+                }},
+                {"foliage_fraction", inst.visualState.foliageFraction},
+                {"leaf_cluster_count", inst.visualState.leafClusterCount},
+                {"woody_stem_visible", inst.visualState.woodyStemVisible},
+                {"visual_valid", inst.visualState.valid},
+                {"applied_scale_factor", inst.appliedFraction},
+                {"foliage_renderable", inst.visualState.valid && inst.visualState.foliageFraction > 0.0},
+                {"foliage_entities", foliageEntitiesJson},
+                {"structure_entities", structureEntitiesJson}
+            });
+        }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
@@ -1174,6 +1332,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"resources_initial", {{"creek", initialCreekResource}, {"shrub0", initialShrub0Resource}}},
             {"resources_final", {{"creek", getResourceRemaining(100)}, {"shrub0", getResourceRemaining(200)}}},
             {"resources_finite", getResourceFinite()},
+            {"shrub_presentation_instances", foliageDepletionJson},
+            {"shrub_presentation_active", !plant.empty() && importedInstances > 0},
             {"eligibility_water", eligibilityWater}, {"eligibility_shrub", eligibilityShrub},
             {"water_eligible_frames", waterEligibleFrames}, {"shrub_eligible_frames", shrubEligibleFrames},
             {"water_contact_applied", waterContactApplied}, {"shrub_contact_applied", shrubContactApplied},

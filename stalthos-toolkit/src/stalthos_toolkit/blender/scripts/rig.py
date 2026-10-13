@@ -933,6 +933,11 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
 
     idle_first_frame, idle_last_frame = 1, int(fps * 2.0) + 1  # 2 second idle
 
+    import random
+    rng = random.Random(int(seed))
+    sway_yaw = rng.uniform(-0.004, 0.004)
+    sway_pitch = rng.uniform(-0.003, 0.003)
+
     # Reset all bones and root to neutral pose for the idle
     for pb in arm.pose.bones:
         pb.rotation_mode = "QUATERNION"
@@ -942,12 +947,46 @@ def author_walk_cycle(arm: bpy.types.Object, contacts: list[dict[str, Any]],
     arm.location = Vector((0.0, 0.0, 0.0))
     bpy.context.view_layer.update()
 
-    # Keyframe first and last frame to create a seamless loop
-    for frame in (idle_first_frame, idle_last_frame):
-        arm.keyframe_insert(data_path="location", frame=frame, group="root_motion")
+    # Keyframe a seamless 2 second loop. Keep the torso and support chain neutral;
+    # only neck and head rotations receive small, bounded motion.
+
+    intervals_idle = idle_last_frame - idle_first_frame
+    for frame in range(idle_first_frame, idle_last_frame + 1):
+        phase = (frame - idle_first_frame) / intervals_idle
+
+        # 1 cycle of breathing over 2 seconds
+        breath_cycle = math.sin(phase * 2.0 * math.pi)
+
+        # 1 cycle of sway over 2 seconds
+        # using cosine for sway to have it slightly offset from breathing
+        sway_cycle = -math.cos(phase * 2.0 * math.pi) + 1.0 # 0 to 2
+
         for pb in arm.pose.bones:
-            pb.keyframe_insert(data_path="rotation_quaternion", frame=frame, group=pb.name)
-            pb.keyframe_insert(data_path="location", frame=frame, group=pb.name)
+            if pb.name.startswith("neck_") or pb.name.startswith("head_"):
+                # Pose is assigned from neutral each frame, so motion stays bounded.
+                pitch = breath_cycle * 0.003 if pb.name.startswith("neck_") else 0.0
+
+                # tiny head gaze sway
+                yaw = 0.0
+                if pb.name.startswith("head_"):
+                    yaw = (sway_cycle - 1.0) * sway_yaw
+                    pitch = breath_cycle * 0.002 + (sway_cycle - 1.0) * sway_pitch
+
+                # euler to quaternion
+                from mathutils import Euler
+                eu = Euler((pitch, yaw, 0.0), 'XYZ')
+                pb.rotation_quaternion = eu.to_quaternion()
+                pb.keyframe_insert(data_path="rotation_quaternion", frame=frame, group=pb.name)
+
+                # Insert location for completeness (remains 0)
+                pb.keyframe_insert(data_path="location", frame=frame, group=pb.name)
+            else:
+                if frame == idle_first_frame or frame == idle_last_frame:
+                    pb.keyframe_insert(data_path="rotation_quaternion", frame=frame, group=pb.name)
+                    pb.keyframe_insert(data_path="location", frame=frame, group=pb.name)
+
+        if frame == idle_first_frame or frame == idle_last_frame:
+            arm.keyframe_insert(data_path="location", frame=frame, group="root_motion")
 
     # Actually evaluate all 4 pads and actor root through frames without native terrain acceptance
     idle_root_translations = []
