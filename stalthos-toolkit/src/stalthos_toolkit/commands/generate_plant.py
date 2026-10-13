@@ -66,6 +66,22 @@ def generate_plant(ctx: Context) -> Status:
             for leaf_key in ("leaf_length_m", "leaf_width_m"):
                 if leaf_key in scaled_shape and leaf_key not in raw_entry and "leaf_scale" not in raw_entry:
                     scaled_shape[leaf_key] = round(scaled_shape[leaf_key] * h_scale, 4)
+            anatomy = definition.get("anatomy", {}) if isinstance(definition, dict) else {}
+            foliage = anatomy.get("foliage", {}) if isinstance(anatomy, dict) else {}
+            if isinstance(foliage, dict):
+                organ = foliage.get("organ")
+                shape = foliage.get("overall_shape")
+                flen = PL.P.unit_m(foliage.get("length"))
+                fwid = PL.P.unit_m(foliage.get("width"))
+                if organ == "scale_spray" or shape == "needled" or (flen is not None and flen < 0.1):
+                    if flen is not None:
+                        scaled_shape["needle_length_m"] = float(flen)
+                    if fwid is not None:
+                        scaled_shape["needle_width_m"] = float(fwid)
+                    if organ:
+                        scaled_shape["foliage_organ"] = str(organ)
+                    if shape:
+                        scaled_shape["foliage_shape"] = str(shape)
         payload["plant"] = scaled_shape
     if ctx.options.get("dry_run"):
         status.asset_id = asset_id

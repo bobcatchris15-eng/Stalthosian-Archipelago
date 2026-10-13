@@ -57,6 +57,80 @@ def _new_collection(name: str) -> bpy.types.Collection:
 
 
 # --------------------------------------------------------------------------- #
+def _add_terminal_needle_spray(
+    leaves: S.MeshBuilder,
+    anchor: mathutils.Vector,
+    direction: mathutils.Vector,
+    scale: float,
+    p: dict[str, Any],
+    level: int,
+    lr: Any,
+) -> int:
+    """Generate a bounded deterministic conifer terminal needle/scale spray."""
+    needle_l = float(p.get("needle_length_m", 0.035))
+    needle_w = float(p.get("needle_width_m", 0.009))
+    twist = math.radians(p.get("twist_deg", 6.0))
+    droop = 0.35 * level
+
+    fwd = S.unit_vector(direction)
+    up_ref = mathutils.Vector((0.0, 0.0, 1.0))
+    if abs(fwd.dot(up_ref)) > 0.92:
+        up_ref = mathutils.Vector((1.0, 0.0, 0.0))
+    lat = S.unit_vector(fwd.cross(up_ref))
+    up = S.unit_vector(lat.cross(fwd))
+
+    def spine_pt(t: float, base: mathutils.Vector, fwd_vec: mathutils.Vector, length: float) -> mathutils.Vector:
+        bend = droop * 0.10 * length * t * t
+        return base + fwd_vec * (length * t) - mathutils.Vector((0.0, 0.0, bend))
+
+    blades = 0
+    shoots: list[tuple[mathutils.Vector, mathutils.Vector, float, int]] = []
+    # Central leader shoot (reach scaled to match foliage fan droop envelope): 3 pairs + terminal
+    leader_len = scale * 0.82
+    shoots.append((anchor, fwd, leader_len, 3))
+
+    # Lateral sprigs: acute conifer branching (24 deg)
+    if scale > 0.08:
+        sprig_len = scale * 0.32
+        pt_lat = spine_pt(0.45, anchor, fwd, leader_len)
+        ang = math.radians(24.0)
+        dir_l = S.unit_vector(fwd * math.cos(ang) - lat * math.sin(ang))
+        dir_r = S.unit_vector(fwd * math.cos(ang) + lat * math.sin(ang))
+        shoots.append((pt_lat, dir_l, sprig_len, 2))
+        shoots.append((pt_lat, dir_r, sprig_len, 2))
+
+    for base, shoot_fwd, s_len, n_pairs in shoots:
+        sfwd = S.unit_vector(shoot_fwd)
+        slat = S.unit_vector(sfwd.cross(up_ref))
+        if slat.length < 1e-4:
+            slat = lat
+        sup = S.unit_vector(slat.cross(sfwd))
+
+        for step in range(n_pairs):
+            t = (step + 1) / (n_pairs + 0.6)
+            pos = spine_pt(t, base, sfwd, s_len)
+            needle_scale = needle_l * lr.uniform(0.9, 1.1)
+            needle_width = needle_w * lr.uniform(0.9, 1.1)
+            needle_ang = math.radians(lr.uniform(22.0, 32.0))
+
+            d_left = S.unit_vector(sfwd * math.cos(needle_ang) - slat * math.sin(needle_ang) + sup * lr.uniform(-0.06, 0.12))
+            d_right = S.unit_vector(sfwd * math.cos(needle_ang) + slat * math.sin(needle_ang) + sup * lr.uniform(-0.06, 0.12))
+
+            leaves.add_blade(pos, d_left, length=needle_scale, width=needle_width,
+                             segments=2, curve=0.15, droop=0.05, tip_twist=twist)
+            leaves.add_blade(pos, d_right, length=needle_scale, width=needle_width,
+                             segments=2, curve=0.15, droop=0.05, tip_twist=-twist)
+            blades += 2
+
+        tip_pos = spine_pt(1.0, base, sfwd, s_len)
+        d_tip = S.unit_vector(sfwd + sup * lr.uniform(0.0, 0.08))
+        leaves.add_blade(tip_pos, d_tip, length=needle_l * 1.05, width=needle_w,
+                         segments=2, curve=0.1, droop=0.03, tip_twist=0.0)
+        blades += 1
+
+    return blades
+
+
 # tree: recursive branching with phyllotaxy
 # --------------------------------------------------------------------------- #
 def build_tree(p: dict[str, Any], root: S.MeshBuilder, leaves: S.MeshBuilder,
@@ -128,6 +202,9 @@ def build_tree(p: dict[str, Any], root: S.MeshBuilder, leaves: S.MeshBuilder,
         cluster = int(p["leaf_cluster"] * (1.0 + 0.35 * (p["branch_levels"] - level)))
         if cluster:
             lr = S.rng(seed, "tree", "leaf", level, node_index)
+            is_scale_spray = (p.get("foliage_organ") == "scale_spray" or
+                              p.get("foliage_shape") == "needled" or
+                              "needle_length_m" in p)
             for i in range(cluster):
                 t = lr.uniform(0.45, 1.0)
                 anchor = bpath[min(len(bpath) - 1, int(t * len(bpath)))]
@@ -137,11 +214,15 @@ def build_tree(p: dict[str, Any], root: S.MeshBuilder, leaves: S.MeshBuilder,
                                      math.sin(az) * math.cos(el * math.pi / 2),
                                      math.sin(el * math.pi / 2)))
                 scale = p["leaf_length_m"] * lr.uniform(0.75, 1.15)
-                leaves.add_blade(anchor, d, length=scale,
-                                 width=p["leaf_width_m"] * lr.uniform(0.8, 1.2),
-                                 segments=p["leaf_segments"], curve=0.3,
-                                 droop=0.35 * level, tip_twist=math.radians(p["twist_deg"]))
-                leaf_count += 1
+                if is_scale_spray:
+                    blades = _add_terminal_needle_spray(leaves, anchor, d, scale, p, level, lr)
+                    leaf_count += blades
+                else:
+                    leaves.add_blade(anchor, d, length=scale,
+                                     width=p["leaf_width_m"] * lr.uniform(0.8, 1.2),
+                                     segments=p["leaf_segments"], curve=0.3,
+                                     droop=0.35 * level, tip_twist=math.radians(p["twist_deg"]))
+                    leaf_count += 1
 
         if level > 1:
             kids = max(1, children if level <= p["branch_levels"] - 1 else 1)
