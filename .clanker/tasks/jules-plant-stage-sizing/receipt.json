@@ -1,10 +1,16 @@
 {
+  "original_commit": "c7192aa",
+  "root_source_unchanged": true,
+  "correction_task": "agy-plant-stage-correction",
+  "scope_drift": [
+    "params.py extraheight_m array support",
+    "plan.md",
+    "38untracked scratchscripts retained isolated"
+  ],
   "session_id": "8336722969998514867",
-  "parent_toolkit_source_unchanged_by_session": true,
-  "status": "InProgress remote uncollected",
-  "ownership": [
-    "generate_plant.py",
-    "newstage-sizingtest",
-    "newdoc"
-  ]
+  "review_issue": "unconditionalvariantmultipliers widensno-stage behavior; weakunsupportedfixture",
+  "status": "AwaitingUserFeedback patchcollectedonce isolated",
+  "parent_integration_checkpoint": "2026-10-13T15:43:00-05:00",
+  "parent_integration": "Reviewed corrected implementation integrated; original candidate and failures retained. See stalthos-toolkit/docs/splitcrown-stage-runtime-evidence.md and stalthos-runtime/docs/woodland-host.md.",
+  "parent_validation": "1997 toolkit tests passed, 2 skipped; native Release build and 23 CTest groups passed. Actual geometry and baked runtime evidence retained; no full draft or FPS acceptance."
 }

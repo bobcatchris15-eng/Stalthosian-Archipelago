@@ -3,7 +3,7 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
-      [switch]$DiagnosticTransition)
+      [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '')
 $ErrorActionPreference = 'Stop'
 $diagnosticModes = @($DiagnosticWalk, $DiagnosticReverseWalk, $DiagnosticNeeds, $DiagnosticTransition) | Where-Object { $_ }
 if ($diagnosticModes.Count -gt 1) {
@@ -40,6 +40,15 @@ if ($SuccessorId) {
     }
     if (-not $LoadState) { throw 'SuccessorId requires LoadState of a save with recorded hero death' }
 }
+$woodlandAdultPath = ''; $woodlandSaplingPath = ''
+if ($WoodlandAdultTree) {
+    $woodlandAdultPath = (Resolve-Path -LiteralPath $WoodlandAdultTree -ErrorAction Stop).Path
+    if (-not (Test-Path -LiteralPath $woodlandAdultPath -PathType Leaf)) { throw "WoodlandAdultTree file not found: $WoodlandAdultTree" }
+}
+if ($WoodlandSaplingTree) {
+    $woodlandSaplingPath = (Resolve-Path -LiteralPath $WoodlandSaplingTree -ErrorAction Stop).Path
+    if (-not (Test-Path -LiteralPath $woodlandSaplingPath -PathType Leaf)) { throw "WoodlandSaplingTree file not found: $WoodlandSaplingTree" }
+}
 $id = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0,8)
 $output = Join-Path $root "var/reports/runtime/$id"
 New-Item -ItemType Directory -Force $output | Out-Null
@@ -50,6 +59,8 @@ $start.UseShellExecute = $false
 $start.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
 foreach ($arg in @('dx12','alwaysactive','--output',$output,'--duration',$Duration.ToString([Globalization.CultureInfo]::InvariantCulture))) { $start.ArgumentList.Add($arg) }
 if ($Plant) { $start.ArgumentList.Add('--plant'); $start.ArgumentList.Add((Resolve-Path $Plant).Path) }
+if ($WoodlandAdultTree) { $start.ArgumentList.Add('--woodland-adult-tree'); $start.ArgumentList.Add($woodlandAdultPath) }
+if ($WoodlandSaplingTree) { $start.ArgumentList.Add('--woodland-sapling-tree'); $start.ArgumentList.Add($woodlandSaplingPath) }
 if ($Creature) { $start.ArgumentList.Add('--creature'); $start.ArgumentList.Add((Resolve-Path $Creature).Path) }
 if ($Creature) { $start.ArgumentList.Add('--walk-duration'); $start.ArgumentList.Add($walkDuration.ToString([Globalization.CultureInfo]::InvariantCulture)); $start.ArgumentList.Add('--stride-length'); $start.ArgumentList.Add($strideLength.ToString([Globalization.CultureInfo]::InvariantCulture)) }
 if ($CalendarScale -ne 1) { $start.ArgumentList.Add('--calendar-scale'); $start.ArgumentList.Add($CalendarScale.ToString([Globalization.CultureInfo]::InvariantCulture)) }
@@ -80,7 +91,7 @@ foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $Sav
     $start.ArgumentList.Add($stateOption[0]); $start.ArgumentList.Add($statePath)
 }
 $process = [Diagnostics.Process]::Start($start)
-[ordered]@{process_id=$process.Id;executable=$exe;executable_sha256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant();evidence=$output;interactive=[bool]$Interactive;requested_seconds=$Duration;walk_metadata=$metadataPath;walk_duration_s=$walkDuration;walk_stride_length_m=$strideLength} | ConvertTo-Json | Set-Content (Join-Path $output 'launch.json') -Encoding utf8
+[ordered]@{process_id=$process.Id;executable=$exe;executable_sha256=(Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant();evidence=$output;interactive=[bool]$Interactive;requested_seconds=$Duration;walk_metadata=$metadataPath;walk_duration_s=$walkDuration;walk_stride_length_m=$strideLength;woodland_adult_tree=$woodlandAdultPath;woodland_sapling_tree=$woodlandSaplingPath} | ConvertTo-Json | Set-Content (Join-Path $output 'launch.json') -Encoding utf8
 Write-Output "Process $($process.Id); evidence $output"
 if (-not $Interactive) {
     if (-not $process.WaitForExit([int](($Duration+60)*1000))) { $process.Kill(); throw "Bounded runtime did not exit; evidence retained at $output" }

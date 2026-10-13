@@ -1,0 +1,11 @@
+# Splitcrown stage sizing and baked runtime evidence
+
+Explicit generate_plant stages now resolve the existing stage contract before constructing the Blender payload. Authored absolute heights take precedence; legacy absolute shape values are preserved. No-stage payloads retain their previous shape. No changes to blender/params.py or random variant multipliers were integrated from the Jules candidate.
+
+Validation on 2026-10-13: nine focused tests passed; the full offline toolkit suite passed 1,997 tests with two skips in 473.32 seconds. Frozen-source hashes and raw results are retained under var/reports/packet-twentyone-stage-*. Fresh Blender sources independently measured named structure height 4.21220784 m for sapling and 14.00071469 m for young_adult. Sources live in separate var/splitcrown-stage-parent-{sapling,young_adult}-20261013 workspaces.
+
+The prior GLB contained procedural material names without base-color factors, textures or vertex colors. The existing bake_materials and export_baked pipeline produced real embedded base-color and normal texture bindings. Baked prototype GLB: var/splitcrown-baked-runtime-20261013/exports/plant.splitcrown.ar1.young_adult.baked.glb; SHA256 a5866481ed79659079a8589230094c0d928cf71b35effe41df5130ba445fe2f1. Parent audit confirmed the hash and material bindings. This prototype remains about 28 m whole height and is not a correctly sized young adult.
+
+Native capture var/reports/runtime/20261013-153953-d11dac2c placed fourteen adult instances with shared geometry (5,460 unique and 76,440 drawn triangles). Six sapling proposals were skipped because their exported asset was absent. The inspected image shows brown trunks and scene shadows/reflections. This verifies material transport and instancing, not finished environment art, animation, stage correctness, full draft completion or 30 FPS acceptance. LOD quality remains provisional and unmeasured.
+
+Next concrete task: bake and export both corrected stage sources in their separate workspaces using the existing pipeline, inspect actual exported geometry and material bindings, then capture both stages together in Wicked. Retain failed strict-LOD and AGY attempt evidence. Jules session 8336722969998514867 was collected once; do not retrieve it again.

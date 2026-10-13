@@ -19,6 +19,7 @@
 #include "terrain_surface.hpp"
 #include "organic_rocks.hpp"
 #include "meadow_scene.hpp"
+#include "woodland_scene.hpp"
 #include "domain/camera_framing.hpp"
 #include "domain/hero_view_controller.hpp"
 #include "domain/body_terrain_support.hpp"
@@ -138,6 +139,8 @@ stalthos::engine::TerrainSurfaceResult Terrain(wi::scene::Scene& scene) {
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     std::filesystem::path output = "run-evidence";
     std::filesystem::path plant;
+    std::filesystem::path woodlandAdultTree;
+    std::filesystem::path woodlandSaplingTree;
     std::filesystem::path creature;
     double creatureClipDuration = 0.0, creatureStrideLength = 0.0;
     std::filesystem::path loadState, saveState;
@@ -166,6 +169,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--diagnostic-camera") diagnosticCamera = true;
             else if (key == L"--output" && i+1 < argumentCount) output = argv[++i];
             else if (key == L"--plant" && i+1 < argumentCount) plant = argv[++i];
+            else if (key == L"--woodland-adult-tree" && i+1 < argumentCount) woodlandAdultTree = argv[++i];
+            else if (key == L"--woodland-sapling-tree" && i+1 < argumentCount) woodlandSaplingTree = argv[++i];
             else if (key == L"--creature" && i+1 < argumentCount) creature = argv[++i];
             else if (key == L"--walk-duration" && i+1 < argumentCount) creatureClipDuration = std::stod(argv[++i]);
             else if (key == L"--stride-length" && i+1 < argumentCount) creatureStrideLength = std::stod(argv[++i]);
@@ -343,6 +348,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
+        scene.Update(0.0f);
+        const auto woodlandReport = stalthos::engine::populateWoodlandScene(
+            scene, landscape, woodlandAdultTree, woodlandSaplingTree, world.worldSeed(), 20);
         struct ShrubFoliageRef {
             wi::ecs::Entity entity = wi::ecs::INVALID_ENTITY;
             XMFLOAT3 originalScale{1.0f, 1.0f, 1.0f};
@@ -1458,6 +1466,31 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"structure_entities", structureEntitiesJson}
             });
         }
+        json woodlandPlacedJson = json::array();
+        for (const auto& t : woodlandReport.placedTrees) {
+            woodlandPlacedJson.push_back({
+                {"id", t.id},
+                {"stage", t.stage},
+                {"x", t.x},
+                {"y", t.y},
+                {"z", t.z},
+                {"analytical_y", t.analyticalY},
+                {"ground_delta_m", t.groundDeltaM},
+                {"heading_radians", t.headingRadians},
+                {"scale", t.scale},
+                {"rendered_ground_sampled", t.renderedGroundSampled}
+            });
+        }
+        json woodlandSkippedJson = json::array();
+        for (const auto& s : woodlandReport.skippedTrees) {
+            woodlandSkippedJson.push_back({
+                {"id", s.id},
+                {"stage", s.stage},
+                {"x", s.x},
+                {"z", s.z},
+                {"reason", s.reason}
+            });
+        }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
@@ -1543,8 +1576,47 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"creature_root_analytical_ground_y", latestCreatureRootAnalyticalGroundY},
             {"creature_root_rendered_ground_y", latestCreatureRootRenderedGroundY},
             {"creature_root_ground_delta_m", latestCreatureRootGroundDeltaM},
+            {"woodland_active", woodlandReport.active},
+            {"woodland_proposals_total", woodlandReport.proposalsTotal},
+            {"woodland_proposals_placed", woodlandReport.placedCount},
+            {"woodland_proposals_skipped", woodlandReport.skippedCount},
+            {"woodland_candidate_attempts", woodlandReport.candidateAttempts},
+            {"woodland_cluster_attempts", woodlandReport.clusterAttempts},
+            {"woodland_budget_exhausted", woodlandReport.candidateBudgetExhausted},
+            {"woodland_hard_cap", woodlandReport.hardCap},
+            {"woodland_max_trees_limit", woodlandReport.requestedMaxTrees},
+            {"woodland_adult_asset_path", woodlandReport.adultMetrics.path},
+            {"woodland_adult_loaded", woodlandReport.adultMetrics.loaded},
+            {"woodland_adult_placed", woodlandReport.adultPlacedCount},
+            {"woodland_adult_skipped", woodlandReport.adultSkippedCount},
+            {"woodland_adult_actual_whole_height_m", woodlandReport.adultMetrics.actualWholeHeightM},
+            {"woodland_adult_actual_trunk_height_m", woodlandReport.adultMetrics.actualTrunkHeightM},
+            {"woodland_adult_actual_crown_width_m", woodlandReport.adultMetrics.actualCrownWidthM},
+            {"woodland_adult_authored_target_height_m", woodlandReport.adultMetrics.authoredTargetHeightM},
+            {"woodland_adult_authored_target_crown_width_m", woodlandReport.adultMetrics.authoredTargetCrownWidthM},
+            {"woodland_adult_authored_mismatch", woodlandReport.adultMetrics.authoredMismatch},
+            {"woodland_adult_authored_mismatch_description", woodlandReport.adultMetrics.authoredMismatchDescription},
+            {"woodland_adult_stage_correct", woodlandReport.adultMetrics.stageCorrect},
+            {"woodland_adult_quality_label", woodlandReport.adultMetrics.qualityLabel},
+            {"woodland_sapling_asset_path", woodlandReport.saplingMetrics.path},
+            {"woodland_sapling_loaded", woodlandReport.saplingMetrics.loaded},
+            {"woodland_sapling_placed", woodlandReport.saplingPlacedCount},
+            {"woodland_sapling_skipped", woodlandReport.saplingSkippedCount},
+            {"woodland_sapling_actual_whole_height_m", woodlandReport.saplingMetrics.actualWholeHeightM},
+            {"woodland_sapling_actual_trunk_height_m", woodlandReport.saplingMetrics.actualTrunkHeightM},
+            {"woodland_sapling_authored_target_height_m", woodlandReport.saplingMetrics.authoredTargetHeightM},
+            {"woodland_sapling_stage_correct", woodlandReport.saplingMetrics.stageCorrect},
+            {"woodland_ground_cache_available", woodlandReport.groundCacheAvailable},
+            {"woodland_ground_sample_source", woodlandReport.groundSampleSource},
+            {"woodland_ground_fallbacks", woodlandReport.groundFallbacks},
+            {"woodland_unique_objects", woodlandReport.adultMetrics.uniqueObjects + woodlandReport.saplingMetrics.uniqueObjects},
+            {"woodland_unique_vertices", woodlandReport.totalUniqueVertices},
+            {"woodland_unique_triangles", woodlandReport.totalUniqueTriangles},
+            {"woodland_drawn_triangles", woodlandReport.totalDrawnTriangles},
+            {"woodland_placed_instances", woodlandPlacedJson},
+            {"woodland_skipped_instances", woodlandSkippedJson},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend","provisional adult woodland asset (lod0.glb) exhibits mature dimensions (26m trunk / 28m whole) exceeding 14m authored target (Jules 8336722969998514867 source fix pending); stage correctness not claimed; plant LOD degraded quality unverified; sapling stage skipped pending valid-sized asset"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {

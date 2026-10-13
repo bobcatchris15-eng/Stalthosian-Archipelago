@@ -13,8 +13,9 @@ import json
 from pathlib import Path
 
 from ..blender import pipeline as PL
-from ..blender.params import growth_stage_params, normalize_plant_params
+from ..blender.params import apply_scales, growth_stage_list, growth_stage_params, normalize_plant_params
 from ..core.contract import Context, command
+from ..core.errors import UsageError
 from ..core.status import Status
 
 
@@ -31,15 +32,35 @@ def generate_plant(ctx: Context) -> Status:
     stage = ctx.options.get("stage")
     variant = ctx.options.get("variant")
 
+    family = PL.P.resolve_family(definition)
+    payload = normalize_plant_params(definition, ctx, family=family, stage=stage,
+                                     asset_id=asset_id)
+    stage_block = growth_stage_params(definition, stage=stage)
+    if stage:
+        if not stage_block.get("available"):
+            raise UsageError(f"invalid plant growth stage {stage!r}")
+        # Apply existing growth scales once. Preserve canonical variant and
+        # no-stage behavior; variant generation owns its own multipliers.
+        original_shape = payload["plant"]
+        scaled_shape = apply_scales(original_shape, {}, stage_block)
+        declared = next(row for row in growth_stage_list(definition) if row["id"] == stage)
+        if declared.get("height_m") is not None:
+            scaled_shape["height_m"] = declared["height_m"]
+        # Legacy mappings can already supply absolute per-stage shape values.
+        # Keep those parsed values instead of scaling their dimensions twice.
+        raw_stages = definition.get("growth_stages")
+        if isinstance(raw_stages, dict):
+            for key in raw_stages.get(stage, {}):
+                if key in original_shape and key != "height_m":
+                    scaled_shape[key] = original_shape[key]
+        payload["plant"] = scaled_shape
     if ctx.options.get("dry_run"):
         status.asset_id = asset_id
-        status.metrics["plan"] = normalize_plant_params(definition, ctx, stage=stage,
-                                                         asset_id=asset_id)
+        status.metrics["plan"] = payload
         return status
 
     PL.require_blender(ctx)      # exit 4: no Blender means no run
 
-    family = PL.P.resolve_family(definition)
     suffix = f".{stage}" if stage else ""
     sources = ctx.workspace.sub("sources", asset_id)
     blend_rel = str((sources / f"{asset_id}{suffix}.blend").relative_to(ctx.workspace.root))
@@ -51,9 +72,8 @@ def generate_plant(ctx: Context) -> Status:
     params = PL.base_params(ctx, command="generate_plant", asset_id=asset_id,
                             definition=definition, stage=stage, variant=variant,
                             outputs=outputs)
-    params.update(normalize_plant_params(definition, ctx, family=family, stage=stage,
-                                         asset_id=asset_id))
-    params["growth_stage"] = growth_stage_params(definition, stage=stage)
+    params.update(payload)
+    params["growth_stage"] = stage_block
 
     _, result = PL.run_script(ctx, status, script="plants", params=params,
                               log_name=f"generate_plant_{asset_id}{suffix}")

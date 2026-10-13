@@ -1,0 +1,16 @@
+{
+  "original_worker_commit": "415fb4c",
+  "root_runtime_unchanged": true,
+  "correction_task": "agy-woodland-transform-review",
+  "review_findings": [
+    "rawmesh bounds ignoreancestorTRS",
+    "capturedlocalobjecttransform losesancestors",
+    "groundmatrixidentityfallback musttypedreject",
+    "unbakedprototypeGLBhas noalbedo factor/texture orvertexcolor"
+  ],
+  "parent_viewed_worker_capture": true,
+  "status": "collected isolated unintegrated correction underway",
+  "parent_integration_checkpoint": "2026-10-13T15:43:00-05:00",
+  "parent_integration": "Reviewed corrected implementation integrated; original candidate and failures retained. See stalthos-toolkit/docs/splitcrown-stage-runtime-evidence.md and stalthos-runtime/docs/woodland-host.md.",
+  "parent_validation": "1997 toolkit tests passed, 2 skipped; native Release build and 23 CTest groups passed. Actual geometry and baked runtime evidence retained; no full draft or FPS acceptance."
+}
