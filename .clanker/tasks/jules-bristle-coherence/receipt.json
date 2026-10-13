@@ -1,0 +1,11 @@
+{
+  "prior_candidate": "47c3d0b retained isolated notintegrated",
+  "session_id": "16460912954695556543",
+  "base_commit": "9417803",
+  "ownership": [
+    "rig.py bristle-only path",
+    "test_reference_rig_alignment.py",
+    "new coherence doc"
+  ],
+  "status": "remote dispatched unvalidated"
+}
