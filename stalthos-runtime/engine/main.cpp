@@ -9,6 +9,7 @@
 #include "domain/locomotion_clip.hpp"
 #include "domain/locomotion_pace.hpp"
 #include "domain/animation_transition.hpp"
+#include "domain/animation_blend.hpp"
 #include "domain/resource_ledger.hpp"
 #include "domain/resource_presentation.hpp"
 #include <cctype>
@@ -62,6 +63,14 @@ struct TransitionPhaseRecord {
     float active_clip_amount = 0.0f;
     std::string inactive_clip;
     float inactive_clip_amount = 0.0f;
+    float start_active_clip_amount = 0.0f;
+    float start_inactive_clip_amount = 0.0f;
+    double start_idle_weight = 0.0;
+    double end_idle_weight = 0.0;
+    double start_walk_weight = 0.0;
+    double end_walk_weight = 0.0;
+    uint64_t blend_frame_count = 0;
+    uint64_t settled_frame_count = 0;
     double start_animation_phase_s = 0.0;
     double end_animation_phase_s = 0.0;
     float start_animation_timer_s = 0.0f;
@@ -70,6 +79,7 @@ struct TransitionPhaseRecord {
     bool bone_pose_changed = false;
     bool inactive_clip_paused = true;
     bool inactive_clip_amount_zero = true;
+    bool post_blend_inactive_clip_zero = true;
     std::string capture_filename;
     bool capture_saved = false;
     std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> baseline_poses;
@@ -628,6 +638,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         bool previousIsDisplaced = false;
         bool transitionFinalCaptureSaved = false;
         double finalElapsed = 0.0;
+        stalthos::domain::AnimationBlend::State blendState;
+        blendState.targetClip = stalthos::domain::AnimationBlend::ClipKind::Idle;
+        blendState.transitionProgress = 1.0;
+        constexpr double kCrossfadeDurationSeconds = 0.25;
+        bool crossfadeWeightsNonzeroOnlyDuringBlend = true;
+        uint64_t crossfadeBlendFramesTotal = 0;
 
         if (diagnosticTransition && (!creatureLoaded || sceneWalkAnimEntity == wi::ecs::INVALID_ENTITY || sceneIdleAnimEntity == wi::ecs::INVALID_ENTITY)) throw std::runtime_error("transition probe requires a creature with separate walk and idle clips");
 
@@ -1015,54 +1031,105 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (creatureLoaded) {
                 auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
                 auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
-                const bool isDisplaced = (actualDistance > 1e-5);
 
-                if (isDisplaced || idleAnim == nullptr) {
-                    if (walkAnim) {
-                        walkAnim->amount = 1.0f;
+                stalthos::domain::AnimationBlend::ClipKind requestedClip = (walking && heroAlive)
+                    ? stalthos::domain::AnimationBlend::ClipKind::Walk
+                    : stalthos::domain::AnimationBlend::ClipKind::Idle;
+
+                if (walkAnim && idleAnim) {
+                    blendState = stalthos::domain::AnimationBlend::advance(blendState, requestedClip, dt, kCrossfadeDurationSeconds);
+                    const auto blendWeights = stalthos::domain::AnimationBlend::resolve(blendState);
+                    const double wIdle = blendWeights.idleWeight;
+                    const double wWalk = blendWeights.walkWeight;
+                    const bool isBlending = (blendState.transitionProgress < 1.0);
+
+                    if (isBlending) {
+                        ++crossfadeBlendFramesTotal;
+                        walkAnim->amount = static_cast<float>(wWalk);
+                        idleAnim->amount = static_cast<float>(wIdle);
+
                         if (creatureClip) {
                             walkAnim->Pause();
                             walkAnim->timer = static_cast<float>(walkAnim->start + creaturePhase);
-                        } else if (speed != 0 && heroAlive) {
+                            walkAnim->last_update_time = walkAnim->timer - 1.0f;
+                        } else if (heroAlive) {
                             walkAnim->Play();
                         } else {
                             walkAnim->Pause();
                         }
-                    }
-                    if (idleAnim) {
-                        idleAnim->amount = 0.0f;
-                        idleAnim->last_update_time = idleAnim->timer;
-                        idleAnim->Pause();
-                    }
-                } else {
-                    if (walkAnim) {
-                        walkAnim->amount = 0.0f;
-                        walkAnim->last_update_time = walkAnim->timer;
-                        walkAnim->Pause();
-                    }
-                    if (idleAnim) {
-                        idleAnim->amount = 1.0f;
-                        if (previousIsDisplaced) {
-                            idleAnim->timer = static_cast<float>(idleAnim->start);
-                            idleAnim->last_update_time = idleAnim->timer;
-                        }
+
                         if (heroAlive) {
                             idleAnim->Play();
                         } else {
                             idleAnim->Pause();
                         }
+
+                        if (walkAnim->amount <= 0.0f || idleAnim->amount <= 0.0f) {
+                            crossfadeWeightsNonzeroOnlyDuringBlend = false;
+                        }
+                    } else {
+                        // Settled in target clip
+                        if (blendState.targetClip == stalthos::domain::AnimationBlend::ClipKind::Walk) {
+                            walkAnim->amount = 1.0f;
+                            if (creatureClip) {
+                                walkAnim->Pause();
+                                walkAnim->timer = static_cast<float>(walkAnim->start + creaturePhase);
+                            } else if (speed != 0 && heroAlive) {
+                                walkAnim->Play();
+                            } else {
+                                walkAnim->Pause();
+                            }
+
+                            idleAnim->amount = 0.0f;
+                            idleAnim->last_update_time = idleAnim->timer;
+                            idleAnim->Pause();
+
+                            if (idleAnim->amount > 0.0f || idleAnim->IsPlaying() || idleAnim->last_update_time != idleAnim->timer) {
+                                inactiveClipWritesPrevented = false;
+                            }
+                        } else {
+                            // Settled in Idle
+                            walkAnim->amount = 0.0f;
+                            walkAnim->last_update_time = walkAnim->timer;
+                            walkAnim->Pause();
+
+                            idleAnim->amount = 1.0f;
+                            if (heroAlive) {
+                                idleAnim->Play();
+                            } else {
+                                idleAnim->Pause();
+                            }
+
+                            if (walkAnim->amount > 0.0f || walkAnim->IsPlaying() || walkAnim->last_update_time != walkAnim->timer) {
+                                inactiveClipWritesPrevented = false;
+                            }
+                        }
+
+                        if (walkAnim->amount > 0.0f && idleAnim->amount > 0.0f) {
+                            crossfadeWeightsNonzeroOnlyDuringBlend = false;
+                        }
+                    }
+                } else if (walkAnim) {
+                    // Single-clip fallback: Walk only
+                    walkAnim->amount = 1.0f;
+                    if (creatureClip) {
+                        walkAnim->Pause();
+                        walkAnim->timer = static_cast<float>(walkAnim->start + creaturePhase);
+                    } else if (speed != 0 && heroAlive) {
+                        walkAnim->Play();
+                    } else {
+                        walkAnim->Pause();
+                    }
+                } else if (idleAnim) {
+                    // Single-clip fallback: Idle only
+                    idleAnim->amount = 1.0f;
+                    if (heroAlive) {
+                        idleAnim->Play();
+                    } else {
+                        idleAnim->Pause();
                     }
                 }
-                if (isDisplaced) {
-                    if (idleAnim && (idleAnim->amount > 0.0f || idleAnim->IsPlaying() || idleAnim->last_update_time != idleAnim->timer)) {
-                        inactiveClipWritesPrevented = false;
-                    }
-                } else {
-                    if (walkAnim && (walkAnim->amount > 0.0f || walkAnim->IsPlaying() || walkAnim->last_update_time != walkAnim->timer)) {
-                        inactiveClipWritesPrevented = false;
-                    }
-                }
-                previousIsDisplaced = isDisplaced;
+                previousIsDisplaced = (actualDistance > 1e-5);
             } else {
                 for(size_t i=0;i<scene.animations.GetCount();++i) {
                     auto& animation=scene.animations[i];
@@ -1146,15 +1213,33 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 cur.accumulated_distance_m += actualDistance;
                 auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
                 auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
+                const auto currentBlendWeights = stalthos::domain::AnimationBlend::resolve(blendState);
+                const bool isBlendingPhase = (blendState.transitionProgress < 1.0);
+                auto* inactiveAnim = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? idleAnim : walkAnim;
+
+                if (isBlendingPhase) {
+                    cur.blend_frame_count++;
+                } else {
+                    cur.settled_frame_count++;
+                    if (inactiveAnim) {
+                        if (inactiveAnim->amount != 0.0f) cur.post_blend_inactive_clip_zero = false;
+                        if (inactiveAnim->IsPlaying()) cur.inactive_clip_paused = false;
+                    }
+                }
+
                 cur.active_clip_amount = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->amount : 0.0f) : (idleAnim ? idleAnim->amount : 0.0f);
                 cur.inactive_clip_amount = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (idleAnim ? idleAnim->amount : 0.0f) : (walkAnim ? walkAnim->amount : 0.0f);
-                auto* inactiveAnim = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? idleAnim : walkAnim;
-                cur.inactive_clip_paused = cur.inactive_clip_paused && inactiveAnim && !inactiveAnim->IsPlaying();
-                cur.inactive_clip_amount_zero = cur.inactive_clip_amount_zero && inactiveAnim && inactiveAnim->amount == 0.0f;
+                cur.inactive_clip_amount_zero = cur.post_blend_inactive_clip_zero;
 
                 if (cur.frame_count == 1) {
+                    cur.start_active_clip_amount = cur.active_clip_amount;
+                    cur.start_inactive_clip_amount = cur.inactive_clip_amount;
+                    cur.start_idle_weight = currentBlendWeights.idleWeight;
+                    cur.start_walk_weight = currentBlendWeights.walkWeight;
                     cur.start_animation_timer_s = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->timer : 0.0f) : (idleAnim ? idleAnim->timer : 0.0f);
                 }
+                cur.end_idle_weight = currentBlendWeights.idleWeight;
+                cur.end_walk_weight = currentBlendWeights.walkWeight;
                 cur.end_animation_timer_s = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->timer : 0.0f) : (idleAnim ? idleAnim->timer : 0.0f);
                 if (creatureLoaded) {
                     for (size_t ai = 0; ai < scene.animations.GetCount(); ++ai) {
@@ -1355,6 +1440,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"active_clip_amount", p.active_clip_amount},
                 {"inactive_clip", p.inactive_clip},
                 {"inactive_clip_amount", p.inactive_clip_amount},
+                {"start_active_clip_amount", p.start_active_clip_amount},
+                {"start_inactive_clip_amount", p.start_inactive_clip_amount},
+                {"start_idle_weight", p.start_idle_weight},
+                {"end_idle_weight", p.end_idle_weight},
+                {"start_walk_weight", p.start_walk_weight},
+                {"end_walk_weight", p.end_walk_weight},
+                {"blend_frame_count", p.blend_frame_count},
+                {"settled_frame_count", p.settled_frame_count},
                 {"start_animation_phase_s", p.start_animation_phase_s},
                 {"end_animation_phase_s", p.end_animation_phase_s},
                 {"start_animation_timer_s", p.start_animation_timer_s},
@@ -1363,6 +1456,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"bone_pose_changed", p.bone_pose_changed},
                 {"inactive_clip_paused", p.inactive_clip_paused},
                 {"inactive_clip_amount_zero", p.inactive_clip_amount_zero},
+                {"post_blend_inactive_clip_zero", p.post_blend_inactive_clip_zero},
                 {"capture_filename", p.capture_filename},
                 {"capture_saved", p.capture_saved}
             });
@@ -1506,10 +1600,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"native_sole_diagnostic",nativeSoleDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
             {"diagnostic_transition_phases", transitionPhasesJson},
             {"transition_captures", transitionCapturesJson},
+            {"animation_crossfade_duration_s", kCrossfadeDurationSeconds},
+            {"animation_crossfade_blend_frames_total", crossfadeBlendFramesTotal},
+            {"both_clips_nonzero_weights_only_during_blend", crossfadeWeightsNonzeroOnlyDuringBlend},
+            {"animation_blend_final_idle_weight", stalthos::domain::AnimationBlend::resolve(blendState).idleWeight},
+            {"animation_blend_final_walk_weight", stalthos::domain::AnimationBlend::resolve(blendState).walkWeight},
             {"inactive_clip_state_guarded", inactiveClipWritesPrevented},
             {"walk_phase_follows_signed_distance", walkPhaseFollowsSignedDistance},
             {"idle_reset_to_neutral_verified", idleResetToNeutralVerified},
-            {"clip_selection_policy", "exclusive binary clip selection (amount 1.0 / 0.0); paused inactive clip skipped by engine dependency scanner"},
+            {"clip_selection_policy", "bounded explicit-duration crossfade via domain AnimationBlend and Wicked AnimationComponent amount semantics; inactive clip paused and skipped after blend"},
             {"remaining_discontinuity_documented", true},
             {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
             {"needs_final", {{"hunger", needs->hunger()}, {"thirst", needs->thirst()}, {"fatigue", needs->fatigue()}}},
@@ -1617,7 +1716,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"woodland_placed_instances", woodlandPlacedJson},
             {"woodland_skipped_instances", woodlandSkippedJson},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend","woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","bounded crossfade blend replaces exclusive binary clip selection for idle/walk/reverse transitions; unblended one-frame pose snap eliminated across transition boundaries; foot sliding during blend and low-tail clearance remain unresolved limitations","woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {
