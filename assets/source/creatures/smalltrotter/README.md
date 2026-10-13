@@ -1,0 +1,6 @@
+# Smalltrotter rough source master
+Supplied by the project owner on 2026-10-13 as a rough Smalltrotter model. This editable master is preserved byte-for-byte; work on derived copies. SHA256: b987e7d7eac4dfe0e09e2e188a592236ed57eb5e00da7d8f7e6d1d901de15350. Bytes: 39,557,738.
+
+Blender 5.2 inspection with auto-execution disabled found body, eyes and bristles; no rig, animations, UVs or assigned mesh materials. No text blocks, linked libraries or external dependencies were found. Body base topology has two equal disconnected components and open edges, requiring examination before deformation. The trial base export contains140,056 triangles; viewport Multires evaluation is substantially larger. See stalthos-runtime/docs/incoming-smalltrotter-audit.md for real inventory and preview evidence.
+
+This is a modeling source, not the currently playable runtime creature. Keep the supplied silhouette as the reference for derived preparation. Next: inspect mirrored body boundary correspondence and weld only intended seam vertices on a copy, retain Multires master, prepare explicit surface/eye/bristle materials and UV strategy, then skeleton/weights and actual foot/neck/tail pose checks. Avoid whole-model destructive remesh or speculative animation reuse. Native imported pose and deformation evidence are required before replacing the existing creature.
