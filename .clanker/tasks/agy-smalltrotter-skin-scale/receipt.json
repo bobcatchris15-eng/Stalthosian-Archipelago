@@ -1,0 +1,8 @@
+{
+  "worktree": "var/worktrees/smalltrotter-skin-scale",
+  "worker_commit": "0ba585e7bc400ad1876f2ba5e318cdbeae82a873",
+  "integration_gate": "Inspect scoped4files/actualrenders, independently rebuild/rig, frozen fullroot toolkit suite and nativecapture. Do not promote from workerreceipt.",
+  "status": "frozen candidate collected, not integrated",
+  "worker_claims": "18focusedtests andactualBlender build/turntable; parent fullroot/native verification pending",
+  "schema_version": 1
+}

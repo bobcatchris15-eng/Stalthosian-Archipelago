@@ -4,6 +4,7 @@
 #include "lifecycle.hpp"
 #include "needs.hpp"
 #include "resource_ledger.hpp"
+#include "camera_framing.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -29,6 +30,14 @@ struct RetainedEntity {
 struct DeadHero { Identity id; RegionId region; };
 struct RegionTrees { RegionId region; std::vector<TreeException> trees; std::uint64_t revision = 0; };
 struct HostPose { Vec3 position; double headingRadians = 0; std::uint8_t cameraMode = 0; };
+struct CameraStateSnapshot {
+    std::uint8_t mode = 0;
+    std::uint8_t focus = 0;
+    Vec3 detachedAnchor{0.0, 0.0, 0.0};
+    double orbitAzimuth = 0.0;
+    double orbitElevation = 0.0;
+    double orbitDistance = domain::CameraFraming::kDefaultDistance;
+};
 struct HeroLifecycleSnapshot {
     Identity heroId;
     HeroSpecies species;
@@ -58,6 +67,7 @@ struct SaveData {
     std::vector<RegionTrees> regions;
     std::optional<HostPose> pose;
     std::optional<ResourceLedgerDto> resourceLedger;
+    std::optional<CameraStateSnapshot> cameraState;
 };
 
 constexpr std::size_t MAX_ACTIVE_TRANSIENTS = 500'000;
@@ -132,6 +142,27 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
+    // STL6 header, times, seed, retention limit, identities, optional pose,
+    // optional lifecycle, optional needs, optional resource ledger, and optional camera state.
+    std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
+        1 + (data.heroLifecycle ? 18 : 0) + 1 + (data.heroNeeds ? 42 : 0) + 1;
+    if (data.resourceLedger) {
+        size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.resourceLedger->resources.size()) * 25);
+        size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.resourceLedger->sessions.size()) * 24);
+    }
+    size = checkedAdd(size, 1 + (data.cameraState ? 50 : 0));
+    size = checkedAdd(size, 4);
+    size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
+    size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.deadHeroes.size()) * 16);
+    size = checkedAdd(size, 4);
+    for (const auto& region : data.regions)
+        size = checkedAdd(size, 20 + static_cast<std::uint64_t>(region.trees.size()) * 17);
+    if (size > MAX_SAVE_BYTES) throw std::runtime_error("save exceeds byte size bound");
+    return size;
+}
+
+inline std::uint64_t encodedSizeStl5(const SaveData& data) {
     // STL5 header, times, seed, retention limit, identities, optional pose,
     // optional lifecycle, optional needs, and optional resource ledger.
     std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
@@ -200,6 +231,20 @@ inline std::uint64_t serializedFileSize(const std::filesystem::path& path) {
     return size;
 }
 
+inline void validate(const CameraStateSnapshot& s) {
+    if (s.mode > 1) throw std::runtime_error("invalid camera mode");
+    if (s.focus > 1) throw std::runtime_error("invalid input focus");
+    if (!finite(s.detachedAnchor) ||
+        std::abs(s.detachedAnchor.x) > 1e6 ||
+        std::abs(s.detachedAnchor.y) > 1e6 ||
+        std::abs(s.detachedAnchor.z) > 1e6)
+        throw std::runtime_error("invalid camera detached anchor");
+    if (!std::isfinite(s.orbitAzimuth) || !std::isfinite(s.orbitElevation) || !std::isfinite(s.orbitDistance) ||
+        s.orbitDistance < domain::CameraFraming::kMinDistance || s.orbitDistance > domain::CameraFraming::kMaxDistance ||
+        s.orbitElevation < domain::CameraFraming::kMinElevation || s.orbitElevation > domain::CameraFraming::kMaxElevation)
+        throw std::runtime_error("invalid camera orbit parameters");
+}
+
 inline void validate(const SaveData& data) {
     if (!std::isfinite(data.calendarSeconds) || data.calendarSeconds < 0) throw std::runtime_error("invalid calendar");
     if (!std::isfinite(data.physicalSeconds) || data.physicalSeconds < 0) throw std::runtime_error("invalid physical time");
@@ -240,6 +285,9 @@ inline void validate(const SaveData& data) {
             !std::isfinite(needs.injury) || needs.injury < 0.0 || needs.injury > 1.0) {
             throw std::runtime_error("invalid needs values");
         }
+    }
+    if (data.cameraState) {
+        validate(*data.cameraState);
     }
     if (data.retentionLimit > MAX_RETAINED) throw std::runtime_error("retention limit exceeds size bound");
     if (data.retained.size() > data.retentionLimit) throw std::runtime_error("retained records exceed retention limit");
@@ -313,8 +361,8 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL5", 4);
-    detail::write_u32(os, 5);
+    os.write("STL6", 4);
+    detail::write_u32(os, 6);
     detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
@@ -369,6 +417,18 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
             detail::write_u64(os, ses.resourceId);
             detail::write_double(os, ses.amount);
         }
+    }
+
+    detail::write_u8(os, data.cameraState ? 1 : 0);
+    if (data.cameraState) {
+        detail::write_u8(os, data.cameraState->mode);
+        detail::write_u8(os, data.cameraState->focus);
+        detail::write_double(os, data.cameraState->detachedAnchor.x);
+        detail::write_double(os, data.cameraState->detachedAnchor.y);
+        detail::write_double(os, data.cameraState->detachedAnchor.z);
+        detail::write_double(os, data.cameraState->orbitAzimuth);
+        detail::write_double(os, data.cameraState->orbitElevation);
+        detail::write_double(os, data.cameraState->orbitDistance);
     }
 
     auto active = data.activeTransients;
@@ -428,9 +488,10 @@ inline SaveData readSave(const std::filesystem::path& path) {
     const bool stl3 = std::strncmp(magic, "STL3", 4) == 0;
     const bool stl4 = std::strncmp(magic, "STL4", 4) == 0;
     const bool stl5 = std::strncmp(magic, "STL5", 4) == 0;
-    if (!legacy && !stl2 && !stl3 && !stl4 && !stl5) throw std::runtime_error("invalid magic or corrupt file");
+    const bool stl6 = std::strncmp(magic, "STL6", 4) == 0;
+    if (!legacy && !stl2 && !stl3 && !stl4 && !stl5 && !stl6) throw std::runtime_error("invalid magic or corrupt file");
     const auto version = detail::read_u32(is);
-    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4) || (stl5 && version != 5)) throw std::runtime_error("unsupported save version");
+    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4) || (stl5 && version != 5) || (stl6 && version != 6)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
     if (!legacy) data.physicalSeconds = detail::read_double(is);
@@ -448,7 +509,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
         if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
     }
-    if (stl3 || stl4 || stl5) {
+    if (stl3 || stl4 || stl5 || stl6) {
         const auto hasLifecycle = detail::read_u8(is);
         if (hasLifecycle > 1) throw std::runtime_error("corrupt lifecycle presence flag");
         if (hasLifecycle) {
@@ -464,7 +525,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
             data.heroLifecycle = life;
         }
     }
-    if (stl4 || stl5) {
+    if (stl4 || stl5 || stl6) {
         const auto hasNeeds = detail::read_u8(is);
         if (hasNeeds > 1) throw std::runtime_error("corrupt needs presence flag");
         if (hasNeeds) {
@@ -483,7 +544,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
             data.heroNeeds = needs;
         }
     }
-    if (stl5) {
+    if (stl5 || stl6) {
         const auto hasResourceLedger = detail::read_u8(is);
         if (hasResourceLedger > 1) throw std::runtime_error("corrupt resource ledger presence flag");
         if (hasResourceLedger) {
@@ -512,6 +573,24 @@ inline SaveData readSave(const std::filesystem::path& path) {
                 ledger.sessions.push_back(ses);
             }
             data.resourceLedger = ledger;
+        }
+    }
+
+    if (stl6) {
+        const auto hasCameraState = detail::read_u8(is);
+        if (hasCameraState > 1) throw std::runtime_error("corrupt camera state presence flag");
+        if (hasCameraState) {
+            CameraStateSnapshot cam;
+            cam.mode = detail::read_u8(is);
+            cam.focus = detail::read_u8(is);
+            cam.detachedAnchor.x = detail::read_double(is);
+            cam.detachedAnchor.y = detail::read_double(is);
+            cam.detachedAnchor.z = detail::read_double(is);
+            cam.orbitAzimuth = detail::read_double(is);
+            cam.orbitElevation = detail::read_double(is);
+            cam.orbitDistance = detail::read_double(is);
+            detail::validate(cam);
+            data.cameraState = cam;
         }
     }
 
@@ -587,7 +666,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         legacySize = detail::checkedAdd(legacySize, 4);
         for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
         if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
-    } else if ((stl5 ? detail::encodedSize(data) : (stl4 ? detail::encodedSizeStl4(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data)))) != fileSize)
+    } else if ((stl6 ? detail::encodedSize(data) : (stl5 ? detail::encodedSizeStl5(data) : (stl4 ? detail::encodedSizeStl4(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data))))) != fileSize)
         throw std::runtime_error("save size does not match encoded records");
     return data;
 }
@@ -648,10 +727,13 @@ inline void restoreResourceLedger(const SaveData& data, ResourceLedger& ledger) 
     }
 }
 
-inline SaveData captureSave(const SimCore& sim, const StalthosState& world, std::optional<HostPose> pose = std::nullopt) {
+inline SaveData captureSave(const SimCore& sim, const StalthosState& world,
+                            std::optional<HostPose> pose = std::nullopt,
+                            std::optional<CameraStateSnapshot> cameraState = std::nullopt) {
     const auto snapshot = world.snapshot();
     SaveData data; data.physicalSeconds = sim.physicalSeconds(); data.calendarSeconds = sim.calendarSeconds();
     data.seed = snapshot.seed; data.retentionLimit = snapshot.retentionLimit; data.pose = pose;
+    data.cameraState = cameraState;
     if (snapshot.hero) data.hero = ActiveEntity{snapshot.hero->first, snapshot.hero->second};
     std::set<Identity> retainedIds;
     for (const auto& value : snapshot.retained) {

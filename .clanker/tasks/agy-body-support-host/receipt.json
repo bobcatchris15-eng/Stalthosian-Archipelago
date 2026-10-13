@@ -1,0 +1,23 @@
+{
+  "test_log": "var/reports/packet-fourteen-final-ctest.log",
+  "matched_pose": {
+    "body_distance": 0,
+    "x": 12,
+    "z": 0,
+    "phase": 0,
+    "heading": 0
+  },
+  "enabled_probe": "var/reports/runtime/20261012-233927-5d2900ad/runtime-receipt.json",
+  "parent_correction": "Reject overflow of doubled halfspans; retain terrain_texture CMake test when merging.",
+  "worker_commit": "8ee38f3704ea0a4ac0c5340aab528f2e0396f2d2",
+  "disabled_probe": "var/reports/runtime/20261012-233900-f534b8fa/runtime-receipt.json",
+  "slope_radians": 0.21413888139211237,
+  "performance_accepted": false,
+  "fallback_failures": 0,
+  "tests": "17/17 root native CTest passed",
+  "jules_session": "7157747656425898948",
+  "schema_version": 1,
+  "foot_contact_accepted": false,
+  "status": "reviewed and validated provisional host integration",
+  "neutral_idle_accepted": false
+}

@@ -18,7 +18,7 @@ The Native Host (`stalthos-runtime/engine/main.cpp`) integrates `stalthos::domai
 
 ## Persistence Semantics
 - **Legacy Compatibility**: `HostPose::cameraMode` preserves legacy 0/1/2 semantics (0: behind follow, 1: broadside, 2: frontal). It is NOT reinterpreted as `LocallyDetached` mode.
-- **Save Scope & Persistence Limitation**: Saves record legacy pose and orientation. Full camera controller runtime state (e.g., detached camera anchor coordinates, orbit elevation/azimuth, input focus) is explicitly documented as not persisted in the legacy host pose format, avoiding state reinterpretation or corruption across versions.
+- **Save Scope & Persistence Limitation**: Saves record legacy pose and orientation. Legacy HostPose remains compatible. Optional STL6 camera snapshots now store mode, focus, detached anchor and orbit parameters; tether configuration and travel intent remain unpersisted.
 
 ## Verifiable Outputs
 Execution records verifiable fields in `runtime-receipt.json`:
@@ -33,7 +33,7 @@ Execution records verifiable fields in `runtime-receipt.json`:
 - `pending_audio`: current audio integration status ("none")
 - `pending_travel_to`: whether an active ground click travel destination is pending
 - `pending_raycast`: mouse raycasting status ("none")
-- Complete controls and full camera state persistence remain explicitly disclaimed under limits.
+- Complete controls and travel intent and tether configuration persistence remain explicitly disclaimed under limits.
 
 Parent review corrected initiallegacy0/1/2 presetapplication, moved fullcamera snapshot beforetoggle/pan, and gatedinteractiveinput on focus. ActualWicked eye is reported separately from requestedcontroller eye. Interactive end-to-end control acceptance remains pending actualhost probes; no audio/raycast/TravelTo implementation.
 

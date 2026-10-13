@@ -1,0 +1,17 @@
+{
+  "mode": "LocallyDetached",
+  "reported_eye_exact_match": true,
+  "parent_correction": "Snapshot default8m, distance2..18m and elevation-10..75degrees match controller; actual host capture/restore wired.",
+  "worker_commit": "5b434e6297b4b832ea85a3215ab6ce087e0c4bce",
+  "limits": "Tether config/travel intent and audio/raycast/TravelTo remain pending; physical input/visual/performance acceptance open.",
+  "orbit_distance_m": 2,
+  "focus": "FreeCamera",
+  "load_probe": "var/reports/runtime/20261012-234033-3e343062/runtime-receipt.json",
+  "legacy_resources_preserved": true,
+  "tests": "17/17 focused persistence cases and17/17 root CTest passed",
+  "jules_session": "10097667138093804130",
+  "schema_version": 1,
+  "legacy_stl5_probe": "var/reports/runtime/20261012-234111-6b37ae28/runtime-receipt.json",
+  "save_probe": "var/reports/runtime/20261012-233954-9187394f/runtime-receipt.json",
+  "status": "reviewed and validated camera fields and host save/load"
+}

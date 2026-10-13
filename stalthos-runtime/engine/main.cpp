@@ -16,6 +16,7 @@
 #include "meadow_scene.hpp"
 #include "domain/camera_framing.hpp"
 #include "domain/hero_view_controller.hpp"
+#include "domain/body_terrain_support.hpp"
 #include <windows.h>
 #include <shellapi.h>
 #include <chrono>
@@ -112,12 +113,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     double cameraDistance = 8;
     bool inspectionCamera = false, cameraDistanceSpecified = false;
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
+    bool disableTerrainSupport = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
         for (int i = 1; i < argumentCount; ++i) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
+            else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
             else if (key == L"--inspection-camera") inspectionCamera = true;
             else if (key == L"--camera-distance" && i+1 < argumentCount) { cameraDistance=std::stod(argv[++i]); cameraDistanceSpecified=true; }
             else if (key == L"--diagnostic-walk") diagnosticWalk = true;
@@ -429,6 +432,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 state.orbit = Framing::followPreset(cameraMode==1 ? Framing::kPi*.5 : cameraMode==2 ? 0 : Framing::kPi);
                 if (cameraDistanceSpecified) state.orbit.distance = cameraDistance;
             }
+            if (loadedSaveData && loadedSaveData->cameraState) {
+                const auto& savedCamera = *loadedSaveData->cameraState;
+                state.mode = static_cast<stalthos::domain::CameraMode>(savedCamera.mode);
+                state.focus = static_cast<stalthos::domain::InputFocus>(savedCamera.focus);
+                state.detachedAnchor = savedCamera.detachedAnchor;
+                state.orbit.azimuth = savedCamera.orbitAzimuth;
+                state.orbit.elevation = savedCamera.orbitElevation;
+                state.orbit.distance = savedCamera.orbitDistance;
+                cameraDistance = savedCamera.orbitDistance;
+            }
             viewController.setState(state);
         }
         auto terrainSampler = [&](double cx, double cz) {
@@ -464,6 +477,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t appliedDrinkContacts = 0, appliedBrowseContacts = 0;
         uint64_t waterEligibleFrames = 0, shrubEligibleFrames = 0;
         bool waterContactApplied = false, shrubContactApplied = false;
+
+        constexpr double kCreatureLongitudinalHalfspan = 0.5;
+        constexpr double kCreatureLateralHalfspan = 0.25;
+        uint64_t supportFailureCount = 0;
+        std::string latestSupportMode = disableTerrainSupport ? "disabled" : "terrain_supported";
+        double latestSlopeRadians = 0.0;
+        stalthos::domain::Vector3 latestNormal{0.0, 1.0, 0.0};
 
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
@@ -573,15 +593,69 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 lastExpectedPhase=creatureClip->advance(0.0,std::fmod(creatureDistanceAccumulated,creatureStrideLength)).phase;
             }
             float y=Ground(x,z);
+            stalthos::domain::TerrainSupport support;
+            auto groundSampler = [&](double sx, double sz) {
+                return static_cast<double>(landscape.height(sx, sz));
+            };
+
+            bool supportCalculated = false;
+            try {
+                support = stalthos::domain::calculateTerrainSupport(
+                    static_cast<double>(x), static_cast<double>(z), static_cast<double>(yaw),
+                    kCreatureLongitudinalHalfspan, kCreatureLateralHalfspan, groundSampler);
+                supportCalculated = true;
+                latestSlopeRadians = support.slopeAngleRadians;
+                latestNormal = support.surfaceNormal;
+            } catch (...) {
+                supportCalculated = false;
+                latestSlopeRadians = 0.0;
+                latestNormal = {0.0, 1.0, 0.0};
+            }
+
+            if (disableTerrainSupport) {
+                latestSupportMode = "disabled";
+            } else if (!supportCalculated || !support.supported) {
+                latestSupportMode = "unsupported_yaw_fallback";
+                ++supportFailureCount;
+            } else {
+                latestSupportMode = "terrain_supported";
+            }
+
             auto* transform=scene.transforms.GetComponent(heroMotionRoot); transform->ClearTransform();
             if(!creatureLoaded) {
                 transform->Scale(XMFLOAT3(.45f,.4f,1.f));
-                transform->RotateRollPitchYaw(XMFLOAT3(0,yaw,0));
+                if (latestSupportMode == "terrain_supported") {
+                    XMMATRIX supportMatrix = XMMATRIX(
+                        static_cast<float>(support.right.x),   static_cast<float>(support.right.y),   static_cast<float>(support.right.z),   0.0f,
+                        static_cast<float>(support.up.x),      static_cast<float>(support.up.y),      static_cast<float>(support.up.z),      0.0f,
+                        static_cast<float>(support.forward.x), static_cast<float>(support.forward.y), static_cast<float>(support.forward.z), 0.0f,
+                        0.0f,                                  0.0f,                                  0.0f,                                  1.0f
+                    );
+                    XMVECTOR quat = XMQuaternionNormalize(XMQuaternionRotationMatrix(supportMatrix));
+                    transform->Rotate(quat);
+                } else {
+                    transform->RotateRollPitchYaw(XMFLOAT3(0,yaw,0));
+                }
                 transform->Translate(XMFLOAT3(x,y+.65f,z));
             } else {
                 // Blender's authored +X longitudinal axis is turned to the host's +Z forward axis at the motion parent.
+                // In DirectX row-vector basis, composite rotation is assetOffsetMatrix * supportMatrix.
+                // If terrain support is disabled or unsupported (>20 deg slope), falls back to flat yaw (yaw - pi * 0.5f).
                 // The provisional sole offset comes from the walk-cycle's measured rear-foot source bound; tail clearance remains unaccepted.
-                transform->RotateRollPitchYaw(XMFLOAT3(0,yaw-pi*.5f,0));
+                if (latestSupportMode == "terrain_supported") {
+                    XMMATRIX assetOffsetMatrix = XMMatrixRotationY(-pi * 0.5f);
+                    XMMATRIX supportMatrix = XMMATRIX(
+                        static_cast<float>(support.right.x),   static_cast<float>(support.right.y),   static_cast<float>(support.right.z),   0.0f,
+                        static_cast<float>(support.up.x),      static_cast<float>(support.up.y),      static_cast<float>(support.up.z),      0.0f,
+                        static_cast<float>(support.forward.x), static_cast<float>(support.forward.y), static_cast<float>(support.forward.z), 0.0f,
+                        0.0f,                                  0.0f,                                  0.0f,                                  1.0f
+                    );
+                    XMMATRIX compositeMatrix = assetOffsetMatrix * supportMatrix;
+                    XMVECTOR quat = XMQuaternionNormalize(XMQuaternionRotationMatrix(compositeMatrix));
+                    transform->Rotate(quat);
+                } else {
+                    transform->RotateRollPitchYaw(XMFLOAT3(0,yaw-pi*.5f,0));
+                }
                 transform->Translate(XMFLOAT3(x,y-static_cast<float>(creatureSoleOffset),z));
             }
             transform->UpdateTransform();
@@ -767,6 +841,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
             if(data.hero) data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,data.hero->id);
             data.resourceLedger = stalthos::persistence::captureResourceLedger(resourceLedger);
+            const auto& cameraState = viewController.getState();
+            data.cameraState = stalthos::persistence::CameraStateSnapshot{
+                static_cast<std::uint8_t>(cameraState.mode), static_cast<std::uint8_t>(cameraState.focus),
+                cameraState.detachedAnchor, cameraState.orbit.azimuth, cameraState.orbit.elevation,
+                cameraState.orbit.distance};
             stalthos::persistence::writeSave(saveState,data);
             if(successorId) {
                 const auto saved=stalthos::persistence::readSave(saveState);
@@ -785,7 +864,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"landscape_candidate_placements",landscape.placements().size()},
             {"calendar_seconds",clock.calendarSeconds()},{"domain_world_seed",world.worldSeed()},
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
-            {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},
+            {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
             {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
             {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"calendar_scale",calendarScale},
             {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
@@ -811,7 +890,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"locomotion_pace_policy", "proposed one cycle per second, maximum one meter per second; proxy fallback two meters per second"},{"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},
-            {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected; full camera state (detached anchor, orbit, focus) not persisted in legacy host pose"},
+            {"save_scope","foundation state, clocks, diagnostic pose, current hero lifecycle and needs; bonds not connected; camera mode, focus, anchor and orbit stored in optional STL6 snapshot; tether configuration and travel intent not persisted"},
             {"pose_vertical_policy","analytical ground projection; no saved vertical body dynamics"},
             {"save_path",saveState.u8string()},{"load_path",loadState.u8string()},
             {"host_pose",{{"x",x},{"z",z},{"heading_radians",yaw},{"camera_mode",cameraMode}}},
@@ -829,8 +908,20 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"pending_audio", "none"},
             {"pending_travel_to", cameraOut.activeTravelDestination.has_value()},
             {"pending_raycast", "none"},
+            {"supportmode", latestSupportMode},
+            {"support_mode", latestSupportMode},
+            {"slope", latestSlopeRadians},
+            {"support_slope_radians", latestSlopeRadians},
+            {"normal", {{"x", latestNormal.x}, {"y", latestNormal.y}, {"z", latestNormal.z}}},
+            {"support_normal", {{"x", latestNormal.x}, {"y", latestNormal.y}, {"z", latestNormal.z}}},
+            {"supportfailure", supportFailureCount},
+            {"support_failure_count", supportFailureCount},
+            {"disable_terrain_support", disableTerrainSupport},
+            {"terrain_support_longitudinal_halfspan_m", kCreatureLongitudinalHalfspan},
+            {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan},
+            {"terrain_support_policy", "proposed approximate visual body plane alignment only; per-foot IK and terrain foot locking not claimed"},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","full camera controller state not persisted; audio, travel-to ground clicking and mouse raycast pending"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {

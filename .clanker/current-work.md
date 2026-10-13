@@ -525,3 +525,30 @@ No localagents dispatched; prioritizeAGY/Jules to preserveCodexquota. Nextcollec
 frozen source, mergeCMake carefully to retainterrain_texture module, nativebuild/tests,
 actualsupportA/B andcamera save/load evidence beforepublication. Keepplanningreadonly,
 unrelateduntrackedpreserved; no full draft/FPS acceptance.
+
+## Body-support and camera continuity checkpoint — 2026-10-12 23:48 Central
+
+Terrain0af137b published/synchronized. Reviewed body8ee38f3 andcamera5b434e6;
+parent preservedterrain_texture CMake module and rejects doubled-halfspan overflow,
+codec distance2..18/elevation-10..75 withdefault8 matchingactualcontroller.
+ParentReleasecombinedbuildpassed; finalnativeCTest17/17 passed, focusedcamera
+persistence17/17 casespassed inclSTL1..5compat/corruption. Actualmatchedbody
+A/B233900-f534b8fa disabled vs233927-5d2900ad enabled, pose12/0, phase0,
+movement0. Samplednormal0.211232/0.977160/-0.023235, slope0.214139rad,
+enabledappliesbodyframe with0fallbacks. Approximation only; individualfootIK,
+contactacceptance andneutralidle remainopen.
+STL6actualsave233954-9187394f detaches/FreeCamera/2m; load234033-3e343062
+restoresmode/focus/distance andexactreportedWickedeye thenresaves. LegacySTL5
+234111-6b37ae28 loads withno camera snapshot andretainscreek999999/shrub1.
+Tetherconfig/travelintent/audio/raycast/TravelTo andphysicalinputacceptanceopen.
+
+Thiswake23:17–23:52:4dispatches, allAGY/Jules; no localagents. Pendingnextwake:
+- FrozenAGYskin0ba585e7 atsmalltrotter-skin-scale:4ownedtoolkitfiles, actualworker
+  build/render and18focusedtests claimed. Collectedcandidate receipt; NOTcopiedroot.
+  Inspectrender/scope, freshparentbuild/rig/render, fullroot toolkit tests (about10min)
+  andnativeevidence beforepublish. Priorroot toolkit1988/2 remainsunchangedbaseline.
+- Jules14602822725229243780 neutralidleclip: preservewalkclip/stride/exportcontract,
+  parentmustchooseactiveclip inhost. Currentidlepauseswalkphase, notneutralstand.
+Resumeexisting beforedispatch. SkinAGYcompleted; otherAGYtasksintegrated aftertests.
+Preserveisolatedcamera.gitignore/test.orig debris; notintegrated. Planningreadonly,
+unrelateduntrackedpreserved, nofull draft/referenceparity/30FPSacceptance.
