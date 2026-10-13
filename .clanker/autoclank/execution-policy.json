@@ -39,7 +39,8 @@
   "agy_execution": "Isolated bounded tasks; explicit model/effort, print timeout and JSON receipt; inspect changes and validate before integration. Do not bypass permissions or use paid API fallback.",
   "active_agy_tasks": [
     "agy-woodland-measured-stage-diagnostics",
-    "agy-splitcrown-crown-proportions"
+    "agy-splitcrown-crown-proportions",
+    "agy-meadow-cluster-readability"
   ],
   "active_native_tasks": []
 }
