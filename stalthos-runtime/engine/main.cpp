@@ -628,6 +628,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for (size_t i = 0; i < footLandmarks.size(); ++i)
                 footLandmarks[i] = scene.Entity_FindByName(stalthos::engine::kWickedFootLandmarks[i].boneName, heroMotionRoot);
             nativeSoleAdapter.initialize(scene, heroMotionRoot);
+            scene.Update(0.0f);
+            latestNativeSoleDiagnostic = nativeSoleAdapter.evaluate(scene, landscape);
         }
 
         bool previousInspectionKey = false, previousToggleKey = false;
@@ -697,6 +699,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         std::string latestSupportMode = disableTerrainSupport ? "disabled" : "terrain_supported";
         double latestSlopeRadians = 0.0;
         stalthos::domain::Vector3 latestNormal{0.0, 1.0, 0.0};
+        uint64_t renderedSupportSampleCount = 0;
+        uint64_t renderedSupportFallbackCount = 0;
+        std::string latestRenderedSupportFallbackReason;
+        std::string latestGroundSampleSource = "analytical_fallback";
+        std::string latestCreatureRootSource = "analytical_fallback";
+        double latestCreatureRootGroundY = 0.0;
+        double latestCreatureRootAnalyticalGroundY = 0.0;
+        double latestCreatureRootRenderedGroundY = 0.0;
+        double latestCreatureRootGroundDeltaM = 0.0;
 
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
@@ -840,12 +851,53 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 creatureDistanceAccumulated+=lastSignedBodyDistance;
                 lastExpectedPhase=creatureClip->advance(0.0,std::fmod(creatureDistanceAccumulated,creatureStrideLength)).phase;
             }
-            float y=Ground(x,z);
-            stalthos::domain::TerrainSupport support;
-            auto groundSampler = [&](double sx, double sz) {
+            const double analyticalRootY = static_cast<double>(landscape.height(static_cast<double>(x), static_cast<double>(z)));
+            double renderedRootY = analyticalRootY;
+            bool rootUsesRendered = false;
+            std::string frameFallbackReason;
+
+            const bool groundCached = creatureLoaded && nativeSoleAdapter.isGroundCached();
+            const stalthos::domain::RenderedGroundSurface* renderedSurface = groundCached ? &nativeSoleAdapter.getRenderedGroundSurface() : nullptr;
+
+            if (renderedSurface && renderedSurface->inBounds(static_cast<double>(x), static_cast<double>(z))) {
+                try {
+                    const double rH = renderedSurface->sampleHeight(static_cast<double>(x), static_cast<double>(z));
+                    if (std::isfinite(rH)) {
+                        renderedRootY = rH;
+                        rootUsesRendered = true;
+                    } else {
+                        frameFallbackReason = "nonfinite_rendered_root_elevation";
+                    }
+                } catch (const std::exception& e) {
+                    frameFallbackReason = std::string("rendered_root_sample_exception: ") + e.what();
+                }
+            } else if (creatureLoaded) {
+                if (!groundCached) {
+                    frameFallbackReason = "rendered_ground_cache_unavailable: " + nativeSoleAdapter.getGroundErrorMessage();
+                } else {
+                    frameFallbackReason = "creature_root_out_of_bounds";
+                }
+            }
+
+            auto groundSampler = [&](double sx, double sz) -> double {
+                if (renderedSurface) {
+                    if (!renderedSurface->inBounds(sx, sz)) {
+                        frameFallbackReason = "support_sample_out_of_bounds";
+                        throw std::out_of_range(frameFallbackReason);
+                    }
+                    const double h = renderedSurface->sampleHeight(sx, sz);
+                    if (!std::isfinite(h)) {
+                        frameFallbackReason = "nonfinite_rendered_support_sample";
+                        throw std::runtime_error(frameFallbackReason);
+                    }
+                    ++renderedSupportSampleCount;
+                    return h;
+                }
+                ++renderedSupportFallbackCount;
                 return static_cast<double>(landscape.height(sx, sz));
             };
 
+            stalthos::domain::TerrainSupport support;
             bool supportCalculated = false;
             try {
                 support = stalthos::domain::calculateTerrainSupport(
@@ -855,9 +907,26 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 latestSlopeRadians = support.slopeAngleRadians;
                 latestNormal = support.surfaceNormal;
             } catch (...) {
-                supportCalculated = false;
-                latestSlopeRadians = 0.0;
-                latestNormal = {0.0, 1.0, 0.0};
+                // Retry the entire five-point support and root against one surface.
+                // Never combine rendered and analytical heights in a single pose.
+                rootUsesRendered = false;
+                if (frameFallbackReason.empty()) frameFallbackReason = "support_calculation_exception";
+                try {
+                    support = stalthos::domain::calculateTerrainSupport(
+                        static_cast<double>(x), static_cast<double>(z), static_cast<double>(yaw),
+                        kCreatureLongitudinalHalfspan, kCreatureLateralHalfspan,
+                        [&](double sx, double sz) {
+                            ++renderedSupportFallbackCount;
+                            return static_cast<double>(landscape.height(sx, sz));
+                        });
+                    supportCalculated = true;
+                    latestSlopeRadians = support.slopeAngleRadians;
+                    latestNormal = support.surfaceNormal;
+                } catch (...) {
+                    supportCalculated = false;
+                    latestSlopeRadians = 0.0;
+                    latestNormal = {0.0, 1.0, 0.0};
+                }
             }
 
             if (disableTerrainSupport) {
@@ -868,6 +937,30 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             } else {
                 latestSupportMode = "terrain_supported";
             }
+
+            float y = static_cast<float>(analyticalRootY);
+            if (creatureLoaded) {
+                if (latestSupportMode == "terrain_supported" && supportCalculated && std::isfinite(support.centerHeight)) {
+                    y = static_cast<float>(support.centerHeight);
+                    latestCreatureRootSource = rootUsesRendered ? "rendered_triangles" : "analytical_fallback";
+                } else if (rootUsesRendered) {
+                    y = static_cast<float>(renderedRootY);
+                    latestCreatureRootSource = "rendered_triangles";
+                } else {
+                    y = static_cast<float>(analyticalRootY);
+                    latestCreatureRootSource = "analytical_fallback";
+                }
+            } else {
+                y = Ground(x, z);
+                latestCreatureRootSource = "analytical_fallback";
+            }
+
+            latestGroundSampleSource = rootUsesRendered && frameFallbackReason.empty() ? "rendered_triangles" : "analytical_fallback";
+            latestCreatureRootGroundY = static_cast<double>(y);
+            latestCreatureRootAnalyticalGroundY = analyticalRootY;
+            latestCreatureRootRenderedGroundY = renderedRootY;
+            latestCreatureRootGroundDeltaM = renderedRootY - analyticalRootY;
+            latestRenderedSupportFallbackReason = frameFallbackReason;
 
             auto* transform=scene.transforms.GetComponent(heroMotionRoot); transform->ClearTransform();
             if(!creatureLoaded) {
@@ -1436,6 +1529,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"terrain_support_longitudinal_halfspan_m", kCreatureLongitudinalHalfspan},
             {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan},
             {"terrain_support_policy", "proposed approximate visual body plane alignment only; per-foot IK and terrain foot locking not claimed"},
+            {"rendered_ground_support_active", latestGroundSampleSource == "rendered_triangles"},
+            {"rendered_ground_support_samples", renderedSupportSampleCount},
+            {"rendered_ground_support_fallbacks", renderedSupportFallbackCount},
+            {"rendered_ground_support_fallback_reason", latestRenderedSupportFallbackReason},
+            {"rendered_ground_sample_source", latestGroundSampleSource},
+            {"creature_root_ground_source", latestCreatureRootSource},
+            {"creature_root_ground_y", latestCreatureRootGroundY},
+            {"creature_root_analytical_ground_y", latestCreatureRootAnalyticalGroundY},
+            {"creature_root_rendered_ground_y", latestCreatureRootRenderedGroundY},
+            {"creature_root_ground_delta_m", latestCreatureRootGroundDeltaM},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
             {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
