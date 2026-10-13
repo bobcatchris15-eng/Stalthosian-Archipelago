@@ -1,11 +1,14 @@
 {
-  "prior_candidate": "47c3d0b retained isolated notintegrated",
-  "session_id": "16460912954695556543",
-  "base_commit": "9417803",
-  "ownership": [
-    "rig.py bristle-only path",
-    "test_reference_rig_alignment.py",
-    "new coherence doc"
+  "next": "NEWworkspace actual Blender/focused checks/full toolkit suite beforeintegration",
+  "worktree": "var/worktrees/bristle-coherence-review",
+  "findings": [
+    "bristle-only helper preserves shared binder",
+    "finally releases bmesh; DFS avoids quadratic pop0",
+    "tolerant tie ordering still needs deterministic review",
+    "offline documentation claims need actual validation"
   ],
-  "status": "remote dispatched unvalidated"
+  "foot_contact_accepted": false,
+  "status": "collected isolated unvalidated",
+  "session_id": "16460912954695556543",
+  "worker_commit": "c655dc6"
 }

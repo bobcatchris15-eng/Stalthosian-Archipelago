@@ -1,0 +1,27 @@
+{
+  "edge_fixture": "saved x95.9 rejected by existing playable-bounds guard beforelaunch; rawfailure retained, native fallback notexercised",
+  "parent_corrections": [
+    "whole-pose atomic surface fallback",
+    "last-frame source and cleared failure telemetry",
+    "worker documentation claims narrowed to final samples"
+  ],
+  "foot_contact_accepted": false,
+  "visual_accepted": false,
+  "idle_min_rendered_mm": [
+    -0.9,
+    -0.91,
+    -1.3,
+    -1.3
+  ],
+  "walk": "20261013-113057-3abea8aa",
+  "disabled": "20261013-113302-998e8a92",
+  "audit": "var/packet-nineteen-support-audit.py",
+  "idle": "20261013-113032-b0aa4269",
+  "fps_accepted": false,
+  "transition": "20261013-113222-f2511100",
+  "native_tests": "22/22",
+  "audit_note": "Initial parent audit mistakenly treated per-phase accumulated_distance as global. Corrected to start phase + signed phase displacement, independently passed. Runtime unchanged.",
+  "integrated_commit": "6627994",
+  "status": "integrated parent validated",
+  "worker_commit": "93c5761159738866a0a118b724029a10ed05924a"
+}
