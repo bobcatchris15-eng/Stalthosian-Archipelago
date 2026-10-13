@@ -1,0 +1,9 @@
+{
+  "status": "reviewed helper tested; host wiring pending",
+  "schema_version": 1,
+  "host_integrated": false,
+  "tests": "parent Release direct executable and combined CTest18/18",
+  "worker_commit": "e579c53",
+  "parent_corrections": "Release-active tests; relative include; validate previous hysteresis state; normalize whitespace",
+  "visual_acceptance": false
+}

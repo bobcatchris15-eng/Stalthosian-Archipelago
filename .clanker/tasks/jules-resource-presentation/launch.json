@@ -1,0 +1,10 @@
+{
+  "session_id": "1892197375685905233",
+  "owned_paths": [
+    "stalthos-runtime/domain/resource_presentation.hpp",
+    "stalthos-runtime/tests/resource_presentation.cpp",
+    "stalthos-runtime/docs/resource-presentation.md"
+  ],
+  "status": "dispatched unvalidated",
+  "started": "2026-10-13T03:25:26.6525360-05:00"
+}

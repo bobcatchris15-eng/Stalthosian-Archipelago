@@ -667,3 +667,6 @@ runtimeoutputs; older rawstatus/captures retained), verify transitions anditerat
 foot/face/vegetation quality. Allbackendtaskscollected. Thiswake2dispatchesAGYonly,
 no localagents, deadline02:00. Planningreadonly/unrelateduntrackedpreserved.
 No full draft/referenceparity/FPSacceptance. Resume receipts before newdispatch.
+
+## Wake checkpoint — 2026-10-13 03:38 Central
+ParentReleasebuild+18/18CTest passed. Bankform revision matchedcapture033624-afbfed4d improves broadspikes; sparseplainenvironment/footfloat stillopen. Resourcepresentation helpertestedbutnotwiredtoscene. PendingAGYtransition/footdiagnostic; Jules6161869236613976869livingidle; allotherremotecompletedcollected.5dispatch, deadline03:56. Toolkit unchangedthiswake; prior1988/2 andfocused78pass remainvalid. NoFPS/full draft/physicalinputacceptance.

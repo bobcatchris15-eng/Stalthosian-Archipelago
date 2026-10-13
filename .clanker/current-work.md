@@ -590,3 +590,11 @@ runtimeoutputs; older rawstatus/captures retained), verify transitions anditerat
 foot/face/vegetation quality. Allbackendtaskscollected. Thiswake2dispatchesAGYonly,
 no localagents, deadline02:00. Planningreadonly/unrelateduntrackedpreserved.
 No full draft/referenceparity/FPSacceptance. Resume receipts before newdispatch.
+
+## Wake 2026-10-13 03:21 Central
+HALT absent; main/origin e897610 synchronized. Last optional idle focused run confirmed78passed146.50s. No prior tasks pending. Four new bounded dispatches: AGYmedium animation-transition-probe owns main/Run/newdoc; AGYmedium foot-terrain-diagnostic newhelper/test/doc only; AGYlow bank-sedge-refinement environment_scene/newdoc only. Actual first2AGYchildren verified; third hiddenrunner launched03:26. Jules1892197375685905233 pure resource-presentation helper/test/doc, no existingfiles. Separateisolatedtrees; exact scopes in briefs. Deadline03:56Central; max6dispatch, used4. Parent viewed015256 draft-host: footfloat/blockout andbroadbankspikes remain visible; full draft/reference/terrainfoot/FPS gates open. Next collect/freeze/review, combinednativebuild/CTest + actualtransition andbankcaptures. Retain NEWassetworkspace convention; no toolkitwrites plannedthiswake.
+
+Fifthdispatch03:30: Jules6161869236613976869 livingidle rig/test/newdoc only, independentofnativeworkers. Needs freshworkspaceactualBlender/fullsuite/native review; likelynextwake. No sixthtaskneededuntilreviewcapacityclear.
+
+## Reviewed checkpoint — 2026-10-13 03:38 Central
+Bank6389853 integrated with finite-scale guard/doc bounds correction. ParentReleasebuild and18/18CTest pass inclnewresource-presentation helper. Actual033624-afbfed4d matched015256staticview confirms broadbankspikes replacedbylowcurvedclumps; environment/creaturefootfloat stillunaccepted. Jules1892197375685905233 collectedoriginale579c53 isolated; parentReleaseactivechecks/relativeinclude/previousstatevalidation. Helperonly, nothostvisibledepletion. PendingAGYtransition+footdiagnostic; Jules6161869236613976869livingidle.5dispatch totalthiswake. Do not repullcollectedresourceJules. Deadline03:56.

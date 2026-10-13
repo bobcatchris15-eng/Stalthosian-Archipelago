@@ -13,6 +13,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <stdexcept>
 #include <vector>
 
 namespace stalthos::engine {
@@ -321,80 +322,116 @@ inline GeneratedMesh createBluffAccentMesh(double scale, std::uint64_t itemSeed)
     return mesh;
 }
 
-// Generates a multi-blade, tapering riparian bank sedge/grass clump.
-// Features radiating arched blades, sharp tips, double-sided quads/triangles,
-// and organic vertex color gradients (earthy root to lush blade tip).
+// Generates a multi-blade, narrow, segmented, drooping riparian bank sedge clump (basal crown).
+// Features a central crown rosette, 3-segment drooping strap-like blades, narrow widths,
+// bounded juvenile-scale arches, double-sided quads/triangles, and organic vertex colors.
+// Strict geometry budget per clump: <= 256 triangles and <= 512 vertices.
 inline GeneratedMesh createBankVegetationClumpMesh(double scale, std::uint64_t itemSeed) {
     GeneratedMesh mesh;
-    const float s = static_cast<float>(std::clamp(scale, 0.25, 1.8));
+    if (!std::isfinite(scale)) throw std::invalid_argument("bank vegetation scale must be finite");
+    // Scale clamped to [0.25, 1.40]; theoretical arch crest range is 0.023 - 0.460m.
+    const float s = static_cast<float>(std::clamp(scale, 0.25, 1.4));
 
-    // Number of radiating blades (6 to 9 blades)
-    const int bladeCount = 6 + static_cast<int>(hashUnitF(itemSeed + 50U) * 3.99f);
-    const float clumpHeight = s * (0.60f + 0.35f * hashUnitF(itemSeed + 51U));
+    // Number of radiating blades in the basal crown (10 to 16 blades)
+    const int bladeCount = 10 + static_cast<int>(hashUnitF(itemSeed + 50U) * 6.99f);
 
-    mesh.positions.reserve(bladeCount * 5);
-    mesh.indices.reserve(bladeCount * 12);
-    mesh.vertexColors.reserve(bladeCount * 5);
+    // Each blade has 7 vertices and 5 triangles:
+    // With max 16 blades: 16 * 7 = 112 vertices (<= 512) and 16 * 5 = 80 triangles (<= 256).
+    mesh.positions.reserve(static_cast<std::size_t>(bladeCount * 7));
+    mesh.indices.reserve(static_cast<std::size_t>(bladeCount * 15));
+    mesh.vertexColors.reserve(static_cast<std::size_t>(bladeCount * 7));
 
-    // Vertex color palette: earthy root -> lush olive green -> sunlit tip
-    const uint32_t colRoot = wi::Color(58, 68, 36, 255).rgba; // Earthy brown-olive base
-    const uint32_t colMid  = wi::Color(82, 118, 44, 255).rgba; // Mid-blade olive green
-    const uint32_t colTip  = wi::Color(112, 148, 56, 255).rgba; // Sunlit golden-green tip
+    // Vertex color palette: earthy basal crown root -> deep wetland olive -> sunlit drooping tip
+    const uint32_t colRoot = wi::Color(52, 60, 32, 255).rgba; // Earthy brown-olive basal crown
+    const uint32_t colLow  = wi::Color(68, 96, 38, 255).rgba; // Lower sheath olive
+    const uint32_t colMid  = wi::Color(88, 126, 46, 255).rgba; // Arch crest green
+    const uint32_t colTip  = wi::Color(118, 152, 58, 255).rgba; // Drooping sunlit tip
+
+    // Base crown radius where blade sheaths emerge
+    const float crownRadius = s * (0.015f + 0.010f * hashUnitF(itemSeed + 52U));
 
     for (int b = 0; b < bladeCount; ++b) {
-        const float azimuth = kTwoPi * (static_cast<float>(b) / static_cast<float>(bladeCount)) +
-                              (hashUnitF(itemSeed + 500U + static_cast<std::uint64_t>(b)) - 0.5f) * 0.45f;
+        // Varied azimuths around the basal crown with natural jitter
+        const float baseAzimuth = kTwoPi * (static_cast<float>(b) / static_cast<float>(bladeCount));
+        const float azimuthJitter = (hashUnitF(itemSeed + 500U + static_cast<std::uint64_t>(b)) - 0.5f) * 0.38f;
+        const float azimuth = baseAzimuth + azimuthJitter;
         const float cosA = std::cos(azimuth);
         const float sinA = std::sin(azimuth);
 
-        // Blade dimensions
-        const float bladeH = clumpHeight * (0.80f + 0.25f * hashUnitF(itemSeed + 600U + static_cast<std::uint64_t>(b)));
-        const float wBase = s * 0.05f * (0.85f + 0.3f * hashUnitF(itemSeed + 700U + static_cast<std::uint64_t>(b)));
-        const float wMid = wBase * 0.65f;
+        // Blade length and arch dimensions; actual height depends on scale and seed.
+        const float lengthVariation = 0.75f + 0.50f * hashUnitF(itemSeed + 600U + static_cast<std::uint64_t>(b));
+        const float bladeArcLen = s * (0.22f + 0.14f * hashUnitF(itemSeed + 51U)) * lengthVariation;
+
+        // Narrow strap-like sedge blade width (0.008m to 0.016m at base, tapering towards apex)
+        const float wBase = s * 0.012f * (0.80f + 0.40f * hashUnitF(itemSeed + 700U + static_cast<std::uint64_t>(b)));
+        const float wLow  = wBase * 0.82f;
+        const float wMid  = wBase * 0.55f;
 
         // Tangent unit vectors perpendicular to radial direction in XZ
         const float tx = -sinA;
         const float tz = cosA;
 
-        // Radial outward curve/arch offsets
-        const float rBase = s * 0.03f;
-        const float rMid  = s * 0.18f;
-        const float rTip  = s * 0.34f;
+        // Segment radial reaches along outward direction
+        const float r0 = crownRadius;
+        const float r1 = crownRadius + bladeArcLen * 0.32f;
+        const float r2 = crownRadius + bladeArcLen * 0.68f;
+        const float rTip = crownRadius + bladeArcLen * (0.95f + 0.15f * hashUnitF(itemSeed + 800U + static_cast<std::uint64_t>(b)));
+
+        // Heights forming a realistic drooping arch profile:
+        // Segment 0: Base crown sheath sitting on ground
+        // Segment 1: Steep ascending rise
+        // Segment 2: Arch crest peaking at mid-span
+        // Segment 3: Gracefully drooping tip descending towards ground
+        const float archPeak = bladeArcLen * (0.55f + 0.18f * hashUnitF(itemSeed + 900U + static_cast<std::uint64_t>(b)));
+        const float droopFactor = 0.45f + 0.45f * hashUnitF(itemSeed + 1000U + static_cast<std::uint64_t>(b));
+
+        const float y0 = 0.0f;
+        const float y1 = archPeak * 0.62f;
+        const float y2 = archPeak;
+        const float yTip = std::max(0.015f, archPeak * (0.28f - 0.22f * droopFactor));
 
         const uint32_t baseIdx = static_cast<uint32_t>(mesh.positions.size());
 
-        // Root vertices (y = 0)
-        const float r0x = cosA * rBase, r0z = sinA * rBase;
-        mesh.positions.push_back(XMFLOAT3(r0x - tx * wBase, 0.0f, r0z - tz * wBase));
-        mesh.positions.push_back(XMFLOAT3(r0x + tx * wBase, 0.0f, r0z + tz * wBase));
+        // Segment 0: Crown base vertices (2)
+        mesh.positions.push_back(XMFLOAT3(cosA * r0 - tx * wBase, y0, sinA * r0 - tz * wBase));
+        mesh.positions.push_back(XMFLOAT3(cosA * r0 + tx * wBase, y0, sinA * r0 + tz * wBase));
         mesh.vertexColors.push_back(colRoot);
         mesh.vertexColors.push_back(colRoot);
 
-        // Mid-height arched vertices (y = 0.52 bladeH)
-        const float r1x = cosA * rMid, r1z = sinA * rMid;
-        const float yMid = bladeH * 0.52f;
-        mesh.positions.push_back(XMFLOAT3(r1x - tx * wMid, yMid, r1z - tz * wMid));
-        mesh.positions.push_back(XMFLOAT3(r1x + tx * wMid, yMid, r1z + tz * wMid));
+        // Segment 1: Lower ascending blade vertices (2)
+        mesh.positions.push_back(XMFLOAT3(cosA * r1 - tx * wLow, y1, sinA * r1 - tz * wLow));
+        mesh.positions.push_back(XMFLOAT3(cosA * r1 + tx * wLow, y1, sinA * r1 + tz * wLow));
+        mesh.vertexColors.push_back(colLow);
+        mesh.vertexColors.push_back(colLow);
+
+        // Segment 2: Arch crest vertices (2)
+        mesh.positions.push_back(XMFLOAT3(cosA * r2 - tx * wMid, y2, sinA * r2 - tz * wMid));
+        mesh.positions.push_back(XMFLOAT3(cosA * r2 + tx * wMid, y2, sinA * r2 + tz * wMid));
         mesh.vertexColors.push_back(colMid);
         mesh.vertexColors.push_back(colMid);
 
-        // Sharp blade tip vertex (y = bladeH, arching outward and slightly down)
-        const float r2x = cosA * rTip, r2z = sinA * rTip;
-        mesh.positions.push_back(XMFLOAT3(r2x, bladeH * 0.90f, r2z));
+        // Segment 3: Drooping tip apex vertex (1)
+        mesh.positions.push_back(XMFLOAT3(cosA * rTip, yTip, sinA * rTip));
         mesh.vertexColors.push_back(colTip);
 
-        // Indices: Lower quad (v0, v1, v2, v3) -> 2 double-sided triangles
+        // Triangles for the 3 segments (5 double-sided triangles total):
+        // Segment 0->1 quad: (v0, v1, v2, v3) -> 2 triangles
         const uint32_t v0 = baseIdx + 0;
         const uint32_t v1 = baseIdx + 1;
         const uint32_t v2 = baseIdx + 2;
         const uint32_t v3 = baseIdx + 3;
-        const uint32_t vTip = baseIdx + 4;
-
         addDoubleSidedTriangle(mesh.indices, v0, v1, v2);
         addDoubleSidedTriangle(mesh.indices, v1, v3, v2);
 
-        // Indices: Upper tapered triangle (v2, v3, vTip) -> 1 double-sided triangle
-        addDoubleSidedTriangle(mesh.indices, v2, v3, vTip);
+        // Segment 1->2 quad: (v2, v3, v4, v5) -> 2 triangles
+        const uint32_t v4 = baseIdx + 4;
+        const uint32_t v5 = baseIdx + 5;
+        addDoubleSidedTriangle(mesh.indices, v2, v3, v4);
+        addDoubleSidedTriangle(mesh.indices, v3, v5, v4);
+
+        // Segment 2->Tip triangle: (v4, v5, vTip) -> 1 triangle
+        const uint32_t vTip = baseIdx + 6;
+        addDoubleSidedTriangle(mesh.indices, v4, v5, vTip);
     }
 
     mesh.groundOffset = 0.0f; // Root rests directly on the terrain

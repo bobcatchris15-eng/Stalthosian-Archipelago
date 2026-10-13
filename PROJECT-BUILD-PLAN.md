@@ -240,7 +240,7 @@ Store receipts by gate/run ID, with source revision plus dirty input hashes, too
 
 **Recommended immediate action:** close toolkit invocation/provenance/tool gaps and prove a reference asset chain, then turn those same assets into the common terrain/foliage/animal benchmark. Use that evidence to start construction of the integrated full draft, keeping complete system, species, geography and lifecycle coverage as the delivery target throughout.
 
-## 10. Verified construction status — 2026-10-12
+## 10. Verified construction status — 2026-10-13
 
 This updates execution status; the full draft delivery contract remains the target.
 Current published project checkpoints and the retained task receipts provide the evidence below.
@@ -249,14 +249,15 @@ Current published project checkpoints and the retained task receipts provide the
 |---|---|---|
 | Wicked build/import/capture | Native Release host, real imported assets and captures; root CTest 17/17 | Integrated target-hardware frame-time/visual acceptance |
 | Toolkit asset pipeline | Full root suite 1988 passed / 2 skipped; actual Smalltrotter build/rig and provisional Basketfern frond generation/bake/PBR export | Better authored forms, UV/material refinement, broad family/stage acceptance |
-| Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; provisional one-cycle/s body pace; approximate bounded terrain-body alignment, matched enabled/disabled captures | Terrain contact/IK (bank slope currently separates support heights), explicit authored front contact schedules, natural transitions, browse/drink/head behavior and visual gait review |
+| Smalltrotter movement | Actual signed distance drives paused clip evaluation; non-skin root translation removed; provisional one-cycle/s body pace; approximate bounded terrain-body alignment; measured neutral idle exported as a separate clip and exclusive native selection verified in separate idle/walk runs | Terrain contact/IK (bank slope currently separates support heights), explicit authored front contact schedules, natural transitions, browse/drink/head behavior and visual gait review |
 | Ordinary needs | Physical body-based browse/drink contacts, persistent finite resources, STL5 ledger and hero needs continuity | Visible plant depletion and interaction poses |
 | World continuity | Lifecycle/death/successor and needs foundation; reviewed bounded resource ledger DTO | Eligible populations/nests, parenting/bonds, visible exceptions and eligible population continuity |
 | Camera | HeroView host integration: orbit/zoom, detached pan/return; actual STL6 camera mode/focus/anchor/orbit save-load continuity | Actual mouse/keyboard acceptance, tether/travel intent persistence, audio, raycast and TravelTo |
-| Environment | One 192 m reference landscape; clipped creek water, seeded organic terrain texture with a10-level mip chain, irregular rocks and 3919 batched groundcover tufts | Richer terrain materials, recognizable habitat composition, dense plants and all four islands |
+| Environment | One 192 m reference landscape; clipped creek water, seeded organic terrain texture with a10-level mip chain, irregular rocks and 3919 batched groundcover tufts (49,844 triangles across three batches) | Richer terrain materials, recognizable habitat composition, dense plants and all four islands |
 | Full cast/life histories | Shared lifecycle/needs/relationships contracts and one provisional hero asset | All five complete playable species, NPC activity, parenting, reproduction and childhood |
 
 The current images remain far from the supplied artistic reference. Proxy seams,
 column/limb shapes, spine-like bristles, large skin patches, plain ground and sparse
 vegetation are explicit refinement targets. Build/test success does not close
 those visual requirements. No full draft completion or 30 FPS gate is accepted.
+

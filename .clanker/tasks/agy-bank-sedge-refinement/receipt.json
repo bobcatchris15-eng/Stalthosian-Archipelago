@@ -1,0 +1,11 @@
+{
+  "visual_acceptance": false,
+  "status": "reviewed and validated provisional bank form",
+  "capture": "var/reports/runtime/20261013-033624-afbfed4d/draft-host.png",
+  "worker_commit": "638985371ce53e9da4f40ef9a2be4425d8fbba04",
+  "visual_scope": "Matched static view confirms broad bank spikes replaced by smaller curved clumps. Overall environment unaccepted.",
+  "parent_corrections": "Document relocated to runtime/docs; finite scale rejection; theoretical height range corrected",
+  "tests": "parent combined Release build and CTest18/18",
+  "previous_capture": "var/reports/runtime/20261013-015256-a97a54ec/draft-host.png",
+  "schema_version": 1
+}

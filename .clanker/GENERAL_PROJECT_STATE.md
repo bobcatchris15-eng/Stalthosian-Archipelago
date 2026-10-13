@@ -245,3 +245,6 @@ parent stillreviews beforecopy/nativebuild. Remainingreviewissues: initiallegacy
 framingnotactuallyapplied, preFrameState snapshot too late afterpan/toggle.
 AllJules tasks collected, no remote pending. No oldsessionretrieval needed.
 Currentwake starts15:44Central deadline16:19;0newdispatches. Preserveunrelateddirty.
+
+## Current verified state — 2026-10-13 03:30 Central
+Main/origin e897610 at wake start. Latestcombinedtoolkit1988passed2skipped543.45s; optionalpostwhitespacefocused78passed146.50s nowcomplete. Native17groupspass. Skin+neutralidle+meadowpublished. Two-clips actualidle/walkprobes acceptedonlyasdiagnostics; bankfootfloat andblockout anatomy visiblein015256capture. Meadow3919tufts49844tris3batches, broadbankclumps needseparateformrefinement. Active/pendingbackendIDs nowinexecution-policyandcurrent-work; oldercollectedsessions mustnotberetrieved. Sourceinputsread-only, unrelateduntrackedpreserved. No full draft/referenceparity/FPS orphysicalinputacceptance.
