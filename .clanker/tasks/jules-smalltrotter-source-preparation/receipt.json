@@ -1,0 +1,19 @@
+{
+  "invalid_exploratory_outputs": "retained isolated only; never use",
+  "source_sha256": "b987e7d7eac4dfe0e09e2e188a592236ed57eb5e00da7d8f7e6d1d901de15350",
+  "status": "reviewed_audit_and_fail_closed_preparation_integrated",
+  "parent_validation": [
+    "Python -O six active selftests passed",
+    "Blender audit exit0",
+    "Ambiguous seam exit5 no output",
+    "Source hash unchanged"
+  ],
+  "unambiguous_pairs": 816,
+  "next_task": "agy-smalltrotter-seam-diagnosis",
+  "corrected_commit": "badceba",
+  "valid_derivative": false,
+  "ambiguous_vertices": 16,
+  "collected_once": true,
+  "session_id": "1630345306947286607",
+  "original_commit": "9a5682e"
+}
