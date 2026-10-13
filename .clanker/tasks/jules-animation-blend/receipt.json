@@ -1,0 +1,16 @@
+{
+  "validation": "24/24 optimized native domain tests passed",
+  "host_wired": false,
+  "native_animation_accepted": false,
+  "session_id": "4083995950081524668",
+  "parent_corrections": [
+    "validate prior state in advance",
+    "validate target and prior clip enum",
+    "zero-time interruption test",
+    "10000 normalization steps"
+  ],
+  "original_commit": "518b744",
+  "status": "reviewed_domain_integration",
+  "next_task": "wire weights to actual Wicked clip playback after diagnostics worker releases main.cpp",
+  "collected_once": true
+}
