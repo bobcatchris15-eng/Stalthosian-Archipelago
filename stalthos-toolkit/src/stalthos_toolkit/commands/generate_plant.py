@@ -53,6 +53,19 @@ def generate_plant(ctx: Context) -> Status:
             for key in raw_stages.get(stage, {}):
                 if key in original_shape and key != "height_m":
                     scaled_shape[key] = original_shape[key]
+        if family == "tree":
+            crown_spread = declared.get("crown_spread_m")
+            if crown_spread is None and "crown_spread" in declared:
+                crown_spread = PL.P.unit_m(declared.get("crown_spread"))
+            if crown_spread is not None:
+                scaled_shape["crown_spread_m"] = float(crown_spread)
+            raw_entry = raw_stages.get(stage, {}) if isinstance(raw_stages, dict) else next(
+                (r for r in raw_stages if isinstance(r, dict) and r.get("id") == stage), {}
+            )
+            h_scale = scaled_shape["height_m"] / original_shape["height_m"]
+            for leaf_key in ("leaf_length_m", "leaf_width_m"):
+                if leaf_key in scaled_shape and leaf_key not in raw_entry and "leaf_scale" not in raw_entry:
+                    scaled_shape[leaf_key] = round(scaled_shape[leaf_key] * h_scale, 4)
         payload["plant"] = scaled_shape
     if ctx.options.get("dry_run"):
         status.asset_id = asset_id

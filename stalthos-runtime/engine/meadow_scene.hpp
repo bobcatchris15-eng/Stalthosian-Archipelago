@@ -81,7 +81,7 @@ inline void appendSlenderCurvedBlade(
     const float rTip  = archReach;
 
     const float wRoot = baseWidth;
-    const float wMid  = baseWidth * 0.48f;
+    const float wMid  = baseWidth * 0.52f;
 
     const float y0 = static_cast<float>(groundY);
     // Peak of graceful curve at mid-span
@@ -148,7 +148,7 @@ inline void appendFernFrond(
     const float rMid  = 0.52f * frondLen;
     const float rTip  = frondLen;
 
-    const float wRoot = 0.007f;
+    const float wRoot = std::max(0.016f, pinnaSpread * 0.14f);
     const float wPinna = pinnaSpread * 0.5f;
 
     const uint32_t baseIdx = static_cast<uint32_t>(batch.positions.size());
@@ -276,35 +276,35 @@ inline void appendTuft(
     const float baseAzimuth = meadowHashUnitF(tuftSeed + 6U) * kTwoPi;
 
     if (morphType == 0) {
-        // --- Morphotype 0: Slender Curved Blade Clump ---
-        // 4 to 6 blades, significantly lower and more slender than initial draft
+        // --- Morphotype 0: Slender Curved Blade Clump (Strap Sedge / Meadow Grass) ---
+        // 4 to 6 blades, scaled with substantial base/mid width and arch reach for clear 8m silhouette
         const int numBlades = 4 + static_cast<int>(meadowHashUnitF(tuftSeed + 1U) * 2.99f);
 
-        float baseHeight = 0.14f;
-        float baseSpread = 0.12f;
+        float baseHeight = 0.22f;
+        float baseSpread = 0.18f;
         if (habitat == domain::Habitat::Riparian) {
-            baseHeight = 0.16f + 0.09f * meadowHashUnitF(tuftSeed + 2U);
-            baseSpread = 0.13f + 0.07f * meadowHashUnitF(tuftSeed + 3U);
+            baseHeight = 0.30f + 0.16f * meadowHashUnitF(tuftSeed + 2U);
+            baseSpread = 0.22f + 0.12f * meadowHashUnitF(tuftSeed + 3U);
         } else if (habitat == domain::Habitat::OpenLowland) {
-            baseHeight = 0.11f + 0.07f * meadowHashUnitF(tuftSeed + 2U);
-            baseSpread = 0.10f + 0.05f * meadowHashUnitF(tuftSeed + 3U);
+            baseHeight = 0.22f + 0.12f * meadowHashUnitF(tuftSeed + 2U);
+            baseSpread = 0.18f + 0.10f * meadowHashUnitF(tuftSeed + 3U);
         } else {
-            baseHeight = 0.08f + 0.05f * meadowHashUnitF(tuftSeed + 2U);
-            baseSpread = 0.08f + 0.04f * meadowHashUnitF(tuftSeed + 3U);
+            baseHeight = 0.18f + 0.10f * meadowHashUnitF(tuftSeed + 2U);
+            baseSpread = 0.14f + 0.08f * meadowHashUnitF(tuftSeed + 3U);
         }
 
-        uint8_t rRoot = 48, gRoot = 56, bRoot = 26;
-        uint8_t rMid  = 72, gMid  = 98,  bMid = 38;
-        uint8_t rTip  = 98, gTip  = 126, bTip = 46;
+        uint8_t rRoot = 48, gRoot = 62, bRoot = 28;
+        uint8_t rMid  = 84, gMid  = 120, bMid = 42;
+        uint8_t rTip  = 122, gTip  = 154, bTip = 50;
 
         if (habitat == domain::Habitat::Riparian) {
-            rRoot = 40; gRoot = 52; bRoot = 24;
-            rMid  = 66; gMid  = 104; bMid = 40;
-            rTip  = 92; gTip  = 132; bTip = 48;
+            rRoot = 42; gRoot = 58; bRoot = 26;
+            rMid  = 74; gMid  = 124; bMid = 44;
+            rTip  = 108; gTip = 160; bTip = 52;
         } else if (habitat == domain::Habitat::Woodland) {
-            rRoot = 38; gRoot = 46; bRoot = 22;
-            rMid  = 58; gMid  = 78;  bMid = 32;
-            rTip  = 78; gTip  = 100; bTip = 38;
+            rRoot = 38; gRoot = 52; bRoot = 24;
+            rMid  = 64; gMid  = 100; bMid = 36;
+            rTip  = 90; gTip  = 130; bTip = 44;
         }
 
         const uint32_t colRoot = wi::Color(
@@ -334,9 +334,9 @@ inline void appendTuft(
                                    (meadowHashUnitF(bSeed + 1U) - 0.5f) * 0.55f;
             const float bladeAzimuth = baseAzimuth + dAzimuth;
 
-            const float bladeH = baseHeight * (0.82f + 0.32f * meadowHashUnitF(bSeed + 2U));
-            const float bladeW = 0.009f + 0.006f * meadowHashUnitF(bSeed + 3U);
-            const float archR  = baseSpread * (0.80f + 0.35f * meadowHashUnitF(bSeed + 4U));
+            const float bladeH = baseHeight * (0.82f + 0.35f * meadowHashUnitF(bSeed + 2U));
+            const float bladeW = 0.024f + 0.014f * meadowHashUnitF(bSeed + 3U);
+            const float archR  = baseSpread * (0.80f + 0.38f * meadowHashUnitF(bSeed + 4U));
             const float droop  = 0.35f + 0.55f * meadowHashUnitF(bSeed + 5U);
 
             appendSlenderCurvedBlade(
@@ -349,16 +349,16 @@ inline void appendTuft(
         }
     } else if (morphType == 1) {
         // --- Morphotype 1: Small Cretaceous Fernlet Rosette ---
-        // 4 to 5 low spreading pinnate fronds
-        const int numFronds = 4 + static_cast<int>(meadowHashUnitF(tuftSeed + 1U) * 1.99f);
+        // 4 to 6 low spreading pinnate fronds with readable pinna spread
+        const int numFronds = 4 + static_cast<int>(meadowHashUnitF(tuftSeed + 1U) * 2.99f);
 
-        const float frondLen = 0.10f + 0.06f * meadowHashUnitF(tuftSeed + 2U);
-        const float pinnaSpread = 0.032f + 0.016f * meadowHashUnitF(tuftSeed + 3U);
+        const float frondLen = 0.24f + 0.14f * meadowHashUnitF(tuftSeed + 2U);
+        const float pinnaSpread = 0.10f + 0.06f * meadowHashUnitF(tuftSeed + 3U);
 
-        // Rich deep fern green tones
-        const uint8_t rRoot = 36, gRoot = 48, bRoot = 22;
-        const uint8_t rMid  = 54, gMid  = 96, bMid = 36;
-        const uint8_t rTip  = 80, gTip  = 124, bTip = 44;
+        // Rich moisture-toned fern green
+        const uint8_t rRoot = 38, gRoot = 54, bRoot = 24;
+        const uint8_t rMid  = 66, gMid  = 118, bMid = 40;
+        const uint8_t rTip  = 98, gTip  = 150, bTip = 50;
 
         const uint32_t colRoot = wi::Color(
             clampU8(static_cast<float>(rRoot) + jitterBright * 0.3f),
@@ -384,7 +384,7 @@ inline void appendTuft(
         for (int f = 0; f < numFronds; ++f) {
             const std::uint64_t fSeed = tuftSeed + 200U + static_cast<std::uint64_t>(f) * 23U;
             const float dAzimuth = (static_cast<float>(f) / static_cast<float>(numFronds)) * kTwoPi +
-                                   (meadowHashUnitF(fSeed + 1U) - 0.5f) * 0.45f;
+                                    (meadowHashUnitF(fSeed + 1U) - 0.5f) * 0.45f;
             const float frondAzimuth = baseAzimuth + dAzimuth;
 
             const float curLen = frondLen * (0.85f + 0.28f * meadowHashUnitF(fSeed + 2U));
@@ -400,17 +400,17 @@ inline void appendTuft(
             );
         }
     } else {
-        // --- Morphotype 2: Low Creeping Herb Rosette ---
-        // 4 to 5 flat spreading diamond/oval leaves hugging the earth
-        const int numLeaves = 4 + static_cast<int>(meadowHashUnitF(tuftSeed + 1U) * 1.99f);
+        // --- Morphotype 2: Low Creeping Herb Rosette (Broadleaf Groundcover / Beadflower Analogue) ---
+        // 4 to 6 flat spreading diamond/oval leaves creating distinct silhouette contrast against grass
+        const int numLeaves = 4 + static_cast<int>(meadowHashUnitF(tuftSeed + 1U) * 2.99f);
 
-        const float leafLen = 0.065f + 0.035f * meadowHashUnitF(tuftSeed + 2U);
-        const float leafWidth = 0.024f + 0.012f * meadowHashUnitF(tuftSeed + 3U);
+        const float leafLen = 0.14f + 0.08f * meadowHashUnitF(tuftSeed + 2U);
+        const float leafWidth = 0.065f + 0.035f * meadowHashUnitF(tuftSeed + 3U);
 
-        // Soft herbaceous green with warm undertone
-        const uint8_t rBase = 44, gBase = 54, bBase = 24;
-        const uint8_t rBody = 74, gBody = 104, bBody = 40;
-        const uint8_t rApex = 98, gApex = 126, bApex = 48;
+        // Soft broadleaf green with warm undertone
+        const uint8_t rBase = 46, gBase = 60, bBase = 26;
+        const uint8_t rBody = 82, gBody = 126, bBody = 44;
+        const uint8_t rApex = 118, gApex = 156, bApex = 52;
 
         const uint32_t colBase = wi::Color(
             clampU8(static_cast<float>(rBase) + jitterBright * 0.4f),
@@ -575,8 +575,9 @@ inline MeadowSceneCounts populateMeadowScene(
     woodlandBatch.vertexColors.reserve(6000);
 
     // 3. Deterministic sampling across central region x/z in [-55.0, 55.0]
-    // We walk a regular lattice of cluster anchor centers, spaced 2.5 meters apart (45 x 45 grid),
-    // and for each cell generate clustered jittered tuft candidate positions.
+    // We walk a regular lattice of cluster anchor centers, spaced 2.5 meters apart (44 x 44 grid).
+    // Clusters are biased near playable reference creek banks and central meadow corridor,
+    // retaining authentic open gaps and avoiding uniform carpets.
     // Total candidate tufts are budget-limited well below kMaxTufts (4096) and kMaxTriangles (80000).
     constexpr double kMinCoord = -55.0;
     constexpr double kMaxCoord = 55.0;
@@ -610,34 +611,67 @@ inline MeadowSceneCounts populateMeadowScene(
                 continue;
             }
 
-            // Cluster density based on habitat:
-            // Riparian: high density near stream bank (1 to 2 tufts per 2.5m cell)
-            // OpenLowland: medium-dense meadow carpet (0 to 2 tufts, ~60% occupancy)
-            // Woodland: sparse dappled understory (0 to 1 tufts, ~25% occupancy)
-            int candidatesInCell = 0;
-            const float occRoll = meadow_detail::meadowHashUnitF(cellSeed + 1U);
+            // Creek centerline distance for biasing density towards playable creek corridor
+            // Mirrors the pinned private ReferenceLandscape creek center formula; habitat/wet checks remain authoritative.
+            const double creekX = 8.0 * std::sin(cellZ / 43.0) + 2.0 * std::sin(cellZ / 17.0);
+            const double dx = std::abs(cellX - creekX);
+
+            // Cluster determination:
+            // Riparian banks (4.6 <= dx < 11.0) have rich, dense clusters along both shores.
+            // OpenLowland near creek (11.0 <= dx < 22.0) contains prominent meadow clusters near hero.
+            // Further into the lowland (dx >= 22.0), cluster probability steps down, preserving wide open gaps.
+            const float clusterRoll = meadow_detail::meadowHashUnitF(cellSeed + 1U);
+            float clusterProb = 0.0f;
+            int tuftsInCluster = 0;
+
             if (centerHabitat == domain::Habitat::Riparian) {
-                candidatesInCell = (occRoll < 0.85f) ? (occRoll < 0.35f ? 2 : 1) : 0;
+                clusterProb = 0.75f;
+                tuftsInCluster = (clusterRoll < 0.35f) ? 5 : ((clusterRoll < 0.75f) ? 4 : 3);
             } else if (centerHabitat == domain::Habitat::OpenLowland) {
-                candidatesInCell = (occRoll < 0.65f) ? (occRoll < 0.20f ? 2 : 1) : 0;
+                if (dx < 22.0) {
+                    clusterProb = 0.56f;
+                    tuftsInCluster = (clusterRoll < 0.32f) ? 5 : ((clusterRoll < 0.72f) ? 4 : 3);
+                } else if (dx < 36.0) {
+                    clusterProb = 0.28f;
+                    tuftsInCluster = (clusterRoll < 0.45f) ? 3 : 2;
+                } else {
+                    clusterProb = 0.14f;
+                    tuftsInCluster = 2;
+                }
             } else if (centerHabitat == domain::Habitat::Woodland) {
-                candidatesInCell = (occRoll < 0.28f) ? 1 : 0;
+                clusterProb = 0.35f;
+                tuftsInCluster = (clusterRoll < 0.50f) ? 3 : 2;
             }
 
-            // Denser bounded clusters; keep the same cell distribution and wet rejection.
-            candidatesInCell *= 4;
-            for (int c = 0; c < candidatesInCell; ++c) {
+            if (clusterRoll >= clusterProb || tuftsInCluster <= 0) {
+                continue;
+            }
+
+            // Cluster anchor position within cell
+            const double anchorX = cellX + (meadow_detail::meadowHashUnit(cellSeed + 10U) - 0.5) * (kCellSize * 0.70);
+            const double anchorZ = cellZ + (meadow_detail::meadowHashUnit(cellSeed + 11U) - 0.5) * (kCellSize * 0.70);
+
+            for (int c = 0; c < tuftsInCluster; ++c) {
                 if (totalTuftsGenerated >= kMaxTufts || currentTriangles + 24 >= kMaxTriangles) {
                     break;
                 }
 
-                const std::uint64_t candSeed = cellSeed + 100U + static_cast<std::uint64_t>(c) * 31U;
+                const std::uint64_t candSeed = cellSeed + 100U + static_cast<std::uint64_t>(c) * 37U;
 
-                // Clustered jitter within cell [-1.1m, +1.1m]
-                const double jx = (meadow_detail::meadowHashUnit(candSeed + 1U) - 0.5) * 2.2;
-                const double jz = (meadow_detail::meadowHashUnit(candSeed + 2U) - 0.5) * 2.2;
-                const double tuftX = cellX + jx;
-                const double tuftZ = cellZ + jz;
+                double tuftX = anchorX;
+                double tuftZ = anchorZ;
+
+                if (c == 0) {
+                    // Core tuft at cluster anchor
+                    tuftX += (meadow_detail::meadowHashUnit(candSeed + 1U) - 0.5) * 0.12;
+                    tuftZ += (meadow_detail::meadowHashUnit(candSeed + 2U) - 0.5) * 0.12;
+                } else {
+                    // Companion tufts clustered tightly around the anchor
+                    const float angle = meadow_detail::meadowHashUnitF(candSeed + 1U) * meadow_detail::kTwoPi;
+                    const float radius = 0.14f + 0.26f * meadow_detail::meadowHashUnitF(candSeed + 2U);
+                    tuftX += static_cast<double>(radius * std::cos(angle));
+                    tuftZ += static_cast<double>(radius * std::sin(angle));
+                }
 
                 // Enforce strict bounding box [-55, 55] and landscape bounds
                 if (tuftX < kMinCoord || tuftX > kMaxCoord ||

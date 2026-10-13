@@ -1,0 +1,10 @@
+{
+  "native_capture": "var/reports/runtime/20261013-183102-4b62df0f",
+  "fps_accepted": false,
+  "parent_evidence": "stalthos-runtime/docs/corrected-woodland-stages.md",
+  "toolkit_validation": "2008passed2skipped source hashes stable",
+  "visual_accepted": false,
+  "outcome": "timeout_no_changes_despite_zero_exit; parent necessary correction built/captured",
+  "task_id": "agy-woodland-measured-stage-diagnostics",
+  "collected": true
+}

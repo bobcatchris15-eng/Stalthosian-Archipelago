@@ -1,0 +1,10 @@
+{
+  "native_capture": "var/reports/runtime/20261013-183102-4b62df0f",
+  "fps_accepted": false,
+  "parent_evidence": "stalthos-runtime/docs/corrected-woodland-stages.md",
+  "toolkit_validation": "2008passed2skipped source hashes stable",
+  "visual_accepted": false,
+  "outcome": "frozen reviewed integration",
+  "task_id": "agy-splitcrown-crown-proportions",
+  "collected": true
+}

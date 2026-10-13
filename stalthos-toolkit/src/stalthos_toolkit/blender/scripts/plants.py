@@ -155,7 +155,12 @@ def build_tree(p: dict[str, Any], root: S.MeshBuilder, leaves: S.MeshBuilder,
                      level - 1, node_index * kids + k)
 
     span = max(node_end - node_start, 0.05)
-    crown_span = height * 0.42            # desired crown radius
+    if "crown_spread_m" in p:
+        target_radius = float(p["crown_spread_m"]) * 0.5
+        leaf_reach = float(p.get("leaf_length_m", height * 0.09)) * 0.78
+        crown_span = max(0.05, (target_radius - leaf_reach) / 0.92)
+    else:
+        crown_span = height * 0.42            # desired crown radius
     for i in range(nodes_per_level):
         t = node_start + span * (i / max(nodes_per_level - 1, 1))
         idx = min(int(t * seg), seg)

@@ -244,10 +244,10 @@ inline PrototypeModel loadWoodlandPrototype(
             model.metrics.authoredMismatch = true;
             model.metrics.stageCorrect = false;
             model.metrics.authoredMismatchDescription =
-                "Provisional adult asset exhibits mature dimensions (" +
+                "Imported adult candidate exceeds the provisional 18m whole-height envelope (" +
                 std::to_string(model.metrics.actualWholeHeightM) + "m whole, " +
                 std::to_string(model.metrics.actualTrunkHeightM) +
-                "m trunk) exceeding authored 14m young adult target; source fix pending (Jules 8336722969998514867); stage correctness not claimed.";
+                "m named structure). Authored young-adult structure target is 14m; biological stage suitability is not inferred from dimensions.";
         } else {
             model.metrics.stageCorrect = false;
             model.metrics.authoredMismatch = false;
@@ -255,7 +255,9 @@ inline PrototypeModel loadWoodlandPrototype(
         }
     }
 
-    model.metrics.authoredMismatchDescription += " Derived base datum correction applied to instance roots: " +
+    model.metrics.authoredMismatchDescription += " Whole height measured: " + std::to_string(model.metrics.actualWholeHeightM) +
+        " m; named structure height: " + (model.metrics.actualTrunkHeightM > 0.0 ? std::to_string(model.metrics.actualTrunkHeightM) + " m" : "unavailable") +
+        ". Derived base datum correction applied to instance roots: " +
         std::to_string(model.metrics.baseDatumCorrectionM) + " m (source geometry minimum Y aligned to rendered ground sample).";
 
     // Capture parts before merging

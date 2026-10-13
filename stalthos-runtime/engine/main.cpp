@@ -1604,6 +1604,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"woodland_sapling_skipped", woodlandReport.saplingSkippedCount},
             {"woodland_sapling_actual_whole_height_m", woodlandReport.saplingMetrics.actualWholeHeightM},
             {"woodland_sapling_actual_trunk_height_m", woodlandReport.saplingMetrics.actualTrunkHeightM},
+            {"woodland_sapling_actual_crown_width_m", woodlandReport.saplingMetrics.actualCrownWidthM},
             {"woodland_sapling_authored_target_height_m", woodlandReport.saplingMetrics.authoredTargetHeightM},
             {"woodland_sapling_stage_correct", woodlandReport.saplingMetrics.stageCorrect},
             {"woodland_ground_cache_available", woodlandReport.groundCacheAvailable},
@@ -1616,7 +1617,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"woodland_placed_instances", woodlandPlacedJson},
             {"woodland_skipped_instances", woodlandSkippedJson},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend","provisional adult woodland asset (lod0.glb) exhibits mature dimensions (26m trunk / 28m whole) exceeding 14m authored target (Jules 8336722969998514867 source fix pending); stage correctness not claimed; plant LOD degraded quality unverified; sapling stage skipped pending valid-sized asset"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","exclusive clip selection used for idle/walk/reverse transitions; unblended one-frame pose snap remains at transition boundaries pending proven crossfade/inertialization blend","woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {
