@@ -1,7 +1,11 @@
 {
-  "status": "collected frozen candidate; validation pending",
-  "schema_version": 1,
+  "status": "reviewed and parent validated provisional geometry",
+  "parent_fullsuite": "1988passed2skipped624.23s",
+  "ridge_triangles": 2184,
+  "parent_artifact_hashes": 18,
   "worker_commit": "8b0b642",
-  "next": "Review narrow ridge function, actual newworkspace build/rig/render and fullsuite before integration",
-  "session_id": "16246971239320251256"
+  "native_probe": "20261013-073058-bd8c7656",
+  "limits": "Geometry refinement only; final rig binding already passes with0unassigned vertices; no reference/FPSacceptance",
+  "schema_version": 1,
+  "parent_doc_fix": "False10triangles/fiberclaimremoved"
 }

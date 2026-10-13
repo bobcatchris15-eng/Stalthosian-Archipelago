@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "worker_commit": "47c3d0b",
+  "status": "collected isolated refinement candidate; notintegrated",
+  "findings": [
+    "Earlier warning was prebinding; final parentrig0unassignedandbindinggatepassed",
+    "Candidate changes sharedfeaturebinder includingeyes despitepreserveotherscope",
+    "Connectedcomponents mayimprovefibercoherence butneedsactualBlender/render/fullsuite"
+  ],
+  "session_id": "7176324516183793664",
+  "next": "Restrictconnected-fiberrefinementtobristles andvalidate separately; do notclaimmissingfinalweightsbug"
+}

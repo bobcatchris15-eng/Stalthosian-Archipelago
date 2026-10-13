@@ -14,6 +14,7 @@
 #include <cctype>
 #include "environment_scene.hpp"
 #include "foot_terrain_diagnostic.hpp"
+#include "native_sole_adapter.hpp"
 #include "shore_scene.hpp"
 #include "terrain_surface.hpp"
 #include "organic_rocks.hpp"
@@ -619,10 +620,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagnosticTransition && (!creatureLoaded || sceneWalkAnimEntity == wi::ecs::INVALID_ENTITY || sceneIdleAnimEntity == wi::ecs::INVALID_ENTITY)) throw std::runtime_error("transition probe requires a creature with separate walk and idle clips");
 
         std::optional<stalthos::engine::FourFootDiagnosticReport> latestFootDiagnostic;
+        stalthos::engine::NativeSoleAdapter nativeSoleAdapter;
+        std::optional<stalthos::engine::NativeSoleReport> latestNativeSoleDiagnostic;
         std::array<wi::ecs::Entity, stalthos::engine::kFootCount> footLandmarks{};
         footLandmarks.fill(wi::ecs::INVALID_ENTITY);
-        if (creatureLoaded) for (size_t i = 0; i < footLandmarks.size(); ++i)
-            footLandmarks[i] = scene.Entity_FindByName(stalthos::engine::kWickedFootLandmarks[i].boneName, heroMotionRoot);
+        if (creatureLoaded) {
+            for (size_t i = 0; i < footLandmarks.size(); ++i)
+                footLandmarks[i] = scene.Entity_FindByName(stalthos::engine::kWickedFootLandmarks[i].boneName, heroMotionRoot);
+            nativeSoleAdapter.initialize(scene, heroMotionRoot);
+        }
 
         bool previousInspectionKey = false, previousToggleKey = false;
         uint64_t tetherTerrainConflictCount = 0;
@@ -1006,6 +1012,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             app.Run(); ++runCalls;
             if (creatureLoaded) {
+                if (nativeSoleAdapter.isInitialized()) {
+                    latestNativeSoleDiagnostic = nativeSoleAdapter.evaluate(scene, landscape);
+                } else {
+                    latestNativeSoleDiagnostic.reset();
+                }
                 std::array<stalthos::engine::FootBoneProxyInput, stalthos::engine::kFootCount> inputs{};
                 bool resolved = true;
                 for (size_t i = 0; i < inputs.size(); ++i) {
@@ -1268,6 +1279,30 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"world_position_m", {sample.worldPosition.x, sample.worldPosition.y, sample.worldPosition.z}},
                 {"terrain_height_m", sample.terrainHeight}, {"vertical_clearance_m", sample.clearanceMeters}, {"issue", sample.issue}});
         }
+        json nativeSoleDiagnosticJson = {
+            {"resolved", creatureLoaded && nativeSoleAdapter.isInitialized() && latestNativeSoleDiagnostic.has_value()},
+            {"method", "native_body_proxy_skinned_surface"},
+            {"initialization_issue", nativeSoleAdapter.getErrorMessage()},
+            {"foot_contact_accepted", false}
+        };
+        if (latestNativeSoleDiagnostic) {
+            nativeSoleDiagnosticJson["all_valid"] = latestNativeSoleDiagnostic->allValid;
+            nativeSoleDiagnosticJson["limitations"] = latestNativeSoleDiagnostic->limitations;
+            nativeSoleDiagnosticJson["feet"] = json::array();
+            for (const auto& sample : latestNativeSoleDiagnostic->feet) {
+                nativeSoleDiagnosticJson["feet"].push_back({
+                    {"foot", stalthos::engine::footIdToString(sample.foot)},
+                    {"valid", sample.valid},
+                    {"selected_vertex_count", sample.selectedVertexCount},
+                    {"min_clearance_m", sample.minClearanceMeters},
+                    {"max_clearance_m", sample.maxClearanceMeters},
+                    {"mean_clearance_m", sample.meanClearanceMeters},
+                    {"lowest_world_pos_m", {sample.lowestVertexWorldPos.x, sample.lowestVertexWorldPos.y, sample.lowestVertexWorldPos.z}},
+                    {"highest_world_pos_m", {sample.highestVertexWorldPos.x, sample.highestVertexWorldPos.y, sample.highestVertexWorldPos.z}},
+                    {"issue", sample.issue}
+                });
+            }
+        }
         json foliageDepletionJson = json::array();
         for (const auto& inst : shrubVisualInstances) {
             json foliageEntitiesJson = json::array();
@@ -1319,7 +1354,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
             {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
             {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
-            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
+            {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"native_sole_diagnostic",nativeSoleDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
             {"diagnostic_transition_phases", transitionPhasesJson},
             {"transition_captures", transitionCapturesJson},
             {"inactive_clip_state_guarded", inactiveClipWritesPrevented},

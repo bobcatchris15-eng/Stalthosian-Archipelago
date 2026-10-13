@@ -221,18 +221,18 @@ def add_irregular_ridge(
         # the ridge; evenly stepping every strand reads as a manufactured comb.
         t = rng.random()
         start = sample_polyline(points, t)
-        jitter = rng.uniform(-0.10, 0.10)
-        direction = (back[0] + jitter, back[1] + rng.uniform(-0.12, 0.12), back[2] + rng.uniform(-0.08, 0.16))
+        jitter = rng.uniform(-0.25, 0.25)
+        direction = (back[0] + jitter, back[1] + rng.uniform(-0.35, 0.35), back[2] + rng.uniform(-0.15, 0.25))
         norm = math.sqrt(sum(v * v for v in direction)) or 1.0
         direction = tuple(v / norm for v in direction)
         taper = max(0.30, 1.0 - 0.68 * t) if length_falloff else 1.0
-        length = max(0.015, max_length * taper * rng.uniform(0.55, 1.35))
-        bend = rng.uniform(0.02, 0.12)
-        middle = tuple(start[k] + direction[k] * length * 0.55 + back[k] * length * bend for k in range(3))
-        tip = tuple(start[k] + direction[k] * length + back[k] * length * bend for k in range(3))
-        # A soft, hair-like base reads as a mane; avoid the needle-thin armor
-        # profile while retaining a fine tapered tip.
-        builder.add_tube((start, middle, tip), (length * 0.22, length * 0.12, length * 0.035), sides=5, cap=True, smooth=True)
+        length = max(0.015, max_length * taper * rng.uniform(0.60, 1.45))
+        bend = rng.uniform(0.15, 0.45)
+        middle = tuple(start[k] + direction[k] * length * 0.45 + back[k] * length * bend for k in range(3))
+        tip = tuple(start[k] + direction[k] * length * 0.8 + back[k] * length * bend * 1.6 for k in range(3))
+        # Narrow tapered roots and fine curved sweeping tips matching reference mane,
+        # avoiding thick spikes and providing irregular visual breakups.
+        builder.add_tube((start, middle, tip), (length * 0.04, length * 0.02, length * 0.005), sides=5, cap=True, smooth=True)
     return count
 
 

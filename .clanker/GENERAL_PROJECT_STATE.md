@@ -254,3 +254,6 @@ Native20/20CTest; bankformmatchedcaptures andsame-session5phaseprobevalidatedasl
 
 ## Current verified state — 2026-10-13 06:01 Central
 Livingidle head/neckmotion withstationaryroot actualWickedverified; fulltoolkit1988/2 in541.22s and18parentartifacthashes. Foliageledgercoarseshrink/hide loaded1/.5/0fractionsover8instances verifiedmatchednativecaptures; structurekept. Native20/20tests. Pendingreviewsole22d9, plane5b3546d, bristle8b0b642isolated, noactivebackend. Full draft/reference/FPS/terrainfootacceptance remainopen.
+
+## Current state — 2026-10-13 07:54 Central
+Finerbristlegeometryvalidatedfulltoolkit1988/2 andfreshasset/native; finalfeaturebinding0unassigned. Nativeactualsoleskinningnowmeasuredagainstanalyticalterrain, fourvalidfootgroups, idlemin -42/-40/+56/-26mm; contactopen. Supportplanehelper21stnativegroupvalidatedbutnotbodyposewired. Next renderedtriangleparity, thenboundedcorrection. Bindingcandidate47c3d0b isolatedscope/Blenderreviewpending. No full draft/reference/FPSacceptance.

@@ -1,0 +1,29 @@
+{
+  "status": "reviewed and parent validated native surface diagnostic",
+  "vertex_counts": [
+    572,
+    572,
+    588,
+    588
+  ],
+  "walk_probe": "20261013-075238-1ab8ebad",
+  "parent_fixes": [
+    "Rendered object matrix exactlymatchespinnedpickingpath",
+    "Objectcomponent search scoped to hero avoidsmeshnamecollision",
+    "No firstarmaturefallback",
+    "Finite normalizedweights/influence/boneData bounds",
+    "Disjoint complete boundedfootgroups",
+    "Initialization failure issueexported"
+  ],
+  "worker_commit": "2486498",
+  "idle_min_clearance_m": [
+    -0.0418904,
+    -0.0402899,
+    0.0555228,
+    -0.0264969
+  ],
+  "limits": "ClearancevsanalyticalReferenceLandscape, rendered-groundtriangleparitynext; noallocation/FPSclaim",
+  "idle_probe": "20261013-074957-b8c7f5b8",
+  "schema_version": 1,
+  "foot_contact_accepted": false
+}

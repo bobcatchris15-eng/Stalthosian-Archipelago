@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "limits": "Planeestimate only; notfeetIK/contact",
+  "worker_commit": "1282cbe",
+  "parent_fix": "Exacthorizontal bearing preserved instead ofprojection yawdrift; precision guarantees removed",
+  "status": "reviewed and parent validated helper; notnativeposewired",
+  "tests": "13focusedReleasegroups andcombined21/21CTest"
+}

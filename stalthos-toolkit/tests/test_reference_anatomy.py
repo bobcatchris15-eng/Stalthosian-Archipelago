@@ -129,8 +129,8 @@ def test_irregular_ridge_is_seeded_and_tapers_toward_tail():
                                           rng=random.Random(42), length_falloff=True)
     assert count_a == count_b == 9
     assert first.faces == second.faces
-    lengths = [max(radii) / 0.22 for _, radii, *_ in first.faces]
-    assert all(0.015 <= length <= 0.27 for length in lengths)
+    lengths = [max(radii) / 0.04 for _, radii, *_ in first.faces]
+    assert all(0.015 <= length <= 0.29 for length in lengths)
 
 
 def test_cubic_path_rejects_wrong_control_count():
