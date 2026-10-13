@@ -1,0 +1,15 @@
+{
+  "optimizer_publish_focused": "51passed154.13s",
+  "rigid_single_bone_each": true,
+  "worker_commit": "0cac68eba68879276c01381fcc61483c502a56ee",
+  "actual_blender_components": 84,
+  "parent_asset_workspace": "var/bristle-coherence-parent-verified-20261013",
+  "integrated_commit": "37858f6",
+  "artifact_hashes_verified": 18,
+  "native_walk": "20261013-131937-aa106f9e",
+  "toolkit_tests": "1988passed2skipped471.50s",
+  "initial_suite": "4failed1969passed15errors367.71s installedoptionaltools broke missing-tool fixture assumptions; rawfailure retained",
+  "source_hashes_stable": true,
+  "status": "integrated parent validated",
+  "full_draft_accepted": false
+}

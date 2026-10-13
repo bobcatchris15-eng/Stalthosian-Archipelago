@@ -1,0 +1,10 @@
+{
+  "original_commit": "f09f947",
+  "session_id": "7958851568525805498",
+  "runtime_rendering": false,
+  "integrated_commit": "2d57136",
+  "next": "collectAGYwoodland-host; stagefix8336722969998514867 stillpending",
+  "native_tests": "23/23",
+  "review_commit": "93d3170",
+  "status": "integrated purehelper only"
+}

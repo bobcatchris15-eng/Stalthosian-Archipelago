@@ -1,0 +1,10 @@
+{
+  "sole_clearances_unchanged": true,
+  "native_tests": "22/22",
+  "parent_capture": "20261013-130539-2ccb5ba1",
+  "integrated_commit": "a06c155",
+  "status": "integrated parent validated",
+  "frame_time_measured": false,
+  "visual": "Visible sun shadow and contact shading reviewed against113032baseline; reference/artisticacceptance open",
+  "worker_commit": "92a9dabff4f0f4f3b4cb96d02cb5830e0dc13028"
+}

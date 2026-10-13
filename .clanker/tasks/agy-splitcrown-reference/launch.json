@@ -1,0 +1,8 @@
+{
+  "status": "running unvalidated",
+  "task_id": "agy-splitcrown-reference",
+  "started": "2026-10-13T13:09:14.9279454-05:00",
+  "model": "gemini-3.8-flash-low",
+  "effort": "low",
+  "worktree": "E:/Stalthosian Archipelago/var/worktrees/splitcrown-reference"
+}
