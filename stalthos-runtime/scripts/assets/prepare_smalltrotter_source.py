@@ -21,6 +21,7 @@ except ImportError:
 
 PLANE_EPS = 1.0e-4
 PAIR_EPS = 1.0e-4
+GAP_EPS = 1.0e-6
 EXIT_OK = 0
 EXIT_USAGE = 2
 EXIT_MISSING_BPY = 4
@@ -100,8 +101,18 @@ def mesh_fingerprints(mesh):
 def seam_pairs(coords, boundary_indices, component_ids):
     """Pair opposite-side, near-plane boundary vertices across components.
 
-    Return deterministic sorted pairs. Any vertex with multiple candidates
-    fails closed; vertices must lie close to X=0 and have opposite X signs.
+    Uses deterministic mutual-unique-nearest matching.
+    Vertices must lie within PLANE_EPS of X=0 and have opposite or zero X signs.
+    Candidates across components within PAIR_EPS are evaluated:
+    - If multiple candidates exist for a vertex, the nearest neighbor distance
+      d1 must be strictly smaller than the second-nearest distance d2 by at
+      least GAP_EPS (>= 1.0e-6 m). If d2 - d1 < GAP_EPS, the vertex fails closed
+      as ambiguous (equal-distance or near-equal ambiguity).
+    - Pairing must be mutually unique: a's unique nearest neighbor must be b,
+      and b's unique nearest neighbor must be a.
+    - If a vertex has candidate counterparts within PAIR_EPS but suffers a
+      mutual mismatch (its nearest neighbor b prefers another vertex c, or b
+      is ambiguous), the vertex fails closed and is reported in ambiguous.
     """
     candidates = []
     for idx in sorted(set(boundary_indices)):
@@ -110,9 +121,9 @@ def seam_pairs(coords, boundary_indices, component_ids):
             fail("non-finite source coordinate")
         if abs(p[0]) <= PLANE_EPS:
             candidates.append((idx, p))
-    possible = {}
+
+    opposing_hits = {idx: [] for idx, _ in candidates}
     for i, (a, pa) in enumerate(candidates):
-        hits = []
         for b, pb in candidates[i + 1:]:
             if component_ids[a] == component_ids[b]:
                 continue
@@ -120,25 +131,45 @@ def seam_pairs(coords, boundary_indices, component_ids):
                 continue
             d2 = sum((pa[k] - pb[k]) ** 2 for k in range(3))
             if d2 <= PAIR_EPS * PAIR_EPS:
-                hits.append(b)
-        # Also test candidates with lower index; symmetric candidate sets are
-        # checked via the final degree map below.
-        possible[a] = hits
-    degree = {idx: 0 for idx, _ in candidates}
-    links = []
-    for a, hits in possible.items():
-        for b in hits:
-            degree[a] += 1
-            degree[b] += 1
-            links.append((min(a, b), max(a, b)))
-    ambiguous = sorted(idx for idx, n in degree.items() if n > 1)
-    pairs = sorted(set((a, b) for a, b in links if degree[a] == 1 and degree[b] == 1))
+                d = math.sqrt(d2)
+                opposing_hits[a].append((d, b))
+                opposing_hits[b].append((d, a))
+
+    best_for = {}
+    ambiguous = set()
+
+    for idx, hits in opposing_hits.items():
+        if not hits:
+            continue
+        hits.sort(key=lambda item: (item[0], item[1]))
+        if len(hits) == 1:
+            best_for[idx] = hits[0][1]
+        else:
+            d1, b1 = hits[0]
+            d2, b2 = hits[1]
+            if d2 - d1 >= GAP_EPS:
+                best_for[idx] = b1
+            else:
+                ambiguous.add(idx)
+
+    pairs = set()
+    for a, b in best_for.items():
+        if b is not None:
+            if best_for.get(b) == a:
+                pairs.add((min(a, b), max(a, b)))
+            else:
+                ambiguous.add(a)
+
+    sorted_pairs = sorted(pairs)
+    sorted_ambiguous = sorted(ambiguous)
+
     used = set()
-    for a, b in pairs:
+    for a, b in sorted_pairs:
         if a in used or b in used:
             fail("seam candidate is paired more than once")
         used.update((a, b))
-    return pairs, len(candidates), ambiguous
+
+    return sorted_pairs, len(candidates), sorted_ambiguous
 
 
 def collect_body(body):
@@ -184,6 +215,23 @@ def run_selftest():
         if not condition:
             raise RuntimeError("selftest failed: " + name)
         tests.append(name)
+
+    # 1. Exact coincident with near neighbor on opposing component (resolved by GAP_EPS)
+    coords_nn = [(0.0, 1.0, 1.0), (0.0, 1.0, 1.0), (0.0, 1.00002, 1.0), (0.0, 1.00002, 1.0)]
+    p_nn, _, amb_nn = seam_pairs(coords_nn, [0, 1, 2, 3], {0: 0, 1: 1, 2: 1, 3: 0})
+    check("exact_coincident_and_near_neighbor", p_nn == [(0, 1), (2, 3)] and amb_nn == [])
+
+    # 2. Equal distance ambiguity (gap < GAP_EPS fails closed into ambiguous)
+    coords_eq = [(0.0, 1.0, 1.0), (0.0, 1.00001, 1.0), (0.0, 0.99999, 1.0)]
+    p_eq, _, amb_eq = seam_pairs(coords_eq, [0, 1, 2], {0: 0, 1: 1, 2: 1})
+    check("equaldist_ambiguity", 0 in amb_eq and p_eq == [])
+
+    # 3. Mutual mismatch (vertex nearest neighbor does not mutually reciprocate)
+    coords_mm = [(0.0, 1.0, 1.0), (0.0, 1.00002, 1.0), (0.0, 1.00003, 1.0)]
+    p_mm, _, amb_mm = seam_pairs(coords_mm, [0, 1, 2], {0: 0, 1: 1, 2: 0})
+    check("mutual_mismatch", p_mm == [(1, 2)] and amb_mm == [0])
+
+    # Prior cases
     coords = [(0.00001, 1., 1.), (-0.00001, 1., 1.), (1., 2., 3.), (0., 4., 4.)]
     pairs, _, _ = seam_pairs(coords, [0, 1, 3], {0: 0, 1: 1, 3: 2})
     check("one_cross_component_pair", pairs == [(0, 1)])
@@ -200,6 +248,7 @@ def run_selftest():
         fail("non-finite coordinate did not fail")
     except ValueError as exc:
         check("nonfinite_fails", "non-finite" in str(exc))
+
     return {"passed": True, "checks": tests}
 
 
@@ -289,6 +338,8 @@ def main():
             fail("ambiguous seam candidates at vertex indices " + ",".join(map(str, bmdata["ambiguous_candidate_indices_sample"][:16])))
         if not pairs:
             fail("no unambiguous cross-component seam pairs found; no derivative created")
+        if len(pairs) != 824:
+            fail("expected exactly 824 seam pairs before weld, found %d" % len(pairs))
         if len(bmdata["component_ids"]) == 0 or len(set(bmdata["component_ids"].values())) != 2:
             fail("expected exactly two body components before seam preparation")
         # Validate target groups before any destructive operation.
@@ -325,6 +376,15 @@ def main():
         bmesh.ops.weld_verts(work, targetmap=targetmap)
         work.to_mesh(body.data); work.free(); body.data.update()
         after = topology(body.data)
+        if after["components"] != 1:
+            fail("expected 1 connected component after weld, got %d" % after["components"])
+        if after["faces"] != bmdata["topology"]["faces"]:
+            fail("face count changed after weld: before %d, after %d" % (bmdata["topology"]["faces"], after["faces"]))
+        source_bounds = bmdata["topology"]["bounds"]
+        for i in range(3):
+            if abs(after["bounds"]["min"][i] - source_bounds["min"][i]) > PLANE_EPS or \
+               abs(after["bounds"]["max"][i] - source_bounds["max"][i]) > PLANE_EPS:
+                fail("bounds changed after weld beyond tolerance")
         receipt["body"]["derivative"] = {"topology": after, "welded_pairs": len(pairs),
             "multires_removed_from_derivative": len(multi), "method": "explicit bmesh.ops.weld_verts targetmap"}
         os.makedirs(os.path.dirname(output), exist_ok=True)
