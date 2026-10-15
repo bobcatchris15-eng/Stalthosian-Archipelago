@@ -36,34 +36,14 @@ import _creature_materials as CREATURE_MAT  # noqa: E402
 import anatomy_pose as POSE  # noqa: E402
 import reference_anatomy as REF  # noqa: E402
 
-
 def _unit(v: mathutils.Vector) -> mathutils.Vector:
     return v.normalized() if v.length > 1e-9 else mathutils.Vector((0.0, 0.0, 1.0))
 
-
-def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
-               report: S.Reporter, stats: dict[str, Any], *,
-               eyes: S.MeshBuilder | None = None,
-               ridge: S.MeshBuilder | None = None) -> dict[str, Any]:
-    seed = p["seed"]
-    sides = p["tube_sides"]
-    reference_form = p.get("_reference_anatomy_profile") == REF.SMALLTROTTER_PROFILE
-    joints: dict[str, list[mathutils.Vector]] = {}
-
-    stance = p["stance_height_m"]
-    support_offsets = POSE.support_offsets(p)
-    trunk_len = p["trunk_length_m"]
-    neck_len = p["neck_length_m"]
-    tail_len = p["tail_length_m"]
-    head_len = p["head_length_m"]
-    tread = math.radians(p["tail_rise_deg"])
-
-    # ---- pelvis / trunk axis -------------------------------------------
+def _build_trunk(p: dict[str, Any], body: S.MeshBuilder, sides: int, reference_form: bool, stance: float, support_offsets: dict[str, float], trunk_len: float, arch: float) -> tuple[list[mathutils.Vector], list[float], list[float], list[tuple[mathutils.Vector, float, float]]]:
     trunk_segs = p["trunk_segments"]
     # +X = forward, +Z = up, +Y = left
     front_x = trunk_len * 0.5
     rear_x = -trunk_len * 0.5
-    arch = p["trunk_arch"]
 
     def trunk_point(t: float) -> mathutils.Vector:
         x = rear_x + trunk_len * t
@@ -86,7 +66,6 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     # The trunk is an elliptical sweep: sweep a tube then scale per-ring by
     # building the ring ourselves for an elliptical cross-section.
     rings = _elliptical_tube(body, path, radii_w, radii_d, sides=sides)
-    joints["spine"] = [p0 for p0 in path]
     if reference_form:
         # Rounded shoulder and pelvic masses soften the proxy's single oval
         # trunk while keeping the existing spine and support anchors intact.
@@ -98,12 +77,25 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
                 (trunk_len * x_scale, width * 0.48, depth * 0.49),
                 segments=sides, rings=12,
             )
+    return path, radii_d, radii_w, pts
 
-    # ---- neck chain -----------------------------------------------------
+def _build_neck(p: dict[str, Any], body: S.MeshBuilder, sides: int, reference_form: bool, seed: int, path: list[mathutils.Vector], radii_d: list[float], trunk_len: float, stance: float, arch: float, support_offsets: dict[str, float]) -> tuple[list[mathutils.Vector], list[float]]:
     neck_segs = p["neck_segments"]
     head_len = p["head_length_m"]
     base = path[-1]
     neck_root_radius = radii_d[-1]
+
+    rear_x = -trunk_len * 0.5
+
+    def trunk_point(t: float) -> mathutils.Vector:
+        x = rear_x + trunk_len * t
+        bulge = math.sin(math.pi * t) ** 0.7
+        depth = p["trunk_depth_m"] * (0.45 + 0.55 * bulge)
+        width = p["trunk_width_m"] * (0.5 + 0.5 * bulge)
+        z = (stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+             + POSE.offset_at(p, support_offsets, t))
+        return mathutils.Vector((x, 0.0, z)), depth, width
+
     if reference_form:
         # Root the neck at the front support/shoulder mass, not the pinched
         # endpoint cap of the axial sweep.
@@ -138,9 +130,9 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
             neck_path.append(base + neck_dir * (neck_len * t) + mathutils.Vector((0.0, sag, 0.0)))
             neck_r.append(max(radii_d[-1] * 0.62 * (1.0 - 0.45 * t), neck_len * 0.018))
         _elliptical_tube(body, neck_path, [r * 0.85 for r in neck_r], neck_r, sides=sides)
-    joints["neck"] = neck_path
+    return neck_path, neck_r
 
-    # ---- skull ----------------------------------------------------------
+def _build_skull(p: dict[str, Any], body: S.MeshBuilder, sides: int, reference_form: bool, neck_path: list[mathutils.Vector], neck_r: list[float], eyes: S.MeshBuilder | None) -> list[mathutils.Vector]:
     head_dir = _unit(neck_path[-1] - neck_path[-2])
     hl, hd, hw = head_len, p["head_depth_m"], head_len * 0.55
     if reference_form:
@@ -211,7 +203,9 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     joints["head"] = skull_path
     stats["skull_length_m"] = round(head_len * (1.34 if reference_form else 1.0), 5)
 
-    # ---- tail chain -----------------------------------------------------
+    return skull_path
+
+def _build_tail(p: dict[str, Any], body: S.MeshBuilder, sides: int, reference_form: bool, seed: int, path: list[mathutils.Vector], radii_d: list[float]) -> tuple[list[mathutils.Vector], list[float], float]:
     tail_segs = p["tail_segments"]
     tdir = _unit(path[0] - path[1])
     tail_path, tail_r = [], []
@@ -235,13 +229,32 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     tail_clearance = min(v[2] for v in body.verts[tail_vertex_start:])
     joints["tail"] = tail_path
 
-    # ---- four limbs -----------------------------------------------------
+    return tail_path, tail_r, tail_clearance
+
+def _build_limbs(p: dict[str, Any], body: S.MeshBuilder, sides: int, reference_form: bool, detail: S.MeshBuilder, stance: float, support_offsets: dict[str, float], trunk_len: float, head_len: float, arch: float) -> tuple[dict[str, dict[str, list[mathutils.Vector]]], dict[str, float]]:
     upper = p["leg_upper_m"]
     lower = p["leg_lower_m"]
     spread = math.radians(p["leg_spread_deg"])
     leg_r = p["leg_diameter_m"] * 0.5
     limb_chains: dict[str, dict[str, list[mathutils.Vector]]] = {}
     pad_bottoms: dict[str, float] = {}
+    rear_x = -trunk_len * 0.5
+
+    def trunk_point(t: float) -> mathutils.Vector:
+        x = rear_x + trunk_len * t
+        bulge = math.sin(math.pi * t) ** 0.7
+        depth = p["trunk_depth_m"] * (0.45 + 0.55 * bulge)
+        width = p["trunk_width_m"] * (0.5 + 0.5 * bulge)
+        z = (stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+             + POSE.offset_at(p, support_offsets, t))
+        return mathutils.Vector((x, 0.0, z)), depth, width
+
+    upper = p["leg_upper_m"]
+    # lower = p["leg_lower_m"]
+    # spread = math.radians(p["leg_spread_deg"])
+    # leg_r = p["leg_diameter_m"] * 0.5
+    # limb_chains: dict[str, dict[str, list[mathutils.Vector]]] = {}
+    # pad_bottoms: dict[str, float] = {}
     # fore at t=0.82 of the trunk, hind at t=0.16 (quadruped plan)
     for label, t, is_fore in (("front_left", 0.80, True), ("front_right", 0.80, True),
                               ("rear_left", 0.16, False), ("rear_right", 0.16, False)):
@@ -325,7 +338,20 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         }
     joints["limbs"] = limb_chains
 
-    # ---- integument detail (fictional placement, proxy-grade) -----------
+    return limb_chains, pad_bottoms
+
+def _build_integument(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder, ridge: S.MeshBuilder | None, seed: int, reference_form: bool, stance: float, support_offsets: dict[str, float], trunk_len: float, arch: float, neck_path: list[mathutils.Vector], neck_r: list[float], tail_path: list[mathutils.Vector], tail_r: list[float], tail_segs: int) -> tuple[int, int, int]:
+    rear_x = -trunk_len * 0.5
+
+    def trunk_point(t: float) -> mathutils.Vector:
+        x = rear_x + trunk_len * t
+        bulge = math.sin(math.pi * t) ** 0.7
+        depth = p["trunk_depth_m"] * (0.45 + 0.55 * bulge)
+        width = p["trunk_width_m"] * (0.5 + 0.5 * bulge)
+        z = (stance + depth * 0.55 + arch * trunk_len * math.sin(math.pi * t)
+             + POSE.offset_at(p, support_offsets, t))
+        return mathutils.Vector((x, 0.0, z)), depth, width
+
     surf = p.get("surface", {})
     bristles = 0
     osteoderms = 0
@@ -397,9 +423,47 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
             detail.add_tube([pos, pos + d * blen], [blen * 0.16, blen * 0.02], sides=3)
             bristles += 1
 
+    return osteoderms, bristles, ridge_bristles
+
+
+
+def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
+               report: S.Reporter, stats: dict[str, Any], *,
+               eyes: S.MeshBuilder | None = None,
+               ridge: S.MeshBuilder | None = None) -> dict[str, Any]:
+    seed = p["seed"]
+    sides = p["tube_sides"]
+    reference_form = p.get("_reference_anatomy_profile") == REF.SMALLTROTTER_PROFILE
+    joints: dict[str, list[mathutils.Vector]] = {}
+
+    stance = p["stance_height_m"]
+    support_offsets = POSE.support_offsets(p)
+    trunk_len = p["trunk_length_m"]
+    head_len = p["head_length_m"]
+    arch = p["trunk_arch"]
+    tail_segs = p["tail_segments"]
+
+    path, radii_d, radii_w, pts = _build_trunk(p, body, sides, reference_form, stance, support_offsets, trunk_len, arch)
+    joints["spine"] = [p0 for p0 in path]
+
+    neck_path, neck_r = _build_neck(p, body, sides, reference_form, seed, path, radii_d, trunk_len, stance, arch, support_offsets)
+    joints["neck"] = neck_path
+
+    skull_path = _build_skull(p, body, sides, reference_form, neck_path, neck_r, eyes)
+    joints["head"] = skull_path
+    stats["skull_length_m"] = round(head_len * (1.34 if reference_form else 1.0), 5)
+
+    tail_path, tail_r, tail_clearance = _build_tail(p, body, sides, reference_form, seed, path, radii_d)
+    joints["tail"] = tail_path
+
+    limb_chains, pad_bottoms = _build_limbs(p, body, sides, reference_form, detail, stance, support_offsets, trunk_len, head_len, arch)
+    joints["limbs"] = limb_chains
+
+    osteoderms, bristles, ridge_bristles = _build_integument(p, body, detail, ridge, seed, reference_form, stance, support_offsets, trunk_len, arch, neck_path, neck_r, tail_path, tail_r, tail_segs)
+
     stats.update({
-        "trunk_segments": trunk_segs,
-        "neck_segments": neck_segs,
+        "trunk_segments": p["trunk_segments"],
+        "neck_segments": p["neck_segments"],
         "tail_segments": tail_segs,
         "limbs": 4,
         "stance_height_m": round(stance, 5),
@@ -407,7 +471,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
         "neutral_pad_bottom_m": round(POSE.PAD_GROUND_Z_M, 6),
         "source_pad_bottoms_m": {k: round(v, 6) for k, v in pad_bottoms.items()},
         "tail_mesh_min_z_m": round(tail_clearance, 6),
-        "leg_segment_lengths_m": {"upper": round(upper, 6), "lower": round(lower, 6)},
+        "leg_segment_lengths_m": {"upper": round(p["leg_upper_m"], 6), "lower": round(p["leg_lower_m"], 6)},
         "osteoderms": osteoderms,
         "bristles": bristles,
         "proxy_disclaimer": ("anatomical proxy for pipeline verification; "
@@ -416,8 +480,7 @@ def build_body(p: dict[str, Any], body: S.MeshBuilder, detail: S.MeshBuilder,
     if reference_form:
         stats["ridge_bristles"] = ridge_bristles
         stats["reference_anatomy_profile"] = REF.SMALLTROTTER_PROFILE
-    return joints
-
+    return {}
 
 def _elliptical_tube(builder: S.MeshBuilder, path, radii_side, radii_up, *, sides: int = 10) -> list[list[int]]:
     """Sweep an elliptical profile along ``path`` with parallel transport."""
@@ -453,7 +516,6 @@ def _elliptical_tube(builder: S.MeshBuilder, path, radii_side, radii_up, *, side
     builder.add_face(tuple(reversed(rings[0])), smooth=False)
     builder.add_face(tuple(rings[-1]), smooth=False)
     return rings
-
 
 def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
     p = dict(params["creature"])
@@ -691,7 +753,6 @@ def main(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
         "artifacts": [{"path": blend_path, "role": "source", "kind": "blend"}],
         "object_names": [o.name for o in objects],
     }
-
 
 if __name__ == "__main__":
     S.run_main("build_creature", main)
