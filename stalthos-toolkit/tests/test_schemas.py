@@ -32,7 +32,7 @@ from stalthos_toolkit.schemas import (
     schema_for_definition,
     validate_against,
 )
-from stalthos_toolkit.schemas.validator import SchemaValidator, validate
+from stalthos_toolkit.schemas.validator import SchemaValidator, escape_token, validate
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -254,9 +254,24 @@ def test_validator_ref_and_combinators():
     assert [i.keyword for i in validate(1, one)] == ["oneOf"]
 
 
+
+def test_escape_token():
+    assert escape_token("foo") == "foo"
+    assert escape_token("foo~bar") == "foo~0bar"
+    assert escape_token("foo/bar") == "foo~1bar"
+    assert escape_token("foo~/bar") == "foo~0~1bar"
+    assert escape_token("~/") == "~0~1"
+    assert escape_token("/~") == "~1~0"
+    assert escape_token(123) == "123"
+    assert escape_token(None) == "None"
+    assert escape_token("foo/bar/baz~qux~") == "foo~1bar~1baz~0qux~0"
+    assert escape_token("") == ""
+
+
 def test_validator_escapes_pointer_tokens():
     issues = validate({"a/b": 1}, {"properties": {"a/b": {"type": "string"}}})
     assert issues[0].pointer == "/a~1b"
+
 
 
 def test_validator_refuses_unsupported_keyword():
