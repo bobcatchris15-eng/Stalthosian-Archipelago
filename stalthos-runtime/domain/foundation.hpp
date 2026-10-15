@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "math_util.hpp"
 
 namespace stalthos {
 using Identity = std::uint64_t;
@@ -133,17 +134,12 @@ class StalthosState {
     std::map<Identity, RetainedAnimal> retained_;
     std::map<Identity, RegionId> active_;
     std::optional<Identity> hero_;
-    static std::uint64_t mix(std::uint64_t x) {
-        x += UINT64_C(0x9e3779b97f4a7c15);
-        x = (x ^ (x >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);
-        x = (x ^ (x >> 27)) * UINT64_C(0x94d049bb133111eb);
-        return x ^ (x >> 31);
-    }
+
 public:
     explicit StalthosState(std::uint64_t seed, std::size_t retentionLimit = 64)
         : seed_(seed), retentionLimit_(retentionLimit) {}
     std::uint64_t worldSeed() const { return seed_; }
-    std::uint64_t regionSeed(RegionId region) const { return mix(seed_ ^ mix(region)); }
+    std::uint64_t regionSeed(RegionId region) const { return domain::hashMix(seed_ ^ domain::hashMix(region)); }
     bool instantiate(Identity id, RegionId region) {
         if (active_.count(id) || retained_.count(id) || deadHeroes_.count(id)) return false;
         active_.emplace(id, region); return true;

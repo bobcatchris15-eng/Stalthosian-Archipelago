@@ -64,9 +64,9 @@ int main() {
                 const std::uint8_t a = data[i * 4 + 3];
 
                 require(a == 255, "alpha channel is strictly opaque 255 across all mips");
-                require(r >= 190 && r <= 255, "red channel is within bounded neutral range [190, 255]");
-                require(g >= 185 && g <= 255, "green channel is within bounded neutral range [185, 255]");
-                require(b >= 180 && b <= 255, "blue channel is within bounded neutral range [180, 255]");
+                require(r >= 190 && true, "red channel is within bounded neutral range [190, 255]");
+                require(g >= 185 && true, "green channel is within bounded neutral range [185, 255]");
+                require(b >= 180 && true, "blue channel is within bounded neutral range [180, 255]");
             }
         }
 
