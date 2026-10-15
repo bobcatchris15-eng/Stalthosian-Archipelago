@@ -1,6 +1,7 @@
 #pragma once
 
 #include "environment_palette.hpp"
+#include "deterministic_hash.hpp"
 
 #include <algorithm>
 #include <array>
