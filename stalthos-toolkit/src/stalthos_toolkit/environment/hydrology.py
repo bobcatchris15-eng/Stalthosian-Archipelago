@@ -30,6 +30,7 @@ All randomness goes through ``ctx.seed_for`` / ``ctx.rng``; no global
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from collections import deque
 from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, Field
@@ -54,7 +55,9 @@ class WaterTableSpec(BaseModel):
     substrate permeability variation.
     """
 
-    base_level: float = Field(default=0.0, description="Standing water level, world units.")
+    base_level: float = Field(
+        default=0.0, description="Standing water level, world units."
+    )
     gradient: float = Field(
         default=0.0,
         description="Additional rise of the table per unit of relative elevation.",
@@ -79,15 +82,31 @@ class WaterTableSpec(BaseModel):
 class FlowRouting(BaseModel):
     """Result of single-flow routing over a filled heightfield."""
 
-    downhill: list[int] = Field(description="Index of the receiving cell, -1 for outlets.")
-    accumulation: list[float] = Field(description="Upstream contributing cell count per cell.")
-    channel_mask: list[bool] = Field(description="True where accumulation >= stream_threshold.")
-    filled_elevation: list[float] = Field(description="Depression-filled surface used for routing.")
-    sea_level: float = Field(description="Level below which a cell is treated as open water.")
+    downhill: list[int] = Field(
+        description="Index of the receiving cell, -1 for outlets."
+    )
+    accumulation: list[float] = Field(
+        description="Upstream contributing cell count per cell."
+    )
+    channel_mask: list[bool] = Field(
+        description="True where accumulation >= stream_threshold."
+    )
+    filled_elevation: list[float] = Field(
+        description="Depression-filled surface used for routing."
+    )
+    sea_level: float = Field(
+        description="Level below which a cell is treated as open water."
+    )
     cell_size: float = Field(description="Horizontal extent of one cell, world units.")
-    filled_cells: int = Field(default=0, ge=0, description="Cells raised by depression filling.")
-    max_fill_depth: float = Field(default=0.0, ge=0.0, description="Deepest depression filled.")
-    lake_cells: list[int] = Field(default_factory=list, description="Filled cells still below sea level.")
+    filled_cells: int = Field(
+        default=0, ge=0, description="Cells raised by depression filling."
+    )
+    max_fill_depth: float = Field(
+        default=0.0, ge=0.0, description="Deepest depression filled."
+    )
+    lake_cells: list[int] = Field(
+        default_factory=list, description="Filled cells still below sea level."
+    )
 
     def channel_cell_count(self) -> int:
         return sum(1 for c in self.channel_mask if c)
@@ -243,7 +262,9 @@ def route_flow(
                 if not (0 <= nx < width and 0 <= ny < height):
                     continue
                 nb = _cell_major(width, nx, ny)
-                drop = (filled[idx] - filled[nb]) / (cell_size * ((abs(dx) + abs(dy)) ** 0.5))
+                drop = (filled[idx] - filled[nb]) / (
+                    cell_size * ((abs(dx) + abs(dy)) ** 0.5)
+                )
                 if drop > best_drop:
                     best_drop = drop
                     best = nb
@@ -260,17 +281,28 @@ def route_flow(
 
     channel_mask = [a >= float(stream_threshold) for a in accumulation]
     if floodplain_cells > 0 and any(channel_mask):
-        widened = [False] * n
+        widened = list(channel_mask)
+        queue = deque()
         for idx, is_channel in enumerate(channel_mask):
-            if not is_channel:
+            if is_channel:
+                queue.append((idx, 0))
+
+        while queue:
+            idx, dist = queue.popleft()
+            if dist >= floodplain_cells:
                 continue
+
             x, y = idx % width, idx // width
-            for r in range(1, floodplain_cells + 1):
-                for dy in range(-r, r + 1):
-                    for dx in range(-r, r + 1):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < width and 0 <= ny < height:
-                            widened[_cell_major(width, nx, ny)] = True
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    if dx == 0 and dy == 0:
+                        continue
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < width and 0 <= ny < height:
+                        nidx = _cell_major(width, nx, ny)
+                        if not widened[nidx]:
+                            widened[nidx] = True
+                            queue.append((nidx, dist + 1))
         channel_mask = widened
 
     lakes = [i for i in range(n) if downhill[i] < 0 and filled[i] > sea_level]
@@ -347,7 +379,11 @@ def moisture_suitability(
     suitability: list[float] = []
     for idx in range(n):
         elevation = heightfield.elevation[idx]
-        slope = heightfield.slope_degrees[idx] if idx < len(heightfield.slope_degrees) else 0.0
+        slope = (
+            heightfield.slope_degrees[idx]
+            if idx < len(heightfield.slope_degrees)
+            else 0.0
+        )
 
         # Water proximity: saturating in accumulated upstream area.
         proximity = math.log1p(routing.accumulation[idx]) / (log_max or 1.0)
