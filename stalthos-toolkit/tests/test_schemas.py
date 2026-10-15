@@ -329,3 +329,23 @@ def test_require_valid_mentions_the_contract(tmp_path):
     with pytest.raises(UsageError) as excinfo:
         require_valid("species-definition", {"id": "nope"})
     assert "species-definition.schema.json" in (excinfo.value.hint or "")
+# --- rfc3339 validation ----------------------------------------------------
+from stalthos_toolkit.schemas.formats import rfc3339
+
+def test_rfc3339_valid():
+    """Verify rfc3339 accepts valid ISO-8601/RFC 3339 formatted strings."""
+    assert rfc3339("2023-01-01T12:00:00") is True
+    assert rfc3339("2023-01-01T12:00:00Z") is True
+    assert rfc3339("2023-01-01T12:00:00+00:00") is True
+    assert rfc3339("2023-01-01T12:00:00-08:00") is True
+    assert rfc3339("2023-01-01T12:00:00.123456Z") is True
+    assert rfc3339("2023-01-01") is True # python's fromisoformat allows date only as well, which is okay
+
+def test_rfc3339_invalid():
+    """Verify rfc3339 rejects invalid formats."""
+    assert rfc3339("2023/01/01") is False
+    assert rfc3339("01-01-2023") is False
+    assert rfc3339("not a date") is False
+    assert rfc3339("") is False
+    assert rfc3339("2023-01-01T25:00:00") is False  # Invalid hour
+    assert rfc3339("2023-13-01T12:00:00") is False  # Invalid month

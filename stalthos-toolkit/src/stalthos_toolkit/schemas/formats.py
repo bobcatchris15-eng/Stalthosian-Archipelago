@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from datetime import datetime
 
 #: `10.1016/j.whatever` style DOI, plus the bare `doi:10.xxxx/yyy` form.
 _DOI_RE = re.compile(r"^(?:doi:\s*|https?://(?:dx\.)?doi\.org/)?(10\.\d{4,9}/\S+)$", re.IGNORECASE)
@@ -104,10 +105,8 @@ def local_media_type(locator: str) -> str | None:
 
 
 def rfc3339(value: str) -> bool:
-    """Cheap RFC 3339 shape check (no `datetime` parsing cost, no tz library)."""
-    return bool(
-        re.match(
-            r"^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}:\d{2}(\.\d+)?([Zz]|[+-]\d{2}:\d{2})?$",
-            value.strip(),
-        )
-    )
+    try:
+        datetime.fromisoformat(value)
+        return True
+    except ValueError:
+        return False
