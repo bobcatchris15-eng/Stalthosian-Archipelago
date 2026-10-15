@@ -230,6 +230,113 @@ def _image_stats(img: bpy.types.Image) -> dict[str, Any]:
         return {"error": str(exc)}
 
 
+
+def _setup_bake_pass(pass_name: str, objects: list[bpy.types.Object],
+                     originals: dict[str, tuple[list[bpy.types.Material | None], list[int]]],
+                     size: int, preset: str, seed: int, scale_hint: float,
+                     report: S.Reporter) -> tuple[list[bpy.types.Image], list[bpy.types.Material]]:
+    images = []
+    materials: dict[str, list[Any]] = {}
+    normal_copies: list[bpy.types.Material] = []
+    for index, obj in enumerate(objects):
+        img = _new_image(f"bake_{pass_name}_{index}", size,
+                         non_color=pass_name != "albedo")
+        images.append(img)
+        source_slots, _ = originals[obj.name]
+        slots = source_slots or [None]
+        slot_materials: list[Any] = []
+        for slot_index, source_mat in enumerate(slots):
+            if pass_name in {"albedo", "roughness"}:
+                mat = _authored_channel_material(source_mat, img, pass_name)
+                if mat is None:
+                    report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
+                                f"has no supported authored {pass_name} input; using "
+                                "explicit procedural fallback and marking material incomplete")
+                    if pass_name == "albedo":
+                        mat = MAT.structure_emission_material(
+                            f"bake_albedo_fallback_{obj.name}_{slot_index}", preset,
+                            seed=seed, scale_hint=scale_hint)
+                    else:
+                        mat = MAT.structure_roughness_material(
+                            f"bake_rough_fallback_{obj.name}_{slot_index}", preset,
+                            seed=seed, scale_hint=scale_hint)
+                    obj["stalthos_authored_material_complete"] = False
+                    _activate_bake_target(mat, img)
+                else:
+                    mat["stalthos_material_fallback"] = False
+            elif pass_name == "thickness":
+                mat = MAT.structure_thickness_material(f"bake_thick_{obj.name}_{slot_index}",
+                                                       seed=seed, scale_hint=scale_hint)
+                _activate_bake_target(mat, img)
+            else:
+                if source_mat is not None:
+                    mat = source_mat.copy()
+                    mat.name = f"bake_normal_{obj.name}_{slot_index}"
+                    normal_copies.append(mat)
+                else:
+                    report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
+                                "has no authored material for normal baking")
+                    mat = MAT.build_procedural_material(
+                        f"normal_fallback_{obj.name}_{slot_index}", preset,
+                        seed=seed, scale_hint=scale_hint)
+                    obj["stalthos_authored_material_complete"] = False
+                _activate_bake_target(mat, img)
+            slot_materials.append(mat)
+        materials[obj.name] = slot_materials
+
+    for obj in objects:
+        _, polygon_indices = originals[obj.name]
+        _set_object_materials(obj, materials[obj.name], polygon_indices)
+    return images, normal_copies
+
+
+
+def _execute_bake_pass(pass_name: str, objects: list[bpy.types.Object],
+                       images: list[bpy.types.Image], normal_copies: list[bpy.types.Material],
+                       originals: dict[str, tuple[list[bpy.types.Material | None], list[int]]],
+                       params: dict[str, Any], margin: int, per_pass: dict[str, list[str]],
+                       baked_images: dict[str, dict[str, bpy.types.Image]],
+                       written: list[dict[str, Any]], report: S.Reporter) -> None:
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in objects:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = objects[0]
+
+    with report.time(f"bake:{pass_name}"):
+        try:
+            if pass_name == "albedo":
+                # DIFFUSE of an emission-only shader = the structure colour
+                bpy.ops.object.bake(type="EMIT", margin=margin, use_clear=True)
+            elif pass_name in ("roughness", "thickness"):
+                bpy.ops.object.bake(type="EMIT", margin=margin, use_clear=True)
+            else:
+                bpy.ops.object.bake(type="NORMAL", margin=margin, use_clear=True)
+        except RuntimeError as exc:
+            report.warn(f"bake pass {pass_name} failed: {exc}")
+
+    for index, obj in enumerate(objects):
+        path = os.path.join(params["outputs"]["textures"], f"{obj.name}_{pass_name}.png")
+        img = images[index]
+        if img is not None:
+            written.append({"path": _save(img, path), "role": "intermediate",
+                            "kind": "texture", "pass": pass_name, "object": obj.name})
+            per_pass.setdefault(pass_name, []).append(path)
+            baked_images[obj.name][pass_name] = img
+            stats = _image_stats(img)
+            if stats.get("flat"):
+                report.warn(f"{obj.name}_{pass_name}.png is flat (no variation captured); "
+                            "the bake target needs a structure input")
+
+    # Restore authored inputs after every pass. Later passes (especially
+    # NORMAL) must never see an earlier pass's emission/material setup.
+    for obj in objects:
+        source_slots, polygon_indices = originals[obj.name]
+        _set_object_materials(obj, source_slots, polygon_indices)
+    for mat in normal_copies:
+        if mat.users == 0:
+            bpy.data.materials.remove(mat)
+
+
 def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
@@ -275,99 +382,13 @@ def bake(params: dict[str, Any], report: S.Reporter) -> dict[str, Any]:
     for pass_name in PASSES:
         if pass_name not in params.get("passes", list(PASSES)):
             continue
-        images = []
-        materials: dict[str, list[Any]] = {}
-        normal_copies: list[bpy.types.Material] = []
-        for index, obj in enumerate(objects):
-            img = _new_image(f"bake_{pass_name}_{index}", size,
-                             non_color=pass_name != "albedo")
-            images.append(img)
-            source_slots, _ = originals[obj.name]
-            slots = source_slots or [None]
-            slot_materials: list[Any] = []
-            for slot_index, source_mat in enumerate(slots):
-                if pass_name in {"albedo", "roughness"}:
-                    mat = _authored_channel_material(source_mat, img, pass_name)
-                    if mat is None:
-                        report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
-                                    f"has no supported authored {pass_name} input; using "
-                                    "explicit procedural fallback and marking material incomplete")
-                        if pass_name == "albedo":
-                            mat = MAT.structure_emission_material(
-                                f"bake_albedo_fallback_{obj.name}_{slot_index}", preset,
-                                seed=seed, scale_hint=scale_hint)
-                        else:
-                            mat = MAT.structure_roughness_material(
-                                f"bake_rough_fallback_{obj.name}_{slot_index}", preset,
-                                seed=seed, scale_hint=scale_hint)
-                        obj["stalthos_authored_material_complete"] = False
-                        _activate_bake_target(mat, img)
-                    else:
-                        mat["stalthos_material_fallback"] = False
-                elif pass_name == "thickness":
-                    mat = MAT.structure_thickness_material(f"bake_thick_{obj.name}_{slot_index}",
-                                                           seed=seed, scale_hint=scale_hint)
-                    _activate_bake_target(mat, img)
-                else:
-                    if source_mat is not None:
-                        mat = source_mat.copy()
-                        mat.name = f"bake_normal_{obj.name}_{slot_index}"
-                        normal_copies.append(mat)
-                    else:
-                        report.warn(f"MATERIAL_CHANNEL_FALLBACK: {obj.name} slot {slot_index} "
-                                    "has no authored material for normal baking")
-                        mat = MAT.build_procedural_material(
-                            f"normal_fallback_{obj.name}_{slot_index}", preset,
-                            seed=seed, scale_hint=scale_hint)
-                        obj["stalthos_authored_material_complete"] = False
-                    _activate_bake_target(mat, img)
-                slot_materials.append(mat)
-            materials[obj.name] = slot_materials
-
-        for obj in objects:
-            _, polygon_indices = originals[obj.name]
-            _set_object_materials(obj, materials[obj.name], polygon_indices)
-        bpy.ops.object.select_all(action="DESELECT")
-        for obj in objects:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = objects[0]
-
-        with report.time(f"bake:{pass_name}"):
-            try:
-                if pass_name == "albedo":
-                    # DIFFUSE of an emission-only shader = the structure colour
-                    bpy.ops.object.bake(type="EMIT", margin=margin, use_clear=True)
-                elif pass_name == "roughness":
-                    bpy.ops.object.bake(type="EMIT", margin=margin, use_clear=True)
-                elif pass_name == "thickness":
-                    bpy.ops.object.bake(type="EMIT", margin=margin, use_clear=True)
-                else:
-                    bpy.ops.object.bake(type="NORMAL", margin=margin, use_clear=True)
-            except RuntimeError as exc:
-                report.warn(f"bake pass {pass_name} failed: {exc}")
-
-        for index, obj in enumerate(objects):
-            pass_name_ = pass_name
-            path = os.path.join(params["outputs"]["textures"], f"{obj.name}_{pass_name_}.png")
-            img = images[index]
-            if img is not None:
-                written.append({"path": _save(img, path), "role": "intermediate",
-                                "kind": "texture", "pass": pass_name, "object": obj.name})
-                per_pass.setdefault(pass_name, []).append(path)
-                baked_images[obj.name][pass_name] = img
-                stats = _image_stats(img)
-                if stats.get("flat"):
-                    report.warn(f"{obj.name}_{pass_name_}.png is flat (no variation captured); "
-                                "the bake target needs a structure input")
-
-        # Restore authored inputs after every pass. Later passes (especially
-        # NORMAL) must never see an earlier pass's emission/material setup.
-        for obj in objects:
-            source_slots, polygon_indices = originals[obj.name]
-            _set_object_materials(obj, source_slots, polygon_indices)
-        for mat in normal_copies:
-            if mat.users == 0:
-                bpy.data.materials.remove(mat)
+        images, normal_copies = _setup_bake_pass(
+            pass_name, objects, originals, size, preset, seed, scale_hint, report
+        )
+        _execute_bake_pass(
+            pass_name, objects, images, normal_copies, originals,
+            params, margin, per_pass, baked_images, written, report
+        )
 
     # Bind baked maps only after every pass has finished, leaving authored
     # materials available as inputs throughout the full bake sequence.
