@@ -329,3 +329,23 @@ def test_require_valid_mentions_the_contract(tmp_path):
     with pytest.raises(UsageError) as excinfo:
         require_valid("species-definition", {"id": "nope"})
     assert "species-definition.schema.json" in (excinfo.value.hint or "")
+
+def test_load_contract_json_decode_error(tmp_path, monkeypatch):
+    from stalthos_toolkit.schemas.registry import load_contract, SchemaError
+
+    mock_contracts = tmp_path / "contracts"
+    mock_contracts.mkdir()
+
+    bad_schema = mock_contracts / "species-definition.schema.json"
+    bad_schema.write_text("{ this is not valid json }", encoding="utf-8")
+
+    # stalthos_toolkit.schemas.registry.contracts_dir is a function that returns a Path
+    # We mock it to return our mock_contracts directory
+    monkeypatch.setattr("stalthos_toolkit.schemas.registry.contracts_dir", lambda: mock_contracts)
+
+    load_contract.cache_clear()
+
+    with pytest.raises(SchemaError) as excinfo:
+        load_contract("species-definition")
+
+    assert "is not valid JSON" in str(excinfo.value)
