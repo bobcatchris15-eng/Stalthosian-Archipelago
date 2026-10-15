@@ -2,6 +2,7 @@
 
 #include "reference_landscape.hpp"
 #include "environment_palette.hpp"
+#include "deterministic_hash.hpp"
 
 #include <cmath>
 #include <cstdint>
