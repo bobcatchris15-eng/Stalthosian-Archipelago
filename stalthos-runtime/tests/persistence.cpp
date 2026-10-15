@@ -891,17 +891,12 @@ void testLegacyStl5Compatibility() {
     std::filesystem::remove(path);
 }
 
-void testStl6CameraStateRoundtripAndValidation() {
+void testStl6CameraStateRoundtrip() {
     const auto path = std::filesystem::path("test_camera_stl6.sav");
     SaveData data;
-    data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2}; // Legacy mode 2 (frontal)
+    data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2};
     data.cameraState = CameraStateSnapshot{
-        1, // mode (LocallyDetached)
-        1, // focus (FreeCamera)
-        {10.0, 20.0, 30.0}, // anchor
-        1.5, // azimuth
-        0.5, // elevation
-        5.0 // distance
+        1, 1, {10.0, 20.0, 30.0}, 1.5, 0.5, 5.0
     };
 
     writeSave(path, data);
@@ -919,18 +914,32 @@ void testStl6CameraStateRoundtripAndValidation() {
     check(near(loaded.cameraState->orbitAzimuth, 1.5), "azimuth mismatch");
     check(near(loaded.cameraState->orbitElevation, 0.5), "elevation mismatch");
     check(near(loaded.cameraState->orbitDistance, 5.0), "distance mismatch");
-    // Verify legacy host pose cameraMode semantics are intact and distinct from cameraState
     check(loaded.pose.has_value() && loaded.pose->cameraMode == 2, "legacy camera mode 2 mismatch");
 
-    // Test optional omission in STL6
-    SaveData dataWithoutCam = data;
-    dataWithoutCam.cameraState.reset();
-    writeSave(path, dataWithoutCam);
-    check(bytes(path).size() == detail::encodedSize(dataWithoutCam), "STL6 without camera size mismatch");
+    std::filesystem::remove(path);
+}
+
+void testStl6CameraStateOmission() {
+    const auto path = std::filesystem::path("test_camera_stl6_omission.sav");
+    SaveData data;
+    data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2};
+
+    writeSave(path, data);
+    check(bytes(path).size() == detail::encodedSize(data), "STL6 without camera size mismatch");
     auto loadedWithoutCam = readSave(path);
     check(!loadedWithoutCam.cameraState.has_value(), "camera state should be omitted");
 
-    // In-memory validation rejections on writeSave
+    std::filesystem::remove(path);
+}
+
+void testStl6CameraStateValidationRejections() {
+    const auto path = std::filesystem::path("test_camera_stl6_val.sav");
+    SaveData data;
+    data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2};
+    data.cameraState = CameraStateSnapshot{
+        1, 1, {10.0, 20.0, 30.0}, 1.5, 0.5, 5.0
+    };
+
     auto invalid = data;
     invalid.cameraState->mode = 2;
     rejects([&] { writeSave(path, invalid); }, "invalid camera mode");
@@ -986,15 +995,18 @@ void testStl6CameraStateRoundtripAndValidation() {
     invalid = data;
     invalid.cameraState->orbitElevation = domain::CameraFraming::kMaxElevation + 0.01;
     rejects([&] { writeSave(path, invalid); }, "invalid camera orbit parameters");
-    // Corrupted binary payload and presence tests on readSave
-    // Offset calculation:
-    // Header: STL6 (4) + version(4) + phys(8) + cal(8) + seed(8) + retLimit(8) = 40
-    // hero: 0 (presence) = 41
-    // pose: 1 (presence) + 24 (pos) + 8 (heading) + 1 (cameraMode) = 34 => 75
-    // lifecycle: 0 (presence) => 76
-    // needs: 0 (presence) => 77
-    // resourceLedger: 0 (presence) => 78
-    // cameraState presence flag: offset 78
+
+    if (std::filesystem::exists(path)) std::filesystem::remove(path);
+}
+
+void testStl6CameraStateCorruption() {
+    const auto path = std::filesystem::path("test_camera_stl6_corrupt.sav");
+    SaveData data;
+    data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2};
+    data.cameraState = CameraStateSnapshot{
+        1, 1, {10.0, 20.0, 30.0}, 1.5, 0.5, 5.0
+    };
+
     const std::streamoff camPresenceOffset = 78;
     auto corruptAt = [&](std::streamoff offset, const std::function<void(std::fstream&)>& mutateFn, const char* expected) {
         writeSave(path, data);
@@ -1014,7 +1026,6 @@ void testStl6CameraStateRoundtripAndValidation() {
     corruptAt(camPresenceOffset + 27, [](std::fstream& io) { detail::write_double(io, std::numeric_limits<double>::infinity()); }, "invalid camera orbit parameters");
     corruptAt(camPresenceOffset + 43, [](std::fstream& io) { detail::write_double(io, -1.0); }, "invalid camera orbit parameters");
 
-    // Truncated payload tests
     writeSave(path, data);
     {
         auto truncated = bytes(path);
@@ -1024,7 +1035,6 @@ void testStl6CameraStateRoundtripAndValidation() {
     }
     rejects([&] { (void)readSave(path); }, "truncated");
 
-    // Trailing bytes test
     writeSave(path, data);
     {
         auto trailing = bytes(path);
@@ -1056,13 +1066,17 @@ int main() {
         {"corrupt resource ledger rollback and size caps", testCorruptResourceLedgerRollbackAndCaps},
         {"saved depleted quantities restore across lives", testSavedDepletedQuantitiesRestoreAcrossLives},
         {"STL5 legacy compatibility", testLegacyStl5Compatibility},
-        {"STL6 camera state roundtrip and validation", testStl6CameraStateRoundtripAndValidation}
+        {"STL6 camera state roundtrip", testStl6CameraStateRoundtrip},
+        {"STL6 camera state omission", testStl6CameraStateOmission},
+        {"STL6 camera state validation rejections", testStl6CameraStateValidationRejections},
+        {"STL6 camera state corruption", testStl6CameraStateCorruption}
+
     };
     int failed = 0;
     for (const auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (17 - failed) << "/17 tests passed\n";
+    std::cout << (std::size(scenarios) - failed) << "/" << std::size(scenarios) << " tests passed\n";
     return failed ? 1 : 0;
 }
