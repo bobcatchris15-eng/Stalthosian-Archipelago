@@ -943,10 +943,11 @@ def _stub_run_returning_banner(monkeypatch):
         captured.update(kwargs)
         encoding = kwargs.get("encoding")
         errors = kwargs.get("errors") or "strict"
-        # No encoding= means subprocess uses locale.getpreferredencoding(False),
-        # which is how the original bug reproduced.
+        # No encoding= means subprocess uses locale.getpreferredencoding(False).
+        # We hardcode cp1252 to reliably reproduce the Windows CI bug regardless
+        # of the host running the tests.
         text = (_NON_ASCII_BANNER.decode(encoding, errors) if encoding
-                else _NON_ASCII_BANNER.decode(locale.getpreferredencoding(False), errors))
+                else _NON_ASCII_BANNER.decode("cp1252", errors))
         return subprocess.CompletedProcess(argv, 0, stdout=text, stderr="")
 
     monkeypatch.setattr("stalthos_toolkit.blender.runner.subprocess.run", fake_run)
