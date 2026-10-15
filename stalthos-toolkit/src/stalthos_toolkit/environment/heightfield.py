@@ -344,17 +344,20 @@ class Heightfield:
         if w < 2 or h < 2 or cell <= 0.0:
             self._slope_cache = out
             return out
+        data = self.data
         for iy in range(h):
             y0 = max(iy - 1, 0)
             y1 = min(iy + 1, h - 1)
             dy = (y1 - y0) * cell
             row = iy * w
+            row0 = y0 * w
+            row1 = y1 * w
             for ix in range(w):
                 x0 = max(ix - 1, 0)
                 x1 = min(ix + 1, w - 1)
                 dx = (x1 - x0) * cell
-                gx = (self.get(x1, iy) - self.get(x0, iy)) / dx
-                gy = (self.get(ix, y1) - self.get(ix, y0)) / dy
+                gx = (data[row + x1] - data[row + x0]) / dx
+                gy = (data[row1 + ix] - data[row0 + ix]) / dy
                 out[row + ix] = math.degrees(math.atan(math.hypot(gx, gy)))
         object.__setattr__(self, "_slope_cache", out)
         return out
