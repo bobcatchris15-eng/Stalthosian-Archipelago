@@ -46,6 +46,7 @@ from stalthos_toolkit.core.seeding import (
     normalize_seed,
     rng,
     sha256_file,
+    sha256_bytes,
     hash_config,
     canonical_json,
 )
@@ -163,6 +164,15 @@ class TestSeeding:
         r1 = rng(42, "a")
         r2 = rng(42, "b")
         assert [r1.random() for _ in range(10)] != [r2.random() for _ in range(10)]
+
+    def test_sha256_bytes(self):
+        h = sha256_bytes(b"hello world")
+        assert len(h) == 64
+        assert all(c in "0123456789abcdef" for c in h)
+        assert h == "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+
+        h_empty = sha256_bytes(b"")
+        assert h_empty == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
     def test_sha256_file(self):
         with tempfile.NamedTemporaryFile(delete=False) as f:
