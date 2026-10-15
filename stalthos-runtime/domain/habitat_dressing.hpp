@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "math_util.hpp"
 
 namespace stalthos::domain {
 
@@ -91,17 +92,6 @@ private:
     HabitatDressingBudget budget_;
     std::vector<DressingProposal> proposals_;
 
-    static std::uint64_t mix(std::uint64_t v) noexcept {
-        v += 0x9e3779b97f4a7c15ULL;
-        v = (v ^ (v >> 30U)) * 0xbf58476d1ce4e5b9ULL;
-        v = (v ^ (v >> 27U)) * 0x94d049bb133111ebULL;
-        return v ^ (v >> 31U);
-    }
-
-    static double unit(std::uint64_t v) noexcept {
-        return static_cast<double>(v >> 11U) * (1.0 / 9007199254740992.0);
-    }
-
     static double creekCenter(double z) noexcept {
         return 8.0 * std::sin(z / 43.0) + 2.0 * std::sin(z / 17.0);
     }
@@ -129,19 +119,19 @@ private:
         // We define cluster seeds along the creek corridor (z: -90..90).
         constexpr int clusterCount = 12;
         for (int c = 0; c < clusterCount && count < targetMax; ++c) {
-            const std::uint64_t clusterSalt = seed_ ^ mix(0xFEED01ULL + static_cast<std::uint64_t>(c));
-            const double centerZ = -80.0 + unit(mix(clusterSalt)) * 160.0;
+            const std::uint64_t clusterSalt = seed_ ^ hashMix(0xFEED01ULL + static_cast<std::uint64_t>(c));
+            const double centerZ = -80.0 + hashUnit(hashMix(clusterSalt)) * 160.0;
             const double channelCenter = creekCenter(centerZ);
             // Cluster center offset across the channel (-5.0 to +5.0)
-            const double clusterOffsetX = (unit(mix(clusterSalt + 1U)) - 0.5) * 10.0;
+            const double clusterOffsetX = (hashUnit(hashMix(clusterSalt + 1U)) - 0.5) * 10.0;
             const double clusterX = channelCenter + clusterOffsetX;
 
-            const std::size_t pebblesInCluster = 4 + static_cast<std::size_t>(unit(mix(clusterSalt + 2U)) * 6.0);
+            const std::size_t pebblesInCluster = 4 + static_cast<std::size_t>(hashUnit(hashMix(clusterSalt + 2U)) * 6.0);
             for (std::size_t p = 0; p < pebblesInCluster && count < targetMax; ++p) {
-                const std::uint64_t pSalt = mix(clusterSalt ^ (static_cast<std::uint64_t>(p) << 4U));
+                const std::uint64_t pSalt = hashMix(clusterSalt ^ (static_cast<std::uint64_t>(p) << 4U));
                 // Cluster dispersion with irregular radial offset
-                const double angle = unit(mix(pSalt)) * 6.283185307179586;
-                const double dist = std::sqrt(unit(mix(pSalt + 1U))) * 3.5;
+                const double angle = hashUnit(hashMix(pSalt)) * 6.283185307179586;
+                const double dist = std::sqrt(hashUnit(hashMix(pSalt + 1U))) * 3.5;
                 const double px = clusterX + std::cos(angle) * dist;
                 const double pz = centerZ + std::sin(angle) * dist;
 
@@ -156,10 +146,10 @@ private:
                 if (dx > 6.5) continue;
 
                 const double py = landscape_.height(px, pz);
-                const double scale = 0.15 + unit(mix(pSalt + 2U)) * 0.45;
-                const double heading = unit(mix(pSalt + 3U)) * 6.283185307179586;
-                const double pitch = (unit(mix(pSalt + 4U)) - 0.5) * 0.3;
-                const double roll = (unit(mix(pSalt + 5U)) - 0.5) * 0.3;
+                const double scale = 0.15 + hashUnit(hashMix(pSalt + 2U)) * 0.45;
+                const double heading = hashUnit(hashMix(pSalt + 3U)) * 6.283185307179586;
+                const double pitch = (hashUnit(hashMix(pSalt + 4U)) - 0.5) * 0.3;
+                const double roll = (hashUnit(hashMix(pSalt + 5U)) - 0.5) * 0.3;
 
                 // Stable deterministic ID
                 std::string id = "pebble_" + std::to_string(count);
@@ -179,20 +169,20 @@ private:
         // Bounded clusters along the banks and outer riparian / woodland transition.
         constexpr int clusterCount = 14;
         for (int c = 0; c < clusterCount && count < targetMax; ++c) {
-            const std::uint64_t clusterSalt = seed_ ^ mix(0xFEED02ULL + static_cast<std::uint64_t>(c));
+            const std::uint64_t clusterSalt = seed_ ^ hashMix(0xFEED02ULL + static_cast<std::uint64_t>(c));
             // Choose bank side: -1 (west) or +1 (east)
-            const double side = (unit(mix(clusterSalt)) > 0.5) ? 1.0 : -1.0;
-            const double centerZ = -85.0 + unit(mix(clusterSalt + 1U)) * 170.0;
+            const double side = (hashUnit(hashMix(clusterSalt)) > 0.5) ? 1.0 : -1.0;
+            const double centerZ = -85.0 + hashUnit(hashMix(clusterSalt + 1U)) * 170.0;
             const double channelCenter = creekCenter(centerZ);
             // Placed at 5.5 to 28.0m from channel center (dry riparian to woodland)
-            const double distFromCenter = 5.5 + unit(mix(clusterSalt + 2U)) * 22.0;
+            const double distFromCenter = 5.5 + hashUnit(hashMix(clusterSalt + 2U)) * 22.0;
             const double clusterX = channelCenter + side * distFromCenter;
 
-            const std::size_t logsInCluster = 1 + static_cast<std::size_t>(unit(mix(clusterSalt + 3U)) * 3.0);
+            const std::size_t logsInCluster = 1 + static_cast<std::size_t>(hashUnit(hashMix(clusterSalt + 3U)) * 3.0);
             for (std::size_t l = 0; l < logsInCluster && count < targetMax; ++l) {
-                const std::uint64_t lSalt = mix(clusterSalt ^ (static_cast<std::uint64_t>(l) << 5U));
-                const double lx = clusterX + (unit(mix(lSalt)) - 0.5) * 6.0;
-                const double lz = centerZ + (unit(mix(lSalt + 1U)) - 0.5) * 6.0;
+                const std::uint64_t lSalt = hashMix(clusterSalt ^ (static_cast<std::uint64_t>(l) << 5U));
+                const double lx = clusterX + (hashUnit(hashMix(lSalt)) - 0.5) * 6.0;
+                const double lz = centerZ + (hashUnit(hashMix(lSalt + 1U)) - 0.5) * 6.0;
 
                 if (!landscape_.inBounds(lx, lz)) continue;
 
@@ -204,11 +194,11 @@ private:
                 if (hab != Habitat::Woodland && hab != Habitat::Riparian && hab != Habitat::OpenLowland) continue;
 
                 const double ly = landscape_.height(lx, lz);
-                const double scale = 0.8 + unit(mix(lSalt + 2U)) * 1.4;
-                const double heading = unit(mix(lSalt + 3U)) * 6.283185307179586;
+                const double scale = 0.8 + hashUnit(hashMix(lSalt + 2U)) * 1.4;
+                const double heading = hashUnit(hashMix(lSalt + 3U)) * 6.283185307179586;
                 // Log pitch follows minor slope or terrain variation
-                const double pitch = (unit(mix(lSalt + 4U)) - 0.5) * 0.25;
-                const double roll = (unit(mix(lSalt + 5U)) - 0.5) * 0.2;
+                const double pitch = (hashUnit(hashMix(lSalt + 4U)) - 0.5) * 0.25;
+                const double roll = (hashUnit(hashMix(lSalt + 5U)) - 0.5) * 0.2;
 
                 std::string id = "log_" + std::to_string(count);
                 proposals_.push_back({std::move(id), DressingKind::FallenLog, lx, ly, lz, scale, heading, pitch, roll});
@@ -226,19 +216,19 @@ private:
         // STRICT: Exclude wetted channel.
         constexpr int clusterCount = 16;
         for (int c = 0; c < clusterCount && count < targetMax; ++c) {
-            const std::uint64_t clusterSalt = seed_ ^ mix(0xFEED03ULL + static_cast<std::uint64_t>(c));
-            const double side = (unit(mix(clusterSalt)) > 0.5) ? 1.0 : -1.0;
-            const double centerZ = -85.0 + unit(mix(clusterSalt + 1U)) * 170.0;
+            const std::uint64_t clusterSalt = seed_ ^ hashMix(0xFEED03ULL + static_cast<std::uint64_t>(c));
+            const double side = (hashUnit(hashMix(clusterSalt)) > 0.5) ? 1.0 : -1.0;
+            const double centerZ = -85.0 + hashUnit(hashMix(clusterSalt + 1U)) * 170.0;
             const double channelCenter = creekCenter(centerZ);
             // Bank zone: 4.8m to 12.0m from channel center
-            const double bankDist = 4.8 + unit(mix(clusterSalt + 2U)) * 7.2;
+            const double bankDist = 4.8 + hashUnit(hashMix(clusterSalt + 2U)) * 7.2;
             const double clusterX = channelCenter + side * bankDist;
 
-            const std::size_t clumpsInCluster = 3 + static_cast<std::size_t>(unit(mix(clusterSalt + 3U)) * 5.0);
+            const std::size_t clumpsInCluster = 3 + static_cast<std::size_t>(hashUnit(hashMix(clusterSalt + 3U)) * 5.0);
             for (std::size_t k = 0; k < clumpsInCluster && count < targetMax; ++k) {
-                const std::uint64_t kSalt = mix(clusterSalt ^ (static_cast<std::uint64_t>(k) << 4U));
-                const double angle = unit(mix(kSalt)) * 6.283185307179586;
-                const double dist = std::sqrt(unit(mix(kSalt + 1U))) * 2.8;
+                const std::uint64_t kSalt = hashMix(clusterSalt ^ (static_cast<std::uint64_t>(k) << 4U));
+                const double angle = hashUnit(hashMix(kSalt)) * 6.283185307179586;
+                const double dist = std::sqrt(hashUnit(hashMix(kSalt + 1U))) * 2.8;
                 const double kx = clusterX + std::cos(angle) * dist;
                 const double kz = centerZ + std::sin(angle) * dist;
 
@@ -252,10 +242,10 @@ private:
                 if (hab != Habitat::Riparian && hab != Habitat::OpenLowland) continue;
 
                 const double ky = landscape_.height(kx, kz);
-                const double scale = 0.4 + unit(mix(kSalt + 2U)) * 0.6;
-                const double heading = unit(mix(kSalt + 3U)) * 6.283185307179586;
-                const double pitch = (unit(mix(kSalt + 4U)) - 0.5) * 0.15;
-                const double roll = (unit(mix(kSalt + 5U)) - 0.5) * 0.15;
+                const double scale = 0.4 + hashUnit(hashMix(kSalt + 2U)) * 0.6;
+                const double heading = hashUnit(hashMix(kSalt + 3U)) * 6.283185307179586;
+                const double pitch = (hashUnit(hashMix(kSalt + 4U)) - 0.5) * 0.15;
+                const double roll = (hashUnit(hashMix(kSalt + 5U)) - 0.5) * 0.15;
 
                 std::string id = "bank_clump_" + std::to_string(count);
                 proposals_.push_back({std::move(id), DressingKind::DryBankClump, kx, ky, kz, scale, heading, pitch, roll});
@@ -273,16 +263,16 @@ private:
         // West side high relief region.
         constexpr int clusterCount = 10;
         for (int c = 0; c < clusterCount && count < targetMax; ++c) {
-            const std::uint64_t clusterSalt = seed_ ^ mix(0xFEED04ULL + static_cast<std::uint64_t>(c));
+            const std::uint64_t clusterSalt = seed_ ^ hashMix(0xFEED04ULL + static_cast<std::uint64_t>(c));
             // Bluff center is roughly around x ~ -58 m
-            const double centerZ = -70.0 + unit(mix(clusterSalt)) * 140.0;
-            const double centerX = -58.0 + (unit(mix(clusterSalt + 1U)) - 0.5) * 20.0;
+            const double centerZ = -70.0 + hashUnit(hashMix(clusterSalt)) * 140.0;
+            const double centerX = -58.0 + (hashUnit(hashMix(clusterSalt + 1U)) - 0.5) * 20.0;
 
-            const std::size_t accentsInCluster = 3 + static_cast<std::size_t>(unit(mix(clusterSalt + 2U)) * 4.0);
+            const std::size_t accentsInCluster = 3 + static_cast<std::size_t>(hashUnit(hashMix(clusterSalt + 2U)) * 4.0);
             for (std::size_t a = 0; a < accentsInCluster && count < targetMax; ++a) {
-                const std::uint64_t aSalt = mix(clusterSalt ^ (static_cast<std::uint64_t>(a) << 4U));
-                const double angle = unit(mix(aSalt)) * 6.283185307179586;
-                const double dist = std::sqrt(unit(mix(aSalt + 1U))) * 5.0;
+                const std::uint64_t aSalt = hashMix(clusterSalt ^ (static_cast<std::uint64_t>(a) << 4U));
+                const double angle = hashUnit(hashMix(aSalt)) * 6.283185307179586;
+                const double dist = std::sqrt(hashUnit(hashMix(aSalt + 1U))) * 5.0;
                 const double ax = centerX + std::cos(angle) * dist;
                 const double az = centerZ + std::sin(angle) * dist;
 
@@ -295,10 +285,10 @@ private:
                 if (hab != Habitat::Bluff && hab != Habitat::Outcrop) continue;
 
                 const double ay = landscape_.height(ax, az);
-                const double scale = 0.5 + unit(mix(aSalt + 2U)) * 1.1;
-                const double heading = unit(mix(aSalt + 3U)) * 6.283185307179586;
-                const double pitch = (unit(mix(aSalt + 4U)) - 0.5) * 0.4;
-                const double roll = (unit(mix(aSalt + 5U)) - 0.5) * 0.4;
+                const double scale = 0.5 + hashUnit(hashMix(aSalt + 2U)) * 1.1;
+                const double heading = hashUnit(hashMix(aSalt + 3U)) * 6.283185307179586;
+                const double pitch = (hashUnit(hashMix(aSalt + 4U)) - 0.5) * 0.4;
+                const double roll = (hashUnit(hashMix(aSalt + 5U)) - 0.5) * 0.4;
 
                 std::string id = "bluff_accent_" + std::to_string(count);
                 proposals_.push_back({std::move(id), DressingKind::BluffAccent, ax, ay, az, scale, heading, pitch, roll});

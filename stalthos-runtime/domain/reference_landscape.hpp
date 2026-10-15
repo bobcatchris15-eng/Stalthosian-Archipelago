@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <vector>
+#include "math_util.hpp"
 
 namespace stalthos::domain {
 
@@ -95,27 +96,20 @@ private:
         const double r = std::sqrt((x + 61.0) * (x + 61.0) + (z - 12.0) * (z - 12.0));
         return 1.0 - smooth(9.0, 19.0, r);
     }
-    static std::uint64_t mix(std::uint64_t v) {
-        v += 0x9e3779b97f4a7c15ULL;
-        v = (v ^ (v >> 30U)) * 0xbf58476d1ce4e5b9ULL;
-        v = (v ^ (v >> 27U)) * 0x94d049bb133111ebULL;
-        return v ^ (v >> 31U);
-    }
-    static double unit(std::uint64_t v) { return static_cast<double>(v >> 11U) * (1.0 / 9007199254740992.0); }
     double noise(double x, double z) const {
         const auto ix = static_cast<std::int64_t>(std::floor(x * 0.17));
         const auto iz = static_cast<std::int64_t>(std::floor(z * 0.17));
-        const std::uint64_t h = mix(seed_ ^ mix(static_cast<std::uint64_t>(ix)) ^ (mix(static_cast<std::uint64_t>(iz)) << 1U));
-        return unit(h);
+        const std::uint64_t h = hashMix(seed_ ^ hashMix(static_cast<std::uint64_t>(ix)) ^ (hashMix(static_cast<std::uint64_t>(iz)) << 1U));
+        return hashUnit(h);
     }
     void buildPlacements() {
         // Stable 8m candidate lattice with bounded seed-derived jitter.
         for (int iz = -11; iz <= 11; ++iz) for (int ix = -11; ix <= 11; ++ix) {
-            const std::uint64_t cell = seed_ ^ mix(static_cast<std::uint64_t>(ix + 32)) ^ (mix(static_cast<std::uint64_t>(iz + 32)) << 1U);
-            const double x = ix * 8.0 + (unit(mix(cell)) - 0.5) * 3.0;
-            const double z = iz * 8.0 + (unit(mix(cell + 1U)) - 0.5) * 3.0;
+            const std::uint64_t cell = seed_ ^ hashMix(static_cast<std::uint64_t>(ix + 32)) ^ (hashMix(static_cast<std::uint64_t>(iz + 32)) << 1U);
+            const double x = ix * 8.0 + (hashUnit(hashMix(cell)) - 0.5) * 3.0;
+            const double z = iz * 8.0 + (hashUnit(hashMix(cell + 1U)) - 0.5) * 3.0;
             const auto h = habitat(x, z);
-            const double choice = unit(mix(cell + 2U));
+            const double choice = hashUnit(hashMix(cell + 2U));
             PlacementKind kind;
             if ((h == Habitat::Bluff || h == Habitat::Outcrop) && choice < 0.42) kind = choice < 0.12 ? PlacementKind::Boulder : PlacementKind::Rock;
             else if (h == Habitat::Woodland && choice < 0.66) kind = choice < 0.22 ? PlacementKind::Tree : PlacementKind::Shrub;
@@ -124,8 +118,8 @@ private:
             if (kind == PlacementKind::Tree || kind == PlacementKind::Shrub || kind == PlacementKind::Fern) {
                 if (waterContains(x, z)) continue;
             }
-            const double scale = 0.7 + unit(mix(cell + 3U)) * (kind == PlacementKind::Tree ? 1.0 : 0.7);
-            placements_.push_back({kind, x, height(x, z), z, scale, unit(mix(cell + 4U)) * 6.283185307179586});
+            const double scale = 0.7 + hashUnit(hashMix(cell + 3U)) * (kind == PlacementKind::Tree ? 1.0 : 0.7);
+            placements_.push_back({kind, x, height(x, z), z, scale, hashUnit(hashMix(cell + 4U)) * 6.283185307179586});
         }
     }
 };
