@@ -509,19 +509,19 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 auto& animation=imported.animations[i];
                 const auto animEntity=imported.animations.GetEntity(i);
                 const auto* nameComp=imported.names.GetComponent(animEntity);
-                const std::string animName=nameComp ? nameComp->name : "";
+                const std::string_view animName = nameComp ? std::string_view(nameComp->name) : std::string_view("");
                 const double importedLength=animation.GetLength();
 
                 bool isWalk=false;
                 bool isIdle=false;
                 if(imported.animations.GetCount()==1) {
                     isWalk=true;
-                } else if(animName.find("Walk")!=std::string::npos || animName.find("walk")!=std::string::npos) {
+                } else if(animName.find("Walk")!=std::string_view::npos || animName.find("walk")!=std::string_view::npos) {
                     isWalk=true;
-                } else if(animName.find("Idle")!=std::string::npos || animName.find("idle")!=std::string::npos) {
+                } else if(animName.find("Idle")!=std::string_view::npos || animName.find("idle")!=std::string_view::npos) {
                     isIdle=true;
                 } else {
-                    throw std::runtime_error("unknown creature animation clip: " + animName);
+                    throw std::runtime_error("unknown creature animation clip: " + std::string(animName));
                 }
 
                 if(isWalk) {
@@ -583,13 +583,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 animation.SetLooped(true); animation.Stop(); animation.amount=0.0f;
                 const auto ent=scene.animations.GetEntity(i);
                 const auto* nameComp=scene.names.GetComponent(ent);
-                const std::string animName=nameComp ? nameComp->name : "";
-                if(scene.animations.GetCount()==1 || animName.find("Walk")!=std::string::npos || animName.find("walk")!=std::string::npos) {
+                const std::string_view animName = nameComp ? std::string_view(nameComp->name) : std::string_view("");
+                if(scene.animations.GetCount()==1 || animName.find("Walk")!=std::string_view::npos || animName.find("walk")!=std::string_view::npos) {
                     sceneWalkAnimEntity=ent;
-                    if(!animName.empty()) sceneWalkAnimName = animName;
-                } else if(animName.find("Idle")!=std::string::npos || animName.find("idle")!=std::string::npos) {
+                    if(!animName.empty()) sceneWalkAnimName = std::string(animName);
+                } else if(animName.find("Idle")!=std::string_view::npos || animName.find("idle")!=std::string_view::npos) {
                     sceneIdleAnimEntity=ent;
-                    if(!animName.empty()) sceneIdleAnimName = animName;
+                    if(!animName.empty()) sceneIdleAnimName = std::string(animName);
                 }
             }
             creatureLoaded=true;
