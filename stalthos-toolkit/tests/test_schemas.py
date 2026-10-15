@@ -329,3 +329,37 @@ def test_require_valid_mentions_the_contract(tmp_path):
     with pytest.raises(UsageError) as excinfo:
         require_valid("species-definition", {"id": "nope"})
     assert "species-definition.schema.json" in (excinfo.value.hint or "")
+
+
+def test_load_definition_file_list(tmp_path):
+    (tmp_path / "valid.yaml").touch()
+    (tmp_path / "also_valid.yml").touch()
+    (tmp_path / "_ignored.yaml").touch()
+
+    refs_dir = tmp_path / "references"
+    refs_dir.mkdir()
+    (refs_dir / "ref.yaml").touch()
+
+    subdir = tmp_path / "subdir"
+    subdir.mkdir()
+    (subdir / "sub_valid.yaml").touch()
+    (subdir / "_sub_ignored.yaml").touch()
+
+    sub_refs = subdir / "references"
+    sub_refs.mkdir()
+    (sub_refs / "sub_ref.yaml").touch()
+
+    json_file = tmp_path / "data.json"
+    json_file.touch()
+
+    # Default pattern: **/*.y*ml
+    found = load_definition_file_list(tmp_path)
+    assert found == sorted([
+        tmp_path / "also_valid.yml",
+        tmp_path / "subdir" / "sub_valid.yaml",
+        tmp_path / "valid.yaml",
+    ])
+
+    # Custom pattern matching JSON
+    found_json = load_definition_file_list(tmp_path, pattern="*.json")
+    assert found_json == [json_file]
