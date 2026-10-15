@@ -179,10 +179,10 @@ def classify_cell(
     low = relief <= 6.0
     wet = moisture >= 0.6
 
-    if low and wet:
-        return FLOODPLAIN_WETLAND if slope_deg <= 4.0 else MARSH
     if moisture >= 0.78 and relief <= 4.0 and slope_deg <= 20.0:
         return RAIN_FOREST
+    if low and wet:
+        return FLOODPLAIN_WETLAND if slope_deg <= 4.0 else MARSH
     if moisture >= 0.5:
         return BROADLEAF_WOODLAND if not low else FLOODPLAIN_WETLAND
     if moisture >= 0.32:
