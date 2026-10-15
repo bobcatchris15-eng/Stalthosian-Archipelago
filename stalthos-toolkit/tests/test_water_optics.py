@@ -274,26 +274,29 @@ def test_absorption_ignores_turbidity():
     assert a == b
 
 
-# --- the SCATTERING_ALBEDO NameError (known bug) -----------------------------
+# --- Scattering / Extinction works now -------------------------------------
 
 
-def test_scattering_albedo_global_is_undefined_in_the_module():
-    assert not hasattr(optics, "SCATTERING_ALBEDO")
+def test_scattering_albedo_global_is_defined():
+    assert hasattr(optics, "SCATTERING_ALBEDO")
+    assert "open_ocean_clear" in optics.SCATTERING_ALBEDO
+    assert optics.SCATTERING_ALBEDO["open_ocean_clear"] == 0.35
 
 
-def test_scattering_coefficient_raises_nameerror_because_albedo_is_missing():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.scattering_coefficient_m(535.0, "open_ocean_clear")
+def test_scattering_coefficient_works():
+    # A basic call to ensure it doesn't raise NameError
+    b = optics.scattering_coefficient_m(535.0, "open_ocean_clear")
+    assert b > 0.0
 
 
-def test_extinction_coefficient_raises_nameerror_via_scattering():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.extinction_coefficient_m(535.0, "open_ocean_clear")
+def test_extinction_coefficient_works():
+    c = optics.extinction_coefficient_m(535.0, "open_ocean_clear")
+    assert c > 0.0
 
 
-def test_single_scattering_albedo_raises_nameerror_via_extinction():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.single_scattering_albedo(535.0, "open_ocean_clear")
+def test_single_scattering_albedo_works():
+    w0 = optics.single_scattering_albedo(535.0, "open_ocean_clear")
+    assert w0 == pytest.approx(0.35)
 
 
 # --- Beer-Lambert ------------------------------------------------------------
