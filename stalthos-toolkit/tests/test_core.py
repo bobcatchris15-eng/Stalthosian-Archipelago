@@ -343,6 +343,17 @@ class TestStatusEnvelope:
         output = stream.getvalue()
         parsed = json.loads(output.strip())
         assert parsed["command"] == "test"
+        assert output.endswith("\n")
+
+    def test_emit_writes_to_stdout_by_default(self, capsys):
+        s = Status(command="test_stdout", ok=True)
+        from stalthos_toolkit.core.status import emit
+        emit(s)
+        captured = capsys.readouterr()
+        parsed = json.loads(captured.out.strip())
+        assert parsed["command"] == "test_stdout"
+        assert captured.out.endswith("\n")
+        assert captured.err == ""
 
     def test_status_from_exception_toolkit_error(self):
         err = UsageError("bad usage", detail={"arg": "foo"}, hint="fix it")
