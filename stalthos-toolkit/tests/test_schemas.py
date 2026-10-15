@@ -24,7 +24,9 @@ from stalthos_toolkit.schemas import (
     CONTRACT_FILES,
     SchemaError,
     UnsupportedSchema,
+    ValidationIssue,
     contract_names,
+    format_issues,
     load_contract,
     load_definition,
     load_definition_file_list,
@@ -329,3 +331,25 @@ def test_require_valid_mentions_the_contract(tmp_path):
     with pytest.raises(UsageError) as excinfo:
         require_valid("species-definition", {"id": "nope"})
     assert "species-definition.schema.json" in (excinfo.value.hint or "")
+
+def test_format_issues():
+    issues = [
+        ValidationIssue(pointer="/a", keyword="type", message="expected string"),
+        ValidationIssue(pointer="/b", keyword="required", message="is missing"),
+        ValidationIssue(pointer="", keyword="enum", message="not in enum"),
+    ]
+
+    # basic formatting
+    out = format_issues(issues)
+    assert out == "  /a: expected string [type]\n  /b: is missing [required]\n  <root>: not in enum [enum]"
+
+    # with source
+    out = format_issues(issues, source="definition.json")
+    assert out.startswith("definition.json does not satisfy its schema:\n  /a:")
+
+    # with limit
+    out = format_issues(issues, limit=2)
+    assert "expected string [type]" in out
+    assert "is missing [required]" in out
+    assert "not in enum [enum]" not in out
+    assert "and 1 more" in out
