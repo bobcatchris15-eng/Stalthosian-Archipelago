@@ -8,16 +8,9 @@ marking is the claim being tested here, not re-litigated.
 
 No Blender, no network, no clock, no RNG. Every assertion is on values.
 
-Known bug captured by these tests (do NOT "fix" the test to make it pass --
-report upstream to the module owner):
-
-  * ``scattering_coefficient_m`` reads a module global ``SCATTERING_ALBEDO``
-    that is never defined anywhere in ``optics.py``. Every call therefore
-    raises ``NameError``, which takes down ``extinction_coefficient_m``,
-    ``single_scattering_albedo`` and ``optics_table()``'s albedo consumers
-    transitively. See ``test_scattering_coefficient_raises_nameerror_*``.
-  * ``absorption_coefficient_m`` accepts ``turbidity`` / ``turbidity_unit``
-    but ignores both, despite validating the unit.
+The restored class albedo lookup is checked through the scattering,
+extinction and transmission APIs. Absorption accepts turbidity but retains the
+module's declared absorption-only model; this is characterized separately.
 """
 
 from __future__ import annotations
@@ -274,26 +267,29 @@ def test_absorption_ignores_turbidity():
     assert a == b
 
 
-# --- the SCATTERING_ALBEDO NameError (known bug) -----------------------------
+# --- Scattering / Extinction works now -------------------------------------
 
 
-def test_scattering_albedo_global_is_undefined_in_the_module():
-    assert not hasattr(optics, "SCATTERING_ALBEDO")
+def test_scattering_albedo_global_is_defined():
+    assert hasattr(optics, "SCATTERING_ALBEDO")
+    assert "open_ocean_clear" in optics.SCATTERING_ALBEDO
+    assert optics.SCATTERING_ALBEDO["open_ocean_clear"] == 0.35
 
 
-def test_scattering_coefficient_raises_nameerror_because_albedo_is_missing():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.scattering_coefficient_m(535.0, "open_ocean_clear")
+def test_scattering_coefficient_works():
+    # A basic call to ensure it doesn't raise NameError
+    b = optics.scattering_coefficient_m(535.0, "open_ocean_clear")
+    assert b > 0.0
 
 
-def test_extinction_coefficient_raises_nameerror_via_scattering():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.extinction_coefficient_m(535.0, "open_ocean_clear")
+def test_extinction_coefficient_works():
+    c = optics.extinction_coefficient_m(535.0, "open_ocean_clear")
+    assert c > 0.0
 
 
-def test_single_scattering_albedo_raises_nameerror_via_extinction():
-    with pytest.raises(NameError, match="SCATTERING_ALBEDO"):
-        optics.single_scattering_albedo(535.0, "open_ocean_clear")
+def test_single_scattering_albedo_works():
+    w0 = optics.single_scattering_albedo(535.0, "open_ocean_clear")
+    assert w0 == pytest.approx(0.35)
 
 
 # --- Beer-Lambert ------------------------------------------------------------
@@ -709,3 +705,32 @@ def test_package_reexports_resolve_to_the_optics_objects():
     assert water.beer_lambert_rgb is optics.beer_lambert_rgb
     assert water.optics_table is optics.optics_table
     assert water.WATER_CLASSES is optics.WATER_CLASSES
+
+
+@pytest.mark.parametrize("water_class", sorted(optics.WATER_CLASSES))
+def test_class_scattering_matches_declared_reference_albedo(water_class):
+    wavelength = float(optics.WAVELENGTH_BANDS["green"])
+    a = optics.absorption_coefficient_m(wavelength, water_class)
+    b = optics.scattering_coefficient_m(wavelength, water_class)
+    c = optics.extinction_coefficient_m(wavelength, water_class)
+    assert c == pytest.approx(a + b)
+    assert optics.single_scattering_albedo(wavelength, water_class) == pytest.approx(
+        optics.WATER_CLASSES[water_class]["scattering_albedo"]
+    )
+    near = optics.beer_lambert_rgb(0.5, water_class)
+    far = optics.beer_lambert_rgb(5.0, water_class)
+    assert all(0.0 <= farther < nearer <= 1.0 for nearer, farther in zip(near, far))
+
+
+@pytest.mark.parametrize("water_class", sorted(optics.WATER_CLASSES))
+def test_added_turbidity_increases_extinction(water_class):
+    assert optics.extinction_coefficient_m(535.0, water_class, turbidity=2.0) > (
+        optics.extinction_coefficient_m(535.0, water_class)
+    )
+
+
+def test_scattering_rejects_unknown_class_and_unit():
+    with pytest.raises(KeyError, match="unknown water class"):
+        optics.scattering_coefficient_m(535.0, "missing")
+    with pytest.raises(KeyError, match="unknown turbidity unit"):
+        optics.scattering_coefficient_m(535.0, turbidity_unit="missing")

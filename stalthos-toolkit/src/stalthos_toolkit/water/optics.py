@@ -37,6 +37,7 @@ __all__ = [
     "WATER_CLASSES",
     "JERLOV_WATER_CLASSES",
     "WATER_CLASS_SCALE",
+    "SCATTERING_ALBEDO",
     "IOR_AIR",
     "IOR_WATER",
     "IOR_SEAWATER",
@@ -298,6 +299,9 @@ JERLOV_WATER_CLASSES = {name: spec for name, spec in WATER_CLASSES.items()
 #: only the magnitude moves -- which is what real turbidity does (it adds a
 #: blue-weighted absorber/CDOM term) rather than shifting the whole curve.
 WATER_CLASS_SCALE = {name: spec["scale"] for name, spec in WATER_CLASSES.items()}
+
+#: The single-scattering albedo per water class.
+SCATTERING_ALBEDO = {name: spec["scattering_albedo"] for name, spec in WATER_CLASSES.items()}
 
 # --- refractive index / Fresnel ---------------------------------------------
 #: VERIFIED-structural (index of refraction is a tabulated physical property; the
