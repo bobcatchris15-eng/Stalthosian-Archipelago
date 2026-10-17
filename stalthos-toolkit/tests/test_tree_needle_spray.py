@@ -86,7 +86,8 @@ def test_non_tree_family_ignores_needle_anatomy(capsys, tmp_path, monkeypatch):
     assert "needle_length_m" not in plant
 
 
-def test_tree_without_needle_anatomy_leaves_needle_params_unset(capsys, tmp_path, monkeypatch):
+@pytest.mark.parametrize("leaf_length_cm", [3.5, 18.0])
+def test_tree_without_needle_anatomy_leaves_needle_params_unset(capsys, tmp_path, monkeypatch, leaf_length_cm):
     """Broadleaf trees lacking needle anatomy do not receive needle parameters."""
     definition = {
         "id": "plant.broadleaf.tree",
@@ -97,7 +98,7 @@ def test_tree_without_needle_anatomy_leaves_needle_params_unset(capsys, tmp_path
             "foliage": {
                 "organ": "broadleaf",
                 "overall_shape": "ovate",
-                "length": {"value": 18.0, "unit": "cm"},
+                "length": {"value": leaf_length_cm, "unit": "cm"},
                 "width": {"value": 12.0, "unit": "cm"},
             }
         },

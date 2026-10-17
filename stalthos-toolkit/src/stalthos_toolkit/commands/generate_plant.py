@@ -73,7 +73,9 @@ def generate_plant(ctx: Context) -> Status:
                 shape = foliage.get("overall_shape")
                 flen = PL.P.unit_m(foliage.get("length"))
                 fwid = PL.P.unit_m(foliage.get("width"))
-                if organ == "scale_spray" or shape == "needled" or (flen is not None and flen < 0.1):
+                # Small leaves alone do not identify a conifer: broadleaf
+                # species also have sub-decimetre foliage.
+                if organ == "scale_spray" or shape == "needled":
                     if flen is not None:
                         scaled_shape["needle_length_m"] = float(flen)
                     if fwid is not None:
