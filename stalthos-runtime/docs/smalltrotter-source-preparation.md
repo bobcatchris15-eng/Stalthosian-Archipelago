@@ -158,3 +158,22 @@ four-legged long-necked silhouette. These captures establish inspectable base
 geometry only. They do not accept anatomy, materials, UVs, rigging, motion,
 runtime presentation or performance. The base-cage derivative intentionally
 omits the original Multires sculpt detail; the immutable master retains it.
+
+## Receipt destination protection — 2026-10-17
+
+Receipt destinations are checked before Blender opens or a receipt writer can
+run. A receipt that aliases the input or derivative is refused with exit 2,
+including normalized/case aliases and existing hardlinks. The source/output
+separation check also recognizes hardlinks. A harmless temporary-fixture probe
+proved the former success path could overwrite the source with receipt JSON;
+the original master was never used for that probe.
+
+`python stalthos-runtime/tests/test_smalltrotter_source_paths.py -v` ran eight
+tests: seven passed and the symlink case skipped because Windows denied link
+creation. Windows case aliases and actual hardlinks passed. Root then reran
+actual Blender preparation into `var/seam-parent-20261017/`: the master remained
+`b987e7d7eac4dfe0e09e2e188a592236ed57eb5e00da7d8f7e6d1d901de15350`, and the
+verified derivative remained
+`021a0e773fa13edfce4b0f32c00ef13b34281e7a94bb2b6ae57c3e92c774627b`.
+These checks accept the preparation step; they do not accept final surface,
+rigging, animation, runtime appearance or performance.

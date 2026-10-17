@@ -44,6 +44,27 @@ def resolved(path):
     return os.path.normcase(os.path.realpath(os.path.abspath(path)))
 
 
+def paths_alias(first, second):
+    """Recognize spelling, symlink and existing hardlink aliases."""
+    if resolved(first) == resolved(second):
+        return True
+    try:
+        return os.path.samefile(first, second)
+    except (FileNotFoundError, OSError):
+        return False
+
+
+def receipt_path_error(source, output, receipt):
+    """Reject receipt writes that could replace a source or derivative."""
+    if not receipt:
+        return None
+    if paths_alias(receipt, source):
+        return "Receipt aliases the source path; source is read-only"
+    if output and paths_alias(receipt, output):
+        return "Receipt aliases the derivative output path"
+    return None
+
+
 def bounds(coords):
     if not coords:
         return None
@@ -279,10 +300,6 @@ def main():
         except Exception as exc:
             receipt["errors"].append(str(exc))
             return emit(receipt, EXIT_FAILED)
-    if bpy is None:
-        receipt["status"] = "missing_bpy"
-        receipt["errors"].append("Run this script with Blender's Python: bpy is unavailable.")
-        return emit(receipt, EXIT_MISSING_BPY)
     if not args.input:
         receipt["status"] = "invalid_arguments"
         receipt["errors"].append("--input is required")
@@ -292,15 +309,20 @@ def main():
         receipt["status"] = "input_missing"
         receipt["errors"].append("Input file does not exist: " + source)
         return emit(receipt, EXIT_USAGE)
-    source_hash = digest(source)
-    receipt["source"] = {"path": source, "sha256": source_hash}
+    # Validate all write destinations before opening Blender or reaching any
+    # receipt-writing success/failure path. samefile also catches hardlinks.
+    path_error = receipt_path_error(source, args.output, args.receipt)
+    if path_error:
+        receipt["status"] = "receipt_path_refused"
+        receipt["errors"].append(path_error)
+        return emit(receipt, EXIT_USAGE)
     if args.mode == "seam-preparation":
         if not args.output:
             receipt["status"] = "invalid_arguments"
             receipt["errors"].append("--output is required in seam-preparation mode")
             return emit(receipt, EXIT_USAGE)
         output = resolved(args.output)
-        if output == source:
+        if paths_alias(output, source):
             receipt["status"] = "same_path_refused"
             receipt["errors"].append("Output resolves to the source path; source is read-only")
             return emit(receipt, EXIT_USAGE)
@@ -308,10 +330,16 @@ def main():
             receipt["status"] = "output_exists_refused"
             receipt["errors"].append("Refusing to overwrite existing derivative: " + output)
             return emit(receipt, EXIT_USAGE)
-    elif args.output and resolved(args.output) == source:
+    elif args.output and paths_alias(args.output, source):
         receipt["status"] = "same_path_refused"
         receipt["errors"].append("Output resolves to the source path; source is read-only")
         return emit(receipt, EXIT_USAGE)
+    if bpy is None:
+        receipt["status"] = "missing_bpy"
+        receipt["errors"].append("Run this script with Blender's Python: bpy is unavailable.")
+        return emit(receipt, EXIT_MISSING_BPY)
+    source_hash = digest(source)
+    receipt["source"] = {"path": source, "sha256": source_hash}
     try:
         bpy.ops.wm.open_mainfile(filepath=source, load_ui=False)
         body = bpy.data.objects.get("Smalltrotter_Body")
