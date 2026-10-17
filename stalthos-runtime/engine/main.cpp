@@ -10,6 +10,7 @@
 #include "domain/locomotion_pace.hpp"
 #include "domain/animation_transition.hpp"
 #include "domain/animation_blend.hpp"
+#include "crossfade_transition.hpp"
 #include "domain/resource_ledger.hpp"
 #include "domain/resource_presentation.hpp"
 #include <cctype>
@@ -82,6 +83,12 @@ struct TransitionPhaseRecord {
     bool post_blend_inactive_clip_zero = true;
     std::string capture_filename;
     bool capture_saved = false;
+    std::string interior_capture_filename;
+    bool interior_capture_saved = false;
+    float max_frame_translation_delta_m = 0.0f;
+    float max_frame_rotation_delta_rad = 0.0f;
+    bool all_blend_deltas_finite = true;
+    std::vector<stalthos::engine::BlendFrameTelemetrySample> blend_frame_telemetry;
     std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> baseline_poses;
 };
 
@@ -634,7 +641,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         int activeTransitionPhaseIndex = -1;
         bool inactiveClipWritesPrevented = true;
         bool walkPhaseFollowsSignedDistance = true;
-        bool idleResetToNeutralVerified = true;
+        std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> previousFrameBonePoses;
         bool previousIsDisplaced = false;
         bool transitionFinalCaptureSaved = false;
         double finalElapsed = 0.0;
@@ -1043,10 +1050,25 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     const double wWalk = blendWeights.walkWeight;
                     const bool isBlending = (blendState.transitionProgress < 1.0);
 
+                    const auto crossfadeOrder = stalthos::engine::determineEvaluationOrder(scene, sceneWalkAnimEntity, sceneWalkAnimName, sceneIdleAnimEntity, sceneIdleAnimName);
+                    const auto crossfadeTopology = stalthos::engine::analyzeAnimationTopology(*crossfadeOrder.firstAnim, crossfadeOrder.firstName, *crossfadeOrder.secondAnim, crossfadeOrder.secondName);
+
+                    const double wFirstLogical = crossfadeOrder.firstIsWalk ? wWalk : wIdle;
+                    const double wSecondLogical = crossfadeOrder.firstIsWalk ? wIdle : wWalk;
+
                     if (isBlending) {
                         ++crossfadeBlendFramesTotal;
-                        walkAnim->amount = static_cast<float>(wWalk);
-                        idleAnim->amount = static_cast<float>(wIdle);
+                        if (crossfadeTopology.has_full_shared_tracks) {
+                            // Sequential evaluation correction:
+                            // The first evaluated clip overwrites the target bones with amount 1.0, eliminating previous-frame contamination.
+                            // The second evaluated clip blends on top of the first using its nominal logical weight.
+                            crossfadeOrder.firstAnim->amount = 1.0f;
+                            crossfadeOrder.secondAnim->amount = static_cast<float>(wSecondLogical);
+                        } else {
+                            // Conservative fallback for mismatched tracks: do not falsely assume exact sequential mixing
+                            crossfadeOrder.firstAnim->amount = static_cast<float>(wFirstLogical);
+                            crossfadeOrder.secondAnim->amount = static_cast<float>(wSecondLogical);
+                        }
 
                         if (creatureClip) {
                             walkAnim->Pause();
@@ -1056,15 +1078,17 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                             walkAnim->Play();
                         } else {
                             walkAnim->Pause();
+                            walkAnim->last_update_time = walkAnim->timer - 1.0f;
                         }
 
                         if (heroAlive) {
                             idleAnim->Play();
                         } else {
                             idleAnim->Pause();
+                            idleAnim->last_update_time = idleAnim->timer - 1.0f;
                         }
 
-                        if (walkAnim->amount <= 0.0f || idleAnim->amount <= 0.0f) {
+                        if (wWalk <= 0.0 || wIdle <= 0.0) {
                             crossfadeWeightsNonzeroOnlyDuringBlend = false;
                         }
                     } else {
@@ -1074,6 +1098,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                             if (creatureClip) {
                                 walkAnim->Pause();
                                 walkAnim->timer = static_cast<float>(walkAnim->start + creaturePhase);
+                                walkAnim->last_update_time = walkAnim->timer - 1.0f;
                             } else if (speed != 0 && heroAlive) {
                                 walkAnim->Play();
                             } else {
@@ -1105,7 +1130,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                             }
                         }
 
-                        if (walkAnim->amount > 0.0f && idleAnim->amount > 0.0f) {
+                        if (wWalk > 0.0 && wIdle > 0.0) {
                             crossfadeWeightsNonzeroOnlyDuringBlend = false;
                         }
                     }
@@ -1203,8 +1228,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if (diagnosticTransition && activeTransitionPhaseIndex >= 0 && activeTransitionPhaseIndex < static_cast<int>(transitionPhases.size())) {
                 auto& cur = transitionPhases[activeTransitionPhaseIndex];
+                const auto currentBlendWeights = stalthos::domain::AnimationBlend::resolve(blendState);
+                const bool isBlendingPhase = (blendState.transitionProgress < 1.0);
                 if (!cur.capture_saved) {
                     cur.capture_saved = wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(), (output / cur.capture_filename).u8string());
+                }
+                if (isBlendingPhase && !cur.interior_capture_saved && blendState.transitionProgress >= 0.5) {
+                    cur.interior_capture_filename = "transition-" + std::to_string(activeTransitionPhaseIndex) + "-interior-blend.png";
+                    cur.interior_capture_saved = wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(), (output / cur.interior_capture_filename).u8string());
                 }
                 if (!transitionFinalCaptureSaved && elapsed >= 9.9) {
                     transitionFinalCaptureSaved = wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(), (output / "transition-5-final-idle.png").u8string());
@@ -1213,8 +1244,6 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 cur.accumulated_distance_m += actualDistance;
                 auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
                 auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
-                const auto currentBlendWeights = stalthos::domain::AnimationBlend::resolve(blendState);
-                const bool isBlendingPhase = (blendState.transitionProgress < 1.0);
                 auto* inactiveAnim = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? idleAnim : walkAnim;
 
                 if (isBlendingPhase) {
@@ -1241,6 +1270,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 cur.end_idle_weight = currentBlendWeights.idleWeight;
                 cur.end_walk_weight = currentBlendWeights.walkWeight;
                 cur.end_animation_timer_s = (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3) ? (walkAnim ? walkAnim->timer : 0.0f) : (idleAnim ? idleAnim->timer : 0.0f);
+
+                float frameMaxTransDelta = 0.0f;
+                float frameMaxRotDelta = 0.0f;
+                bool frameDeltasFinite = true;
+
                 if (creatureLoaded) {
                     for (size_t ai = 0; ai < scene.animations.GetCount(); ++ai) {
                         auto& animation = scene.animations[ai];
@@ -1264,7 +1298,55 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                     std::abs(pose.z - it->second.z),
                                     std::abs(pose.w - it->second.w)});
                             }
+
+                            auto prevIt = previousFrameBonePoses.find(key);
+                            if (prevIt != previousFrameBonePoses.end()) {
+                                if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) {
+                                    const float dx = pose.x - prevIt->second.x;
+                                    const float dy = pose.y - prevIt->second.y;
+                                    const float dz = pose.z - prevIt->second.z;
+                                    const float dTrans = std::sqrt(dx*dx + dy*dy + dz*dz);
+                                    if (std::isfinite(dTrans)) {
+                                        frameMaxTransDelta = std::max(frameMaxTransDelta, dTrans);
+                                    } else {
+                                        frameDeltasFinite = false;
+                                    }
+                                } else if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) {
+                                    const float dot = std::abs(pose.x*prevIt->second.x + pose.y*prevIt->second.y + pose.z*prevIt->second.z + pose.w*prevIt->second.w);
+                                    const float clampedDot = std::clamp(dot, 0.0f, 1.0f);
+                                    const float dRot = 2.0f * std::acos(clampedDot);
+                                    if (std::isfinite(dRot)) {
+                                        frameMaxRotDelta = std::max(frameMaxRotDelta, dRot);
+                                    } else {
+                                        frameDeltasFinite = false;
+                                    }
+                                }
+                            }
+                            previousFrameBonePoses[key] = pose;
                         }
+                    }
+                }
+
+                if (isBlendingPhase) {
+                    cur.max_frame_translation_delta_m = std::max(cur.max_frame_translation_delta_m, frameMaxTransDelta);
+                    cur.max_frame_rotation_delta_rad = std::max(cur.max_frame_rotation_delta_rad, frameMaxRotDelta);
+                    if (!frameDeltasFinite) cur.all_blend_deltas_finite = false;
+
+                    if (cur.blend_frame_telemetry.size() < 64) {
+                        const auto crossfadeOrder = stalthos::engine::determineEvaluationOrder(scene, sceneWalkAnimEntity, sceneWalkAnimName, sceneIdleAnimEntity, sceneIdleAnimName);
+                        stalthos::engine::BlendFrameTelemetrySample sample;
+                        sample.frame_index = cur.frame_count;
+                        sample.elapsed_s = elapsed;
+                        sample.logical_idle_weight = currentBlendWeights.idleWeight;
+                        sample.logical_walk_weight = currentBlendWeights.walkWeight;
+                        sample.applied_first_amount = crossfadeOrder.firstAnim ? crossfadeOrder.firstAnim->amount : 0.0f;
+                        sample.applied_second_amount = crossfadeOrder.secondAnim ? crossfadeOrder.secondAnim->amount : 0.0f;
+                        sample.first_evaluated_clip = crossfadeOrder.firstName;
+                        sample.second_evaluated_clip = crossfadeOrder.secondName;
+                        sample.max_bone_translation_delta_m = frameMaxTransDelta;
+                        sample.max_bone_rotation_delta_rad = frameMaxRotDelta;
+                        sample.deltas_finite = frameDeltasFinite;
+                        cur.blend_frame_telemetry.push_back(sample);
                     }
                 }
             }
@@ -1418,7 +1500,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.duration_s = last.end_time_s - last.start_time_s;
             last.end_x = x; last.end_z = z;
             last.displacement_m = std::hypot(last.end_x - last.start_x, last.end_z - last.start_z);
-            last.signed_displacement_m = 0.0;
+            last.signed_displacement_m = (last.phase_index == 1) ? last.displacement_m : (last.phase_index == 3) ? -last.displacement_m : 0.0;
             last.end_animation_phase_s = creaturePhase;
             auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
@@ -1427,6 +1509,22 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         json transitionPhasesJson = json::array();
         json transitionCapturesJson = json::object();
         for (const auto& p : transitionPhases) {
+            json telemetryJson = json::array();
+            for (const auto& sample : p.blend_frame_telemetry) {
+                telemetryJson.push_back({
+                    {"frame_index", sample.frame_index},
+                    {"elapsed_s", sample.elapsed_s},
+                    {"logical_idle_weight", sample.logical_idle_weight},
+                    {"logical_walk_weight", sample.logical_walk_weight},
+                    {"applied_first_amount", sample.applied_first_amount},
+                    {"applied_second_amount", sample.applied_second_amount},
+                    {"first_evaluated_clip", sample.first_evaluated_clip},
+                    {"second_evaluated_clip", sample.second_evaluated_clip},
+                    {"max_bone_translation_delta_m", sample.max_bone_translation_delta_m},
+                    {"max_bone_rotation_delta_rad", sample.max_bone_rotation_delta_rad},
+                    {"deltas_finite", sample.deltas_finite}
+                });
+            }
             transitionPhasesJson.push_back({
                 {"phase_index", p.phase_index},
                 {"phase_name", p.phase_name},
@@ -1458,10 +1556,19 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"inactive_clip_amount_zero", p.inactive_clip_amount_zero},
                 {"post_blend_inactive_clip_zero", p.post_blend_inactive_clip_zero},
                 {"capture_filename", p.capture_filename},
-                {"capture_saved", p.capture_saved}
+                {"capture_saved", p.capture_saved},
+                {"interior_capture_filename", p.interior_capture_filename},
+                {"interior_capture_saved", p.interior_capture_saved},
+                {"max_frame_translation_delta_m", p.max_frame_translation_delta_m},
+                {"max_frame_rotation_delta_rad", p.max_frame_rotation_delta_rad},
+                {"all_blend_deltas_finite", p.all_blend_deltas_finite},
+                {"blend_frame_telemetry", telemetryJson}
             });
             if (p.capture_saved) {
                 transitionCapturesJson[p.phase_name] = p.capture_filename;
+            }
+            if (p.interior_capture_saved) {
+                transitionCapturesJson[p.phase_name + "_interior_blend"] = p.interior_capture_filename;
             }
         }
         if (transitionFinalCaptureSaved) {
@@ -1585,6 +1692,26 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"reason", s.reason}
             });
         }
+        json sequentialEvaluationJson = {
+            {"evaluated", creatureLoaded && sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY && sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY}
+        };
+        if (creatureLoaded && sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY && sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY) {
+            const auto order = stalthos::engine::determineEvaluationOrder(scene, sceneWalkAnimEntity, sceneWalkAnimName, sceneIdleAnimEntity, sceneIdleAnimName);
+            const auto topology = stalthos::engine::analyzeAnimationTopology(*order.firstAnim, order.firstName, *order.secondAnim, order.secondName);
+            sequentialEvaluationJson["engine_evaluation_order_verified"] = true;
+            sequentialEvaluationJson["first_evaluated_clip"] = order.firstName;
+            sequentialEvaluationJson["first_evaluated_index"] = order.firstIndex;
+            sequentialEvaluationJson["second_evaluated_clip"] = order.secondName;
+            sequentialEvaluationJson["second_evaluated_index"] = order.secondIndex;
+            sequentialEvaluationJson["full_shared_tracks_verified"] = topology.has_full_shared_tracks;
+            sequentialEvaluationJson["shared_channel_count"] = topology.shared_channel_count;
+            sequentialEvaluationJson["first_only_channel_count"] = topology.clip_a_only_channel_count;
+            sequentialEvaluationJson["second_only_channel_count"] = topology.clip_b_only_channel_count;
+            sequentialEvaluationJson["first_clip_amount_policy"] = topology.has_full_shared_tracks ? "overwrite_1_0_during_blend" : "nominal_weight_fallback";
+            sequentialEvaluationJson["second_clip_amount_policy"] = "nominal_weight_during_blend";
+            sequentialEvaluationJson["settled_inactive_clip_skipped"] = inactiveClipWritesPrevented;
+            sequentialEvaluationJson["paused_walk_clip_forced_evaluation"] = creatureClip.has_value();
+        }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
@@ -1607,8 +1734,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"animation_blend_final_walk_weight", stalthos::domain::AnimationBlend::resolve(blendState).walkWeight},
             {"inactive_clip_state_guarded", inactiveClipWritesPrevented},
             {"walk_phase_follows_signed_distance", walkPhaseFollowsSignedDistance},
-            {"idle_reset_to_neutral_verified", idleResetToNeutralVerified},
-            {"clip_selection_policy", "bounded explicit-duration crossfade via domain AnimationBlend and Wicked AnimationComponent amount semantics; inactive clip paused and skipped after blend"},
+            {"idle_crossfade_verified", (blendState.targetClip == stalthos::domain::AnimationBlend::ClipKind::Idle && blendState.transitionProgress == 1.0)},
+            {"idle_reset_to_neutral_retired", "explicit neutral snap retired in favor of continuous crossfade with sequential evaluation correction"},
+            {"clip_selection_policy", "bounded explicit-duration crossfade with sequential evaluation amount correction (first clip overwrites amount 1.0, second clip nominal weight); inactive clip paused and skipped after blend"},
+            {"sequential_evaluation_crossfade", sequentialEvaluationJson},
             {"remaining_discontinuity_documented", true},
             {"needs_initial", {{"hunger", initialHunger}, {"thirst", initialThirst}, {"fatigue", initialFatigue}}},
             {"needs_final", {{"hunger", needs->hunger()}, {"thirst", needs->thirst()}, {"fatigue", needs->fatigue()}}},
@@ -1716,7 +1845,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"woodland_placed_instances", woodlandPlacedJson},
             {"woodland_skipped_instances", woodlandSkippedJson},
             {"frame_time_measured",false},{"full_draft_complete",false},{"visual_accepted",false},
-            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance remains unresolved","no external frame-time measurement","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","bounded crossfade blend replaces exclusive binary clip selection for idle/walk/reverse transitions; unblended one-frame pose snap eliminated across transition boundaries; foot sliding during blend and low-tail clearance remain unresolved limitations","woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"}}});
+            {"limits",{"proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance and foot skate during blend remain unresolved","no external frame-time measurement; 30 FPS floor not accepted","visual acceptance and full draft completion strictly unaccepted","resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence","camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio, ground clicking and mouse raycast pending","bounded crossfade blend with sequential evaluation amount correction replaces exclusive binary clip selection for idle/walk/reverse transitions; unblended one-frame pose snap eliminated across transition boundaries; foot sliding during linear crossfade and low-tail clearance remain unresolved limitations","woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"}}});
         wi::jobsystem::ShutDown(); DestroyWindow(window);
         return runCalls>0 && screenshot?0:3;
     } catch(const std::exception& error) {
