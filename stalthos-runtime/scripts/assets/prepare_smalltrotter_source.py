@@ -376,6 +376,10 @@ def main():
         bmesh.ops.weld_verts(work, targetmap=targetmap)
         work.to_mesh(body.data); work.free(); body.data.update()
         after = topology(body.data)
+        if after["vertices"] != bmdata["topology"]["vertices"] - len(pairs):
+            fail("weld did not remove exactly one vertex per seam pair")
+        if after["boundary_edges"] != 0 or after["nonmanifold_edges"] != 0:
+            fail("derivative body must have zero boundary and over-connected edges")
         if after["components"] != 1:
             fail("expected 1 connected component after weld, got %d" % after["components"])
         if after["faces"] != bmdata["topology"]["faces"]:
@@ -392,6 +396,14 @@ def main():
         expected_other = {name: (item["coordinate_index_sha256"], item["polygon_index_sha256"])
                           for name, item in receipt["other_meshes"].items()}
         bpy.ops.wm.open_mainfile(filepath=output, load_ui=False)
+        saved_body = bpy.data.objects.get("Smalltrotter_Body")
+        if saved_body is None or saved_body.type != "MESH":
+            fail("saved derivative is missing body mesh")
+        if topology(saved_body.data) != after:
+            fail("saved derivative body topology differs from verified result")
+        if any(m.type == "MULTIRES" for m in saved_body.modifiers):
+            fail("saved derivative unexpectedly retains Multires")
+        receipt["body"]["derivative"]["reopened_topology_verified"] = True
         for name, expected in expected_other.items():
             saved_obj = bpy.data.objects.get(name)
             if saved_obj is None or saved_obj.type != "MESH":

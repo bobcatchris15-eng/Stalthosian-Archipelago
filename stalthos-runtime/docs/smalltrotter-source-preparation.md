@@ -131,3 +131,30 @@ This source preparation derivative establishes a clean, single-component welded 
 - No claim is made regarding skinning weights, deformation behavior under animation, or rig compatibility.
 - No claim is made regarding 30 FPS rendering performance or engine acceptance.
 
+
+## Independent seam review — 2026-10-17
+
+A second operator ran the candidate with Blender 5.2.0 LTS directly against the
+tracked master, with automatic execution disabled and a fresh ignored output:
+`var/seam-review-20261017/derivative.blend`. The master hash before and after was
+`b987e7d7eac4dfe0e09e2e188a592236ed57eb5e00da7d8f7e6d1d901de15350`.
+The derivative hash was `021a0e773fa13edfce4b0f32c00ef13b34281e7a94bb2b6ae57c3e92c774627b`,
+matching the earlier exact-seam candidate byte for byte.
+
+The reviewer strengthened acceptance before saving: the weld must remove exactly
+one vertex per pair and leave zero boundary/over-connected body edges. After
+saving, the reopened body's complete topology receipt must match the in-memory
+verified result and Multires must remain absent. The actual run passed with 824
+pairs, 33,320 vertices, 66,636 edges, 33,318 faces, one component, unchanged bounds,
+and zero body boundary/over-connected edges. Reopened eyes and bristles retained
+their source coordinate/polygon fingerprints. Nine active selftests passed under
+`python -O`. No toolkit source was changed.
+
+Workbench review captures in the same ignored directory (`three-quarter.png`,
+`front.png`, `side.png`) were generated from the reopened derivative without
+saving presentation changes. Front and three-quarter images were inspected: the
+rough animal has a continuous visible chest/neck surface and recognizable
+four-legged long-necked silhouette. These captures establish inspectable base
+geometry only. They do not accept anatomy, materials, UVs, rigging, motion,
+runtime presentation or performance. The base-cage derivative intentionally
+omits the original Multires sculpt detail; the immutable master retains it.
