@@ -14,7 +14,7 @@ from pathlib import Path
 #: `10.1016/j.whatever` style DOI, plus the bare `doi:10.xxxx/yyy` form.
 _DOI_RE = re.compile(r"^(?:doi:\s*|https?://(?:dx\.)?doi\.org/)?(10\.\d{4,9}/\S+)$", re.IGNORECASE)
 _URL_RE = re.compile(r"^[a-z][a-z0-9+.-]*://", re.IGNORECASE)
-_IDENTIFIER_RE = re.compile(r"^(?:urn:|ark:|isbn:|bi:|gbif:|taxon:)")
+_IDENTIFIER_RE = re.compile(r"^(?:urn:|ark:|isbn:|bi:|gbif:|taxon:)", re.IGNORECASE)
 
 _URL_NORMALIZERS = {
     "HTTP": "http",
@@ -44,7 +44,7 @@ def classify_locator(locator: str) -> LocatorInfo:
 
     doi_match = _DOI_RE.match(raw)
     if doi_match:
-        return LocatorInfo("doi", f"10.{doi_match.group(1)}", None)
+        return LocatorInfo("doi", doi_match.group(1), None)
 
     if _URL_RE.match(raw):
         scheme = raw.split("://", 1)[0].lower()
