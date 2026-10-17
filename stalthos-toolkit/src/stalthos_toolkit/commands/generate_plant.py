@@ -10,6 +10,7 @@ output, no file outside the workspace.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 from ..blender import pipeline as PL
@@ -48,7 +49,12 @@ def generate_plant(ctx: Context) -> Status:
             scaled_shape["height_m"] = declared["height_m"]
         # Legacy mappings can already supply absolute per-stage shape values.
         # Keep those parsed values instead of scaling their dimensions twice.
-        raw_stages = definition.get("growth_stages")
+        raw_stages = PL.P.pick(definition, "growth_stages", None)
+        if raw_stages is None:
+            raw_stages = (PL.P.pick(definition, "life_stages", None)
+                          or PL.P.pick(definition, "stages", None))
+        if raw_stages is None:
+            raw_stages = []
         if isinstance(raw_stages, dict):
             for key in raw_stages.get(stage, {}):
                 if key in original_shape and key != "height_m":
@@ -76,6 +82,10 @@ def generate_plant(ctx: Context) -> Status:
                 # Small leaves alone do not identify a conifer: broadleaf
                 # species also have sub-decimetre foliage.
                 if organ == "scale_spray" or shape == "needled":
+                    for dimension, value in (("length", flen), ("width", fwid)):
+                        if value is None or not math.isfinite(value) or value <= 0:
+                            raise UsageError(
+                                f"needle foliage {dimension} must be a finite positive dimension")
                     if flen is not None:
                         scaled_shape["needle_length_m"] = float(flen)
                     if fwid is not None:
