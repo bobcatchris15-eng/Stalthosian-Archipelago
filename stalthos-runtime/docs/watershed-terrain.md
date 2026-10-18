@@ -43,3 +43,31 @@ custom extent and nonbinary spacing, adjacent tile identity and build-order
 reconstruction, finite transition samples, sampler-derived normals and invalid
 configurations/queries. This establishes domain sampler behavior; it does not
 establish native rendering, triangle-contact quality or frame-rate acceptance.
+
+## Native construction check
+
+Run `scripts/Verify-WatershedJoin.ps1 -Duration 18`. The separate diagnostic
+uses 64 cells at 2 m spacing per 128 m tile. Four central tiles stay pinned;
+body-centered 3x3 neighborhoods add at most nine surrounding tiles. The fixed
+route moves from (24,24) to (544,24) and back to exactly (24,24), processing the
+endpoint frame. This evicts and rebuilds outer tiles without replacing the
+watershed datum. The cache samples engine-owned float position/index buffers.
+Reconstruction digests cover positions and normals; colors/materials are not
+claimed byte-identical by that check.
+
+The receipt measures shared float mesh edge heights/normals, original interior
+2 m triangle height agreement, reconstructed mesh digests, bottom-center
+contact and post-update proxy bounds. Capture diagnostics must show the marker
+before the inner boundary, near the outer join and farther into coarse terrain.
+The verifier rejects absent/nonfinite metrics, incorrect capture locations,
+missing renderer visibility, mismatched reconstruction and an incomplete return.
+Inspect all three retained images as a separate presentation check.
+
+This is a diagnostic coordinate/terrain join only. The normal populated-world
+mode still uses its original detailed patch; production population activation,
+regional habitat placement, water rendering outside the watershed and dormant
+population evolution remain subsequent integration work. The diagnostic uses
+coarse color materials, an accelerated proxy and disabled occlusion culling;
+it is engineering evidence, not final scenery, full-footprint/foot contact or
+30 FPS acceptance. Analytical versus triangle height error includes the original
+discontinuous reference noise; proxy support always uses rendered triangles.

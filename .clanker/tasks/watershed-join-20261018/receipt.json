@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "task_id": "watershed-join-20261018",
+  "status": "validated",
+  "updated": "2026-10-18T08:44:05.392604+00:00",
+  "scope": "Immutable watershed/coarse terrain overlay and optional native outbound/return diagnostic. Production populated world remains unchanged.",
+  "native_build": "Release Build.ps1 passed pinned cache hash verification",
+  "native_ctest": "30/30 passed; 1.91s",
+  "domain_command_output": {
+    "status": "success",
+    "suite": "watershed_terrain",
+    "groups": 3
+  },
+  "native_verification": {
+    "passed": true,
+    "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-034050-13d0ec88",
+    "checks": {
+      "native_mode": true,
+      "outbound_return_crossings": true,
+      "visited_five_body_tiles": true,
+      "resident_budget": true,
+      "retired_tiles": true,
+      "regenerated_exactly": true,
+      "retained_watershed": true,
+      "returned_to_watershed": true,
+      "original_interior_mesh": true,
+      "exact_shared_heights": true,
+      "exact_shared_normals": true,
+      "bottom_center_support": true,
+      "rendered_proxy_bounds": true,
+      "captures_saved": true,
+      "capture_locations_and_visibility": true
+    },
+    "receipt": {
+      "body_tile_crossings": 8,
+      "capture_diagnostics": [
+        {
+          "body_x": 81.287048,
+          "body_z": 24.0,
+          "bounds_center": [
+            81.28704833984375,
+            7.277909755706787,
+            24.0
+          ],
+          "camera_eye": [
+            56.28704071044922,
+            24.777908325195312,
+            -3.999999523162842
+          ],
+          "capture": 0,
+          "projected_center": [
+            -0.17375361919403076,
+            -0.16044749319553375,
+            0.0024129459634423256
+          ],
+          "visible_object": true
+        },
+        {
+          "body_x": 268.44746444444445,
+          "body_z": 24.0,
+          "bounds_center": [
+            268.4474792480469,
+            84.49195861816406,
+            24.0
+          ],
+          "camera_eye": [
+            243.44747924804688,
+            101.99197387695312,
+            -3.999992847442627
+          ],
+          "capture": 1,
+          "projected_center": [
+            -0.17375396192073822,
+            -0.16044875979423523,
+            0.0024129468947649
+          ],
+          "visible_object": true
+        },
+        {
+          "body_x": 455.61221422222224,
+          "body_z": 24.0,
+          "bounds_center": [
+            455.6122131347656,
+            81.7447738647461,
+            24.0
+          ],
+          "camera_eye": [
+            430.6121826171875,
+            99.2447738647461,
+            -4.000014781951904
+          ],
+          "capture": 2,
+          "projected_center": [
+            -0.17375344038009644,
+            -0.1604478657245636,
+            0.0024129438679665327
+          ],
+          "visible_object": true
+        }
+      ],
+      "captures": [
+        true,
+        true,
+        true
+      ],
+      "created_tiles": 29,
+      "evicted_tiles": 20,
+      "final_body_x": 24.0,
+      "frames": 8004,
+      "interactive": false,
+      "interior_mesh_samples": 907,
+      "limitations": "terrain construction probe; synchronous streaming; accelerated proxy traversal; no population activation or water surface in this probe; no final art or target FPS acceptance",
+      "max_interior_mesh_height_error_m": 1.7763568394002505e-15,
+      "max_proxy_bottom_center_error_m": 3.814375133970316e-06,
+      "max_rendered_bounds_center_error_m": 4.31432291065903e-05,
+      "max_shared_height_error_m": 0.0,
+      "max_shared_normal_component_error": 0.0,
+      "max_source_interpolation_error_m": 0.14911141926492988,
+      "mode": "watershed-join-probe",
+      "occlusion_culling": false,
+      "peak_resident_tiles": 13,
+      "regenerated_mesh_mismatches": 0,
+      "regenerated_tiles": 8,
+      "route_returned": true,
+      "schema_version": 1,
+      "shared_edge_samples": 8970,
+      "support_samples": 8004,
+      "transitions": [
+        {
+          "resident": 9,
+          "tile_x": 0,
+          "tile_z": 0,
+          "x": 24.009770222222222,
+          "z": 24.0
+        },
+        {
+          "resident": 11,
+          "tile_x": 1,
+          "tile_z": 0,
+          "x": 128.0678137777778,
+          "z": 24.0
+        },
+        {
+          "resident": 13,
+          "tile_x": 2,
+          "tile_z": 0,
+          "x": 256.1099502222222,
+          "z": 24.0
+        },
+        {
+          "resident": 13,
+          "tile_x": 3,
+          "tile_z": 0,
+          "x": 384.0493404444444,
+          "z": 24.0
+        },
+        {
+          "resident": 13,
+          "tile_x": 4,
+          "tile_z": 0,
+          "x": 512.0232413333333,
+          "z": 24.0
+        },
+        {
+          "resident": 13,
+          "tile_x": 3,
+          "tile_z": 0,
+          "x": 511.88243688888895,
+          "z": 24.0
+        },
+        {
+          "resident": 13,
+          "tile_x": 2,
+          "tile_z": 0,
+          "x": 383.9778924444444,
+          "z": 24.0
+        },
+        {
+          "resident": 11,
+          "tile_x": 1,
+          "tile_z": 0,
+          "x": 255.92157155555554,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": 0,
+          "tile_z": 0,
+          "x": 127.89487911111107,
+          "z": 24.0
+        }
+      ],
+      "visited_body_tiles": 5,
+      "watershed_tile_evictions": 0,
+      "watershed_tiles_pinned": 4
+    }
+  },
+  "coarse_regression": {
+    "passed": true,
+    "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-034109-f688dd59"
+  },
+  "population_continuation": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "resumed_motion": true,
+    "water_restore_abs_error": 1.1641532182693481e-10,
+    "water_consumption_abs_error": 8.03266342330744e-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-034122-ee053933",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-034131-bf6f892c",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-034122\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-034122\\second.stl"
+  },
+  "executable_sha256": "9c213af20d20d537688e9f3759bb3e481c8653b64cd739ec5d0edffe3d4328c2",
+  "independent_review": ".clanker\\tasks\\watershed-join-20261018\\independent-review.md",
+  "capture_review": ".clanker\\tasks\\watershed-join-20261018\\native-capture-review.json",
+  "verifier_hardening": "13 malformed receipt fixtures rejected including empty-array capture index; valid fixture and canonical final native receipt accepted",
+  "dispatches": 3,
+  "collection": "Prior terrain checkpoint integrated; no outstanding world workers. Domain implementation and review/followup collected; no AGY/Jules dispatch or old patch retrieval.",
+  "limitations": [
+    "Optional construction diagnostic only; normal populated world retains original detailed 192m terrain",
+    "No production population activation/traversal/regional habitat integration or coarse dormant evolution",
+    "Separable clamped blend has steep slopes and discontinuous inherited interior noise; no C1 inner boundary claim",
+    "Engineering color terrain, accelerated cube, disabled occlusion, no water surface in probe; no final art, full-foot contact or 30FPS acceptance",
+    "Source-vs-triangle error about0.15m includes inherited reference noise; contact uses actual rendered triangles",
+    "Digests verify positions/normals reconstruction only, not materials/colors"
+  ],
+  "preservation": "All84 preexisting untracked files verified byte-identical; planning/source assets/open applications preserved",
+  "toolkit": "2073 passed, 2 skipped in 522.34s (0:08:42)",
+  "graph": {
+    "nodes": 6708,
+    "edges": 11911,
+    "mode": "AST refresh without clustering;329 zero-node metadata warnings retained; task graph delta compares existing untouched cumulative baseline"
+  },
+  "secret_scan": "secret-scan.json: zero credential-pattern matches across added lines since467b7a0"
+}

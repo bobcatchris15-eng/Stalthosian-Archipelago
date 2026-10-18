@@ -175,7 +175,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
     bool populatedWorld = false;
-    bool terrainStreamProbe = false;
+    bool terrainStreamProbe = false, watershedJoinProbe = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -184,6 +184,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
             else if (key == L"--terrain-stream-probe") terrainStreamProbe = true;
+            else if (key == L"--watershed-join-probe") { terrainStreamProbe = true; watershedJoinProbe = true; }
             else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
             else if (key == L"--inspection-camera") inspectionCamera = true;
             else if (key == L"--camera-distance" && i+1 < argumentCount) { cameraDistance=std::stod(argv[++i]); cameraDistanceSpecified=true; }
@@ -375,7 +376,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         app.Initialize(); wi::initializer::WaitForInitializationsToFinish();
         auto& scene = wi::scene::GetScene();
         if (terrainStreamProbe) {
-            const auto receipt = stalthos::engine::runTerrainStreamProbe(app,renderPath,window,output,duration,interactive);
+            const auto receipt = stalthos::engine::runTerrainStreamProbe(app,renderPath,window,output,duration,interactive,watershedJoinProbe);
             WriteJson(output / "runtime-receipt.json",receipt);
             return 0;
         }

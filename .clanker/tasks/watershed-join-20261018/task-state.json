@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task_id": "watershed-join-20261018",
+  "status": "complete",
+  "base_revision": "467b7a0",
+  "current_step": "Validated immutable watershed overlay and native outbound/return diagnostic",
+  "completed_steps": [
+    "Collected prior checkpoint; no HALT or outstanding world worker",
+    "Integrated isolated immutable overlay and native2m join diagnostic",
+    "Verified30native suites and2073 toolkit tests with2skips",
+    "Passed outbound/return exact seams, reconstruction and actual mesh contact",
+    "Passed population continuation and coarse regression; independent review closed",
+    "Verified84 unrelated untracked paths unchanged"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/watershed_terrain.hpp",
+    "stalthos-runtime/engine/terrain_stream_probe.hpp",
+    "stalthos-runtime/scripts/Verify-WatershedJoin.ps1"
+  ],
+  "updated": "2026-10-18T08:44:05.394394+00:00",
+  "next_step": "Adopt joined terrain in actual populated host; see next-task.md",
+  "resume_instructions": "Read current-work.md and this receipt. No worker active. Optional join diagnostic validated; normal populated-world terrain unchanged. Next adopt production streaming and activation; do not refetch Jules patches.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest; pytest; Verify-WatershedJoin; Verify-TerrainStreaming; Verify-PopulationContinuation; independent review",
+    "evidence_path": ".clanker\\tasks\\watershed-join-20261018\\receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\watershed-join-20261018\\receipt.json"
+}

@@ -1,0 +1,24 @@
+{
+  "frames": [
+    {
+      "capture": 0,
+      "path": "var\\reports\\runtime\\20261018-034050-13d0ec88\\terrain-0.png",
+      "sha256": "a2976351d689ca12135f75b9a2a0e38e8c07def50c31c518962fda5ae2d4cc05",
+      "red_marker_pixels": 405
+    },
+    {
+      "capture": 1,
+      "path": "var\\reports\\runtime\\20261018-034050-13d0ec88\\terrain-1.png",
+      "sha256": "08f2bb787754171dd5619bdcc7060e70d918fecb3c3b7619275a8fd869e92e87",
+      "red_marker_pixels": 405
+    },
+    {
+      "capture": 2,
+      "path": "var\\reports\\runtime\\20261018-034050-13d0ec88\\terrain-2.png",
+      "sha256": "43788f49a8ffcc2cc3c2bb1ba172343e2d93c222062dc3dedfe53629ab9122ff",
+      "red_marker_pixels": 405
+    }
+  ],
+  "inspection": "All final frames visually inspected. Marker visible; no apparent open terrain crack. Coarse color meshes with black diagnostic background and finite neighborhood horizon; not artistic acceptance.",
+  "scope": "Native contact and coordinate join diagnostic only; no populations or water surface in this mode."
+}
