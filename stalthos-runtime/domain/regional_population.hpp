@@ -77,6 +77,7 @@ private:
         std::vector<RegionalResourceAnchor> anchors;
         std::map<Identity, std::uint64_t> sessions;
         std::set<std::uint64_t> importedSessions;
+        std::map<Identity, std::uint64_t> importedBindings;
         ResourceLedgerDto importedBaseline;
         Entry(Population p, ResourceLedger l, RegionalReservation r)
             : population(std::move(p)), ledger(std::move(l)), reservation(r), importedBaseline(ledger.continuationSnapshot()) {
@@ -89,7 +90,8 @@ private:
     RegionalCapacity used_{};
 
     RegionalAdmission insert(Population population, const ResourceLedgerDto& history,
-                             RegionalReservation reservation) {
+                             RegionalReservation reservation,
+                             const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {}) {
         const auto candidate = population.snapshot();
         if (regions_.count(candidate.region)) return RegionalAdmission::DuplicateRegion;
         if (candidate.seed != seed_) return RegionalAdmission::SeedConflict;
@@ -103,9 +105,27 @@ private:
         if (reservation.resources > maxResources - used_.resources ||
             reservation.historyKeys > maxHistoryKeys - used_.historyKeys)
             return RegionalAdmission::ReservationLimit;
+        // Explicit trusted saved provenance is accepted only during admission.
+        // Empty-history sessions are valid: the host allocates before first contact.
+        if (savedSessions.size()>candidate.actors.size()) return RegionalAdmission::SessionConflict;
+        std::map<Identity,std::uint64_t> bindings;
+        std::set<std::uint64_t> uniqueSessions;
+        for (const auto& binding:savedSessions) {
+            if (!binding.first || !binding.second ||
+                !std::any_of(candidate.actors.begin(),candidate.actors.end(),
+                    [&](const ActorSnapshot& a) { return a.id==binding.first; }) ||
+                !bindings.emplace(binding).second || !uniqueSessions.insert(binding.second).second)
+                return RegionalAdmission::SessionConflict;
+        }
         ResourceLedger ledger(reservation.resources, reservation.historyKeys);
         if (!ledger.restore(history)) return RegionalAdmission::InvalidReservation;
         for (const auto& entry : regions_) {
+            for (const auto session:uniqueSessions) {
+                for (const auto& binding:entry.second.sessions)
+                    if (binding.second==session) return RegionalAdmission::SessionConflict;
+                for (const auto& key:entry.second.ledger.continuationSnapshot().sessions)
+                    if (key.sessionId==session) return RegionalAdmission::SessionConflict;
+            }
             for (const auto& binding:entry.second.sessions)
                 for (const auto& key:history.sessions)
                     if (binding.second==key.sessionId) return RegionalAdmission::SessionConflict;
@@ -118,7 +138,9 @@ private:
         }
         // All validation and allocations happen before usage counters commit.
         // No erasure or replacement API exists: retained identities and keys stay.
-        regions_.emplace(candidate.region, Entry(std::move(population), std::move(ledger), reservation));
+        Entry next(std::move(population), std::move(ledger), reservation);
+        next.sessions=bindings; next.importedBindings=std::move(bindings);
+        regions_.emplace(candidate.region, std::move(next));
         ++used_.regions;
         used_.individuals += candidate.actors.size();
         used_.resources += reservation.resources;
@@ -150,16 +172,18 @@ public:
     // history are imported unchanged. Used history counts inside its reservation,
     // never once as used keys and again as reserved keys.
     RegionalPopulationRegistry(Population legacy, const ResourceLedgerDto& history,
-                               RegionalReservation reservation)
+                               RegionalReservation reservation,
+                               const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {})
         : seed_(legacy.snapshot().seed), legacyRegion_(legacy.snapshot().region) {
-        if (insert(std::move(legacy), history, reservation) != RegionalAdmission::Accepted)
+        if (insert(std::move(legacy), history, reservation, savedSessions) != RegionalAdmission::Accepted)
             throw std::invalid_argument("invalid retained legacy population/reservation");
     }
     RegionalAdmission admit(RegionalAdmissionOrigin origin, Population population,
-                            const ResourceLedgerDto& history, RegionalReservation reservation) {
+                            const ResourceLedgerDto& history, RegionalReservation reservation,
+                            const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {}) {
         if (origin == RegionalAdmissionOrigin::CameraPrewarm) return RegionalAdmission::CameraOnly;
         if (origin != RegionalAdmissionOrigin::PhysicalArrival) return RegionalAdmission::InvalidOrigin;
-        try { return insert(std::move(population), history, reservation); }
+        try { return insert(std::move(population), history, reservation, savedSessions); }
         catch (const std::bad_alloc&) { return RegionalAdmission::StorageFailure; }
     }
     RegionalCapacity capacity() const noexcept { return used_; }
@@ -335,10 +359,13 @@ public:
                 const auto priorBindings=entry.sessions;
                 entry.sessions.clear();
                 for (const auto& binding:saved.bindings) {
-                    // Admission-time history has no asserted actor provenance;
-                    // restoration must not promote those keys into actor contacts.
+                    // Only immutable admission provenance can own imported keys.
                     for (const auto& region:regions_) {
-                        if (region.second.importedSessions.count(binding.session)) return false;
+                        if (region.second.importedSessions.count(binding.session)) {
+                            const auto owner=region.second.importedBindings.find(binding.actor);
+                            if (region.first!=saved.population.region || owner==region.second.importedBindings.end() ||
+                                owner->second!=binding.session) return false;
+                        }
                         for (const auto& key:region.second.ledger.continuationSnapshot().sessions)
                             if (key.sessionId==binding.session && !std::any_of(region.second.sessions.begin(),region.second.sessions.end(),
                                 [&](const auto& owner) { return owner.first==binding.actor && owner.second==binding.session; })) return false;
@@ -352,10 +379,14 @@ public:
                     if (prior!=priorBindings.end() && prior->second!=binding.session) return false;
                     for (const auto& oldBinding:priorBindings)
                         if (oldBinding.second==binding.session && oldBinding.first!=binding.actor) return false;
-                    if (!saved.contactsConfigured || !binding.session || !std::any_of(saved.population.actors.begin(),saved.population.actors.end(),
+                    if ((!saved.contactsConfigured && !entry.importedBindings.count(binding.actor)) || !binding.session || !std::any_of(saved.population.actors.begin(),saved.population.actors.end(),
                         [&](const ActorSnapshot& a) { return a.id==binding.actor; }) ||
                         !entry.sessions.emplace(binding.actor,binding.session).second ||
                         !sessions.emplace(binding.session,std::make_pair(saved.population.region,binding.actor)).second) return false;
+                }
+                for (const auto& imported:entry.importedBindings) {
+                    const auto owner=entry.sessions.find(imported.first);
+                    if (owner==entry.sessions.end() || owner->second!=imported.second) return false;
                 }
                 for (const auto& oldBinding:priorBindings) {
                     const bool retainedHistory=std::any_of(saved.ledger.sessions.begin(),saved.ledger.sessions.end(),

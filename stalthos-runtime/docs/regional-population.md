@@ -87,8 +87,8 @@ Fresh equivalent registries can restore valid adapter-owned continuation history
 cross-region movement, persistence archive/version, native host wiring, or native
 visual acceptance is implemented. A host must transfer **all** retained legacy
 keys into registry ownership; a separate host ledger would escape these budgets.
-Legacy contact ownership migration needs an explicit provenance contract before
-old unbound keys can become actor-bound. The current populated legacy world and
+Legacy contact ownership migration is supported by the admission-only saved
+provenance argument described below; native host wiring remains unfinished. The current populated legacy world and
 STL8 behavior are untouched. Native multi-region save/load and real rendered
 resource-consequence evidence are still required before claiming population
 expansion.
@@ -107,3 +107,29 @@ imported-history theft prevention, exact multi-region departure/dormancy/return,
 restore into equivalent admitted layouts, derived depleted routing and malformed
 continuation failure atomicity. `REGIONAL_CONTACTS_OK` explicitly reports
 `host_integrated=false`. Neither fixture establishes native rendering or 30 FPS.
+
+
+`RegionalPopulationRegistry` bootstrap and `admit` accept an optional final
+`std::vector<std::pair<Identity,std::uint64_t>>` saved actor/session mapping,
+matching STL8 `SaveData::faunaResourceSessions` and the host coordinator directly.
+This is trusted explicit saved provenance, supplied together with the complete
+ledger during ownership transfer, never a live rebinding API. Partial mappings
+are valid; unmatched ledger sessions remain protected bookkeeping history.
+Sessions with no history are also valid because the host allocates sessions
+before contact. Every supplied nonzero actor must already exist in this region;
+actors and sessions must be unique and sessions cannot alias another region's
+bindings or ledger history. Admission validates before committing capacities or
+state. Existing calls without a mapping retain their previous behavior.
+
+Imported mappings are immutable even without history or contact configuration.
+They survive continuation restoration before anchors are configured, into an
+equivalent newly admitted registry, and after actor death. Dead actors retain
+ownership but contact validation still denies relief/events. Continuation cannot
+remove, rotate or steal imported ownership, claim unrelated imported keys, or
+refund admission-time depletion/history. The existing four global budgets and
+256-key cap remain unchanged; replay produces no relief and cumulative updates
+produce only their accepted delta. Native host adapter and disk format are
+unchanged. `tests/regional_legacy_import.cpp` verifies import, exact continuation,
+malformed mappings, atomic rejection, retained dead ownership and full-cap replay,
+update and new-key denial. This is domain infrastructure, not native gameplay or
+visual/performance acceptance.
