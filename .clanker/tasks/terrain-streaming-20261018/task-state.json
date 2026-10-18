@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "terrain-streaming-20261018",
+  "status": "complete",
+  "base_revision": "3a731e1",
+  "current_step": "Validated terrain sampling and optional native coarse neighborhood traversal",
+  "completed_steps": [
+    "Collected prior checkpoint and bounded isolated terrain worker",
+    "Integrated same-resolution tile contract and optional native neighborhood probe",
+    "Passed 29/29 native suites and 2073 toolkit tests (2 skipped)",
+    "Validated five native boundary crossings, exact seams, proxy support/bounds and three captures",
+    "Independent review plus malformed receipt verification; preserved 84 unrelated untracked files"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/terrain_tiles.hpp",
+    "stalthos-runtime/engine/terrain_stream_probe.hpp"
+  ],
+  "updated": "2026-10-18T07:50:36.276258+00:00",
+  "next_step": "Join watershed/coarse coordinate and boundary policy; see next-task.md",
+  "validation": {
+    "passed": true,
+    "command": "Release build; CTest; pytest; Verify-TerrainStreaming.ps1; independent review",
+    "evidence_path": ".clanker\\tasks\\terrain-streaming-20261018\\receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\terrain-streaming-20261018\\receipt.json",
+  "resume_instructions": "Read current-work.md and this receipt first. No worker active. Optional probe is validated; actual populated-world streaming remains next. Do not refetch Jules patches."
+}

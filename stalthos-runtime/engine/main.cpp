@@ -29,6 +29,7 @@
 #include "domain/hero_view_controller.hpp"
 #include "domain/body_terrain_support.hpp"
 #include <windows.h>
+#include "terrain_stream_probe.hpp" // Optional coarse-world traversal with native visibility diagnostics.
 #include <shellapi.h>
 #include <chrono>
 #include <algorithm>
@@ -174,6 +175,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
     bool populatedWorld = false;
+    bool terrainStreamProbe = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -181,6 +183,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--terrain-stream-probe") terrainStreamProbe = true;
             else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
             else if (key == L"--inspection-camera") inspectionCamera = true;
             else if (key == L"--camera-distance" && i+1 < argumentCount) { cameraDistance=std::stod(argv[++i]); cameraDistanceSpecified=true; }
@@ -217,6 +220,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagCount > 1) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
+        if (terrainStreamProbe && (populatedWorld || diagCount || diagnosticCamera || !loadState.empty() || !saveState.empty() || !creature.empty() || !plant.empty() || !woodlandAdultTree.empty() || !woodlandSaplingTree.empty() || successorId))
+            throw std::runtime_error("terrain stream probe must run separately from watershed, assets and persistence");
         if (diagnosticTransition && !durationSpecified) duration = 10.0;
         if (diagnosticTransition && (!std::isfinite(duration) || duration < 10.0)) throw std::runtime_error("transition probe requires at least ten seconds");
         if(inspectionCamera && !cameraDistanceSpecified) cameraDistance=3;
@@ -369,6 +374,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         app.setFrameRateLock(false); app.setFrameSkip(false); app.SetWindow(window);
         app.Initialize(); wi::initializer::WaitForInitializationsToFinish();
         auto& scene = wi::scene::GetScene();
+        if (terrainStreamProbe) {
+            const auto receipt = stalthos::engine::runTerrainStreamProbe(app,renderPath,window,output,duration,interactive);
+            WriteJson(output / "runtime-receipt.json",receipt);
+            return 0;
+        }
         const auto terrainSurface=Terrain(scene);
         const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);

@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "captures": [
+    {
+      "path": "var\\reports\\runtime\\20261018-024851-fdbe3696\\terrain-0.png",
+      "sha256": "db9d43e4afa27ff4b980cfcc4f03e3a6cd2b40780c5f80c4fccdc50ded225b94",
+      "red_marker_pixels": 405,
+      "marker_bounds": [
+        770,
+        607,
+        814,
+        624
+      ]
+    },
+    {
+      "path": "var\\reports\\runtime\\20261018-024851-fdbe3696\\terrain-1.png",
+      "sha256": "f822866121e802ba7c2180fbb1d7a059d08cb7a2901998eee0c9f1d0e83e1833",
+      "red_marker_pixels": 405,
+      "marker_bounds": [
+        770,
+        607,
+        814,
+        624
+      ]
+    },
+    {
+      "path": "var\\reports\\runtime\\20261018-024851-fdbe3696\\terrain-2.png",
+      "sha256": "06cf6311ece38bda8ad9b1c62f75a21cdef7e5ee40368f0526951b2ed5088639",
+      "red_marker_pixels": 405,
+      "marker_bounds": [
+        770,
+        607,
+        814,
+        624
+      ]
+    }
+  ],
+  "capture_diagnostics": [
+    {
+      "body_x": -73.5374464,
+      "body_z": 24.0,
+      "bounds_center": [
+        -73.53744506835938,
+        89.39910888671875,
+        24.0
+      ],
+      "camera_eye": [
+        -98.53742980957031,
+        106.89909362792969,
+        -3.999995708465576
+      ],
+      "capture": 0,
+      "projected_center": [
+        -0.1737539917230606,
+        -0.16044726967811584,
+        0.002412947593256831
+      ],
+      "visible_object": true
+    },
+    {
+      "body_x": 99.219536,
+      "body_z": 24.0,
+      "bounds_center": [
+        99.21953582763672,
+        86.94450378417969,
+        24.0
+      ],
+      "camera_eye": [
+        74.21953582763672,
+        104.44449615478516,
+        -3.999995708465576
+      ],
+      "capture": 1,
+      "projected_center": [
+        -0.17375369369983673,
+        -0.16044734418392181,
+        0.002412946429103613
+      ],
+      "visible_object": true
+    },
+    {
+      "body_x": 272.01500480000004,
+      "body_z": 24.0,
+      "bounds_center": [
+        272.0150146484375,
+        84.43986511230469,
+        24.0
+      ],
+      "camera_eye": [
+        247.01499938964844,
+        101.93988037109375,
+        -3.9999852180480957
+      ],
+      "capture": 2,
+      "projected_center": [
+        -0.17375345528125763,
+        -0.1604492962360382,
+        0.002412945730611682
+      ],
+      "visible_object": true
+    }
+  ],
+  "limitations": "Coarse diagnostic terrain and proxy only; no artwork, full-footprint contact, population streaming or performance acceptance"
+}

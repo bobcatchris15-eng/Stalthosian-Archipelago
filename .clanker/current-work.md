@@ -1,21 +1,23 @@
-# Current world construction checkpoint — 2026-10-18
+# Current world construction checkpoint â€” 2026-10-18
 
-Priority: world, simulations, systems and populations. Population meshes are replaceable. HeroViewer and individual Smalltrotter polish remain off the critical path.
+Priority: world, simulations, systems and populations. Replaceable population assets are best effort; HeroViewer and individual Smalltrotter polish are off the critical path.
 
 ## Validated continuation
 
-Eight native active-region animals now retain identities, exact positions, routes, lifecycle and needs through save/load. STL8 adds stable actor/resource sessions so repeated loads continue cumulative depletion without spending new ledger history entries. Original STL1–STL7 remain readable. Generated midroute deaths restore at their exact corpse position; malformed positions fail closed.
+A bounded terrain tile contract now samples the existing coarse Archipelago elevation/moisture with globally indexed vertices, same-source sea mask and finite-difference normals. Shared edges agree exactly across both axes, negative tile indices and non-binary spacing. Configurations, world coordinates, NaN and overflow fail explicitly.
 
-Native Release built; 28/28 CTest passed, including 20 persistence cases. Toolkit: 2073 passed/2 skipped (522.39s). Two-session proxy replay restored all eight actor projections exactly, resumed motion, creek restoration error 0, consumption reconciliation error 4.08e-11, no ledger-cap failures. Evidence: `.clanker/tasks/fauna-continuation-20261017/receipt.json`. Domain resource regression covers 100 reloads with only two history keys.
+The optional Wicked terrain construction route streams a body-centered 3x3 neighborhood of 128m tiles. A 12s accelerated native run visited six body tiles across five boundaries: 24 creations, 15 evictions, nine peak residents. All 1224 shared-edge comparisons have zero height/normal error. Proxy bottom-center error <0.000004m; post-update rendered-bounds center error <0.00002m. Three captures retain the red marker, with positive renderer visibility and raw pixel checks. Occlusion culling is disabled in this diagnostic. Coarse terrain/proxy captures are engineering evidence, not final visual progress.
 
-Four coarse islands and populated watershed remain as in `.clanker/tasks/world-population-20261017/receipt.json`. Weather wind and canopy temperature now vary continuously across weather/day categories. Detailed terrain remains a 192m patch. No final visuals, full-draft completion or target 30 FPS acceptance.
+Release built; native CTest 29/29 passed. Toolkit 2073 passed/2 skipped in 789.22s. Missing/null/NaN/negative receipt metrics and coerced string captures fail verification. Independent review complete. Receipt: `.clanker/tasks/terrain-streaming-20261018/receipt.json`; native evidence: `var/reports/runtime/20261018-024851-fdbe3696`.
+
+The populated watershed remains on its original 192m detailed patch, with eight autonomous native actors (native smoke retained all eight). Actor/resource continuation remains as validated in `.clanker/tasks/fauna-continuation-20261017/receipt.json`: exact identities/poses/routes/needs, STL1â€“STL8 readability and bounded shared resource sessions. Existing saves are unchanged; the terrain probe rejects save/load combinations.
 
 ## Next concrete work
 
-Implement a bounded terrain tile sampler/stitching contract using existing coarse archipelago elevation/moisture, with shared-edge height and normal checks. Then integrate an explorable streamed neighborhood and region-specific habitat patches. Connect population activation/retention and coarse evolution to body-driven regions; inactive saved actors currently remain frozen. Resource history remains bounded to 256 actor/resource keys; production epochs and crowding remain open.
+Establish an explicit watershed/coarse-world coordinate and boundary join that preserves existing saved local poses and water/resource positions, then use streamed neighborhoods for actual populated traversal and regional habitat placement. Native outbound/return coverage must evict/regenerate tiles and measure actual joins/contact. Brief: `.clanker/tasks/terrain-streaming-20261018/next-task.md`.
+
+Population activation/retention and coarse dormant evolution remain open; inactive saved animals are frozen. Resource history remains capped at 256 actor/resource keys; production epochs and crowding are open. Synchronous coarse streaming does not establish preparation budgets, full-draft completion, final visuals or target 30 FPS acceptance.
 
 ## Collection and preservation
 
-Existing fauna-continuation worker collected and integrated; independent review complete. No new AGY/Jules dispatch and no old patch retrieval. Old Jules inventory remains 26 completed/4 awaiting feedback/1 failed, 30 patches inventoried; do not refetch. No active construction workers remain after checkpoint.
-
-Preserve unrelated untracked logs/receipts/objs and open applications. `Rauken-Archipelago/` remains read-only. Check `.clanker/HALT` before work/dispatch. Authorized validated publication is origin main only; no force push, release, deployment or paid API.
+Terrain isolated implementation collected and integrated; independent review plus two narrow follow-ups complete. Four dispatches this wake, no AGY/Jules dispatch and no old patch retrieval. Old Jules inventory remains 26 completed/4 awaiting feedback/1 failed, 30 patches inventoried; do not refetch. No active worker remains. All 84 preexisting untracked files verified unchanged. Open unrelated applications and immutable source assets preserved; Rauken-Archipelago remains read-only. Check `.clanker/HALT` before work/dispatch. Authorized validated publication is origin main only; no force push, release, deployment or paid API.

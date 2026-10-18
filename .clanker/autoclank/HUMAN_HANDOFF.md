@@ -1,3 +1,9 @@
+# Current continuation - 2026-10-18
+
+Read `.clanker/current-work.md` and `.clanker/tasks/terrain-streaming-20261018/receipt.json` first. Terrain tile sampling and an optional native nine-tile coarse traversal probe are validated; populated-world terrain joining/activation remain next. Native 29/29 suites and toolkit 2073 passed/2 skipped. No active worker or human blocker. Next bounded task: `.clanker/tasks/terrain-streaming-20261018/next-task.md`. Historical notes below are retained and superseded where stale.
+
+---
+
 # Construction handoff â€” 2026-10-11
 
 Wicked is selected and the complete full draft remains the target. The initial construction packet is implemented: pinned project-local engine source and hash-verified Release inputs; native C++17 host; domain foundations; toolkit reference/dependency/export corrections. No scheduling or unattended background continuation is enabled.

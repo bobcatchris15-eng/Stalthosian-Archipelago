@@ -1,8 +1,9 @@
 # Coarse terrain tile sampling contract
 
-Status: **Decided**, tested domain contract. Engine streaming, contact, join policy
-with the existing 192 m watershed, visual quality and target frame rate remain
-**To test**. This module does not replace the reference landscape.
+Status: **Decided**, tested domain contract and bounded native coarse-tile probe.
+Joining the existing 192 m watershed, integrated population streaming, visual
+quality and target frame rate remain **To test**. This module does not replace
+the reference landscape.
 
 `domain/terrain_tiles.hpp` is a header-only adapter over `world::Archipelago`.
 Construct one immutable `world::TerrainTiles(seed, config)` per terrain source.
@@ -80,3 +81,40 @@ cl /nologo /std:c++17 /EHsc /W4 /WX /permissive- /O2 stalthos-runtime/tests/terr
 
 Observed output: `{"status":"success","suite":"terrain_tiles","groups":3}`.
 Domain success does not establish streamed playability or population evolution.
+
+## Optional native construction route
+
+`engine/terrain_stream_probe.hpp` consumes this contract in a separate Wicked
+construction mode. Run `scripts/Run.ps1 -TerrainStreamProbe -Interactive` for
+W/A/S/D traversal (20 m/s, Escape exits), or
+`scripts/Verify-TerrainStreaming.ps1 -Duration 12` for the bounded automated
+route. The automated proxy travels from x=-160 to x=416, z=24, at accelerated
+diagnostic speed. It crosses five boundaries and visits six body tiles. The
+camera follows that body; it does not select terrain residency.
+
+The host retains a 3x3 neighborhood of 128 m tiles, removing outgoing tile
+entities and creating incoming meshes synchronously. It submits source normals
+and moisture/sea-derived colors, compares actual float mesh edge heights and
+normals, and builds a rendered-triangle cache from the same float vertices and
+indices. The proxy's bottom-center height follows that cache. This measurement
+does not cover bottom-face corners, feet, slope alignment or animal locomotion.
+Post-update scene bounds and capture-time visibility/projection are also
+reported. Object and meshlet occlusion culling are explicitly disabled in this
+accelerated diagnostic; production culling and frame-rate acceptance are not
+established by it.
+
+The verification script checks numeric metric presence/types/finiteness before
+thresholds, rejects missing/negative fields and coerced string capture flags,
+and requires bounded residency, actual
+eviction, crossings, support samples and three saved capture files. Pass
+`-Evidence <existing evidence directory>` to verify a receipt without launching
+another process. Review captures separately; saved files and counters do not
+establish visual quality.
+
+This route has no water surface, habitat props, population, save/load or join to
+the existing watershed. It rejects combinations with watershed, asset and
+persistence options. The populated watershed still uses its original detailed
+terrain. Integrating its coordinate/elevation and boundary policy is required
+before this can become the actual populated world's terrain. Native reverse
+traversal after eviction, mixed LOD, preparation budgets and target-hardware
+frame times remain open.

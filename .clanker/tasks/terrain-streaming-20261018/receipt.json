@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "task_id": "terrain-streaming-20261018",
+  "status": "validated",
+  "updated": "2026-10-18T07:50:36.274714+00:00",
+  "native_build": "Wicked Release rebuilt against verified pinned cache; final cmake --build --config Release --target Stalthos --parallel 2",
+  "native_ctest": "29/29 passed; 6.55s",
+  "toolkit": "2073 passed, 2 skipped in 789.22s (0:13:09)",
+  "domain_tests": "3 terrain groups; shared edges both axes, negative keys, nonbinary spacing, world/config/NaN/overflow guards",
+  "native_evidence": "var\\reports\\runtime\\20261018-024851-fdbe3696",
+  "native_verification": {
+    "passed": true,
+    "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-024851-fdbe3696",
+    "checks": {
+      "native_mode": true,
+      "crossed_five_boundaries": true,
+      "visited_six_body_tiles": true,
+      "resident_budget": true,
+      "retired_tiles": true,
+      "exact_shared_heights": true,
+      "exact_shared_normals": true,
+      "bottom_center_support": true,
+      "rendered_proxy_bounds": true,
+      "captures_saved": true
+    },
+    "receipt": {
+      "body_tile_crossings": 5,
+      "capture_diagnostics": [
+        {
+          "body_x": -73.5374464,
+          "body_z": 24.0,
+          "bounds_center": [
+            -73.53744506835938,
+            89.39910888671875,
+            24.0
+          ],
+          "camera_eye": [
+            -98.53742980957031,
+            106.89909362792969,
+            -3.999995708465576
+          ],
+          "capture": 0,
+          "projected_center": [
+            -0.1737539917230606,
+            -0.16044726967811584,
+            0.002412947593256831
+          ],
+          "visible_object": true
+        },
+        {
+          "body_x": 99.219536,
+          "body_z": 24.0,
+          "bounds_center": [
+            99.21953582763672,
+            86.94450378417969,
+            24.0
+          ],
+          "camera_eye": [
+            74.21953582763672,
+            104.44449615478516,
+            -3.999995708465576
+          ],
+          "capture": 1,
+          "projected_center": [
+            -0.17375369369983673,
+            -0.16044734418392181,
+            0.002412946429103613
+          ],
+          "visible_object": true
+        },
+        {
+          "body_x": 272.01500480000004,
+          "body_z": 24.0,
+          "bounds_center": [
+            272.0150146484375,
+            84.43986511230469,
+            24.0
+          ],
+          "camera_eye": [
+            247.01499938964844,
+            101.93988037109375,
+            -3.9999852180480957
+          ],
+          "capture": 2,
+          "projected_center": [
+            -0.17375345528125763,
+            -0.1604492962360382,
+            0.002412945730611682
+          ],
+          "visible_object": true
+        }
+      ],
+      "captures": [
+        true,
+        true,
+        true
+      ],
+      "created_tiles": 24,
+      "evicted_tiles": 15,
+      "frames": 5802,
+      "interactive": false,
+      "limitations": "coarse terrain construction probe; synchronous streaming; accelerated proxy traversal; no watershed join, population activation, water surface, final art or target FPS acceptance",
+      "max_proxy_bottom_center_error_m": 3.8146820173778906e-06,
+      "max_rendered_bounds_center_error_m": 2.2596093742777157e-05,
+      "max_shared_height_error_m": 0.0,
+      "max_shared_normal_component_error": 0.0,
+      "max_source_interpolation_error_m": 2.2287528778974774e-05,
+      "mode": "terrain-stream-probe",
+      "occlusion_culling": false,
+      "peak_resident_tiles": 9,
+      "schema_version": 1,
+      "shared_edge_samples": 1224,
+      "support_samples": 5802,
+      "transitions": [
+        {
+          "resident": 9,
+          "tile_x": -2,
+          "tile_z": 0,
+          "x": -159.9900784,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": -1,
+          "tile_z": 0,
+          "x": -127.98028959999999,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": 0,
+          "tile_z": 0,
+          "x": 0.06572479999999814,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": 1,
+          "tile_z": 0,
+          "x": 128.02752800000002,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": 2,
+          "tile_z": 0,
+          "x": 256.04092640000005,
+          "z": 24.0
+        },
+        {
+          "resident": 9,
+          "tile_x": 3,
+          "tile_z": 0,
+          "x": 384.0597535999999,
+          "z": 24.0
+        }
+      ],
+      "visited_body_tiles": 6
+    }
+  },
+  "executable_sha256": "79c48eb6ce7903d15fd51380f56af68ad9bc41fa939405ad0be74243a48f52c1",
+  "capture_review": ".clanker\\tasks\\terrain-streaming-20261018\\native-capture-review.json",
+  "independent_review": ".clanker\\tasks\\terrain-streaming-20261018\\independent-review.md",
+  "watershed_smoke": {
+    "populated_world": true,
+    "autonomous_population_count": 8,
+    "rendered_ground_support_active": false,
+    "launch": "Process 10664; evidence E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-024453-daecb179"
+  },
+  "preservation": "84 preexisting untracked files hashed and verified unchanged; planning/source assets/open unrelated apps preserved",
+  "dispatches": 4,
+  "collection": "No outstanding construction workers at entry; isolated terrain worker collected; no AGY/Jules dispatch or old patch retrieval",
+  "verification_hardening": "Missing/null/NaN/negative metric and string capture fixtures rejected; stale old metric receipt rejected",
+  "publication": "Validated for authorized ordinary origin main publication after explicit staging and secret scan",
+  "limitations": [
+    "Optional coarse terrain construction mode only; existing populated watershed still uses its 192m detailed patch",
+    "No join/coordinate mapping to watershed, region habitat placement, population activation/coarse dormant evolution or save-state change",
+    "Synchronous same-resolution streaming; no native reverse/return reconstruction or production preparation budget proof",
+    "Bottom-center and rendered bounds support only; no foot/full-footprint contact",
+    "Diagnostic occlusion disabled; coarse color terrain with proxy is not final visual or target-hardware 30FPS acceptance"
+  ],
+  "graph": {
+    "nodes": 6660,
+    "edges": 11813,
+    "mode": "AST refresh without clustering; 324 zero-node metadata warnings retained"
+  },
+  "secret_scan": "Built-in staged added-line credential pattern scan required before commit; result recorded in secret-scan.json"
+}
