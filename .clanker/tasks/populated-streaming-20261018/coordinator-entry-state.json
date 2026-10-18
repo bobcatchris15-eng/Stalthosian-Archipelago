@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "task_id": "populated-streaming-20261018",
+  "status": "running",
+  "base_revision": "0a03f445e28f8bdbbcca2172280d5ff0d852f552",
+  "current_step": "Isolated host implementation dispatched; root preparing native regression and preservation checks",
+  "completed_steps": [
+    "No HALT; prior validated receipt read; no outstanding world workers or old Jules retrieval",
+    "Preserved initial untracked hashes; isolated implementation worktree created",
+    "Graph dependency query and entry delta recorded; toolkit full regression launched"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-18T09:34:11.580349+00:00",
+  "next_step": "Collect candidate; build and review actual populated traversal before integration/publication",
+  "resume_instructions": "Read current-work and this task. Implementation worker in var/worktrees/populated-streaming-20261018. Do not assume candidate accepted. Root owns verification/durable records. Existing baseline normal host retains192m patch."
+}

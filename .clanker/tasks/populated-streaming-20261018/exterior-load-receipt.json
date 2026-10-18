@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "fixture_scope": "Controlled binary pose fixture copied from a native STL8 save; x400 z24; original source preserved",
+  "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044149-2ef43f99",
+  "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044223-d1cd9788",
+  "exact_eight_actor_state_continuation": true,
+  "resaved_pose": [
+    400.0,
+    82.06354522705078,
+    24.0,
+    0.0,
+    0
+  ],
+  "water_consumption_abs_error": 1.7753479242266224e-11,
+  "final_rendered_support_fallbacks": 0
+}

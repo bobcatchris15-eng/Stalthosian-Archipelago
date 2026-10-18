@@ -1,1 +1,160 @@
-{"task_id":"populated-streaming-20261018","outcome":"partial","acceptance":[{"condition":"production populated host adopts joined terrain preserving original central mesh","met":true,"how_checked":"source diff: original Terrain call retained, exterior rectangles exclude original square"},{"condition":"actual populated traversal reaches544 and returns with rendered contact and seam evidence","met":false,"how_checked":"requires coordinator native build/run; telemetry implemented"},{"condition":"existing focused modes remain clean","met":false,"how_checked":"coordinator native regression pending"}],"artifacts_changed":["stalthos-runtime/engine/populated_terrain.hpp","stalthos-runtime/engine/main.cpp","stalthos-runtime/engine/fauna_scene.hpp","stalthos-runtime/scripts/Run.ps1"],"evidence":["git diff --check passed"],"findings":["Original proxy bottom center has +.25m offset before slope; measured diagnostic retained, root-ground error separate","Population remains8 local individuals simulated while away; terrain residency is not population activation","Original reference mesh triangles and material retained; matching original edge normals copied into exterior buffers"],"blockers":["Native validation reserved to coordinator"],"assumptions_made":["Synchronous radius1 body residency sufficient for follow camera; camera does not activate populations"]}
+{
+  "schema_version": 1,
+  "task_id": "populated-streaming-20261018",
+  "status": "validated",
+  "updated": "2026-10-18T09:44:36.011858+00:00",
+  "scope": "Actual populated host retains original watershed and adopts joined exterior terrain with body-driven residency; no regional population activation yet",
+  "base_revision": "0a03f445e28f8bdbbcca2172280d5ff0d852f552",
+  "native_evidence": "var\\reports\\runtime\\20261018-043923-84100b07",
+  "native_metrics": {
+    "body_tile_crossings": 8,
+    "capture_diagnostics": [
+      {
+        "body_x": 72.06591796875,
+        "body_z": 24.0,
+        "capture": 0,
+        "filename": "populated-terrain-0.png",
+        "saved": true,
+        "visible_object": true
+      },
+      {
+        "body_x": 138.87322998046875,
+        "body_z": 24.0,
+        "capture": 1,
+        "filename": "populated-terrain-1.png",
+        "saved": true,
+        "visible_object": true
+      },
+      {
+        "body_x": 256.0523986816406,
+        "body_z": 24.0,
+        "capture": 2,
+        "filename": "populated-terrain-2.png",
+        "saved": true,
+        "visible_object": true
+      },
+      {
+        "body_x": 400.17449951171875,
+        "body_z": 24.0,
+        "capture": 3,
+        "filename": "populated-terrain-3.png",
+        "saved": true,
+        "visible_object": true
+      }
+    ],
+    "created_tiles": 29,
+    "diagnostic_traversal": true,
+    "evicted_tiles": 20,
+    "exterior_cells_overlap_reference": false,
+    "final_body_x": 24.0,
+    "final_body_z": 24.0,
+    "limitations": "synchronous terrain; local fauna remain simulated while away; no regional fauna activation or final art/FPS acceptance",
+    "max_body_x": 544.0,
+    "max_proxy_bottom_center_error_m": 0.27379546442534775,
+    "max_rendered_bounds_center_error_m": 3.0517578125e-05,
+    "max_root_ground_error_m": 3.8105063140392303e-06,
+    "max_shared_height_error_m": 0.0,
+    "max_shared_normal_component_error": 0.0,
+    "peak_resident_tiles": 13,
+    "population_activation_implemented": false,
+    "population_count_retained": 8,
+    "reference_mesh_retained": true,
+    "regenerated_mesh_mismatches": 0,
+    "regenerated_tiles": 8,
+    "rendered_support_fallbacks": 0,
+    "residency_driver": "body",
+    "resident_tiles": 9,
+    "route_returned": true,
+    "shared_edge_samples": 15006,
+    "support_samples": 5779,
+    "visited_body_tiles": 5
+  },
+  "native_build": "Release Build.ps1 passed pinned input hash verification; candidate native source unchanged since build",
+  "executable_sha256": "074ae9ad00d2ecb9b4a4ca4f716258de6a06ce6c92d6492a2f6ee9cff6dd5f8f",
+  "ctest": "30/30 passed in1.75s",
+  "toolkit": "2073 passed,2 skipped in522.51s",
+  "standard_continuation": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "resumed_motion": true,
+    "water_restore_abs_error": 1.1641532182693481e-10,
+    "water_consumption_abs_error": 8.847574062276209e-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044024-2dfad2f3",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044033-69040754",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-044023\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-044023\\second.stl"
+  },
+  "traversal_save_continuation": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "first_run_traversal": true,
+    "resumed_motion": true,
+    "water_restore_abs_error": 0.0,
+    "water_consumption_abs_error": 2.5320287533325825e-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044118-666acb0e",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044143-5d62918a",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-044118\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-044118\\second.stl"
+  },
+  "exterior_load": {
+    "passed": true,
+    "fixture_scope": "Controlled binary pose fixture copied from a native STL8 save; x400 z24; original source preserved",
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044149-2ef43f99",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-044223-d1cd9788",
+    "exact_eight_actor_state_continuation": true,
+    "resaved_pose": [
+      400.0,
+      82.06354522705078,
+      24.0,
+      0.0,
+      0
+    ],
+    "water_consumption_abs_error": 1.7753479242266224e-11,
+    "final_rendered_support_fallbacks": 0
+  },
+  "watershed_regression": {
+    "passed": true,
+    "evidence": "var/reports/runtime/20261018-044038-0afdaf43"
+  },
+  "coarse_regression": {
+    "passed": true,
+    "evidence": "var/reports/runtime/20261018-044057-40d629ef"
+  },
+  "verifier_fixtures": {
+    "valid_accepted": true,
+    "malformed_rejected": 16,
+    "results": "var/reports/populated-verifier-fixtures/results.json",
+    "review_finding": "String-zero resource cap coercion fixed; independent repro rejects"
+  },
+  "review": "independent-review.md: no unresolved finding; source,geometry enumeration,actual four captures,continuation reviewed",
+  "preservation": {
+    "preexisting_untracked_files": 84,
+    "changed": 0,
+    "scope": "Planning,source assets,open applications,historical worktrees preserved"
+  },
+  "workers": {
+    "dispatches": 3,
+    "local_peak": 2,
+    "agy": 0,
+    "jules": 0,
+    "outstanding": 0,
+    "old_jules_patches_retrieved": 0
+  },
+  "graph": {
+    "nodes": 6757,
+    "edges": 11978,
+    "mode": "AST refresh, no clustering;334zero-node metadata warnings; cumulative baseline retained"
+  },
+  "limitations": [
+    "Local8actors remain simulated while body away; no body-driven population activation or regional habitat population placement",
+    "Inactive saved actors remain frozen;256actor/resource history cap persists",
+    "Finite resident edge visible in capture;steep blend banks,material discontinuity,sparse exterior,preexisting floating marker",
+    "Approximate body grounding only; no full-foot contact,final scenery,full-draft or30FPS acceptance",
+    "Continuation JSON proves actor projections identity/species/pose/heading/age/needs/activity/distance; route target/site persistence remains covered by existing domain save tests rather than JSON receipt fields"
+  ],
+  "next_task": "Body-driven population activation/retention with deterministic regional habitats and honest coarse dormant evolution; see next-task.md"
+}

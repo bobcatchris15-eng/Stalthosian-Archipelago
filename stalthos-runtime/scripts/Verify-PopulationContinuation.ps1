@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([double]$FirstDuration=8, [double]$SecondDuration=4)
+param([double]$FirstDuration=8, [double]$SecondDuration=4, [switch]$FirstTraversal)
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $report=Join-Path $root ('var/reports/population-continuation/'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
@@ -8,6 +8,7 @@ $firstSave=Join-Path $report 'first.stl'
 $secondSave=Join-Path $report 'second.stl'
 function Invoke-Probe([double]$Seconds,[string]$Load,[string]$Save,[string]$Log) {
     $options=@{PopulatedWorld=$true;Duration=$Seconds;CameraDistance=16;SaveState=$Save}
+    if($FirstTraversal -and -not $Load) {$options.PopulatedTraversal=$true}
     if($Load) {$options.LoadState=$Load}
     $lines=@(& (Join-Path $PSScriptRoot 'Run.ps1') @options)
     $lines | Set-Content -LiteralPath $Log -Encoding utf8
@@ -38,6 +39,6 @@ for($i=0;$i -lt $after.actors_final.Count;$i++) {
 }
 if(-not $advanced) {throw 'No resumed actor advanced along its route'}
 $result=[ordered]@{passed=$true;actor_count=$after.actors_initial.Count;exact_initial_state_restored=$true;
-    resumed_motion=$advanced;water_restore_abs_error=$waterError;water_consumption_abs_error=$consumptionError;ledger_cap_exhaustions=0;first_evidence=$first;second_evidence=$second;first_save=$firstSave;second_save=$secondSave}
+    first_run_traversal=[bool]$FirstTraversal;resumed_motion=$advanced;water_restore_abs_error=$waterError;water_consumption_abs_error=$consumptionError;ledger_cap_exhaustions=0;first_evidence=$first;second_evidence=$second;first_save=$firstSave;second_save=$secondSave}
 $result | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $report 'receipt.json') -Encoding utf8
 $result | ConvertTo-Json

@@ -1,1 +1,34 @@
-{"schema_version":1,"task_id":"populated-streaming-20261018","status":"running","base_revision":"pending","current_step":"implementation ready for coordinator native build","completed_steps":["retained original reference mesh and clipped exterior rectangles","actual mesh-buffer ground caches and local boundary normal matching","production loop residency, support, camera and traversal telemetry"],"next_step":"coordinator build/native traversal and verifier","touched_artifacts":["stalthos-runtime/engine/populated_terrain.hpp","stalthos-runtime/engine/main.cpp","stalthos-runtime/engine/fauna_scene.hpp","stalthos-runtime/scripts/Run.ps1"],"validation":{"passed":false,"command":"git diff --check passed; native build reserved to coordinator"},"resume_instructions":"Root owns native build/test. New flag --populated-traversal with --populated-world; Run.ps1 -PopulatedWorld -PopulatedTraversal -Duration 24 -SaveState <path>. Await root evidence before completion claim.","updated":"2026-10-18T09:15:00Z"}
+{
+  "schema_version": 1,
+  "task_id": "populated-streaming-20261018",
+  "status": "complete",
+  "base_revision": "0a03f445e28f8bdbbcca2172280d5ff0d852f552",
+  "current_step": "Validated production populated streaming and native traversal/persistence; reviewed checkpoint ready for publication",
+  "completed_steps": [
+    "Collected prior checkpoint; no HALT or outstanding tasks",
+    "Integrated isolated retained-watershed exterior streamer into actual populated host",
+    "Release build;30CTest;2073toolkit tests passed with2skips",
+    "Actual24->544->24 traversal passed exact edges/reconstruction/rendered support;4captures inspected",
+    "Standard and traversal-save continuations plus exterior400m native resave/reload passed",
+    "Independent review closed verifier type hole;16malformed fixtures rejected",
+    "All84preexistinguntracked unchanged;no AGY/Jules dispatch or refetch"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/fauna_scene.hpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Verify-PopulatedStreaming.ps1",
+    "stalthos-runtime/scripts/Verify-PopulationContinuation.ps1",
+    "stalthos-runtime/docs/populated-terrain.md"
+  ],
+  "updated": "2026-10-18T09:44:36.011858+00:00",
+  "next_step": "Body-driven population activation/retention with deterministic regional habitats and honest coarse dormant evolution; see next-task.md",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1;CTest;pytest;Verify-PopulatedStreaming;Verify-PopulationContinuation standard and FirstTraversal;Verify-WatershedJoin;Verify-TerrainStreaming;exterior load;independent review",
+    "evidence_path": ".clanker\\tasks\\populated-streaming-20261018\\receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\populated-streaming-20261018\\receipt.json",
+  "resume_instructions": "Read current-work and this receipt then next-task.md. Actual populated host now streams exterior. No worker active. Do not repeat join probe as new progress or retrieve old Jules patches. Next body-driven population activation and habitats."
+}

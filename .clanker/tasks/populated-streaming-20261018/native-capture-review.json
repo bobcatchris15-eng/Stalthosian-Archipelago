@@ -1,0 +1,31 @@
+{
+  "updated": "2026-10-18T09:44:36.011858+00:00",
+  "evidence": "var\\reports\\runtime\\20261018-043923-84100b07",
+  "reviewers": [
+    "root",
+    "independent review"
+  ],
+  "captures": [
+    {
+      "path": "var\\reports\\runtime\\20261018-043923-84100b07\\populated-terrain-0.png",
+      "sha256": "849c7d8cf1295e5b1c366c47fb91fb89a399a23ea6e6cc48a01ec46f8a069895",
+      "observed": "Brown hero marker visible;connected foreground;no internal open crack seen"
+    },
+    {
+      "path": "var\\reports\\runtime\\20261018-043923-84100b07\\populated-terrain-1.png",
+      "sha256": "c9e20f8665d28e07248c94c8dd23481d77bb5d5ade414aac9bdbeaf7a3143217",
+      "observed": "Brown hero marker visible;connected foreground;no internal open crack seen"
+    },
+    {
+      "path": "var\\reports\\runtime\\20261018-043923-84100b07\\populated-terrain-2.png",
+      "sha256": "db437d850e6f092715bd21087e0a31620fec265db85d20b4bace4849b21287c3",
+      "observed": "Brown hero marker visible;connected foreground;no internal open crack seen"
+    },
+    {
+      "path": "var\\reports\\runtime\\20261018-043923-84100b07\\populated-terrain-3.png",
+      "sha256": "52d8ae8267d63151fd2902777fb350d142176b50d2218460023c14eeff1025d3",
+      "observed": "Brown hero marker visible;connected foreground;no internal open crack seen"
+    }
+  ],
+  "limits": "Visible outer resident edge/black void at256m;very steep blend banks;abrupt material transition;sparse exterior;floating proxy. Engineering evidence only."
+}
