@@ -47,6 +47,17 @@ void interiorAndBoundary() {
     }
 }
 void tilesAndOrder() {
+    WatershedTerrain native(42,{64,2.0,1.0});
+    domain::ReferenceLandscape nativeReference(42);
+    for (const auto key : {TerrainTileKey{-1,-1},TerrainTileKey{-1,0},
+                           TerrainTileKey{0,-1},TerrainTileKey{0,0}}) {
+        const auto tile=native.build(key);
+        check(tile.vertices.size()==4225,"native 2m grid vertex count");
+        for (const auto& vertex : tile.vertices)
+            if (nativeReference.inBounds(vertex.position.x,vertex.position.z))
+                check(vertex.position.y==nativeReference.height(vertex.position.x,vertex.position.z),
+                      "native 2m mesh vertices preserve watershed datum");
+    }
     for (double spacing : {8.0,0.3}) {
         WatershedTerrain field(42,{16,spacing,1}), again(42,{16,spacing,1});
         for (const std::int64_t z : {-54LL,-21LL,-3LL,-1LL,0LL,2LL,20LL,53LL})
