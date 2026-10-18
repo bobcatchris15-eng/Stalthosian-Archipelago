@@ -1,0 +1,30 @@
+{
+  "current_step": "Validated bounded regional domain foundation",
+  "schema_version": 1,
+  "base_revision": "cfecfc0d151343810ef55f601693e29c260b90f3",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/tests/regional_population.cpp",
+    "stalthos-runtime/docs/regional-population.md",
+    "stalthos-runtime/CMakeLists.txt"
+  ],
+  "status": "complete",
+  "next_step": "Actor-bound regional contact adapter and exact continuation DTO;native wiring remains deferred",
+  "task_id": "regional-registry-20261018",
+  "updated": "2026-10-18T13:51:26.9675395Z",
+  "completed_steps": [
+    "Checked HALT and collected checkpoint; no outstanding workers",
+    "Preserved 85 preexisting untracked file hashes",
+    "Pinned Wicked Release build and native eight-actor exact continuation passed",
+    "Collected independently reviewed candidate e22bc62",
+    "Merged pinned Wicked Release build and CTest32/32 passed",
+    "Toolkit2073passed2skipped;doctor0;native eight-actor continuation passed",
+    "Graph AST refreshed;secret scan passed;85preexistinguntracked hashes restored/preserved"
+  ],
+  "validation": {
+    "command": "Build.ps1;CTest Release32/32;PYTHONPATH=src python -m pytest -q2073passed2skipped;native Verify-PopulationContinuation",
+    "evidence_path": ".clanker/tasks/regional-registry-20261018/receipt.json",
+    "passed": true
+  },
+  "receipt_path": ".clanker/tasks/regional-registry-20261018/receipt.json"
+}

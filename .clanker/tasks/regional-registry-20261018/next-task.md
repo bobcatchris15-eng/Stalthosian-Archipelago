@@ -1,0 +1,11 @@
+# Next bounded world construction task
+
+Check HALT, current-work and this task receipt. RegionalPopulationRegistry now owns bounded retained populations and disjoint ledgers, mandatory legacy bootstrap, camera denial and global reservation limits. It is domain infrastructure only; native populated world still uses original eight watershed animals and legacy STL8 persistence.
+
+Next implement a bounded actor-bound regional resource-contact adapter with exact continuation DTO before native wiring. Bind actor IDs to replay sessions, validate site-resource identity and physical reach against rendered-ground regional habitat, refresh resource availability before active advance, and grant relief only for accepted new/update deltas. Replays, denied keys, camera-only activity, dormant regions and missing/dead actors must grant no relief or fresh events. Preserve mandatory complete legacy import, original eight IDs/signature 6489859816375510053, global 256 history reservation cap, no silent eviction, and existing STL8 loading.
+
+Add exact domain multi-region departure/elapsed-dormancy/return and continuation restore tests with retained needs/routes/resource quantities/session keys and failure atomicity. Plan compatible versioned registry persistence separately before host integration; current registry snapshot is detached in-memory state, not a new save representation. Resource insertion/reservation growth, physical region bounds, border ownership and cross-region links remain unimplemented. Actual regional identities must stay separate from coarse island population estimates.
+
+Native integration must establish real exterior rendered-ground habitat, resource quantities and a physical activation path. Camera prewarm must never create retained populations or HeroSim knowledge. Transfer all shared legacy history into registry ownership; keeping an unrelated mutable host ledger defeats its budgets. Native multi-region save/load, activation and observable resource consequence evidence are required before claiming population expansion.
+
+Keep work bounded and isolated. No HeroViewer/mesh polish detour; no old Jules patch retrieval. Planning/source assets/open applications and historical worktrees remain preserved. Publication to origin main is authorized after review and validation; no force push/releases/deployment/paid APIs/credential changes.

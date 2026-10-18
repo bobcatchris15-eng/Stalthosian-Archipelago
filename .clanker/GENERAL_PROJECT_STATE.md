@@ -3,51 +3,49 @@
 Priority: world, simulations, systems and populations. Wicked Engine selected.
 Assets remain replaceable; HeroViewer/individual Smalltrotter polish is off path.
 
-## Validated continuation
+## Current bounded construction
 
-Resource history now has explicit typed admission and capacity reporting. The
-256-key limit remains; existing cumulative contacts continue at capacity, new
-keys are rejected atomically without eviction or host termination. Populated host
-needs relief follows accepted ledger consumption only; replay/denial grants none.
-Existing STL8 saves remain compatible. No new world needed.
+Regional retained-population domain foundation collected and independently reviewed.
+Mandatory legacy Population/complete ResourceLedger bootstrap preserves supplied
+IDs, habitat signature, routes, needs, quantities and replay history. Explicit
+physical-arrival admission; camera cannot admit or activate retained populations.
+Detached snapshots prevent outside mutation. No erasure/replacement API.
 
-Final imported native full-history run and reload retained all256keys and8actor
-session mappings, with exact full population snapshot restored. Rejected627/437
-new-contact attempts; existing food/water consumption continued. Blocked browser
-hunger increased. Original8IDs and habitat signature6489859816375510053 preserved.
+Limits: eight retained regions,64 actual individuals,16 per Population,4096 global
+reserved resource slots,256 global reserved history keys. Used keys count within
+reservation, not twice. Cross-region actor/resource conflicts, malformed ledger,
+seed mismatch and capacity rejection leave retained state unchanged. Per-region
+owned ledgers enforce reservation budgets; full history permits existing replay/
+update but rejects new keys. Departure/elapsed dormancy/return retains exact
+expected complete snapshot and ledger in native C++ domain tests.
 
-New bounded regional habitat candidate contract uses pure rendered-ground/resource
-queries, global half-open lattice ownership, sampled dry/slope-eligible links and
-explicit Ready/NoViable/Invalid/WorkLimit outcomes. Max512candidates,100kqueries.
-Native watershed probe produced312connected sites,2browse,8freshwater,1168directed
-links,1552queries;1m lattice,.5m route samples. Food uses3D.8m reach;water.8m reach
-and.45m vertical limit. It does not create populations or replace legacy habitat.
+This foundation is NOT wired into Wicked host and has no registry save/restore
+format. Ledger consumption alone grants no actor relief; contact binding/reach,
+resource-site availability synchronization and accepted-delta relief remain next.
+Physical bounds,real exterior population habitat and cross-region travel remain.
+Native world still has original eight watershed individuals; STL8 unchanged.
+Original habitat signature6489859816375510053 remains the preservation contract.
 
-Pinned Wicked Release passed;CTest31/31;toolkit2073passed2skipped in532.40s;doctor0.
-Native exactsavecontinuation,24sstreaming,importeddeparture/dormancy/return and
-cameraindependence passed;9malformedproof fixtures passed. Source review findings
-fixed. Native frame inspected: animals/creek/shrubs visible;whiteunfinishedtrees,
-steep enclosing terrain walls,sparse exterior and approximate contacts persist.
-No finalart,fullfootcontact,full-draft or30FPSacceptance.
-Receipt: .clanker/tasks/regional-habitat-admission-20261018/receipt.json
-Native manifest: var/reports/regional-habitat-admission-20261018/evidence.json
+Merged pinned Wicked Release build passed;CTest32/32 passed1.52s;independent MSVC
+registry diagnostic passed. Native existing-host eight-actor exactsavecontinuation
+passed, resumed movement/shared-water consumption and no history-cap exhaustion.
+This native regression uses proxies; inspected frame shows animals/creek/shrubs,
+steep enclosing walls,sparse unfinished scenery. No new regional visual evidence,
+finalart,footcontact,full-draft or30FPS acceptance. Toolkit2073passed2skipped in504.61s;doctor0;
+graph6915nodes12374edges;358zero-node source warnings. Scan and publication in receipt.
 
-## Next concrete work
-
-Bounded retained regional population registry with explicit per-region resource
-and history-key admission. See task next-task.md and runtime docs/regional-habitat-
-admission.md. Preserve original8IDs/signature and legacySTL8loading;separate actual
-individuals from coarse island estimates. Camera prewarm cannot create actual
-populations or grant HeroSim knowledge. Candidate has no cross-region links.
-New pairs can remain denied everyframe at fullcapacity;production persistence
-archive/versioning remains work. Never silently evict retained IDs/historykeys.
+Receipt: .clanker/tasks/regional-registry-20261018/receipt.json
+Next: .clanker/tasks/regional-registry-20261018/next-task.md
+Contract: stalthos-runtime/docs/regional-population.md
+Prior native streaming/activation evidence remains in regional-habitat-admission-
+20261018 receipt; not rerun or newly claimed by this foundation packet.
 
 ## Preservation and collection
 
-Two isolated local candidates collected and independently reviewed;peak2local,
-6dispatches including reviewfollowups. NoAGY/Jules oroldpatchretrieval. No outstanding
-worker. All85preexistinguntrackedhashes preserved;planning/sourceassets/openapps and
-historicalworktrees untouched. Graph AST refreshed:6857nodes12243edges;353zero-node
-metadata/sourcewarnings;historicalbaseline preserved. Check HALTbeforework/dispatch.
-Reviewed publication to originmain authorized;no forcepush/releases/deployment/
-paidAPI/credentials. Publication details in taskreceipt after remoteverification.
+Previous isolated tasks already collected; no outstanding prior worker. One new
+implementation and one independent reviewer;2 dispatches,peak2local,noAGY/Jules,
+no oldpatch retrieval. Both completed. All85 preexistinguntracked hashes preserved
+at final audit; graph marker restored byte-for-byte. Planning/sourceassets/open
+apps/historicalworktrees untouched. Check HALT before work/dispatch. Reviewed
+publication to originmain authorized;no forcepush/releases/deployment/paidAPI/
+credentials. Next wake must retain explicit foundation-only integration limits.

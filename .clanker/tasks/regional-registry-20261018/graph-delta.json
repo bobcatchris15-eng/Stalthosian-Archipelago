@@ -1,0 +1,43 @@
+{
+  "base_digest": "3dee0067a5d376be",
+  "current_digest": "306e07107cf3b008",
+  "nodes_added": 61,
+  "nodes_removed": 3,
+  "edges_added": 137,
+  "edges_removed": 6,
+  "edges_added_not_extracted": 0,
+  "central_nodes_touched": [
+    "iostream",
+    "stalthos_runtime_domain_fauna_population",
+    "stalthos_runtime_domain_fauna_population_habitatsite",
+    "stalthos_runtime_domain_fauna_population_population",
+    "stalthos_runtime_domain_fauna_population_population_snapshot",
+    "stalthos_runtime_domain_fauna_population_populationsnapshot",
+    "stalthos_runtime_domain_foundation_hpp_optional",
+    "stalthos_runtime_domain_resource_ledger",
+    "stdexcept"
+  ],
+  "boundary_nodes_touched": [],
+  "pressure": 103,
+  "churn": 350,
+  "recommend_validation": true,
+  "sample": {
+    "nodes_added": [
+      "clanker_current_work_preservation_and_collection",
+      "clanker_general_project_state_preservation_and_collection",
+      "clanker_tasks_regional_registry_20261018_independent_review",
+      "clanker_tasks_regional_registry_20261018_independent_review_independent_registry_review",
+      "entry",
+      "regionaladmission",
+      "regionaladmissionorigin",
+      "stalthos_runtime_docs_regional_population",
+      "stalthos_runtime_docs_regional_population_retained_regional_population_registry_foundation",
+      "stalthos_runtime_domain_regional_population"
+    ],
+    "nodes_removed": [
+      "clanker_current_work_collection_and_preservation",
+      "clanker_general_project_state_collection_and_preservation",
+      "resourceadmission"
+    ]
+  }
+}

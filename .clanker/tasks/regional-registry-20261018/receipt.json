@@ -1,0 +1,97 @@
+{
+  "implementation_commit": "e22bc620aa22c62f91173abd1d3843e3d8b7893f",
+  "updated": "2026-10-18T13:51:26.9267155Z",
+  "limitations": [
+    "No native host wiring or registry persistence/restore format",
+    "No actor-bound contacts/reach/depletion synchronization/accepted-delta relief",
+    "No real exterior population construction/bounds/cross-region movement",
+    "No resource insertion or reservation resizing",
+    "No allocation-failure injection proof",
+    "No finalart/footcontact/full-draft/30FPSacceptance"
+  ],
+  "doctor": "exit0 zero warnings/errors;cli list12commands ok",
+  "native_registry_integrated": false,
+  "caps": {
+    "history_keys": 256,
+    "per_population": 16,
+    "regions": 8,
+    "resources": 4096,
+    "individuals": 64
+  },
+  "native_visual": {
+    "path": "var/reports/runtime/20261018-084419-451af696/draft-host.png",
+    "observed": "Proxy animals beside creek and shrubs; steep enclosing walls and sparse unfinished scenery. Existing-host regression, not regional registry integration."
+  },
+  "next_task": "next-task.md",
+  "schema_version": 1,
+  "candidate": "f5fc982590a605e8be89ebc286bd11689441aa39",
+  "native_existing_host_regression": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "full_snapshot_fields_verified": true,
+    "first_run_traversal": false,
+    "resumed_motion": true,
+    "water_restore_abs_error": 1.1641532182693481E-10,
+    "water_consumption_abs_error": 5.937189628824058E-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-084410-3de40829",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-084419-451af696",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-084410\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-084410\\second.stl"
+  },
+  "review": "independent-review.md;independent MSVC build/diagnostic passed;elapsed dormant/return full expected snapshot equality strengthened and root-inspected;no unresolved blocker for foundation scope",
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "60bd13ca77d1211c9fad2e3c06fa6dc45bcf8ba33601fa1616314894ec394ffb"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "e139a0a8e12c48b1196ca56db32d71b93793fe4f7cdc17beeb7e1ea84f42296a"
+    },
+    {
+      "path": "stalthos-runtime/tests/regional_population.cpp",
+      "sha256": "3081943d6bc3a5c5f2fc2e228f76fdbb4156570bb87991c67b1eaea5d79187aa"
+    },
+    {
+      "path": "stalthos-runtime/docs/regional-population.md",
+      "sha256": "2863d3bca332adcf564dc2f035537336357c7cab5a1c11d4ad3cda2b74161f1c"
+    }
+  ],
+  "build": "Pinned Wicked Release build passed in merged tree",
+  "base_revision": "cfecfc0d151343810ef55f601693e29c260b90f3",
+  "ctest": "32/32 passed in1.52s",
+  "failed_attempts": [
+    "Graph delta initially invoked from toolkit cwd; rerun from root passed;no source impact",
+    "Graph freshness marker briefly changed; reconstructed original bytes by recorded SHA256 and restored;all85preexistinguntracked hashes match"
+  ],
+  "preservation": {
+    "time": "2026-10-18T13:50:14.7821971Z",
+    "changed": [],
+    "checked": 85
+  },
+  "task_id": "regional-registry-20261018",
+  "toolkit": "2073 passed,2 skipped in504.61s;PYTHONPATH=src python -m pytest -q",
+  "scope": "Bounded regional retained-population domain foundation; not native integrated",
+  "workers": {
+    "dispatches": 2,
+    "outstanding": 0,
+    "local": 2,
+    "agy": 0,
+    "peak_local": 2,
+    "jules": 0,
+    "old_patches_retrieved": 0
+  },
+  "status": "validated_domain_foundation",
+  "graph": {
+    "edges": 12374,
+    "edges_added": 137,
+    "nodes_removed": 3,
+    "edges_removed": 6,
+    "nodes_added": 61,
+    "nodes": 6915,
+    "mode": "Synchronous AST refresh without clustering;historical baseline preserved",
+    "zero_node_source_warnings": 358
+  }
+}
