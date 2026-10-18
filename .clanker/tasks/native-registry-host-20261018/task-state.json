@@ -9,7 +9,7 @@
     "Independent adversarial review and empty legacy compatibility fix verified",
     "Pinned Wicked build;36/36 CTest;2073 toolkit tests and doctor passed",
     "Native old-save migration and complete shared hero/NPC restart verified",
-    "90 preserved files unchanged; explicit staging and credential pattern scan"
+    "87 preexisting files unchanged; own runtime locks released; explicit staging and credential pattern scan"
   ],
   "next_step": "Coherent host regional save transaction and bounded reservation migration before exterior expansion",
   "touched_artifacts": [

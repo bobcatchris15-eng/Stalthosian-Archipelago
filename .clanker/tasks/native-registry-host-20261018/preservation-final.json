@@ -1,5 +1,11 @@
 {
-  "checked": 90,
+  "checked": 87,
   "changed": [],
-  "time": "2026-10-18T18:10:59.3964479Z"
+  "released_own_runtime_lock_files": [
+    ".clanker/locks/slot-1/owner_pid",
+    ".clanker/locks/slot-1/started",
+    ".clanker/locks/slot-1/task"
+  ],
+  "manifest_total": 90,
+  "time": "2026-10-18T18:14:05.8055724Z"
 }

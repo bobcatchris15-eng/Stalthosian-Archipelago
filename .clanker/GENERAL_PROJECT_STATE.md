@@ -53,7 +53,7 @@ steep enclosing terrain. No final visuals, anatomical contact, full-draft or
 
 ## Preservation
 
-No HALT. All90 original manifest files retain hashes. No planning/source/app or
+No HALT. All87 preexisting manifest files retain hashes; three own runtime lock files were released. No planning/source/app or
 historical-worktree cleanup. Chat interruption stopped initial processes and left
 some partially written NUL files; reconstructed owned changes, then parser/NUL
 checks, builds and runtime proofs passed. Three agent dispatches plus two recovery/

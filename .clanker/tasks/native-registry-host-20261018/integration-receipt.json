@@ -104,9 +104,15 @@
   "independent_actual_legacy_decode": "9 resources,4 history keys,8 bindings exactly match initial migrated native telemetry",
   "independent_review": "independent-review.json; no unresolved material findings; empty legacy regression found/fixed/reverified",
   "preservation": {
-    "checked": 90,
+    "checked": 87,
     "changed": [],
-    "time": "2026-10-18T18:10:59.3964479Z"
+    "released_own_runtime_lock_files": [
+      ".clanker/locks/slot-1/owner_pid",
+      ".clanker/locks/slot-1/started",
+      ".clanker/locks/slot-1/task"
+    ],
+    "manifest_total": 90,
+    "time": "2026-10-18T18:14:05.8055724Z"
   },
   "workers": {
     "agent_dispatches": 3,
