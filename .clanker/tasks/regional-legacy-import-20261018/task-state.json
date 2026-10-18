@@ -1,0 +1,33 @@
+{
+  "updated": "2026-10-18T16:51:40.207786+00:00",
+  "status": "complete",
+  "next_step": "Native host single-ledger ownership migration and coherent atomic save integration",
+  "current_step": "Reviewed explicit provenance and STLR archive integrated; native host wiring is next",
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/domain/regional_archive.hpp",
+    "stalthos-runtime/tests/regional_legacy_import.cpp",
+    "stalthos-runtime/tests/regional_archive.cpp",
+    "stalthos-runtime/docs/regional-population.md"
+  ],
+  "task_id": "regional-legacy-import-20261018",
+  "completed_steps": [
+    "Recovered two interrupted isolated candidates; no duplicate old patch retrieval",
+    "Legacy admission ownership and exact archive transport implemented",
+    "Independent alias and species-substitution findings fixed",
+    "Merged pinned Wicked Release build passed; CTest 35/35 passed",
+    "Toolkit 2073 passed, 2 skipped; doctor exit 0 without warnings/errors",
+    "Existing-host eight-actor native save/load and water-consumption regression passed",
+    "86 preserved-manifest files unchanged; explicit staging and secret scan"
+  ],
+  "base_revision": "d2d1ec2be3f3aa452ffd04129234c50a7499f521",
+  "schema_version": 1,
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest; pytest; doctor; Verify-PopulationContinuation.ps1; independent probes",
+    "evidence_path": ".clanker\\tasks\\regional-legacy-import-20261018\\receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\regional-legacy-import-20261018\\receipt.json",
+  "resume_instructions": "Check HALT; read current-work and receipt then next-task.md. No outstanding workers. Native host/archive ownership not wired."
+}

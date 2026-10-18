@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "task_id": "regional-legacy-import-20261018",
+  "updated": "2026-10-18T16:51:40.206765+00:00",
+  "status": "validated_domain_infrastructure",
+  "base_revision": "d2d1ec2be3f3aa452ffd04129234c50a7499f521",
+  "implementation_commits": [
+    "77a5bd4",
+    "1e39685",
+    "176d5f3"
+  ],
+  "scope": "Explicit admission-time legacy actor/session provenance plus bounded STLR v1 companion regional archive; immutable retained species",
+  "native_registry_integrated": false,
+  "legacy_disk_format_changed": false,
+  "companion_archive_version": 1,
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "f06df7b0cbfe264e17f7c04ddb17a3d2ec02ca1789b5eb61c7366083fb2fd78d"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "4aaaa778f4cdf548520ea761e23ff374d276781ab63dc498de925c9745ce9c6e"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_archive.hpp",
+      "sha256": "ce8fa1f2035aa1836da2041b099b4576b58e133180f2ab3c9425bb5abe56f151"
+    },
+    {
+      "path": "stalthos-runtime/tests/regional_legacy_import.cpp",
+      "sha256": "0874b01f29d05006bbd3c58f8f5b246a5e044265bfe6acd40b99e33d765c3b6b"
+    },
+    {
+      "path": "stalthos-runtime/tests/regional_archive.cpp",
+      "sha256": "79bfa578e799cf5f393c4a054103b277a5ecd9e9b8601fd73bf2b419364ed16c"
+    },
+    {
+      "path": "stalthos-runtime/docs/regional-population.md",
+      "sha256": "c32024bb25cc8bec2c000c3491b3a94e7b523428387d313b2a36d159b8ce52de"
+    }
+  ],
+  "review": "review.json; PASS_WITH_FINDINGS_FIXED; unbound-history alias compatibility and species-substitution findings resolved",
+  "ctest": "Merged 35/35 passed 2.30 s; independent 35/35 passed 2.63 s",
+  "build": "Pinned Wicked Release Build.ps1 passed; var/build/stalthos-runtime/build.log and build-receipt.json",
+  "toolkit": "PYTHONPATH=src python -m pytest -q: 2073 passed, 2 skipped in 537.63 s",
+  "doctor": "python -m stalthos_toolkit.cli doctor exit 0, no warnings/errors",
+  "native_existing_host_regression": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "full_snapshot_fields_verified": true,
+    "first_run_traversal": false,
+    "resumed_motion": true,
+    "water_restore_abs_error": 0.0,
+    "water_consumption_abs_error": 6.9848848927023255e-12,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-114441-dee98614",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-114450-c52d7ac9",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-114441\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-114441\\second.stl"
+  },
+  "native_visual": {
+    "path": "var/reports/runtime/20261018-114450-c52d7ac9/draft-host.png",
+    "observed": "Creek, proxy block animals, sparse low foliage, steep enclosing terrain. Existing-host regression only."
+  },
+  "limits": {
+    "regions": 8,
+    "individuals": 64,
+    "resources": 4096,
+    "history_keys": 256,
+    "archive_bytes": 524288
+  },
+  "workers": {
+    "dispatches": 3,
+    "review_metadata_followup": 1,
+    "peak_local": 3,
+    "agy": 0,
+    "jules": 0,
+    "old_patches_retrieved": 0,
+    "outstanding": 0
+  },
+  "limitations": [
+    "Domain-only registry/archive; native host still original eight watershed actors and STL8",
+    "Archive reconstruction requires externally admitted equivalent immutable layout and trusted imported provenance",
+    "Stream write is not atomic filesystem replacement or a coherent paired host save",
+    "No physical region bounds, border ownership, cross-region travel or real exterior habitat/resource integration",
+    "No new visual, foot-contact, full-draft or 30 FPS acceptance"
+  ],
+  "failed_attempts": [
+    "Previous automation interrupted after writing isolated candidates; recovered candidates rather than duplicated dispatch",
+    "Initial archive over-rejected valid unbound history aliases; fixed before integration",
+    "Independent species swap reproduction accepted same actor ID with changed species; fixed and probe rejects atomically",
+    "Exact hash audit found archive test CRLF-only conversion after cherry-pick; normalized source identical, root suite passed"
+  ],
+  "next_task": "next-task.md",
+  "publication": {
+    "remote": "origin/main",
+    "status": "pending final checkpoint"
+  },
+  "preservation": {
+    "time": "2026-10-18T16:49:44.2096321Z",
+    "checked": 86,
+    "changed": []
+  },
+  "secret_scan": {
+    "source_added_lines": 467,
+    "passed": true,
+    "method": "builtin pattern scan, not exhaustive credential detection"
+  },
+  "graph": {
+    "mode": "synchronous code-only AST, no clustering or semantic docs extraction",
+    "nodes": 7074,
+    "edges": 12661,
+    "delta": "graph-delta.json",
+    "nodes_added": 134,
+    "nodes_removed": 28,
+    "edges_added": 354,
+    "edges_removed": 233,
+    "note": "Historical preserved .clanker/graph baseline/marker untouched; zero-node-source warnings retained in graph refresh log"
+  }
+}

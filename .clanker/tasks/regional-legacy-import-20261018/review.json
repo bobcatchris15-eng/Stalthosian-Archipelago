@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reviewer": "adversarial_review",
+  "time_utc": "2026-10-18T16:46:15.6308158Z",
+  "worktree": "E:\\Stalthosian Archipelago\\var\\worktrees\\regional-archive-review-20261018",
+  "status": "PASS_WITH_FINDINGS_FIXED",
+  "candidates": [
+    "fb31ad435459572bd5f33ebdf9ec9e8c2c94a656",
+    "fbef03a9c5a951b65777ca0ac30f4d33ee144881",
+    "root species immutability fix"
+  ],
+  "reviewed_hashes": {
+    "stalthos-runtime/tests/regional_legacy_import.cpp": "0874b01f29d05006bbd3c58f8f5b246a5e044265bfe6acd40b99e33d765c3b6b",
+    "stalthos-runtime/domain/regional_archive.hpp": "ce8fa1f2035aa1836da2041b099b4576b58e133180f2ab3c9425bb5abe56f151",
+    "stalthos-runtime/tests/regional_archive.cpp": "f62431cb9ca1402c5953c4132866bbd9d1543a1566f38aa411abffd33609773e",
+    "stalthos-runtime/domain/regional_population.hpp": "4aaaa778f4cdf548520ea761e23ff374d276781ab63dc498de925c9745ce9c6e"
+  },
+  "checks": {
+    "full_domain_ctest": "35/35 passed in 2.63 s",
+    "species_probe": "original4 supplied0 encoded1 restored0 resulting4",
+    "disk": "candidate regression writes/reads/removes owned temp binary; exact DTO equality",
+    "release_build": "MSVC production targets /W4 /WX /permissive- passed",
+    "independent_probe": "6000 deterministic binary mutations; decode-output/live-restore rejection atomic; full IEEE reencode including signed zero; imported provenance theft rejected"
+  },
+  "findings": [
+    {
+      "resolution": "Final archive preserves aliases unless a session has actor ownership",
+      "issue": "Unbound cross-region bookkeeping aliases rejected by initial archive"
+    },
+    {
+      "resolution": "Root compares admitted actor species before restore; independent probe now rejects and preserves original",
+      "issue": "Same retained actor ID accepted changed species"
+    }
+  ],
+  "limitations": [
+    "Domain infrastructure only; Wicked host integration unverified",
+    "Stream write does not guarantee atomic file replacement; documented future host responsibility",
+    "No visual, full-draft or performance acceptance"
+  ],
+  "commands": [
+    "cmake --build var/build/stalthos-runtime --config Release --parallel 2",
+    "ctest --test-dir var/build/stalthos-runtime -C Release --output-on-failure",
+    "var/build/stalthos-runtime/Release/IndependentRegionalProbe.exe",
+    "var/build/stalthos-runtime/Release/SpeciesSwapProbe.exe"
+  ],
+  "root_hash_audit": {
+    "time_utc": "2026-10-18T16:47:26.2840566Z",
+    "file": "stalthos-runtime/tests/regional_archive.cpp",
+    "review_worktree_sha256": "f62431cb9ca1402c5953c4132866bbd9d1543a1566f38aa411abffd33609773e",
+    "merged_root_sha256": "79bfa578e799cf5f393c4a054103b277a5ecd9e9b8601fd73bf2b419364ed16c",
+    "difference": "CRLF versus LF only; normalized LF content identical per root exact audit",
+    "other_three_reviewed_files": "Exact byte hashes match root",
+    "merged_root_ctest": "35/35 passed in 2.30 s per root",
+    "new_source_changes": false,
+    "additional_tests_required": false
+  }
+}
