@@ -61,6 +61,10 @@ static void contactChecks() {
     require(!r.bindContactSession(7,actor(r,7,1),88,physical),"actor cannot steal session");
     require(!r.bindContactSession(8,actor(r,8),88,physical),"cross-region session collision denied");
     const auto before=exact(r.continuationSnapshot());
+    auto collision=ledger(300); collision.resources[0].consumedQuantity=0.1;
+    collision.sessions={{88,300,0.1}};
+    require(r.admit(physical,population(9),collision,{2,1})==RegionalAdmission::SessionConflict,"new imported region cannot alias a bound session");
+    require(before==exact(r.continuationSnapshot()),"session conflict admission atomic");
     for(auto result:{r.contact(7,id,88,0,100,0.5,camera),r.contact(7,id,89,0,100,0.5,physical),
         r.contact(7,999,88,0,100,0.5,physical),r.contact(7,id,88,1,101,0.5,physical),
         r.contact(7,id,88,0,200,0.5,physical)}) require(!result.event,"invalid contact no event");

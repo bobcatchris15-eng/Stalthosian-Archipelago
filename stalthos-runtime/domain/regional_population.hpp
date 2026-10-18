@@ -14,7 +14,7 @@ enum class RegionalAdmissionOrigin { PhysicalArrival, CameraPrewarm };
 enum class RegionalAdmission {
     Accepted, CameraOnly, InvalidOrigin, DuplicateRegion, RegionLimit,
     IndividualLimit, IdentityConflict, ResourceConflict, ReservationLimit,
-    InvalidReservation, EmptyPopulation, SeedConflict, StorageFailure
+    InvalidReservation, EmptyPopulation, SeedConflict, StorageFailure, SessionConflict
 };
 struct RegionalReservation {
     std::size_t resources = 0;
@@ -105,6 +105,9 @@ private:
         ResourceLedger ledger(reservation.resources, reservation.historyKeys);
         if (!ledger.restore(history)) return RegionalAdmission::InvalidReservation;
         for (const auto& entry : regions_) {
+            for (const auto& binding:entry.second.sessions)
+                for (const auto& key:history.sessions)
+                    if (binding.second==key.sessionId) return RegionalAdmission::SessionConflict;
             for (const auto& actor : entry.second.population.actors())
                 for (const auto& other : candidate.actors)
                     if (actor.id == other.id) return RegionalAdmission::IdentityConflict;
@@ -141,7 +144,7 @@ private:
             entry.population.setSiteResources(site,available[site].first,available[site].second);
     }
 public:
-    static constexpr double contactRadiusMeters = 1.25;
+    static constexpr double contactRadiusMeters = 0.8;
     // Bootstrap is mandatory: the original population and ALL retained legacy
     // history are imported unchanged. Used history counts inside its reservation,
     // never once as used keys and again as reserved keys.

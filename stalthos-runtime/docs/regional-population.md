@@ -37,13 +37,14 @@ replay/update behavior at capacity. They form disjoint global resource namespace
 `configureContacts` associates existing resource IDs with supplied world anchors
 and the population's actual read-only habitat sites. Each resource has one anchor;
 each site has at most one anchor per resource kind. Configuration checks finite
-positions, site bounds, matching browse/freshwater kind and a fixed 1.25 m 3D
+positions, site bounds, matching browse/freshwater kind and a fixed 0.8 m 3D
 reach from the habitat site. Configuration is immutable. Actual rendered ground
 and world-resource anchor provenance remain responsibilities of future native
 world construction; the domain adapter cannot verify rendered geometry.
 
 Physical active arrival may bind each living retained actor to one nonzero,
-immutable session. Sessions are unique across the registry, a deliberately
+immutable session. New region admission rejects imported history that aliases an already-bound
+session. Bound sessions are unique across the registry, a deliberately
 conservative policy even though resource namespaces are disjoint. Session binding
 is bounded by retained actor count. Any imported history session is permanently
 unbound bookkeeping history: the adapter cannot infer its actor provenance and
@@ -52,7 +53,7 @@ rejects attempts to claim it. All its original keys and quantities stay retained
 `contact` validates origin, active region, actual living actor, bound session,
 actual site, anchor/resource identity, 3D reach and Browse/Drink activity. Only a
 ledger NewKey or Update returns a fresh event and grants relief, using the actual
-accepted cumulative difference (food × 0.1, water × 0.2, with existing Population
+accepted cumulative difference (food times 0.1, water times 0.2, with existing Population
 per-call relief caps). Replay, history-full denial, insufficient quantity,
 camera/dormant activity, wrong site/resource and missing/dead actors grant no
 relief or event. The result carries at most one event; there is no mutable event
