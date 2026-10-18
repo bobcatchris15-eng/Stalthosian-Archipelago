@@ -21,6 +21,7 @@ class FaunaScene {
         double scale = 1;
     };
     domain::RenderedGroundSurface ground_;
+    std::function<double(double,double)> groundQuery_;
     std::vector<Replica> replicas_;
     std::uint64_t groundedUpdates_ = 0;
     bool importedMeshes_ = false;
@@ -35,7 +36,8 @@ public:
         if (!ground_.build(mesh->vertex_positions.data(), mesh->vertex_positions.size(), mesh->indices.data(), mesh->indices.size(), matrix))
             throw std::runtime_error("fauna terrain cache: " + ground_.errorMessage());
     }
-    double height(double x, double z) const { return ground_.sampleHeight(x,z); }
+    void setGroundQuery(std::function<double(double,double)> query) {groundQuery_=std::move(query);}
+    double height(double x, double z) const { return groundQuery_ ? groundQuery_(x,z) : ground_.sampleHeight(x,z); }
     std::uint64_t groundedUpdates() const { return groundedUpdates_; }
 
     std::vector<fauna::HabitatSite> habitat(const domain::ReferenceLandscape& land, const std::vector<Vec3>& food) const {

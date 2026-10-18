@@ -23,6 +23,7 @@
 #include "meadow_scene.hpp"
 #include "woodland_scene.hpp"
 #include "fauna_scene.hpp"
+#include "populated_terrain.hpp"
 #include "fauna_resources.hpp"
 #include "world_conditions.hpp"
 #include "domain/camera_framing.hpp"
@@ -50,6 +51,7 @@ wi::RenderPath3D renderPath;
 constexpr float pi = 3.14159265358979323846f;
 constexpr int width = 1920, height = 1080;
 stalthos::domain::ReferenceLandscape landscape(42);
+std::function<double(double,double)> productionGround;
 
 struct TransitionPhaseRecord {
     int phase_index = 0;
@@ -107,7 +109,7 @@ void WriteJson(const std::filesystem::path& file, const json& value) {
     std::filesystem::rename(temp, file);
 }
 float Ground(float x, float z) {
-    return static_cast<float>(landscape.height(x,z));
+    return static_cast<float>(productionGround ? productionGround(x,z) : landscape.height(x,z));
 }
 void Color(wi::scene::Scene& scene, wi::ecs::Entity entity, XMFLOAT4 color) {
     auto* object = scene.objects.GetComponent(entity);
@@ -174,7 +176,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
-    bool populatedWorld = false;
+    bool populatedWorld = false, populatedTraversal = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -183,6 +185,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--populated-traversal") populatedTraversal = true;
             else if (key == L"--terrain-stream-probe") terrainStreamProbe = true;
             else if (key == L"--watershed-join-probe") { terrainStreamProbe = true; watershedJoinProbe = true; }
             else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
@@ -221,6 +224,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagCount > 1) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
+        if(populatedTraversal && (!populatedWorld || interactive || diagnosticCamera)) throw std::runtime_error("populated traversal requires timed populated world without camera diagnostics");
         if (terrainStreamProbe && (populatedWorld || diagCount || diagnosticCamera || !loadState.empty() || !saveState.empty() || !creature.empty() || !plant.empty() || !woodlandAdultTree.empty() || !woodlandSaplingTree.empty() || successorId))
             throw std::runtime_error("terrain stream probe must run separately from watershed, assets and persistence");
         if (diagnosticTransition && !durationSpecified) duration = 10.0;
@@ -263,7 +267,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 cameraMode=data.pose->cameraMode;
                 // HostPose cameraMode 0/1/2 represents legacy framing angles (0: behind, 1: broadside, 2: frontal).
                 // It does NOT indicate LocallyDetached mode. Full camera state (detached anchor, orbit, focus) is not persisted.
-                if (std::abs(x)>60 || std::abs(z)>60 || !std::isfinite(yaw))
+                if (std::abs(x)>(populatedWorld?12000:60) || std::abs(z)>(populatedWorld?12000:60) || !std::isfinite(yaw))
                     throw std::runtime_error("saved pose is outside this diagnostic host's playable bounds");
             }
             if (data.hero) {
@@ -381,6 +385,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             return 0;
         }
         const auto terrainSurface=Terrain(scene);
+        std::optional<stalthos::engine::PopulatedTerrain> populatedTerrain;
+        if(populatedWorld) {
+            populatedTerrain.emplace(world.worldSeed(),scene);
+            populatedTerrain->update(scene,0,0);
+            productionGround=[&](double gx,double gz){return populatedTerrain->height(gx,gz);};
+        }
         const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
@@ -721,6 +731,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         json faunaInitial=json::array();
         if(populatedWorld) {
             faunaScene.cacheGround(scene);
+            faunaScene.setGroundQuery([&](double gx,double gz){return populatedTerrain->height(gx,gz);});
+            populatedTerrain->update(scene,x,z);
             std::vector<stalthos::Vec3> food;
             for(const auto& p:cachedShrubs) food.push_back({p.x,p.y,p.z});
             faunaSites=faunaScene.habitat(landscape,food);
@@ -751,6 +763,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(plant.empty()) for(const auto& s:faunaSites) if(s.browse)
                 Box(scene,"best effort browse patch",{float(s.position.x),float(s.position.y+.25),float(s.position.z)},{.6f,.25f,.6f},{.23f,.4f,.12f,1});
         }
+        double populatedMaxX=x,populatedRootError=0,populatedProxyError=0,populatedBoundsError=0;
+        std::uint64_t populatedSupportSamples=0;
+        json populatedCaptures=json::array();
+        std::array<bool,4> populatedCaptured{};
         uint64_t tetherTerrainConflictCount = 0;
         int diagnosticCameraStage = 0;
         uint64_t detachedCameraFrames = 0;
@@ -778,6 +794,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             viewController.setState(state);
         }
         auto terrainSampler = [&](double cx, double cz) {
+            if(populatedTerrain) return populatedTerrain->height(cx,cz);
             if (!landscape.inBounds(cx, cz)) throw std::runtime_error("camera outside reference landscape");
             return landscape.height(cx, cz);
         };
@@ -947,8 +964,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (speed != 0.f) {
                 auto forward=stalthos::BeastCore::bodyForward(yaw);
                 x+=static_cast<float>(forward.x)*speed*dt; z+=static_cast<float>(forward.z)*speed*dt;
-                x=std::clamp(x,-60.f,60.f); z=std::clamp(z,-60.f,60.f);
+                const float extent=populatedWorld?12000.f:60.f;
+                x=std::clamp(x,-extent,extent); z=std::clamp(z,-extent,extent);
             }
+            if(populatedTraversal) {
+                const double t=std::min(1.0,elapsed/(duration*.95));
+                x=float(24+520*(t<.5?t*2:(1-t)*2));z=24; yaw=pi*.5f;
+            }
+            if(populatedTerrain) populatedTerrain->update(scene,x,z);
             if (viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera) {
                 double panX = 0, panZ = 0;
                 if (down('W')) panZ -= 1.0;
@@ -969,7 +992,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 creatureDistanceAccumulated+=lastSignedBodyDistance;
                 lastExpectedPhase=creatureClip->advance(0.0,std::fmod(creatureDistanceAccumulated,creatureStrideLength)).phase;
             }
-            const double analyticalRootY = static_cast<double>(landscape.height(static_cast<double>(x), static_cast<double>(z)));
+            const double analyticalRootY = (populatedTerrain ? populatedTerrain->analytical(x,z) : static_cast<double>(landscape.height(static_cast<double>(x), static_cast<double>(z))));
             double renderedRootY = analyticalRootY;
             bool rootUsesRendered = false;
             std::string frameFallbackReason;
@@ -977,7 +1000,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             const bool groundCached = creatureLoaded && nativeSoleAdapter.isGroundCached();
             const stalthos::domain::RenderedGroundSurface* renderedSurface = groundCached ? &nativeSoleAdapter.getRenderedGroundSurface() : nullptr;
 
-            if (renderedSurface && renderedSurface->inBounds(static_cast<double>(x), static_cast<double>(z))) {
+            if(populatedTerrain) { renderedRootY=populatedTerrain->height(x,z);rootUsesRendered=true; }
+            else if (renderedSurface && renderedSurface->inBounds(static_cast<double>(x), static_cast<double>(z))) {
                 try {
                     const double rH = renderedSurface->sampleHeight(static_cast<double>(x), static_cast<double>(z));
                     if (std::isfinite(rH)) {
@@ -998,6 +1022,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
 
             auto groundSampler = [&](double sx, double sz) -> double {
+                if(populatedTerrain) {++renderedSupportSampleCount;return populatedTerrain->height(sx,sz);}
                 if (renderedSurface) {
                     if (!renderedSurface->inBounds(sx, sz)) {
                         frameFallbackReason = "support_sample_out_of_bounds";
@@ -1070,7 +1095,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             } else {
                 y = Ground(x, z);
-                latestCreatureRootSource = "analytical_fallback";
+                latestCreatureRootSource = populatedTerrain ? "rendered_triangles" : "analytical_fallback";
             }
 
             latestGroundSampleSource = rootUsesRendered && frameFallbackReason.empty() ? "rendered_triangles" : "analytical_fallback";
@@ -1291,6 +1316,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             try {
                 auto terrainSampler = [&](double cx, double cz) {
+                    if(populatedTerrain) return populatedTerrain->height(cx,cz);
                     if (!landscape.inBounds(cx, cz)) throw std::runtime_error("camera outside reference landscape");
                     return landscape.height(cx, cz);
                 };
@@ -1309,8 +1335,33 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(populatedTerrain) {
+                populatedMaxX=std::max(populatedMaxX,double(x));
+                const double renderedGround=populatedTerrain->height(x,z);
+                populatedRootError=std::max(populatedRootError,std::abs(double(y)-renderedGround));
+                ++populatedSupportSamples;
+                const auto renderedIndex=scene.objects.GetIndex(hero);
+                const auto center=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();
+                if(renderedIndex<scene.aabb_objects.size()) {
+                    const auto actual=scene.aabb_objects[renderedIndex].getCenter();
+                    populatedBoundsError=std::max(populatedBoundsError,std::max({std::abs(double(actual.x)-center.x),std::abs(double(actual.y)-center.y),std::abs(double(actual.z)-center.z)}));
+                    if(!creatureLoaded) {
+                        const auto matrix=scene.transforms.GetComponent(heroMotionRoot)->GetWorldMatrix();
+                        XMFLOAT3 bottom;XMStoreFloat3(&bottom,XMVector3TransformCoord(XMVectorSet(0,-1,0,1),matrix));
+                        populatedProxyError=std::max(populatedProxyError,std::abs(double(bottom.y)-renderedGround));
+                    }
+                }
+                const std::array<double,4> thresholds{72,110,256,400};
+                for(std::size_t i=0;i<thresholds.size();++i) if(populatedTraversal && !populatedCaptured[i] && x>=thresholds[i]) {
+                    const auto filename="populated-terrain-"+std::to_string(i)+".png";
+                    const bool saved=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());
+                    populatedCaptured[i]=saved;
+                    populatedCaptures.push_back({{"capture",i},{"filename",filename},{"saved",saved},{"body_x",x},{"body_z",z},
+                        {"visible_object",std::find(renderPath.visibility_main.visibleObjects.begin(),renderPath.visibility_main.visibleObjects.end(),renderedIndex)!=renderPath.visibility_main.visibleObjects.end()}});
+                }
+            }
             if (creatureLoaded) {
-                if (nativeSoleAdapter.isInitialized()) {
+                if (nativeSoleAdapter.isInitialized() && (!populatedTerrain || landscape.inBounds(x,z))) {
                     latestNativeSoleDiagnostic = nativeSoleAdapter.evaluate(scene, landscape);
                 } else {
                     latestNativeSoleDiagnostic.reset();
@@ -1619,12 +1670,28 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
+        if(populatedTerrain) {
+            auto streaming=populatedTerrain->receipt();
+            streaming["diagnostic_traversal"]=populatedTraversal;
+            streaming["max_body_x"]=populatedMaxX;
+            streaming["max_root_ground_error_m"]=populatedRootError;
+            streaming["max_proxy_bottom_center_error_m"]=populatedProxyError;
+            streaming["max_rendered_bounds_center_error_m"]=populatedBoundsError;
+            streaming["support_samples"]=populatedSupportSamples;
+            streaming["rendered_support_fallbacks"]=renderedSupportFallbackCount;
+            streaming["capture_diagnostics"]=populatedCaptures;
+            streaming["final_body_x"]=x;streaming["final_body_z"]=z;
+            streaming["route_returned"]=populatedTraversal && std::abs(x-24)<.01;
+            streaming["population_count_retained"]=faunaPopulation->actors().size();
+            streaming["limitations"]="synchronous terrain; local fauna remain simulated while away; no regional fauna activation or final art/FPS acceptance";
+            WriteJson(output/"populated-terrain.json",streaming);
+        }
         if(faunaPopulation) {
             auto regions=json::parse(stalthos::engine::regionConditionsJson(regionalConditions));
             regions["calendar_seconds"]=clock.calendarSeconds();
             regions["condition_updates"]=conditionsUpdates;
             regions["remote_population_is_coarse_estimate"]=true;
-            regions["terrain_streaming_implemented"]=false;
+            regions["terrain_streaming_implemented"]=true;
             regions["detailed_patch_span_m"]=192;
             WriteJson(output/"world-regions.json",regions);
             json sites=json::array();
