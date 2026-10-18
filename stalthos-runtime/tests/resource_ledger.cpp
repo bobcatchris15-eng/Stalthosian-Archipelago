@@ -96,6 +96,47 @@ void strictCapsAndNoEviction() {
     CHECK(unchanged.snapshot()[0].id == 9);
 }
 
+void explicitAdmissionAtHardLimit() {
+    ResourceLedger ledger;
+    CHECK(ledger.load({{1, ResourceKind::Shrub, 1000, 0}}));
+    CHECK(ledger.historyCapacity().limit == 256);
+    CHECK(ledger.inspectConsume(1, 1, 1) == ResourceAdmission::NewKey);
+    for (std::uint64_t key = 1; key <= 256; ++key)
+        CHECK(ledger.tryConsume(key, 1, 1) == ResourceAdmission::NewKey);
+    CHECK(ledger.historyCapacity().used == 256 && ledger.historyCapacity().available == 0);
+    CHECK(ledger.inspectConsume(1, 1, 2, true) == ResourceAdmission::Update);
+    CHECK(ledger.tryConsumeCumulative(1, 1, 2) == ResourceAdmission::Update);
+    CHECK(ledger.tryConsumeCumulative(1, 1, 2) == ResourceAdmission::Replay);
+    CHECK(ledger.tryConsumeCumulative(1, 1, 1) == ResourceAdmission::Conflict);
+    CHECK(ledger.tryConsume(1, 1, 3) == ResourceAdmission::Conflict);
+    CHECK(ledger.tryConsumeCumulative(1, 1, 2000) == ResourceAdmission::InsufficientQuantity);
+    CHECK(ledger.tryConsume(0, 1, 1) == ResourceAdmission::InvalidRequest);
+    CHECK(ledger.tryConsume(1, 99, 1) == ResourceAdmission::MissingResource);
+    CHECK(ledger.tryConsume(1, 1, std::numeric_limits<double>::quiet_NaN()) == ResourceAdmission::InvalidRequest);
+    const auto saved = ledger.continuationSnapshot();
+    CHECK(ledger.tryConsume(257, 1, 1) == ResourceAdmission::HistoryFull);
+    const auto rejected = ledger.continuationSnapshot();
+    CHECK(rejected.resources[0].consumedQuantity == saved.resources[0].consumedQuantity);
+    CHECK(rejected.sessions.size() == saved.sessions.size());
+    ResourceLedger restored;
+    CHECK(restored.restore(saved));
+    const auto exact = restored.continuationSnapshot();
+    CHECK(exact.resources[0].initialQuantity == saved.resources[0].initialQuantity);
+    CHECK(exact.resources[0].consumedQuantity == saved.resources[0].consumedQuantity);
+    CHECK(exact.sessions.size() == saved.sessions.size());
+    for (std::size_t i = 0; i < saved.sessions.size(); ++i) {
+        CHECK(exact.sessions[i].sessionId == saved.sessions[i].sessionId);
+        CHECK(exact.sessions[i].resourceId == saved.sessions[i].resourceId);
+        CHECK(exact.sessions[i].amount == saved.sessions[i].amount);
+    }
+    CHECK(restored.tryConsume(257, 1, 1) == ResourceAdmission::HistoryFull);
+    CHECK(restored.tryConsumeCumulative(1, 1, 3) == ResourceAdmission::Update);
+    CHECK(restored.historyCapacity().used == 256);
+    ResourceLedger zero(1, 0);
+    CHECK(zero.load({{1, ResourceKind::Shrub, 1, 0}}));
+    CHECK(zero.tryConsume(1, 1, 1) == ResourceAdmission::HistoryFull);
+}
+
 void rejectsMalformedDtos() {
     ResourceLedger ledger;
     CHECK(!ledger.load({{1, ResourceKind::Shrub, 1.0, 0.0},
@@ -118,6 +159,7 @@ int main() {
         CHECK(resumed.restore(ongoing.continuationSnapshot()));
         CHECK(resumed.consumeCumulative(7,99,11));
         CHECK(std::abs(resumed.snapshot()[0].consumedQuantity-11)<1e-10);
+        explicitAdmissionAtHardLimit();
         happyPathAndReplay();
         failuresDoNotMutate();
         transactionalLoadAndRestore();

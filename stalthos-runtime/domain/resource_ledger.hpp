@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <limits>
 #include <map>
+#include <new>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -12,6 +13,19 @@
 namespace stalthos {
 
 enum class ResourceKind { Shrub, Creek };
+
+// Admission is observational: NewKey and Update mean a request can be applied.
+// The same statuses returned by tryConsume* describe the applied operation.
+enum class ResourceAdmission {
+    Replay, Update, NewKey, HistoryFull, MissingResource, InvalidRequest,
+    Conflict, InsufficientQuantity, StorageFailure
+};
+
+struct ResourceHistoryCapacity {
+    std::size_t used;
+    std::size_t limit;
+    std::size_t available;
+};
 
 struct ResourceDto {
     std::uint64_t id;
@@ -129,49 +143,80 @@ public:
         return result;
     }
 
-    // Returns true for a first successful application or an exact replay.
-    // Reusing a key with a different amount is rejected to avoid masking conflicts.
-    bool consume(std::uint64_t sessionId, std::uint64_t resourceId, double amount) {
-        if (sessionId == 0 || !std::isfinite(amount) || amount <= 0.0) {
-            throw std::invalid_argument("invalid consume key or amount");
-        }
+    ResourceHistoryCapacity historyCapacity() const noexcept {
+        return {history_.size(), maxHistory_, maxHistory_ - history_.size()};
+    }
+
+    // Existing keys are inspected before capacity, so a full history still
+    // permits exact replays and increasing totals for retained contacts.
+    ResourceAdmission inspectConsume(std::uint64_t sessionId, std::uint64_t resourceId,
+                                     double amount, bool cumulative = false) const noexcept {
+        if (sessionId == 0 || !std::isfinite(amount) || amount <= 0.0)
+            return ResourceAdmission::InvalidRequest;
         const auto resource = resources_.find(resourceId);
-        if (resource == resources_.end()) return false;
-        const auto key = std::make_pair(sessionId, resourceId);
-        const auto prior = history_.find(key);
-        if (prior != history_.end()) return prior->second == amount;
-        if (history_.size() >= maxHistory_) {
-            throw std::runtime_error("ledger history capacity exceeded");
+        if (resource == resources_.end()) return ResourceAdmission::MissingResource;
+        const auto prior = history_.find(std::make_pair(sessionId, resourceId));
+        double delta = amount;
+        if (prior != history_.end()) {
+            if (amount == prior->second) return ResourceAdmission::Replay;
+            if (!cumulative || amount < prior->second) return ResourceAdmission::Conflict;
+            delta -= prior->second;
+        } else if (history_.size() >= maxHistory_) {
+            return ResourceAdmission::HistoryFull;
         }
-        ResourceRecord& record = resource->second;
-        const double remaining = record.initialQuantity - record.consumedQuantity;
-        if (amount > remaining) return false;
-        // Insert first: allocation failure must not deduct without recording replay key.
-        const auto inserted = history_.emplace(key, amount);
-        if (!inserted.second) return inserted.first->second == amount;
-        record.consumedQuantity += amount;
-        return true;
+        const auto& record = resource->second;
+        if (delta > record.initialQuantity - record.consumedQuantity)
+            return ResourceAdmission::InsufficientQuantity;
+        return prior == history_.end() ? ResourceAdmission::NewKey : ResourceAdmission::Update;
     }
 
-    // A continuous actor contact keeps one bounded replay key. The caller
-    // supplies its total consumption for that contact, so replay is idempotent
-    // and long-running browsing does not allocate one record per frame/bite.
+    ResourceAdmission tryConsume(std::uint64_t sessionId, std::uint64_t resourceId,
+                                 double amount, bool cumulative = false) noexcept {
+        const auto admission = inspectConsume(sessionId, resourceId, amount, cumulative);
+        if (admission != ResourceAdmission::NewKey && admission != ResourceAdmission::Update)
+            return admission;
+        const auto key = std::make_pair(sessionId, resourceId);
+        auto& record = resources_.find(resourceId)->second;
+        if (admission == ResourceAdmission::NewKey) {
+            // Allocate before deduction; failure cannot partially consume.
+            try { history_.emplace(key, amount); }
+            catch (...) { return ResourceAdmission::StorageFailure; }
+            record.consumedQuantity += amount;
+        } else {
+            auto prior = history_.find(key);
+            record.consumedQuantity += amount - prior->second;
+            prior->second = amount;
+        }
+        return admission;
+    }
+
+    ResourceAdmission tryConsumeCumulative(std::uint64_t sessionId, std::uint64_t resourceId,
+                                           double total) noexcept {
+        return tryConsume(sessionId, resourceId, total, true);
+    }
+
+    // Legacy bool/exception contract retained for existing callers.
+    bool consume(std::uint64_t sessionId, std::uint64_t resourceId, double amount) {
+        return legacyResult(tryConsume(sessionId, resourceId, amount));
+    }
+
+    // A continuous actor contact retains one cumulative replay key.
     bool consumeCumulative(std::uint64_t sessionId, std::uint64_t resourceId, double total) {
-        if(sessionId==0 || !std::isfinite(total) || total<=0) throw std::invalid_argument("invalid cumulative consume key or amount");
-        const auto resource=resources_.find(resourceId);
-        if(resource==resources_.end()) return false;
-        const auto key=std::make_pair(sessionId,resourceId);
-        const auto prior=history_.find(key);
-        if(prior==history_.end()) return consume(sessionId,resourceId,total);
-        if(total<prior->second) return false;
-        const double delta=total-prior->second;
-        auto& record=resource->second;
-        if(delta>record.initialQuantity-record.consumedQuantity) return false;
-        record.consumedQuantity+=delta;
-        prior->second=total;
-        return true;
+        return legacyResult(tryConsumeCumulative(sessionId, resourceId, total));
     }
 
+private:
+    static bool legacyResult(ResourceAdmission status) {
+        if (status == ResourceAdmission::InvalidRequest)
+            throw std::invalid_argument("invalid consume key or amount");
+        if (status == ResourceAdmission::HistoryFull)
+            throw std::runtime_error("ledger history capacity exceeded");
+        if (status == ResourceAdmission::StorageFailure) throw std::bad_alloc();
+        return status == ResourceAdmission::Replay || status == ResourceAdmission::Update ||
+               status == ResourceAdmission::NewKey;
+    }
+
+public:
     void reset(std::uint64_t seed = 0) {
         (void)seed;
         resources_.clear();
