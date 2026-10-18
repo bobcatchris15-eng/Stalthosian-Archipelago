@@ -25,7 +25,7 @@
 #include "woodland_scene.hpp"
 #include "fauna_scene.hpp"
 #include "populated_terrain.hpp"
-#include "fauna_resources.hpp"
+#include "native_population_registry.hpp"
 #include "world_conditions.hpp"
 #include "domain/camera_framing.hpp"
 #include "domain/hero_view_controller.hpp"
@@ -309,13 +309,18 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
         stalthos::InteractionsCore interactions(256);
-        stalthos::ResourceLedger resourceLedger(4096, 256);
+        std::optional<stalthos::ResourceLedger> bootstrapLedger(std::in_place,4096,256);
+        std::optional<stalthos::engine::NativePopulationRegistry> faunaPopulation;
+        auto ledgerSnapshot=[&]() {return faunaPopulation ? faunaPopulation->ledger() : bootstrapLedger->continuationSnapshot();};
+        auto resourceSnapshot=[&]() {return ledgerSnapshot().resources;};
+        auto resourceHistoryCapacity=[&]() {const auto used=ledgerSnapshot().sessions.size(); return stalthos::ResourceHistoryCapacity{used,256,256-used};};
+        auto consumeResource=[&](uint64_t session,uint64_t resource,double amount) {return faunaPopulation ? faunaPopulation->consume(session,resource,amount) : bootstrapLedger->consume(session,resource,amount);};
         landscape=stalthos::domain::ReferenceLandscape(world.worldSeed());
 
         if (loadedSaveData && loadedSaveData->resourceLedger.has_value()) {
-            stalthos::persistence::restoreResourceLedger(*loadedSaveData, resourceLedger);
+            stalthos::persistence::restoreResourceLedger(*loadedSaveData, *bootstrapLedger);
         } else {
-            resourceLedger.load({{100, stalthos::ResourceKind::Creek, 1000000.0, 0.0},
+            bootstrapLedger->load({{100, stalthos::ResourceKind::Creek, 1000000.0, 0.0},
                                  {200, stalthos::ResourceKind::Shrub, 2.0, 0.0},
                                  {201, stalthos::ResourceKind::Shrub, 2.0, 0.0},
                                  {202, stalthos::ResourceKind::Shrub, 2.0, 0.0},
@@ -340,7 +345,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t nextInteractionSession = maxPersistedSessionId + 1;
 
         std::map<uint64_t, stalthos::ResourceDto> cachedResourceDtos;
-        for (const auto& res : resourceLedger.snapshot()) {
+        for (const auto& res : resourceSnapshot()) {
             cachedResourceDtos[res.id] = res;
         }
 
@@ -714,10 +719,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
         const auto heroAnimationCount=scene.animations.GetCount();
         bool previousInspectionKey = false, previousToggleKey = false;
-        std::optional<stalthos::fauna::Population> faunaPopulation;
         bool faunaPopulationRestored=false;
         stalthos::engine::FaunaScene faunaScene;
-        std::optional<stalthos::engine::FaunaResources> faunaResources;
         std::vector<stalthos::fauna::HabitatSite> faunaSites;
         std::array<uint64_t,4> faunaActivityFrames{};
         uint64_t faunaSimulationFrames=0;
@@ -759,18 +762,26 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         auto beginFaunaDormancy=[&]() {
             dormantStart=populationJson(faunaPopulation->snapshot());
             dormantPhysical=0;dormantCalendar=0;
-            dormantFood=faunaResources->consumedFood();dormantWater=faunaResources->consumedWater();
-            dormantEvents=faunaResourceEvents;dormantSessions=faunaResources->sessions();
+            dormantFood=faunaPopulation->consumedFood();dormantWater=faunaPopulation->consumedWater();
+            dormantEvents=faunaResourceEvents;dormantSessions=faunaPopulation->sessions();
         };
         auto endFaunaDormancy=[&](bool reactivated) {
             faunaDormantIntervals.push_back({{"before",dormantStart},{"after",populationJson(faunaPopulation->snapshot())},
                 {"physical_seconds",dormantPhysical},{"calendar_seconds",dormantCalendar},{"reactivated",reactivated},
-                {"food_consumed",faunaResources->consumedFood()-dormantFood},
-                {"water_consumed",faunaResources->consumedWater()-dormantWater},
+                {"food_consumed",faunaPopulation->consumedFood()-dormantFood},
+                {"water_consumed",faunaPopulation->consumedWater()-dormantWater},
                 {"resource_events",faunaResourceEvents-dormantEvents},
-                {"resource_sessions_unchanged",dormantSessions==faunaResources->sessions()}});
+                {"resource_sessions_unchanged",dormantSessions==faunaPopulation->sessions()}});
         };
         json faunaInitial=json::array();
+        json faunaSessionsInitial=json::array();
+        auto ledgerJson=[](const stalthos::ResourceLedgerDto& dto) {
+            json resources=json::array(),sessions=json::array();
+            for(const auto& r:dto.resources) resources.push_back({{"id",r.id},{"kind",static_cast<unsigned>(r.kind)},{"initial_quantity",r.initialQuantity},{"consumed_quantity",r.consumedQuantity}});
+            for(const auto& k:dto.sessions) sessions.push_back({{"session_id",k.sessionId},{"resource_id",k.resourceId},{"amount",k.amount}});
+            return json{{"resources",resources},{"sessions",sessions}};
+        };
+        json faunaLedgerInitial;
         if(populatedWorld) {
             faunaScene.cacheGround(scene);
             faunaScene.setGroundQuery([&](double gx,double gz){return populatedTerrain->height(gx,gz);});
@@ -815,14 +826,32 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto& active:world.snapshot().active) excluded.insert(active.first);
             for(const auto& r:world.snapshot().retained) excluded.insert(r.id);
             for(const auto& d:world.snapshot().deadHeroes) excluded.insert(d.first);
-            faunaPopulation.emplace(world.worldSeed(),1001,faunaSites,8,excluded);
+            stalthos::fauna::Population legacyPopulation(world.worldSeed(),1001,faunaSites,8,excluded);
             if(loadedSaveData && loadedSaveData->faunaPopulation) {
-                faunaPopulation->restore(*loadedSaveData->faunaPopulation,excluded);
+                legacyPopulation.restore(*loadedSaveData->faunaPopulation,excluded);
                 faunaPopulationRestored=true;
             }
-            faunaResources.emplace(faunaSites,food,nextInteractionSession,
-                loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{});
-            faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
+            std::vector<stalthos::fauna::RegionalResourceAnchor> anchors;
+            for(std::size_t site=0;site<faunaSites.size();++site) {
+                const auto& habitat=faunaSites[site];
+                if(habitat.freshwater) anchors.push_back({site,100,habitat.position});
+                if(habitat.browse) {
+                    double nearest=.8*.8; std::optional<std::size_t> shrub;
+                    for(std::size_t i=0;i<food.size();++i) {
+                        const auto dx=food[i].x-habitat.position.x,dy=food[i].y-habitat.position.y,dz=food[i].z-habitat.position.z;
+                        const auto d=dx*dx+dy*dy+dz*dz;
+                        if(d<=nearest) {nearest=d;shrub=i;}
+                    }
+                    if(!shrub) throw std::runtime_error("native browse site has no rendered shrub anchor");
+                    anchors.push_back({site,200+*shrub,food[*shrub]});
+                }
+            }
+            faunaPopulation.emplace(std::move(legacyPopulation),bootstrapLedger->continuationSnapshot(),
+                loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{},
+                anchors,nextInteractionSession);
+            bootstrapLedger.reset(); // No mutable ledger remains outside registry authority.
+            faunaLedgerInitial=ledgerJson(faunaPopulation->ledger());
+            faunaSessionsInitial=faunaPopulation->sessions();
             faunaInitial=actorJson(faunaPopulation->actors());
             faunaFullInitial=populationJson(faunaPopulation->snapshot());
             if(!faunaPhysical) beginFaunaDormancy();
@@ -1367,12 +1396,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     dormantPhysical+=timeStep.physicalSeconds;dormantCalendar+=timeStep.calendarSeconds;
                     faunaDormantPhysicalSeconds+=timeStep.physicalSeconds;faunaDormantCalendarSeconds+=timeStep.calendarSeconds;
                 } else {
-                faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
-                faunaPopulation->advance(timeStep,false);
-                faunaResources->applyContacts(*faunaPopulation,timeStep.physicalSeconds,resourceLedger);
-                faunaResourceEvents+=faunaResources->events().size();
-                if(!faunaResources->events().empty()) {
-                    for(const auto& res:resourceLedger.snapshot()) cachedResourceDtos[res.id]=res;
+                faunaPopulation->advance(timeStep,true);
+                faunaResourceEvents+=faunaPopulation->events().size();
+                if(!faunaPopulation->events().empty()) {
+                    for(const auto& res:resourceSnapshot()) cachedResourceDtos[res.id]=res;
                     for(auto& rec:shrubVisualInstances) applyShrubVisual(rec,cachedResourceDtos.at(rec.resourceId));
                 }
                 faunaScene.update(scene,faunaPopulation->actors(),creatureClipDuration,creatureStrideLength);
@@ -1682,8 +1709,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     double actualDrink = std::min(drinkAmount, available);
                     if (actualDrink > 0) {
                         try {
-                            if (resourceLedger.consume(physicalInteractionSession, 100, actualDrink)) {
-                                for (const auto& res : resourceLedger.snapshot()) cachedResourceDtos[res.id] = res;
+                            if (consumeResource(physicalInteractionSession, 100, actualDrink)) {
+                                for (const auto& res : resourceSnapshot()) cachedResourceDtos[res.id] = res;
                                 double dummyResource = available;
                                 if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, actualDrink, dummyResource)) {
                                     needs->drink(actualDrink);
@@ -1703,8 +1730,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     double actualFeed = std::min(feedAmount, available);
                     if (actualFeed > 0) {
                         try {
-                            if (resourceLedger.consume(physicalInteractionSession, shrubId, actualFeed)) {
-                                for (const auto& res : resourceLedger.snapshot()) cachedResourceDtos[res.id] = res;
+                            if (consumeResource(physicalInteractionSession, shrubId, actualFeed)) {
+                                for (const auto& res : resourceSnapshot()) cachedResourceDtos[res.id] = res;
                                 if (nearbyShrubIndex >= 0 && nearbyShrubIndex < static_cast<int>(shrubVisualInstances.size())) {
                                     applyShrubVisual(shrubVisualInstances[nearbyShrubIndex], cachedResourceDtos[shrubId]);
                                 }
@@ -1731,10 +1758,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto data=stalthos::persistence::captureSave(clock, world, pose);
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
             if(data.hero) data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,data.hero->id);
-            data.resourceLedger = stalthos::persistence::captureResourceLedger(resourceLedger);
+            data.resourceLedger = ledgerSnapshot();
             if(faunaPopulation) {
                 data.faunaPopulation=faunaPopulation->snapshot();
-                data.faunaResourceSessions=faunaResources->sessions();
+                data.faunaResourceSessions=faunaPopulation->sessions();
             } else if(loadedSaveData) {
                 data.faunaPopulation=loadedSaveData->faunaPopulation;
                 data.faunaResourceSessions=loadedSaveData->faunaResourceSessions;
@@ -1805,11 +1832,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"pose_matrix_checks",faunaScene.poseChecks()},{"skin_matrix_checks",faunaScene.boneChecks()},
                 {"hidden_object_checks",faunaScene.hiddenObjectChecks()},{"visible_object_checks",faunaScene.visibleObjectChecks()},
                 {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
-                {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaResources->consumedFood()},
-                {"water_consumed",faunaResources->consumedWater()},{"resources_use_shared_persisted_ledger",true},
-                {"resource_history_used",resourceLedger.historyCapacity().used},{"resource_history_limit",resourceLedger.historyCapacity().limit},
-                {"resource_history_available",resourceLedger.historyCapacity().available},
-                {"resource_history_rejections",faunaResources->historyRejections()},{"needs_relief_requires_accepted_contact",true},
+                {"registry_owns_population",true},{"registry_owns_shared_ledger",true},{"regional_save_supported",false},
+                {"registry_capacity",{{"regions",faunaPopulation->capacity().regions},{"individuals",faunaPopulation->capacity().individuals},{"resources_reserved",faunaPopulation->capacity().resources},{"history_reserved",faunaPopulation->capacity().historyKeys}}},
+                {"resource_ledger_initial",faunaLedgerInitial},{"resource_ledger_final",ledgerJson(faunaPopulation->ledger())},
+                {"resource_sessions_initial",faunaSessionsInitial},{"resource_sessions_final",faunaPopulation->sessions()},
+                {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaPopulation->consumedFood()},
+                {"water_consumed",faunaPopulation->consumedWater()},{"resources_use_shared_persisted_ledger",true},
+                {"resource_history_used",resourceHistoryCapacity().used},{"resource_history_limit",resourceHistoryCapacity().limit},
+                {"resource_history_available",resourceHistoryCapacity().available},
+                {"resource_history_rejections",faunaPopulation->historyRejections()},{"needs_relief_requires_accepted_contact",true},
                 {"population_persistence_supported",true},{"population_persisted",!saveState.empty()},
                 {"population_restored",faunaPopulationRestored},
                 {"meshes_best_effort",true},{"frame_time_measured",false}});

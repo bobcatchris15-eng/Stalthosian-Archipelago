@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "native-registry-host-20261018",
+  "status": "running",
+  "base_revision": "a77a71a",
+  "current_step": "Candidate ready for independent review and merged native runtime proof",
+  "completed_steps": [
+    "Read HALT and task handoff",
+    "Implemented sole registry authority adapter and native wiring",
+    "Reconstructed interruption-corrupted files and audited NUL bytes",
+    "Domain Release build passed",
+    "CTest 36/36 passed in 4.65 seconds"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/domain/regional_archive.hpp",
+    "stalthos-runtime/tests/native_population_registry.cpp",
+    "stalthos-runtime/CMakeLists.txt"
+  ],
+  "updated": "2026-10-18T18:02:38.174388+00:00",
+  "resume_instructions": "Run domain CTest, fix fixture failures; root reviews and builds pinned Wicked native host. Native water anchors retain rendered-ground bank abstraction, not anatomical water-surface proof.",
+  "next_step": "Root reviews candidate, builds Wicked host, runs exact original-eight migration and continuation.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1 -DomainOnly; ctest --test-dir var/build/stalthos-runtime -C Release --output-on-failure",
+    "evidence_path": "var/build/stalthos-runtime/Testing/Temporary/LastTest.log"
+  },
+  "receipt_path": ".clanker/tasks/native-registry-host-20261018/receipt.json"
+}

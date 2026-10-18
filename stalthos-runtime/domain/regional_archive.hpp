@@ -56,7 +56,7 @@ template<class C> void body(C& c,RegionalContinuationDto& dto) {
         resourceBudget-=r.ledger.resources.size();
         sequence(c,r.ledger.sessions,std::min(historyBudget,r.reservation.historyKeys),[&](ResourceSessionDto& v) { c.integer(v.sessionId); c.integer(v.resourceId); c.real(v.amount); });
         historyBudget-=r.ledger.sessions.size();
-        sequence(c,r.anchors,std::min(anchorBudget,r.ledger.resources.size()),[&](RegionalResourceAnchor& v) { index(c,v.site,5000); c.integer(v.resource); vector3(c,v.position); });
+        sequence(c,r.anchors,std::min(anchorBudget,r.reservation.resources),[&](RegionalResourceAnchor& v) { index(c,v.site,5000); c.integer(v.resource); vector3(c,v.position); });
         anchorBudget-=r.anchors.size();
         sequence(c,r.bindings,std::min(bindingBudget,p.actors.size()),[&](RegionalContactBinding& v) { c.integer(v.actor); c.integer(v.session); });
         bindingBudget-=r.bindings.size();
@@ -71,16 +71,21 @@ inline void validate(const RegionalContinuationDto& d) {
         if(r.population.actors.size()>16 || r.reservation.resources>4096 || r.reservation.historyKeys>256 || r.ledger.resources.size()>r.reservation.resources || r.ledger.sessions.size()>r.reservation.historyKeys || r.anchors.size()>4096 || r.bindings.size()>64) throw Invalid{};
         if(!regions.insert(r.population.region).second || r.population.seed!=d.seed || r.population.actors.empty()) throw Invalid{};
         nr+=r.reservation.resources; nh+=r.reservation.historyKeys; na+=r.population.actors.size(); anchors+=r.anchors.size(); bindings+=r.bindings.size();
-        if(nr>4096 || nh>256 || na>64 || anchors>4096 || bindings>64 || r.anchors.size()>r.ledger.resources.size() || r.bindings.size()>r.population.actors.size()) throw Invalid{};
+        if(nr>4096 || nh>256 || na>64 || anchors>4096 || bindings>64 || r.anchors.size()>r.reservation.resources || r.bindings.size()>r.population.actors.size()) throw Invalid{};
         ResourceLedger ledger(r.reservation.resources,r.reservation.historyKeys); if(!ledger.restore(r.ledger)) throw Invalid{};
-        std::set<Identity> local; std::set<std::uint64_t> localResources,anchorIds;
+        std::set<Identity> local; std::set<std::uint64_t> localResources;
+        std::set<std::pair<std::size_t,ResourceKind>> anchorSlots;
         for(const auto& a:r.population.actors) {
             if(a.id<2 || !actors.insert(a.id).second || a.calendarAge<0 || a.distanceTravelledMeters<0 || a.hunger<0 || a.hunger>1 || a.thirst<0 || a.thirst>1 || a.fatigue<0 || a.fatigue>1 || a.injury<0 || a.injury>1) throw Invalid{};
             local.insert(a.id);
         }
         for(const auto& v:r.ledger.resources) { if(!resources.insert(v.id).second) throw Invalid{}; localResources.insert(v.id); }
         for(const auto& h:r.ledger.sessions) { historyOwners[h.sessionId].insert(r.population.region); }
-        for(const auto& a:r.anchors) if(!r.contactsConfigured || !localResources.count(a.resource) || !anchorIds.insert(a.resource).second) throw Invalid{};
+        for(const auto& a:r.anchors) {
+            const auto resource=std::find_if(r.ledger.resources.begin(),r.ledger.resources.end(),[&](const ResourceDto& v){return v.id==a.resource;});
+            if(!r.contactsConfigured || resource==r.ledger.resources.end() ||
+                !anchorSlots.emplace(a.site,resource->kind).second) throw Invalid{};
+        }
         std::set<Identity> localBindings;
         for(const auto& b:r.bindings) if(!b.session || !local.count(b.actor) || !localBindings.insert(b.actor).second || !bound.insert(b.session).second) throw Invalid{};
     }

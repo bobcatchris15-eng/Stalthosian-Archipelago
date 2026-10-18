@@ -1,0 +1,60 @@
+{
+  "task_id": "native-registry-host-20261018",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Transfer original population, complete shared ledger and saved mappings to sole registry authority",
+      "met": true,
+      "how_checked": "NativePopulationRegistry fixture imports eight identities, complete history including unbound keys, saved bound and empty-history sessions; main bootstrapLedger.reset after transfer"
+    },
+    {
+      "condition": "Hero bookkeeping shares authority without NPC relief or session impersonation",
+      "met": true,
+      "how_checked": "domain-native_population_registry hero shared consumption, unchanged NPC thirst, bound-session denial"
+    },
+    {
+      "condition": "Preserve original IDs/signature and exact STL1-STL8 compatibility",
+      "met": true,
+      "how_checked": "Fixture signature/state/mapping/cumulative restoration; existing persistence CTest passes; no persistence format edits"
+    },
+    {
+      "condition": "Shared freshwater anchors remain bounded and serializable",
+      "met": true,
+      "how_checked": "Fixture two creek-bank sites both consume single resource; duplicate site-kind rejection; STLR encode/decode/restore closure; all 36 CTests passed"
+    },
+    {
+      "condition": "Actual native original-eight migration/runtime proof",
+      "met": false,
+      "how_checked": "Root owns merged pinned Wicked build and native continuation run; not yet executed"
+    },
+    {
+      "condition": "Actual rendered-ground contact provenance",
+      "met": true,
+      "how_checked": "Host browse anchors use cached rendered shrub placements; freshwater anchors use original habitat positions sampled from populatedTerrain rendered ground. This retains existing bank contact abstraction, does not prove mouth-water reach"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/domain/regional_archive.hpp",
+    "stalthos-runtime/tests/native_population_registry.cpp",
+    "stalthos-runtime/CMakeLists.txt"
+  ],
+  "evidence": [
+    "var/build/stalthos-runtime/build.log",
+    "var/build/stalthos-runtime/Testing/Temporary/LastTest.log"
+  ],
+  "findings": [
+    "User interruption left new adapter, fixture and CMake NUL-filled; reconstructed and verified all touched files have zero NUL bytes.",
+    "Original creek resource 100 serves multiple habitat sites; registry/archive now permit distinct site-kind anchors sharing one quantity/history authority, bounded by resource reservation (global 4096).",
+    "Whole legacy reservation remains 4096 resources/256 history keys; no exterior admission capacity is freed silently."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "First bounded adapter retains original dry-bank freshwater contact anchors; precise water-surface/anatomical reach is separate unverified acceptance.",
+    "STL8 captures registry original region only; native multi-region disk persistence and STLR host pairing remain explicitly unsupported.",
+    "Root independently reviews/builds/runs native integration before acceptance."
+  ],
+  "updated": "2026-10-18T18:02:38.174388+00:00"
+}

@@ -222,7 +222,9 @@ public:
         else entry.population.advanceDormant(dt);
         return true;
     }
-    // Configuration is immutable once supplied, and validates anchors against
+    // Multiple contact sites may share one resource (for example creek banks).
+    // Each site still has at most one anchor per kind; global anchor count is
+    // bounded by the same resource reservation. Configuration is immutable and validates anchors against
     // the population's actual habitat and the registry's existing resource kinds.
     bool configureContacts(RegionId region, const std::vector<RegionalResourceAnchor>& anchors) {
         const auto found=regions_.find(region);
@@ -231,11 +233,10 @@ public:
         if (anchors.size()>entry.reservation.resources) return false;
         const auto resources=entry.ledger.snapshot();
         std::set<std::pair<std::size_t,ResourceKind>> slots;
-        std::set<std::uint64_t> ids;
         for (const auto& anchor:anchors) {
             if (anchor.site>=entry.population.sites().size() || !finite(anchor.position) ||
                 distanceSquared(anchor.position,entry.population.sites()[anchor.site].position)>
-                    contactRadiusMeters*contactRadiusMeters || !ids.insert(anchor.resource).second) return false;
+                    contactRadiusMeters*contactRadiusMeters) return false;
             const auto resource=std::find_if(resources.begin(),resources.end(),[&](const ResourceDto& r) { return r.id==anchor.resource; });
             if (resource==resources.end()) return false;
             const auto& site=entry.population.sites()[anchor.site];
