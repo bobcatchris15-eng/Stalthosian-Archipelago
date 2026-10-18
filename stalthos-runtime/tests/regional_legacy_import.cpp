@@ -67,6 +67,9 @@ int main() {
         require(fresh.restoreContinuation(saved),"fresh trusted provenance restore");
         require(exact(saved)==exact(fresh.continuationSnapshot()),"all snapshot fields exact");
         auto bad=saved; bad.regions[0].bindings[0].actor=actor(r,7,1); rejected(r,bad,"stolen mapping");
+        bad=saved; bad.regions[0].population.actors[0].species=
+            bad.regions[0].population.actors[0].species==HeroSpecies::Smalltrotter ? HeroSpecies::Longstride : HeroSpecies::Smalltrotter;
+        rejected(r,bad,"retained actor species cannot change");
         bad=saved; bad.regions[0].bindings.clear(); rejected(r,bad,"lost imported owner");
         bad=saved; bad.regions[0].ledger.sessions.clear(); rejected(r,bad,"lost admission history");
         bad=saved; bad.regions[0].ledger.sessions[0].amount=0.25; rejected(r,bad,"imported cumulative floor");

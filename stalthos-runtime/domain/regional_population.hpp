@@ -334,8 +334,12 @@ public:
                 if (saved.population.actors.size()!=original.actors.size()) return false;
                 std::set<Identity> identities;
                 for (const auto& a:original.actors) identities.insert(a.id);
-                for (const auto& a:saved.population.actors)
-                    if (!identities.erase(a.id) || !actors.insert(a.id).second) return false;
+                for (const auto& a:saved.population.actors) {
+                    const auto admitted=std::find_if(original.actors.begin(),original.actors.end(),
+                        [&](const ActorSnapshot& existing) { return existing.id==a.id; });
+                    if (!identities.erase(a.id) || !actors.insert(a.id).second ||
+                        admitted==original.actors.end() || admitted->species!=a.species) return false;
+                }
                 const auto resources=entry.ledger.snapshot();
                 if (saved.ledger.resources.size()!=resources.size()) return false;
                 for (const auto& r:saved.ledger.resources) {

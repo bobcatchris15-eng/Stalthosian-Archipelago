@@ -84,7 +84,7 @@ operations cannot create a snapshot that violates continuation session ownership
 Fresh equivalent registries can restore valid adapter-owned continuation history.
 
 **Integration limits:** no physical-region boundary/habitat construction,
-cross-region movement, persistence archive/version, native host wiring, or native
+cross-region movement, native host archive/save wiring, or native
 visual acceptance is implemented. A host must transfer **all** retained legacy
 keys into registry ownership; a separate host ledger would escape these budgets.
 Legacy contact ownership migration is supported by the admission-only saved
@@ -133,3 +133,33 @@ unchanged. `tests/regional_legacy_import.cpp` verifies import, exact continuatio
 malformed mappings, atomic rejection, retained dead ownership and full-cap replay,
 update and new-key denial. This is domain infrastructure, not native gameplay or
 visual/performance acceptance.
+
+## Companion regional archive (STLR version 1)
+
+`domain/regional_archive.hpp` supplies deterministic little-endian encoding of
+`RegionalContinuationDto`, bounded stream transport and detached restoration.
+It is a separate companion format; STL1-STL8 readers/writers are unchanged.
+Every actor field, resource quantity, cumulative key, binding, anchor,
+reservation and activation flag is retained. The parser caps input at 512 KiB,
+checks counts before vector allocation, and enforces the existing global limits
+of eight regions, 64 individuals, 4096 resources and 256 history reservations.
+Per-population limits remain 16 actors and 5000 habitat sites. Unbound legacy
+bookkeeping session aliases remain representable; actor-owned sessions cannot
+alias foreign history or another actor.
+
+Reconstruction requires an externally admitted equivalent registry: identical
+seed, regional populations and immutable habitat/resource/anchor configuration,
+plus explicit trusted admission provenance where imported owners exist. The
+archive deliberately does not synthesize habitat definitions or infer ownership
+from unbound keys. A malformed archive or incompatible world leaves the live
+registry unchanged. Encoding/decoding output arguments are unchanged on failure.
+Stream writing can partially write on I/O failure; atomic file replacement and
+coordination with the host save remain future host-adapter responsibilities.
+
+`tests/regional_archive.cpp` checks exact multiregion departure, elapsed dormancy,
+disk roundtrip, physical return, replay rejection and continued equality. It also
+checks every truncated prefix, trailing/oversized input, malformed counts,
+versions, enums, booleans and nonfinite values, duplicate identities and session
+ownership. This is a domain archive library with disk transport tests. It is not
+wired to the Wicked host and does not establish native multiregion gameplay,
+visual, foot-contact, full-draft or performance acceptance.
