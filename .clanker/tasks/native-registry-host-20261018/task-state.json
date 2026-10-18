@@ -9,7 +9,8 @@
     "Implemented sole registry authority adapter and native wiring",
     "Reconstructed interruption-corrupted files and audited NUL bytes",
     "Domain Release build passed",
-    "CTest 36/36 passed in 4.65 seconds"
+    "CTest 36/36 passed in 4.65 seconds",
+    "Review correction: legal empty legacy STL8 accepted without admitting empty new regions; CTest36/36 passed3.65s"
   ],
   "touched_artifacts": [
     "stalthos-runtime/engine/main.cpp",
@@ -19,7 +20,7 @@
     "stalthos-runtime/tests/native_population_registry.cpp",
     "stalthos-runtime/CMakeLists.txt"
   ],
-  "updated": "2026-10-18T18:02:38.174388+00:00",
+  "updated": "2026-10-18T18:08:20.670809+00:00",
   "resume_instructions": "Run domain CTest, fix fixture failures; root reviews and builds pinned Wicked native host. Native water anchors retain rendered-ground bank abstraction, not anatomical water-surface proof.",
   "next_step": "Root reviews candidate, builds Wicked host, runs exact original-eight migration and continuation.",
   "validation": {

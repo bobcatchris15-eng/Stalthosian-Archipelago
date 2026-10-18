@@ -69,7 +69,7 @@ inline void validate(const RegionalContinuationDto& d) {
     std::size_t nr=0,nh=0,na=0,anchors=0,bindings=0;
     for(const auto& r:d.regions) {
         if(r.population.actors.size()>16 || r.reservation.resources>4096 || r.reservation.historyKeys>256 || r.ledger.resources.size()>r.reservation.resources || r.ledger.sessions.size()>r.reservation.historyKeys || r.anchors.size()>4096 || r.bindings.size()>64) throw Invalid{};
-        if(!regions.insert(r.population.region).second || r.population.seed!=d.seed || r.population.actors.empty()) throw Invalid{};
+        if(!regions.insert(r.population.region).second || r.population.seed!=d.seed || (r.population.actors.empty() && r.population.region!=d.legacyRegion)) throw Invalid{};
         nr+=r.reservation.resources; nh+=r.reservation.historyKeys; na+=r.population.actors.size(); anchors+=r.anchors.size(); bindings+=r.bindings.size();
         if(nr>4096 || nh>256 || na>64 || anchors>4096 || bindings>64 || r.anchors.size()>r.reservation.resources || r.bindings.size()>r.population.actors.size()) throw Invalid{};
         ResourceLedger ledger(r.reservation.resources,r.reservation.historyKeys); if(!ledger.restore(r.ledger)) throw Invalid{};

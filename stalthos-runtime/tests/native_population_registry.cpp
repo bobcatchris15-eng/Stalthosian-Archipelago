@@ -1,5 +1,6 @@
 #include "engine/native_population_registry.hpp"
 #include "domain/regional_archive.hpp"
+#include "domain/persistence.hpp"
 #include <iostream>
 using namespace stalthos;
 using namespace stalthos::fauna;
@@ -40,6 +41,32 @@ try {
     require(regional_archive::encode(registry.continuationSnapshot(),bytes) && regional_archive::decode(bytes,decoded) && registry.restoreContinuation(decoded),"multi-bank archive closure");
     RegionalPopulationRegistry duplicate(population,ledger,{3,256},bindings);
     require(!duplicate.configureContacts(1001,{{0,100,sites[0].position},{0,100,sites[0].position}}),"duplicate site kind rejected");
+    Population empty(42,1001,sites,0);
+    persistence::SaveData emptySave;emptySave.seed=42;emptySave.faunaPopulation=empty.snapshot();emptySave.resourceLedger=ledger;
+    const auto path=std::filesystem::temp_directory_path()/"stalthos-empty-native-registry.stl";
+    persistence::writeSave(path,emptySave);
+    const auto loaded=persistence::readSave(path);std::filesystem::remove(path);
+    Population emptyLoaded(42,1001,sites,0);emptyLoaded.restore(*loaded.faunaPopulation);
+    engine::NativePopulationRegistry emptyHost(std::move(emptyLoaded),*loaded.resourceLedger,loaded.faunaResourceSessions,anchors,next);
+    require(emptyHost.actors().empty() && emptyHost.sessions().empty(),"empty legacy STL8 does not invent actors or bindings");
+    require(emptyHost.snapshot().habitatSignature==empty.snapshot().habitatSignature && emptyHost.ledger().sessions.size()==ledger.sessions.size() && emptyHost.ledger().resources[0].consumedQuantity==3,"empty legacy keeps topology and full ledger");
+    const auto emptyLedger=emptyHost.ledger();
+    require(emptyLedger.resources.size()==ledger.resources.size() && emptyLedger.sessions.size()==ledger.sessions.size(),"empty complete ledger counts");
+    for(std::size_t i=0;i<ledger.resources.size();++i) {
+        const auto& a=ledger.resources[i];const auto& b=emptyLedger.resources[i];
+        require(a.id==b.id && a.kind==b.kind && a.initialQuantity==b.initialQuantity && a.consumedQuantity==b.consumedQuantity,"empty exact resource record");
+    }
+    for(std::size_t i=0;i<ledger.sessions.size();++i) {
+        const auto& a=ledger.sessions[i];const auto& b=emptyLedger.sessions[i];
+        require(a.sessionId==b.sessionId && a.resourceId==b.resourceId && a.amount==b.amount,"empty exact history record");
+    }
+    RegionalPopulationRegistry emptyRegistry(empty,ledger,{3,256});
+    require(emptyRegistry.configureContacts(1001,anchors),"empty legacy anchors retained");
+    require(regional_archive::encode(emptyRegistry.continuationSnapshot(),bytes) && regional_archive::decode(bytes,decoded) && emptyRegistry.restoreContinuation(decoded),"empty legacy archive closure");
+    Population emptyExterior(42,2001,sites,0);
+    require(emptyRegistry.admit(RegionalAdmissionOrigin::PhysicalArrival,std::move(emptyExterior),{}, {0,0})==RegionalAdmission::EmptyPopulation,"nonlegacy empty admission denied");
+    auto badEmpty=emptyRegistry.continuationSnapshot();auto exterior=badEmpty.regions[0];exterior.population.region=2001;exterior.ledger={};exterior.anchors.clear();exterior.contactsConfigured=false;exterior.reservation={0,0};badEmpty.regions.push_back(exterior);
+    require(!regional_archive::encode(badEmpty,bytes),"nonlegacy empty archive rejected");
     std::cout<<"NATIVE_POPULATION_REGISTRY_ADAPTER_OK actors=8 shared_ledger=true multi_bank=true native_rendering=false\n";
 } catch(const std::exception& e) {std::cerr<<e.what()<<'\n';return 1;}
 }

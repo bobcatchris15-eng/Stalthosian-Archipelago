@@ -31,6 +31,11 @@
       "condition": "Actual rendered-ground contact provenance",
       "met": true,
       "how_checked": "Host browse anchors use cached rendered shrub placements; freshwater anchors use original habitat positions sampled from populatedTerrain rendered ground. This retains existing bank contact abstraction, does not prove mouth-water reach"
+    },
+    {
+      "condition": "Zero-actor legacy STL8 exact continuation without invented population",
+      "met": true,
+      "how_checked": "New fixture writes and reads actual STL8, adapts empty legacy with exact every resource/history field, no actors or bindings; empty legacy STLR closure and nonlegacy empty admission/archive rejection; rebuilt changed targets and CTest36/36 passed3.65s"
     }
   ],
   "artifacts_changed": [
@@ -48,7 +53,8 @@
   "findings": [
     "User interruption left new adapter, fixture and CMake NUL-filled; reconstructed and verified all touched files have zero NUL bytes.",
     "Original creek resource 100 serves multiple habitat sites; registry/archive now permit distinct site-kind anchors sharing one quantity/history authority, bounded by resource reservation (global 4096).",
-    "Whole legacy reservation remains 4096 resources/256 history keys; no exterior admission capacity is freed silently."
+    "Whole legacy reservation remains 4096 resources/256 history keys; no exterior admission capacity is freed silently.",
+    "Independent review found legal zero-actor STL8 bootstrap rejection; fixed only legacy constructor, ordinary empty region admission remains denied. Archive permits empty region only when legacyRegion matches."
   ],
   "blockers": [],
   "assumptions_made": [
@@ -56,5 +62,10 @@
     "STL8 captures registry original region only; native multi-region disk persistence and STLR host pairing remain explicitly unsupported.",
     "Root independently reviews/builds/runs native integration before acceptance."
   ],
-  "updated": "2026-10-18T18:02:38.174388+00:00"
+  "updated": "2026-10-18T18:08:20.661127+00:00",
+  "secret_scan": {
+    "passed": true,
+    "method": "Added-line private-key/GitHub/AWS/OpenAI credential patterns; not exhaustive",
+    "added_lines": 305
+  }
 }

@@ -91,11 +91,12 @@ private:
 
     RegionalAdmission insert(Population population, const ResourceLedgerDto& history,
                              RegionalReservation reservation,
-                             const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {}) {
+                             const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {},
+                             bool allowEmptyLegacy = false) {
         const auto candidate = population.snapshot();
         if (regions_.count(candidate.region)) return RegionalAdmission::DuplicateRegion;
         if (candidate.seed != seed_) return RegionalAdmission::SeedConflict;
-        if (candidate.actors.empty()) return RegionalAdmission::EmptyPopulation;
+        if (candidate.actors.empty() && !allowEmptyLegacy) return RegionalAdmission::EmptyPopulation;
         if (regions_.size() >= maxRegions) return RegionalAdmission::RegionLimit;
         if (candidate.actors.size() > maxIndividuals - used_.individuals)
             return RegionalAdmission::IndividualLimit;
@@ -175,7 +176,7 @@ public:
                                RegionalReservation reservation,
                                const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {})
         : seed_(legacy.snapshot().seed), legacyRegion_(legacy.snapshot().region) {
-        if (insert(std::move(legacy), history, reservation, savedSessions) != RegionalAdmission::Accepted)
+        if (insert(std::move(legacy), history, reservation, savedSessions, true) != RegionalAdmission::Accepted)
             throw std::invalid_argument("invalid retained legacy population/reservation");
     }
     RegionalAdmission admit(RegionalAdmissionOrigin origin, Population population,
