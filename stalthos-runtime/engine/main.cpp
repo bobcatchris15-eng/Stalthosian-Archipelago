@@ -12,6 +12,7 @@
 #include "domain/animation_blend.hpp"
 #include "crossfade_transition.hpp"
 #include "domain/resource_ledger.hpp"
+#include "domain/regional_habitat.hpp"
 #include "domain/resource_presentation.hpp"
 #include <cctype>
 #include "environment_scene.hpp"
@@ -777,6 +778,39 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::vector<stalthos::Vec3> food;
             for(const auto& p:cachedShrubs) food.push_back({p.x,p.y,p.z});
             faunaSites=faunaScene.habitat(landscape,food);
+            // Construction probe only: do not replace legacy sites/signature or create actors.
+            const auto candidate=stalthos::fauna::regionalHabitatCandidate(world.worldSeed(),1001,
+                {0,-12,32,0},[&](double gx,double gz)->std::optional<stalthos::fauna::HabitatGround> {
+                    try {
+                        const double gy=populatedTerrain->height(gx,gz), h=.25;
+                        const double dx=(populatedTerrain->height(gx+h,gz)-populatedTerrain->height(gx-h,gz))/(2*h);
+                        const double dz=(populatedTerrain->height(gx,gz+h)-populatedTerrain->height(gx,gz-h))/(2*h);
+                        const bool wet=landscape.waterContains(gx,gz);
+                        bool browse=false;
+                        for(const auto& f:food) if(std::hypot(std::hypot(f.x-gx,f.z-gz),f.y-gy)<=.8) browse=true;
+                        bool water=false;
+                        // Match the contact radius in 3D and reject banks beyond draft vertical reach.
+                        for(double reach:{.25,.5,.75}) for(const auto offset:std::array<std::pair<double,double>,4>{{{reach,0},{-reach,0},{0,reach},{0,-reach}}}) {
+                            const double wx=gx+offset.first,wz=gz+offset.second;
+                            const double drop=std::abs(gy-landscape.waterSurface(wx,wz));
+                            if(!wet && landscape.waterContains(wx,wz) && drop<=.45 && std::hypot(reach,drop)<=.8) water=true;
+                        }
+                        return stalthos::fauna::HabitatGround{gy,std::hypot(dx,dz),!wet,wet,browse,water};
+                    } catch(const std::out_of_range&) { return std::nullopt; }
+                },{1,.5,.6,20000});
+            json candidateSites=json::array(); std::size_t candidateLinks=0;
+            for(const auto& site:candidate.sites) {
+                candidateLinks+=site.neighbors.size();
+                candidateSites.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},
+                    {"browse",site.browse},{"freshwater",site.freshwater},{"neighbors",site.neighbors}});
+            }
+            WriteJson(output/"regional-habitat-candidate.json",{{"schema_version",1},{"region",1001},
+                {"status",static_cast<unsigned>(candidate.status)},{"ground_queries",candidate.groundQueries},
+                {"ground_source","joined rendered triangles"},{"bounds",{0,-12,32,0}},
+                {"lattice_m",1},{"route_sample_m",.5},{"max_slope",.6},{"contact_radius_m",.8},{"max_water_vertical_reach_m",.45},{"directed_links",candidateLinks},
+                {"sites",candidateSites},{"creates_population",false},{"legacy_habitat_replaced",false},
+                {"scope","watershed construction probe; no regional registry or cross-region links"}});
+
             std::set<stalthos::Identity> excluded{heroId};
             for(const auto& active:world.snapshot().active) excluded.insert(active.first);
             for(const auto& r:world.snapshot().retained) excluded.insert(r.id);
@@ -1334,8 +1368,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     faunaDormantPhysicalSeconds+=timeStep.physicalSeconds;faunaDormantCalendarSeconds+=timeStep.calendarSeconds;
                 } else {
                 faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
-                faunaPopulation->advance(timeStep);
-                faunaResources->applyContacts(faunaPopulation->actors(),timeStep.physicalSeconds,resourceLedger);
+                faunaPopulation->advance(timeStep,false);
+                faunaResources->applyContacts(*faunaPopulation,timeStep.physicalSeconds,resourceLedger);
                 faunaResourceEvents+=faunaResources->events().size();
                 if(!faunaResources->events().empty()) {
                     for(const auto& res:resourceLedger.snapshot()) cachedResourceDtos[res.id]=res;
@@ -1773,6 +1807,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
                 {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaResources->consumedFood()},
                 {"water_consumed",faunaResources->consumedWater()},{"resources_use_shared_persisted_ledger",true},
+                {"resource_history_used",resourceLedger.historyCapacity().used},{"resource_history_limit",resourceLedger.historyCapacity().limit},
+                {"resource_history_available",resourceLedger.historyCapacity().available},
+                {"resource_history_rejections",faunaResources->historyRejections()},{"needs_relief_requires_accepted_contact",true},
                 {"population_persistence_supported",true},{"population_persisted",!saveState.empty()},
                 {"population_restored",faunaPopulationRestored},
                 {"meshes_best_effort",true},{"frame_time_measured",false}});

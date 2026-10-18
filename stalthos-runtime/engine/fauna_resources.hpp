@@ -47,6 +47,7 @@ private:
     double consumedFood_ = 0;
     double consumedWater_ = 0;
     bool historyRestored_ = false;
+    std::uint64_t historyRejections_ = 0;
 
     static double distanceSquared(Vec3 a, Vec3 b) noexcept {
         const double x=a.x-b.x, y=a.y-b.y, z=a.z-b.z;
@@ -182,7 +183,10 @@ public:
             const double totalWater=kind==Kind::Water?consumedWater_+delta:consumedWater_;
             if (!std::isfinite(totalFood)||!std::isfinite(totalWater)) throw std::overflow_error("fauna resource statistics overflow");
             const auto session=sessions_.at(actor.id);
-            if (!ledger.consumeCumulative(session,resourceId,total)) continue;
+            const auto admission=ledger.tryConsumeCumulative(session,resourceId,total);
+            if (admission==ResourceAdmission::HistoryFull) { ++historyRejections_; continue; }
+            if (admission==ResourceAdmission::StorageFailure) throw std::bad_alloc();
+            if (admission!=ResourceAdmission::NewKey && admission!=ResourceAdmission::Update) continue;
             if (prior==cumulative_.end()) cumulative_.emplace(key,total);
             else prior->second=total;
             resource->second.consumedQuantity+=delta;
@@ -192,6 +196,14 @@ public:
         }
     }
 
+    // Pair with Population::advance(dt, false): denied contacts grant no needs relief.
+    void applyContacts(fauna::Population& population, double physicalSeconds, ResourceLedger& ledger) {
+        applyContacts(population.actors(),physicalSeconds,ledger);
+        for (const auto& event: events_)
+            population.applyAcceptedResourceContact(event.actorId,event.kind==Kind::Food,
+                event.amount*(event.kind==Kind::Food ? 0.1 : 0.2));
+    }
+    std::uint64_t historyRejections() const noexcept { return historyRejections_; }
     double consumedFood() const noexcept { return consumedFood_; }
     double consumedWater() const noexcept { return consumedWater_; }
     const std::vector<Event>& events() const noexcept { return events_; }

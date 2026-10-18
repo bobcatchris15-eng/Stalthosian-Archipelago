@@ -210,7 +210,7 @@ public:
         }
         refreshViews();
     }
-    void advance(const TimeStep& dt) {
+    void advance(const TimeStep& dt, bool localResourceRelief = true) {
         if (!std::isfinite(dt.physicalSeconds)||dt.physicalSeconds<0||!std::isfinite(dt.calendarSeconds)||dt.calendarSeconds<0)
             throw std::invalid_argument("invalid fauna time step");
         if (dt.physicalSeconds==0 && dt.calendarSeconds==0) return;
@@ -222,8 +222,8 @@ public:
             if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
             a.life=life; a.needs=needsState;
             if (a.activity==Activity::Rest) a.needs.setResting(true); else a.needs.setResting(false);
-            if (a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
-            if (a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
+            if (localResourceRelief && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
+            if (localResourceRelief && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
             if (a.activity!=Activity::Travel) chooseActivity(a);
             if (a.activity==Activity::Travel && a.target!=a.site && dt.physicalSeconds>0) {
                 const auto hop=nextHop(a.site,a.target);
@@ -246,6 +246,19 @@ public:
         }
         actors_.swap(next);
         refreshViews();
+    }
+    // Host-ledger mode applies relief only after an accepted physical contact.
+    // Standalone simulations retain the original local-resource behavior.
+    void applyAcceptedResourceContact(Identity id, bool food, double amount) {
+        if (!std::isfinite(amount) || amount < 0) throw std::invalid_argument("invalid fauna contact relief");
+        for (auto& a: actors_) if (a.id==id) {
+            if (a.life.stage()!=LifeStage::Dead) {
+                if (food) a.needs.feed(std::min(amount,0.08));
+                else a.needs.drink(std::min(amount,0.10));
+            }
+            refreshViews(); return;
+        }
+        throw std::invalid_argument("unknown fauna contact actor");
     }
     // Coarse inactive evolution: retain route intent and exact physical state.
     // Resource contacts are owned by the host and never occur in this path.

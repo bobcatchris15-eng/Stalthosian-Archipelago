@@ -1,0 +1,59 @@
+{
+  "base_digest": "c0b223fbd6743fcb",
+  "current_digest": "3dee0067a5d376be",
+  "nodes_added": 57,
+  "nodes_removed": 7,
+  "edges_added": 118,
+  "edges_removed": 12,
+  "edges_added_not_extracted": 0,
+  "central_nodes_touched": [
+    "iostream",
+    "pathlib",
+    "stalthos_runtime_domain_fauna_population",
+    "stalthos_runtime_domain_fauna_population_habitatsite",
+    "stalthos_runtime_domain_fauna_population_population",
+    "stalthos_runtime_domain_fauna_population_population_advance",
+    "stalthos_runtime_domain_fauna_population_population_snapshot",
+    "stalthos_runtime_domain_foundation_hpp_optional",
+    "stalthos_runtime_domain_foundation_hpp_set",
+    "stalthos_runtime_domain_resource_ledger",
+    "stalthos_runtime_domain_resource_ledger_resourceledger",
+    "stalthos_runtime_domain_resource_ledger_resourceledger_load",
+    "stalthos_runtime_engine_fauna_resources_faunaresources",
+    "stalthos_runtime_engine_main",
+    "stalthos_runtime_engine_main_wwinmain",
+    "stalthos_runtime_engine_populated_terrain_hpp_json",
+    "stalthos_runtime_tests_resource_ledger",
+    "stalthos_toolkit_src_stalthos_toolkit_optimize_glb_glbdocument_read",
+    "stdexcept",
+    "struct",
+    "sys"
+  ],
+  "boundary_nodes_touched": [],
+  "pressure": 198,
+  "churn": 324,
+  "recommend_validation": true,
+  "sample": {
+    "nodes_added": [
+      "clanker_tasks_regional_habitat_admission_20261018_independent_review",
+      "clanker_tasks_regional_habitat_admission_20261018_independent_review_independent_review",
+      "clanker_tasks_regional_habitat_admission_20261018_native_history_probe",
+      "clanker_tasks_regional_habitat_admission_20261018_native_history_probe_audit",
+      "clanker_tasks_regional_habitat_admission_20261018_native_history_probe_decode",
+      "clanker_tasks_regional_habitat_admission_20261018_native_history_probe_fixture",
+      "clanker_tasks_regional_habitat_admission_20261018_native_history_probe_rationale_1",
+      "clanker_tasks_regional_habitat_admission_20261018_next_task",
+      "clanker_tasks_regional_habitat_admission_20261018_next_task_next_bounded_world_construction_task",
+      "clanker_tasks_regional_habitat_admission_20261018_run_activation"
+    ],
+    "nodes_removed": [
+      "stalthos_toolkit_tests_test_blender_export_bridge_py_fixture",
+      "stalthos_toolkit_tests_test_blender_py_fixture",
+      "stalthos_toolkit_tests_test_optimize_py_fixture",
+      "stalthos_toolkit_tests_test_publish_py_fixture",
+      "stalthos_toolkit_tests_test_reference_rig_alignment_py_fixture",
+      "stalthos_toolkit_tests_test_research_paths_py_fixture",
+      "stalthos_toolkit_tests_test_roster_py_fixture"
+    ]
+  }
+}

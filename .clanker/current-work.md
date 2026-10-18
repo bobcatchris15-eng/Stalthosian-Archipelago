@@ -1,50 +1,53 @@
 # Current world construction checkpoint - 2026-10-18
 
-Priority: world,simulations,systems,populations. Wicked Engine selected. Assets
-remain replaceable;HeroViewer/individual Smalltrotter polish off critical path.
+Priority: world, simulations, systems and populations. Wicked Engine selected.
+Assets remain replaceable; HeroViewer/individual Smalltrotter polish is off path.
 
 ## Validated continuation
 
-Body-driven activation now applies to the original8watershed individuals in the
-actual populated host. Within192m of origin they simulate physically;away they
-retain exact route/site/target/pose/injury/resting/activity while elapsed game
-age/needs evolve without resource contacts. Camera movement never changes this
-policy. Dormant object render/shadow flags hide replicas without singular skin
-transforms;allocations remain resident. Existing STL8 saves remain compatible.
-No new world required. No closed-app walltime evolution.
+Resource history now has explicit typed admission and capacity reporting. The
+256-key limit remains; existing cumulative contacts continue at capacity, new
+keys are rejected atomically without eviction or host termination. Populated host
+needs relief follows accepted ledger consumption only; replay/denial grants none.
+Existing STL8 saves remain compatible. No new world needed.
 
-Native imported departure24->544 save,dormantreload,return544->24 and detached
-camera probes passed strict schema2 verification. All actor snapshot fields match
-exactly across bothloads. Dormancy11.558/3.624/10.189physical/calendar seconds;
-zero active frames while loadedaway;zero dormantresourcecontacts. Exact decoded
-ledger/history while dormant;all8sessionmappings survive;4historykeys preserved
-through return. Positive finite skin checks in all4runs;hidden/visibleflags match.
-Camera728detachedframes with0bodymovement,0activationtransitions. Native local
-population frame shows several imported animals;steepbanks,sparseworld and white
-unfinished tree materials remain visible presentation debt.
+Final imported native full-history run and reload retained all256keys and8actor
+session mappings, with exact full population snapshot restored. Rejected627/437
+new-contact attempts; existing food/water consumption continued. Blocked browser
+hunger increased. Original8IDs and habitat signature6489859816375510053 preserved.
 
-Releasebuild passed;CTest30/30in1.47s;toolkit2073passed2skipped535.78s;doctor0.
-Nine malformed-proof fixtures pass. Productionstreaming24s,standard/traversal
-fullsnapshotcontinuation,watershedjoin andcoarsestreaming regressions passed.
-18s streamcapture missed spatialbracket;failed evidence retained;24s rerunpassed.
-Independent review found/fixed singularhiding and proofholes;no unresolved finding.
-Receipt:`.clanker/tasks/population-activation-20261018/receipt.json`.
-Native manifest:`var/reports/population-activation-20261018/evidence.json`.
+New bounded regional habitat candidate contract uses pure rendered-ground/resource
+queries, global half-open lattice ownership, sampled dry/slope-eligible links and
+explicit Ready/NoViable/Invalid/WorkLimit outcomes. Max512candidates,100kqueries.
+Native watershed probe produced312connected sites,2browse,8freshwater,1168directed
+links,1552queries;1m lattice,.5m route samples. Food uses3D.8m reach;water.8m reach
+and.45m vertical limit. It does not create populations or replace legacy habitat.
+
+Pinned Wicked Release passed;CTest31/31;toolkit2073passed2skipped in532.40s;doctor0.
+Native exactsavecontinuation,24sstreaming,importeddeparture/dormancy/return and
+cameraindependence passed;9malformedproof fixtures passed. Source review findings
+fixed. Native frame inspected: animals/creek/shrubs visible;whiteunfinishedtrees,
+steep enclosing terrain walls,sparse exterior and approximate contacts persist.
+No finalart,fullfootcontact,full-draft or30FPSacceptance.
+Receipt: .clanker/tasks/regional-habitat-admission-20261018/receipt.json
+Native manifest: var/reports/regional-habitat-admission-20261018/evidence.json
 
 ## Next concrete work
 
-Deterministic region-owned habitats and bounded retainedpopulationregistry.
-Preserve original8IDs/habitatsignature,groundedjoinedterrain and exactroutes/needs/
-resourcehistories. Separate actualindividuals fromcoarseestimates. Fixed256history
-keyceiling remains open;never silentlyevict. Read tasknext-task.md. Existing
-joinedterrainstreaming proof remains in populated-streaming-20261018 receipt.
+Bounded retained regional population registry with explicit per-region resource
+and history-key admission. See task next-task.md and runtime docs/regional-habitat-
+admission.md. Preserve original8IDs/signature and legacySTL8loading;separate actual
+individuals from coarse island estimates. Camera prewarm cannot create actual
+populations or grant HeroSim knowledge. Candidate has no cross-region links.
+New pairs can remain denied everyframe at fullcapacity;production persistence
+archive/versioning remains work. Never silently evict retained IDs/historykeys.
 
-## Collection and preservation
+## Preservation and collection
 
-Collected interrupted domaincandidate1a9b696 and4dirtyhostpaths beforedispatch.
-Two newnativeagents;peak2local;4dispatches includingreviewfollowups. NoAGY/Jules
-oroldpatchretrieval. All85preexistinguntrackedfileshashesunchanged. Planning,
-sourceassets,openapps,historicalworktrees preserved. Noactiveworker requirednext.
-CheckHALTbeforework/dispatch. Reviewedpublicationoriginmainauthorized;noforcepush,
-release,deployment,paidAPI,credentials. No finalart,fullfootcontact,full-draft or
-30FPSacceptance. Publication details in taskreceipt after remoteverification.
+Two isolated local candidates collected and independently reviewed;peak2local,
+6dispatches including reviewfollowups. NoAGY/Jules oroldpatchretrieval. No outstanding
+worker. All85preexistinguntrackedhashes preserved;planning/sourceassets/openapps and
+historicalworktrees untouched. Graph AST refreshed:6857nodes12243edges;353zero-node
+metadata/sourcewarnings;historicalbaseline preserved. Check HALTbeforework/dispatch.
+Reviewed publication to originmain authorized;no forcepush/releases/deployment/
+paidAPI/credentials. Publication details in taskreceipt after remoteverification.

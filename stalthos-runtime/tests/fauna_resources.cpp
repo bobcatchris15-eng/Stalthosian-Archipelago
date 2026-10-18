@@ -10,7 +10,7 @@ using namespace stalthos::engine;
 
 static void require(bool condition,const char* message) { if(!condition) throw std::runtime_error(message); }
 
-int main() {
+int main() try {
     const std::vector<HabitatSite> sites{
         {{0,0,0},false,true,{1}},
         {{1,0,0},true,false,{0}}
@@ -65,5 +65,42 @@ int main() {
     }
     const auto final=longLived.snapshot();
     require(std::abs(final[0].consumedQuantity-1)<1e-10 && std::abs(final[1].consumedQuantity-1.5)<1e-10,"cumulative consumption resumes for 100 reloads");
+    // Ledger-driven relief: a full history must neither throw nor feed denied actors.
+    Population boundedPopulation(55,4,sites,2);
+    auto boundedState=boundedPopulation.snapshot();
+    for (auto& actor:boundedState.actors) {
+        actor.site=actor.target=1; actor.position=sites[1].position;
+        actor.activity=Activity::Browse; actor.hunger=.7; actor.thirst=.2;
+    }
+    boundedPopulation.restore(boundedState);
+    ResourceLedger boundedLedger(16,1);
+    require(boundedLedger.load({{100,ResourceKind::Creek,100,0},{200,ResourceKind::Shrub,100,0}}),"bounded ledger loaded");
+    std::uint64_t boundedNext=900;
+    FaunaResources boundedContacts(sites,shrubs,boundedNext);
+    boundedContacts.refreshAvailability(boundedPopulation,boundedLedger);
+    boundedPopulation.advance({1,1},false);
+    const auto beforeContact=boundedPopulation.actors();
+    boundedContacts.applyContacts(boundedPopulation,1,boundedLedger);
+    require(boundedContacts.events().size()==1 && boundedContacts.historyRejections()==1,"last slot admits one actor and rejects second");
+    require(std::abs(boundedPopulation.actors()[0].hunger-(beforeContact[0].hunger-.0015))<1e-12,"accepted food relieves hunger");
+    require(boundedPopulation.actors()[1].hunger==beforeContact[1].hunger,"denied food grants no hunger relief");
+    const auto mappingsBefore=boundedContacts.sessions();
+    const auto ledgerBefore=boundedLedger.continuationSnapshot();
+    ResourceLedger resumedLedger(16,1); require(resumedLedger.restore(ledgerBefore),"full ledger restores");
+    FaunaResources resumedContacts(sites,shrubs,boundedNext,mappingsBefore);
+    resumedContacts.refreshAvailability(boundedPopulation,resumedLedger);
+    // A replay before adapter hydration must not produce fresh events or relief.
+    FaunaResources unhydrated(sites,shrubs,boundedNext,mappingsBefore);
+    const auto beforeReplay=boundedPopulation.actors();
+    unhydrated.applyContacts(boundedPopulation,1,resumedLedger);
+    require(unhydrated.events().empty(),"ledger replay emits no fresh contact event");
+    require(boundedPopulation.actors()[0].hunger==beforeReplay[0].hunger,"ledger replay grants no hunger relief");
+    const auto beforeResume=boundedPopulation.actors();
+    resumedContacts.applyContacts(boundedPopulation,1,resumedLedger);
+    require(resumedContacts.events().size()==1 && resumedContacts.historyRejections()==1,"restored full ledger continues existing actor only");
+    require(resumedLedger.continuationSnapshot().sessions.size()==1,"full history retains exact key count");
+    require(resumedLedger.continuationSnapshot().sessions[0].sessionId==ledgerBefore.sessions[0].sessionId,"original history key retained");
+    require(std::abs(resumedLedger.snapshot()[1].consumedQuantity-.03)<1e-12,"only accepted actor consumes food across restore");
+    require(boundedPopulation.actors()[1].hunger==beforeResume[1].hunger,"restored denial grants no relief");
     std::cout << "fauna resource checks passed: shrub and creek mapping, contact range, cumulative clamping, unique sessions\n";
-}
+} catch (const std::exception& error) { std::cerr << error.what() << "\n"; return 1; }

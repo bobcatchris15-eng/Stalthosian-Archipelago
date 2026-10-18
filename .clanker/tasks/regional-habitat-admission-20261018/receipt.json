@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "task_id": "regional-habitat-admission-20261018",
+  "status": "validated",
+  "updated": "2026-10-18T12:53:41.310634+00:00",
+  "base_revision": "b91dfc51be788d7092cc9d08444c956164210e60",
+  "scope": "Bounded regional habitat candidate contract and explicit no-eviction history admission; no retained regional registry yet",
+  "collected_candidates": [
+    "c22b656e901585277670d21022070de485c57fd0",
+    "6355371"
+  ],
+  "native_manifest": "var\\reports\\regional-habitat-admission-20261018\\evidence.json",
+  "native": {
+    "full": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074818-12ecfc22",
+      "audit": {
+        "passed": true,
+        "keys_preserved": 256,
+        "mappings_preserved": 8,
+        "rejected_contacts": 627,
+        "accepted_food": 0.054268103979920886,
+        "accepted_water": 0.0723574719732278,
+        "blocked_actor_hunger_initial": 0.5476444247982472,
+        "blocked_actor_hunger_final": 0.5480062121581124,
+        "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074818-12ecfc22"
+      }
+    },
+    "resumed": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074825-0f3c7294",
+      "audit": {
+        "passed": true,
+        "keys_preserved": 256,
+        "mappings_preserved": 8,
+        "rejected_contacts": 437,
+        "accepted_food": 0.03933208055670546,
+        "accepted_water": 0.052442774075607206,
+        "blocked_actor_hunger_initial": 0.5480062121581124,
+        "blocked_actor_hunger_final": 0.5482684260284907,
+        "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074825-0f3c7294"
+      }
+    },
+    "candidate": {
+      "status": 0,
+      "ground_queries": 1552,
+      "directed_links": 1168,
+      "contact_radius_m": 0.8,
+      "max_water_vertical_reach_m": 0.45,
+      "site_count": 312,
+      "browse": 2,
+      "freshwater": 8
+    },
+    "exact_full_snapshot_across_full_history_reload": true,
+    "activation": {
+      "passed": true,
+      "actor_count": 8,
+      "exact_snapshot_continuation": true,
+      "dormant_needs_verified": true,
+      "body_activation_verified": true,
+      "camera_activation_independent": true,
+      "skins_required": true
+    },
+    "activation_runs": {
+      "departure": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074941-b382826b",
+      "dormant": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074958-029b39ac",
+      "return": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-075004-5695035e",
+      "camera": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-075057-0f696f51"
+    },
+    "streaming": {
+      "passed": true,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074831-2b1b3fdd",
+      "retained_actor_count": 8,
+      "exact_shared_mesh_edges": true,
+      "body_outbound_return": true,
+      "support_from_rendered_triangles": true,
+      "captures_require_visual_review": true,
+      "receipt": {
+        "body_tile_crossings": 8,
+        "capture_diagnostics": [
+          {
+            "body_x": 91.41946411132812,
+            "body_z": 24.0,
+            "capture": 0,
+            "filename": "populated-terrain-0.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 138.87152099609375,
+            "body_z": 24.0,
+            "capture": 1,
+            "filename": "populated-terrain-1.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 256.12744140625,
+            "body_z": 24.0,
+            "capture": 2,
+            "filename": "populated-terrain-2.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 400.1535949707031,
+            "body_z": 24.0,
+            "capture": 3,
+            "filename": "populated-terrain-3.png",
+            "saved": true,
+            "visible_object": true
+          }
+        ],
+        "created_tiles": 29,
+        "diagnostic_traversal": true,
+        "evicted_tiles": 20,
+        "exterior_cells_overlap_reference": false,
+        "final_body_x": 24.0,
+        "final_body_z": 24.0,
+        "limitations": "synchronous terrain; body-driven watershed dormancy only; no regional habitat populations or final art/FPS acceptance",
+        "max_body_x": 544.0,
+        "max_proxy_bottom_center_error_m": 0.27409742126474157,
+        "max_rendered_bounds_center_error_m": 3.0517578125e-05,
+        "max_root_ground_error_m": 3.8133002817630768e-06,
+        "max_shared_height_error_m": 0.0,
+        "max_shared_normal_component_error": 0.0,
+        "peak_resident_tiles": 13,
+        "population_activation_implemented": true,
+        "population_count_retained": 8,
+        "reference_mesh_retained": true,
+        "regenerated_mesh_mismatches": 0,
+        "regenerated_tiles": 8,
+        "rendered_support_fallbacks": 0,
+        "residency_driver": "body",
+        "resident_tiles": 9,
+        "route_returned": true,
+        "shared_edge_samples": 15006,
+        "support_samples": 5157,
+        "visited_body_tiles": 5
+      }
+    },
+    "continuation": {
+      "passed": true,
+      "actor_count": 8,
+      "exact_initial_state_restored": true,
+      "full_snapshot_fields_verified": true,
+      "first_run_traversal": false,
+      "resumed_motion": true,
+      "water_restore_abs_error": 0.0,
+      "water_consumption_abs_error": 5.093166860481446e-11,
+      "ledger_cap_exhaustions": 0,
+      "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074614-5af16e7c",
+      "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-074621-488a08f4",
+      "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-074614\\first.stl",
+      "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-074614\\second.stl"
+    }
+  },
+  "build": "Pinned Wicked Release build passed after final callback fixes",
+  "ctest": "31/31 passed in2.25s",
+  "toolkit": "2073 passed,2 skipped in532.40s;actual PYTHONPATH=src python -m pytest -q;doctor exit0 zero warnings/errors;cli list12commands ok",
+  "doctor": "exit0,zero warnings/errors;cli list12commands ok",
+  "verifier_fixtures": "9/9 passed",
+  "review": "independent-review.md;all actionable source findings resolved;no unresolved blocker",
+  "visual_review": {
+    "frame": "var/reports/runtime/20261018-074818-12ecfc22/draft-host.png",
+    "observed": "Several imported animals visible alongside creek and shrubs. Enclosing steep terrain walls, unfinished white trees, sparse exterior and approximate animal contact remain. No art or FPS acceptance."
+  },
+  "workers": {
+    "new_local": 2,
+    "peak_local": 2,
+    "dispatches_including_review_followups": 6,
+    "agy": 0,
+    "jules": 0,
+    "old_patches_retrieved": 0,
+    "outstanding": 0
+  },
+  "preservation": {
+    "checked": 85,
+    "changed": [],
+    "time": "2026-10-18T12:51:41.353896+00:00"
+  },
+  "limitations": [
+    "Only original8 watershed individuals;native candidate creates no actors;no regional retained registry",
+    "256 history hardcap unchanged;newpairs can remain denied each frame;no eviction",
+    "Draft water reach and cardinal search;sampled routes can miss narrower obstacles",
+    "Host activity choice may reflect pre-relief needs until nextframe",
+    "No finalart/fullfootcontact/full-draft/30FPSacceptance"
+  ],
+  "failed_attempts": [
+    "CTest fauna_resources synthetic setup thirst.6 selected water instead of browse;corrected fixture thirst.2 and31tests passed",
+    "Camera7s cannot reach diagnostic8s stage;10s camera rerun passed unchanged verifier",
+    "Initial CLI invocation missing .cli module and guessed missing plant path corrected before actual probes"
+  ],
+  "next_task": "next-task.md: bounded retainedpopulationregistry with explicit regionresource/key admission and compatible versioned persistence;original8IDs/signature/STL8 preserved",
+  "graph": {
+    "delta": "graph-delta.json",
+    "nodes_added": 57,
+    "edges_added": 118,
+    "mode": "Synchronous AST refresh,no clustering;353 zero-node metadata/source warnings;historical baseline untouched"
+  }
+}

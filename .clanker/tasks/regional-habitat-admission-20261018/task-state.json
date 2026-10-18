@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "regional-habitat-admission-20261018",
+  "status": "complete",
+  "base_revision": "b91dfc51be788d7092cc9d08444c956164210e60",
+  "current_step": "Verified bounded habitat candidates and safe history-cap contacts;checkpoint publication pending",
+  "completed_steps": [
+    "Collected prior receipt;no HALT;preserved85untracked hashes",
+    "Integrated two bounded isolated packets and reviewed root contact/ground-query wiring",
+    "Pinned Wicked Release and31domain tests passed",
+    "Full256history native save/reload retainedkeys and8mappings;deniedcontact no relief",
+    "Exact fullsnapshot continuation,productionstreaming and importedactivation/camera regressions passed",
+    "Independent findings fixed;currentnativeframe inspected;no finalart/FPSacceptance",
+    "Toolkit2073passed2skipped;doctor0;85preexistinguntrackedhashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/regional_habitat.hpp",
+    "stalthos-runtime/domain/resource_ledger.hpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/engine/fauna_resources.hpp",
+    "stalthos-runtime/engine/main.cpp"
+  ],
+  "updated": "2026-10-18T12:53:41.310634+00:00",
+  "next_step": "Bounded retainedpopulationregistry;see next-task.md",
+  "receipt_path": ".clanker\\tasks\\regional-habitat-admission-20261018\\receipt.json",
+  "validation": {
+    "passed": true,
+    "command": "Pinned Wicked Release;CTest31/31;pytest2073pass2skip;doctor;native fullcap save/reload;continuation;productionstreaming;activation+camera;9verifierfixtures;independentreview",
+    "evidence_path": ".clanker\\tasks\\regional-habitat-admission-20261018\\receipt.json"
+  },
+  "resume_instructions": "Check HALT,current-work,receipt,next-task. No outstandingworkers. No oldJulesretrieval. Preserve original8IDs/signature/STL8 and historykeys. Next bounded retained regional registry."
+}
