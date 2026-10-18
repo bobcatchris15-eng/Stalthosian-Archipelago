@@ -2,18 +2,55 @@
   "scope": {
     "graph_digest": "not computed in isolated reviewer; coordinator owns integration graph delta",
     "base_digest": "9526bd5",
-    "artifacts": ["stalthos-runtime/engine/native_population_registry.hpp", "stalthos-runtime/engine/main.cpp", "stalthos-runtime/domain/regional_population.hpp", "stalthos-runtime/domain/regional_archive.hpp", ".clanker/tasks/native-registry-host-20261018/independent-adapter-probe.cpp"]
+    "artifacts": [
+      "stalthos-runtime/engine/native_population_registry.hpp",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/domain/regional_population.hpp",
+      "stalthos-runtime/domain/regional_archive.hpp",
+      ".clanker/tasks/native-registry-host-20261018/independent-adapter-probe.cpp"
+    ]
   },
-  "goal_alignment": {"verdict":"advances_partially", "drift":[]},
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
   "findings": [
-    {"severity":"observation", "claim":"Original single-region adapter owns complete shared ledger and original actor/session mappings; independent adversarial probes passed.", "evidence":"Independent probe output INDEPENDENT_NATIVE_REGISTRY_OK; Release CTest36/36 passed5.09s on isolated cherry-pick f4fd6ed of9526bd5."},
-    {"severity":"minor", "claim":"Regional population contract historical legacy-import section still says native host adapter unchanged; append current adapter scope to prevent stale interpretation.", "evidence":"stalthos-runtime/docs/regional-population.md legacy admission section. Coordinator notified."},
-    {"severity":"observation", "claim":"Adapter takes multiple complete bounded registry/ledger snapshots per actor/contact. No performance acceptance follows from tests.", "evidence":"NativePopulationRegistry::advance calls snapshot once, ledger per matching anchor, RegionalPopulationRegistry::contact snapshots population and ledger."},
-    {"severity":"observation", "claim":"Native water contact anchors use preserved terrain-derived dry-bank habitat positions. They are not measured nasal/water-surface contact.", "evidence":"engine/main.cpp anchors.push_back({site,100,habitat.position}); worker receipt explicitly disclaims precise water reach."}
+    {
+      "severity": "observation",
+      "claim": "Original single-region adapter owns complete shared ledger and original actor/session mappings; independent adversarial probes passed.",
+      "evidence": "Independent probe output INDEPENDENT_NATIVE_REGISTRY_OK; Release CTest36/36 passed5.09s on isolated cherry-pick f4fd6ed of9526bd5."
+    },
+    {
+      "severity": "minor",
+      "claim": "Regional population contract historical legacy-import section still says native host adapter unchanged; append current adapter scope to prevent stale interpretation.",
+      "evidence": "stalthos-runtime/docs/regional-population.md legacy admission section. Coordinator notified."
+    },
+    {
+      "severity": "observation",
+      "claim": "Adapter takes multiple complete bounded registry/ledger snapshots per actor/contact. No performance acceptance follows from tests.",
+      "evidence": "NativePopulationRegistry::advance calls snapshot once, ledger per matching anchor, RegionalPopulationRegistry::contact snapshots population and ledger."
+    },
+    {
+      "severity": "observation",
+      "claim": "Native water contact anchors use preserved terrain-derived dry-bank habitat positions. They are not measured nasal/water-surface contact.",
+      "evidence": "engine/main.cpp anchors.push_back({site,100,habitat.position}); worker receipt explicitly disclaims precise water reach."
+    },
+    {
+      "severity": "material",
+      "claim": "Legal STL8 empty fauna population previously accepted by Population::restore is rejected by new registry adapter; original-eight checkpoint unaffected but full legacy compatibility is not proven.",
+      "evidence": "persistence.hpp validation line300 checks only upper actor bound; Population::restore permits0; registry insert line98 rejects empty. Independent adapter probe prints COMPATIBILITY_EDGE empty_legacy_population_rejected=true.",
+      "reproducer": "Population empty(41,1001,sites,0); NativePopulationRegistry(empty,ledger,{},anchors,next) throws."
+    }
   ],
   "unproven_claims": [],
-  "validation_debt": ["Coordinator must verify native actual migration and restart, shared hero/NPC consumption evidence and complete ledger telemetry.", "No native multi-region, transactional host STLR save, visual or target-hardware frame-rate acceptance established."],
+  "validation_debt": [
+    "Coordinator must verify native actual migration and restart, shared hero/NPC consumption evidence and complete ledger telemetry.",
+    "No native multi-region, transactional host STLR save, visual or target-hardware frame-rate acceptance established."
+  ],
   "asks": [],
-  "effort": {"probes_run":37,"attempted":"Built isolated candidate Release and ran all36 CTest checks; independently compiled adapter probe for eight bindings including dead owner/empty history, complete ledger resources/history including unanchored/unbound/dead keys, both shared creek banks, hero replay/no NPC relief, living/dead NPC impersonation rejection, negative/Inf/NaN/zero-session atomic denial, exact dormancy ledger, exact reload mapping/ledger, shared creek STLR closure and duplicate site-kind rejection, full256-key denial of seven NPC contacts and new hero key without relief/mutation. Reviewed main host ownership reset and legacy capture, proposed save design, and root verifier exact snapshot/session checks; reported missing full-ledger migration telemetry and misleading InitialSave+FirstTraversal combo to coordinator."},
-  "reviewed_at_utc":"2026-10-18T18:06:00Z"
+  "effort": {
+    "probes_run": 37,
+    "attempted": "Built isolated candidate Release and ran all36 CTest checks; independently compiled adapter probe for eight bindings including dead owner/empty history, complete ledger resources/history including unanchored/unbound/dead keys, both shared creek banks, hero replay/no NPC relief, living/dead NPC impersonation rejection, negative/Inf/NaN/zero-session atomic denial, exact dormancy ledger, exact reload mapping/ledger, shared creek STLR closure and duplicate site-kind rejection, full256-key denial of seven NPC contacts and new hero key without relief/mutation. Reviewed main host ownership reset and legacy capture, proposed save design, and root verifier exact snapshot/session checks; reported missing full-ledger migration telemetry and misleading InitialSave+FirstTraversal combo to coordinator."
+  },
+  "reviewed_at_utc": "2026-10-18T18:09:00Z"
 }
