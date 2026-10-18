@@ -3,7 +3,7 @@
   "task_id": "populated-streaming-20261018",
   "status": "complete",
   "base_revision": "0a03f445e28f8bdbbcca2172280d5ff0d852f552",
-  "current_step": "Validated production populated streaming and native traversal/persistence; reviewed checkpoint ready for publication",
+  "current_step": "Validated production populated streaming and native traversal/persistence; reviewed checkpoint published to origin main",
   "completed_steps": [
     "Collected prior checkpoint; no HALT or outstanding tasks",
     "Integrated isolated retained-watershed exterior streamer into actual populated host",
@@ -22,7 +22,7 @@
     "stalthos-runtime/scripts/Verify-PopulationContinuation.ps1",
     "stalthos-runtime/docs/populated-terrain.md"
   ],
-  "updated": "2026-10-18T09:44:36.011858+00:00",
+  "updated": "2026-10-18T09:46:07.412780+00:00",
   "next_step": "Body-driven population activation/retention with deterministic regional habitats and honest coarse dormant evolution; see next-task.md",
   "validation": {
     "passed": true,

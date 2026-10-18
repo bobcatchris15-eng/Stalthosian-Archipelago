@@ -147,7 +147,7 @@
   "graph": {
     "nodes": 6757,
     "edges": 11978,
-    "mode": "AST refresh, no clustering;334zero-node metadata warnings; cumulative baseline retained"
+    "mode": "AST refresh, no clustering;338 zero-node metadata warnings; cumulative baseline retained"
   },
   "limitations": [
     "Local8actors remain simulated while body away; no body-driven population activation or regional habitat population placement",
@@ -156,5 +156,11 @@
     "Approximate body grounding only; no full-foot contact,final scenery,full-draft or30FPS acceptance",
     "Continuation JSON proves actor projections identity/species/pose/heading/age/needs/activity/distance; route target/site persistence remains covered by existing domain save tests rather than JSON receipt fields"
   ],
-  "next_task": "Body-driven population activation/retention with deterministic regional habitats and honest coarse dormant evolution; see next-task.md"
+  "next_task": "Body-driven population activation/retention with deterministic regional habitats and honest coarse dormant evolution; see next-task.md",
+  "publication": {
+    "verified_commit": "a5a717ed455a1f1eabd4359e7aa4681c7e75a4aa",
+    "remote": "origin/main",
+    "remote_head_matched": true,
+    "scope": "Validated code checkpoint; metadata followup may advance tip"
+  }
 }
