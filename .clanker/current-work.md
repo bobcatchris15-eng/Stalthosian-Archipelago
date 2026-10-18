@@ -1,49 +1,53 @@
-# Current work â€” populated watershed and world systems
+# Current world construction checkpoint — 2026-10-17
 
-Updated 2026-10-17. Direct user steering: prioritize building the world, simulations,
-systems and populations. Population meshes/assets are best effort. Reuse available
-assets as replaceable presentation; Smalltrotter/model/HeroViewer polish is off the
-critical path unless it blocks the world. Full draft remains five playable lives
-and four islands; the reference watershed is a connected construction step.
+Direct user priority: world, simulations, systems and population. Meshes/assets
+are best effort and replaceable. HeroViewer/Smalltrotter polish is off the critical
+path unless it blocks world construction. Root coordinates and implements details;
+use light capable workers with bounded ownership and independently verified output.
 
-## Active work
+## Validated now
 
-- Native bounded fauna population module: codex/fauna-population-20261017,
-  var/worktrees/fauna-population-20261017. Owns new domain/fauna_population.hpp,
-  tests/fauna_population.cpp and its doc. Root owns engine/main.cpp, renderer
-  adapter and CMake integration. Public ActorView/Population API is in its brief.
-- Jules environment module session3306157609621882461: owns new
-  domain/world_environment.hpp, tests/world_environment.cpp and doc. Collect once
-  into isolation when ready; inspect/compile/review before root integration.
-- Root connects autonomous region actors to actual dry habitat paths, shared
-  food/water sites and existing creature assets. Rendering remains replaceable.
+Eight autonomous active-region animals run on actual terrain-derived dry habitat
+routes, sharing existing lifecycle/needs components and clock. Browse/drink use
+the hero resource ledger and shrub depletion presentation. Draft creature imports
+are optional; a proxy-only save/load runtime also passed. Final spawn fix distributes
+browsers/drinkers across available sites. No camera-driven simulation activation.
 
-## Validated checkpoint immediately before world work
+Actual30s run:8 actors,4 moving,4 activity categories,0.778708 food and0.519139 water
+consumed,9580 contacts,26 condition updates. Save/load creek continuation error0.
+Final10s separated spawn replay also consumed both resource types. NativeRelease
+build and28/28 CTest passed. Toolkit earlier same-session2073pass/2skip; no further
+toolkit changes in world packet. Exact evidence tasks/world-population-20261017/receipt.json.
 
-Toolkit2073 passed/2 skipped (627.89s); focused plant64; Wicked Release and CTest24/24.
-Exact Smalltrotter seam824 pairs now succeeds on a derived base cage, closed and
-reopened with other meshes preserved; source SHA256 b987e7d7...d901de15350 unchanged.
-Receipt source/output aliases (including hardlinks) are refused before writes.
-Source-derived UV/material/rig work is deferred behind world construction.
+Integrated Jules regional weather and AGY coarse archipelago: Main Island,
+Rainridge, Stone Island, Outer Reach. Actual64x64 atlas flood fill found4 distinct
+land components; plot under var/reports/world-population-20261017/world-atlas.png.
+Regional conditions consume actual continuous moisture and drive Wicked rain/wind.
+Coarse regional counts are seeded capacity estimates, NOT thousands of simulated
+animals. Coarse islands remain rounded and moisture differs from descriptive
+metadata (especially Stone); preserve these limitations.
 
-Fresh conifer stage GLBs reproduced prior candidate bytes with six bindings each;
-20 actual placements, zero ground fallbacks. Canopy reads sparse and remains
-provisional; no asset-polish gate for population work. Existing asset files remain.
-Crossfade implementation compiled/replayed with225 shared channels, one setup
-analysis,34 sampled blend frames/four interior captures and signed phase error
-4.44e-16s. Death frozen to numerical tolerance; no-creature fallback passes.
-No gait/foot locking/visual/FPS acceptance. See tasks/continuation-20261017/receipt.json.
+## Next world work
+
+1. Stream/stitch coarse terrain into explorable regions with habitat patches,
+   authored coasts/drainage and regional vegetation communities.
+2. Persist population state and implement activation/retention/coarse cohorts.
+3. Add observable interactions and environmental consequences; improve collision/
+   resource crowding and replace bounded resource history with production epochs.
+
+Detailed rendered patch remains192m; no full four-island playability, final
+visual/gait acceptance, or target-hardware30FPS claim. Run with
+stalthos-runtime/scripts/Run-PopulatedWorld.ps1 (-Interactive optional).
 
 ## Backlog and preservation
 
-31 new Jules sessions retrieved:26 completed,4 awaiting feedback,1 failed;
-30 patches. Three bounded corrections integrated (optics lookup, DOI normalization,
-Windows banner regression);3 rejected-as-written;24 deferred;1 no-diff already
-addressed. Inventory tasks/jules-backlog-20261017. GitHub had27 open PRs; no remote
-states changed. Do not repeatedly retrieve old collected sessions. New environment
-session above is the only newly dispatched Jules task.
+Jules31-session audit collected26completed,4awaitingfeedback,1failed/30patches.
+Three fixes integrated;3 rejected as written;24 deferred;1 no-diff already handled.
+New Jules3306157609621882461 completed/reviewed/integrated. Do not refetch old patches.
+AGY archipelago and native fauna/environment reviews completed; no active workers.
+Earlier seam/needle/crossfade checkpoint published86ade13. Artwork refinement remains
+provisional and deferred. See tasks/continuation-20261017/receipt.json.
 
-Rauken-Archipelago is read-only. Preserve unrelated untracked receipts/logs/object
-files. Use isolated ownership, lowest confidently capable model/effort and no paid
-API fallback. Validated publication to origin/main is authorized, without force,
-releases or deployment. Check HALT before dispatch. Full draft remains incomplete.
+Rauken-Archipelago stays read-only. Preserve unrelated untracked logs/receipts/objs.
+Validated origin/main publication authorized; no force/release/deployment/paid API.
+Check .clanker/HALT before dispatch. Full draft remains incomplete.

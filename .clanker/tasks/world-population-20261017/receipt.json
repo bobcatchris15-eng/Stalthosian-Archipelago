@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "task_id": "world-population-20261017",
+  "outcome": "populated watershed and coarse world foundation validated; full draft incomplete",
+  "native_build": "Wicked Release passed; final source incremental build exit0",
+  "native_ctest": "28/28 passed; 2.65 seconds",
+  "runtime": {
+    "asset_run": "var/reports/runtime/20261017-192418-2b2b6637",
+    "proxy_load_run": "var/reports/runtime/20261017-192504-08819d76",
+    "actor_count": 8,
+    "moving_actors": 4,
+    "activities_observed": 4,
+    "food_consumed": 0.7787083228910324,
+    "water_consumed": 0.5191388819273549,
+    "events": 9580,
+    "conditions_updates": 26,
+    "region_count": 4,
+    "coarse_population_estimate": 4349,
+    "saved_water_remaining": 999999.4808611181,
+    "loaded_final_plus_run_consumption": 999999.4808611181,
+    "water_continuation_abs_error": 0.0,
+    "water_continuation_pass": true,
+    "proxy_count": 8,
+    "all_alive": true,
+    "notes": [
+      "Initial resource telemetry is sampled after first fauna frame; continuation checked from loaded final plus recorded NPC consumption.",
+      "Population respawns on load; only resource ledger continuation is implemented.",
+      "No FPS acceptance."
+    ],
+    "final_spawn_run": "var/reports/runtime/20261017-192713-1265a9a2",
+    "distinct_initial_browser_and_drinker_sites": true
+  },
+  "atlas_review": ".clanker/tasks/world-atlas-review-20261017/receipt.md",
+  "environment_review": ".clanker/tasks/world-environment-review-20261017/receipt.md",
+  "toolkit": "Earlier same-session checkpoint2073 passed/2 skipped; no toolkit changes in world packet",
+  "executable_sha256": "1db27d1b9c9b6ab1c380b611358d68e0378bfc82553c38cff4048dd26f091885",
+  "graph": {
+    "nodes": 6546,
+    "edges": 11606,
+    "mode": "structural update no clustering; zero-node JSON metadata warning retained"
+  },
+  "limitations": [
+    "192m detailed patch; coarse islands not streamed",
+    "regional counts are estimates, not remote individual simulation",
+    "population actors respawn on load; resource depletion persists",
+    "shared draft mesh/proxies; no art/gait acceptance",
+    "coarse rounded islands and metadata/continuous moisture discrepancy",
+    "256 ledger history keys; epoch persistence remains needed",
+    "no 30FPS acceptance"
+  ],
+  "publication": "validated for authorized main publication",
+  "updated": "2026-10-18T00:28:15.385756+00:00"
+}

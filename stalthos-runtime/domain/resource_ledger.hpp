@@ -153,6 +153,25 @@ public:
         return true;
     }
 
+    // A continuous actor contact keeps one bounded replay key. The caller
+    // supplies its total consumption for that contact, so replay is idempotent
+    // and long-running browsing does not allocate one record per frame/bite.
+    bool consumeCumulative(std::uint64_t sessionId, std::uint64_t resourceId, double total) {
+        if(sessionId==0 || !std::isfinite(total) || total<=0) throw std::invalid_argument("invalid cumulative consume key or amount");
+        const auto resource=resources_.find(resourceId);
+        if(resource==resources_.end()) return false;
+        const auto key=std::make_pair(sessionId,resourceId);
+        const auto prior=history_.find(key);
+        if(prior==history_.end()) return consume(sessionId,resourceId,total);
+        if(total<prior->second) return false;
+        const double delta=total-prior->second;
+        auto& record=resource->second;
+        if(delta>record.initialQuantity-record.consumedQuantity) return false;
+        record.consumedQuantity+=delta;
+        prior->second=total;
+        return true;
+    }
+
     void reset(std::uint64_t seed = 0) {
         (void)seed;
         resources_.clear();

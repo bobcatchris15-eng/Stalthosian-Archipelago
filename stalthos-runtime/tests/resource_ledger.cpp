@@ -106,6 +106,18 @@ void rejectsMalformedDtos() {
 
 int main() {
     try {
+        ResourceLedger ongoing(1,1);
+        CHECK(ongoing.load({{99,ResourceKind::Shrub,20,0}}));
+        for(int bite=1;bite<=1000;++bite) CHECK(ongoing.consumeCumulative(7,99,double(bite)/100));
+        CHECK(ongoing.continuationSnapshot().sessions.size()==1);
+        CHECK(std::abs(ongoing.snapshot()[0].consumedQuantity-10)<1e-10);
+        CHECK(ongoing.consumeCumulative(7,99,10));
+        CHECK(!ongoing.consumeCumulative(7,99,9));
+        CHECK(!ongoing.consumeCumulative(7,99,25));
+        ResourceLedger resumed(1,1);
+        CHECK(resumed.restore(ongoing.continuationSnapshot()));
+        CHECK(resumed.consumeCumulative(7,99,11));
+        CHECK(std::abs(resumed.snapshot()[0].consumedQuantity-11)<1e-10);
         happyPathAndReplay();
         failuresDoNotMutate();
         transactionalLoadAndRestore();

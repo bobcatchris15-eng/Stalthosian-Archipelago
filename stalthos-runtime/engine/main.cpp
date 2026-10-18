@@ -22,6 +22,9 @@
 #include "organic_rocks.hpp"
 #include "meadow_scene.hpp"
 #include "woodland_scene.hpp"
+#include "fauna_scene.hpp"
+#include "fauna_resources.hpp"
+#include "world_conditions.hpp"
 #include "domain/camera_framing.hpp"
 #include "domain/hero_view_controller.hpp"
 #include "domain/body_terrain_support.hpp"
@@ -170,12 +173,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
+    bool populatedWorld = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
         for (int i = 1; i < argumentCount; ++i) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
+            else if (key == L"--populated-world") populatedWorld = true;
             else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
             else if (key == L"--inspection-camera") inspectionCamera = true;
             else if (key == L"--camera-distance" && i+1 < argumentCount) { cameraDistance=std::stod(argv[++i]); cameraDistanceSpecified=true; }
@@ -223,6 +228,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             !std::isfinite(creatureStrideLength) || creatureStrideLength <= 0))
             throw std::runtime_error("animated creature requires finite positive walk duration and stride length metadata");
         std::filesystem::create_directories(output);
+        if(populatedWorld && (diagnosticTransition || diagnosticNeeds || diagnosticWalk || diagnosticReverseWalk))
+            throw std::runtime_error("populated world and focused hero diagnostics must run separately");
         if (std::filesystem::exists(output / "runtime-receipt.json")) throw std::runtime_error("use a fresh evidence directory");
         stalthos::SimCore clock;
         stalthos::StalthosState world(42);
@@ -676,7 +683,54 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             latestNativeSoleDiagnostic = nativeSoleAdapter.evaluate(scene, landscape);
         }
 
+        const auto heroAnimationCount=scene.animations.GetCount();
         bool previousInspectionKey = false, previousToggleKey = false;
+        std::optional<stalthos::fauna::Population> faunaPopulation;
+        stalthos::engine::FaunaScene faunaScene;
+        std::optional<stalthos::engine::FaunaResources> faunaResources;
+        std::vector<stalthos::fauna::HabitatSite> faunaSites;
+        std::array<uint64_t,4> faunaActivityFrames{};
+        uint64_t faunaSimulationFrames=0;
+        uint64_t faunaResourceEvents=0;
+        stalthos::world::Archipelago archipelago(world.worldSeed());
+        std::vector<stalthos::engine::RegionConditionsSnapshot> regionalConditions;
+        double nextConditionsUpdate=0;
+        uint64_t conditionsUpdates=0;
+        auto actorJson=[](const std::vector<stalthos::fauna::ActorView>& actors) {
+            json result=json::array();
+            for(const auto& a:actors) result.push_back({{"id",a.id},{"species",stalthos::heroSpeciesNames[static_cast<unsigned>(a.species)]},
+                {"x",a.position.x},{"y",a.position.y},{"z",a.position.z},{"heading",a.headingRadians},{"age",a.calendarAge},
+                {"distance_m",a.distanceTravelledMeters},{"hunger",a.hunger},{"thirst",a.thirst},{"fatigue",a.fatigue},
+                {"alive",a.alive},{"activity",static_cast<unsigned>(a.activity)}});
+            return result;
+        };
+        json faunaInitial=json::array();
+        if(populatedWorld) {
+            faunaScene.cacheGround(scene);
+            std::vector<stalthos::Vec3> food;
+            for(const auto& p:cachedShrubs) food.push_back({p.x,p.y,p.z});
+            faunaSites=faunaScene.habitat(landscape,food);
+            std::set<stalthos::Identity> excluded{heroId};
+            for(const auto& r:world.snapshot().retained) excluded.insert(r.id);
+            for(const auto& d:world.snapshot().deadHeroes) excluded.insert(d.first);
+            faunaPopulation.emplace(world.worldSeed(),1001,faunaSites,8,excluded);
+            faunaResources.emplace(faunaSites,food,nextInteractionSession);
+            faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
+            faunaInitial=actorJson(faunaPopulation->actors());
+            auto proxy=[&](std::size_t index) {
+                const auto root=scene.Entity_CreateTransform("best effort fauna proxy "+std::to_string(index));
+                auto part=[&](const char* name,XMFLOAT3 pos,XMFLOAT3 size) {auto e=Box(scene,name,pos,size,{.38f,.27f,.16f,1}); scene.Component_Attach(e,root);};
+                part("fauna body",{0,.65f,0},{.32f,.30f,.65f});
+                part("fauna head",{0,1.12f,.65f},{.18f,.2f,.28f});
+                part("fauna neck",{0,.91f,.4f},{.12f,.3f,.13f});
+                for(float lx:{-.24f,.24f}) for(float lz:{-.4f,.4f}) part("fauna leg",{lx,.24f,lz},{.08f,.24f,.08f});
+                return root;
+            };
+            faunaScene.load(scene,creature.u8string(),faunaPopulation->actors(),proxy);
+            faunaScene.update(scene,faunaPopulation->actors(),creatureClipDuration,creatureStrideLength);
+            if(plant.empty()) for(const auto& s:faunaSites) if(s.browse)
+                Box(scene,"best effort browse patch",{float(s.position.x),float(s.position.y+.25),float(s.position.z)},{.6f,.25f,.6f},{.23f,.4f,.12f,1});
+        }
         uint64_t tetherTerrainConflictCount = 0;
         int diagnosticCameraStage = 0;
         uint64_t detachedCameraFrames = 0;
@@ -800,7 +854,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto transition:lifecycle->advance(timeStep)) {
                 const char* names[]={"hatchling","juvenile","adult","old","dead"};
                 lifecycleTransitions.push_back(names[static_cast<unsigned>(transition)]);
-                if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<scene.animations.GetCount();++i) scene.animations[i].Pause(); }
+                if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<heroAnimationCount;++i) scene.animations[i].Pause(); }
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
             if (diagnosticTransition) {
@@ -1164,10 +1218,29 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
                 previousIsDisplaced = (actualDistance > 1e-5);
             } else {
-                for(size_t i=0;i<scene.animations.GetCount();++i) {
+                for(size_t i=0;i<heroAnimationCount;++i) {
                     auto& animation=scene.animations[i];
                     if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
                 }
+            }
+            if(faunaPopulation) {
+                if(regionalConditions.empty() || clock.physicalSeconds()>=nextConditionsUpdate) {
+                    regionalConditions=stalthos::engine::sampleRegionConditions(archipelago,world.worldSeed(),clock.calendarSeconds());
+                    stalthos::engine::applyWeatherToScene(scene,regionalConditions.front().conditions,{.8f,0,.6f});
+                    nextConditionsUpdate=clock.physicalSeconds()+1;
+                    ++conditionsUpdates;
+                }
+                faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
+                faunaPopulation->advance(timeStep);
+                faunaResources->applyContacts(faunaPopulation->actors(),timeStep.physicalSeconds,resourceLedger);
+                faunaResourceEvents+=faunaResources->events().size();
+                if(!faunaResources->events().empty()) {
+                    for(const auto& res:resourceLedger.snapshot()) cachedResourceDtos[res.id]=res;
+                    for(auto& rec:shrubVisualInstances) applyShrubVisual(rec,cachedResourceDtos.at(rec.resourceId));
+                }
+                faunaScene.update(scene,faunaPopulation->actors(),creatureClipDuration,creatureStrideLength);
+                ++faunaSimulationFrames;
+                for(const auto& actor:faunaPopulation->actors()) ++faunaActivityFrames[static_cast<unsigned>(actor.activity)];
             }
             if(interactive && focused) {
                 const bool inspectionKey=down('V');
@@ -1284,7 +1357,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 bool frameDeltasFinite = true;
 
                 if (creatureLoaded) {
-                    for (size_t ai = 0; ai < scene.animations.GetCount(); ++ai) {
+                    for (size_t ai = 0; ai < heroAnimationCount; ++ai) {
                         auto& animation = scene.animations[ai];
                         for (const auto& channel : animation.channels) {
                             const auto* bone = scene.transforms.GetComponent(channel.target);
@@ -1363,7 +1436,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     }
                 }
             }
-            if(creatureLoaded) for(size_t ai=0;ai<scene.animations.GetCount();++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
+            if(creatureLoaded) for(size_t ai=0;ai<heroAnimationCount;++ai) { auto& animation=scene.animations[ai]; minimumAnimationTimer=std::min(minimumAnimationTimer,animation.timer); maximumAnimationTimer=std::max(maximumAnimationTimer,animation.timer); if(animation.IsPlaying()) ++animationPlayingFrames; for(const auto& channel:animation.channels) { const auto* bone=scene.transforms.GetComponent(channel.target); if(!bone) continue; uint8_t path=static_cast<uint8_t>(channel.path); XMFLOAT4 pose; if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) pose=bone->rotation_local; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::TRANSLATION) pose={bone->translation_local.x,bone->translation_local.y,bone->translation_local.z,0}; else if(channel.path==wi::scene::AnimationComponent::AnimationChannel::Path::SCALE) pose={bone->scale_local.x,bone->scale_local.y,bone->scale_local.z,0}; else continue; auto key=std::make_pair(channel.target,path); auto it=channelPoseBaseline.find(key); if(it==channelPoseBaseline.end()) channelPoseBaseline.emplace(key,pose); else localBoneDelta=std::max({localBoneDelta,std::abs(pose.x-it->second.x),std::abs(pose.y-it->second.y),std::abs(pose.z-it->second.z),std::abs(pose.w-it->second.w)}); } }
             if(!initialNeedsRecorded) {
                 initialNeedsRecorded = true;
                 initialHunger = needs->hunger();
@@ -1518,6 +1591,25 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
+        }
+        if(faunaPopulation) {
+            auto regions=json::parse(stalthos::engine::regionConditionsJson(regionalConditions));
+            regions["calendar_seconds"]=clock.calendarSeconds();
+            regions["condition_updates"]=conditionsUpdates;
+            regions["remote_population_is_coarse_estimate"]=true;
+            regions["terrain_streaming_implemented"]=false;
+            regions["detailed_patch_span_m"]=192;
+            WriteJson(output/"world-regions.json",regions);
+            json sites=json::array();
+            for(const auto& site:faunaSites) sites.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},
+                {"browse",site.browse},{"freshwater",site.freshwater},{"neighbors",site.neighbors}});
+            WriteJson(output/"world-population.json",{{"schema_version",1},{"region",1001},{"world_seed",world.worldSeed()},
+                {"actors_initial",faunaInitial},{"actors_final",actorJson(faunaPopulation->actors())},{"habitat_sites",sites},
+                {"activity_frames_rest_travel_browse_drink",faunaActivityFrames},{"simulation_frames",faunaSimulationFrames},
+                {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
+                {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaResources->consumedFood()},
+                {"water_consumed",faunaResources->consumedWater()},{"resources_use_shared_persisted_ledger",true},
+                {"population_persisted",false},{"meshes_best_effort",true},{"frame_time_measured",false}});
         }
         json transitionPhasesJson = json::array();
         json transitionCapturesJson = json::object();
@@ -1727,6 +1819,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             sequentialEvaluationJson["paused_walk_clip_forced_evaluation"] = creatureClip.has_value();
         }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
+            {"populated_world",populatedWorld},{"autonomous_population_count",faunaPopulation ? faunaPopulation->actors().size() : 0},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
             {"scenery_objects",sceneryCounts.objectCount},{"scenery_vertices",sceneryCounts.vertexCount},{"scenery_triangles",sceneryCounts.triangleCount},

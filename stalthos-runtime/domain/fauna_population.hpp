@@ -167,8 +167,8 @@ public:
             const auto slot=i%4;
             Activity mode=slot==0 ? Activity::Travel : slot==1 ? Activity::Browse : slot==2 ? Activity::Drink : Activity::Rest;
             double hunger=0.22, thirst=0.25, fatigue=0.28;
-            if (mode==Activity::Browse) { at=browse[i%browse.size()]; hunger=0.55; }
-            else if (mode==Activity::Drink) { at=water[i%water.size()]; thirst=0.60; }
+            if (mode==Activity::Browse) { at=browse[(i/4)%browse.size()]; hunger=0.55; }
+            else if (mode==Activity::Drink) { at=water[(i/4)%water.size()]; thirst=0.60; }
             else if (mode==Activity::Rest) fatigue=0.68;
             Actor a{id,kind,age,at,sites[at].position,mode,hunger,thirst,fatigue};
             if (mode==Activity::Travel) a.target=sites[at].neighbors.empty()?at:sites[at].neighbors.front();
@@ -214,6 +214,13 @@ public:
         refreshViews();
     }
     const std::vector<ActorView>& actors() const noexcept { return views_; }
+    // Resource ownership stays with the shared world ledger. The host supplies
+    // current contact availability before each active-region step.
+    void setSiteResources(std::size_t index, bool browse, bool freshwater) {
+        if(index>=sites_.size()) throw std::out_of_range("fauna resource site index");
+        sites_[index].browse=browse;
+        sites_[index].freshwater=freshwater;
+    }
 private:
     void refreshViews() {
         views_.clear(); views_.reserve(actors_.size());

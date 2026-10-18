@@ -14,6 +14,9 @@ static std::vector<HabitatSite> habitat() {
 }
 int main() {
     const auto sites=habitat();
+    Population distributed(41,7,sites,8);
+    require(distributed.actors()[1].position.x!=distributed.actors()[5].position.x,"initial browsers use distinct available sites");
+    require(distributed.actors()[2].position.x!=distributed.actors()[6].position.x,"initial drinkers use distinct available sites");
     Population a(41,7,sites,6,{77,99});
     Population b(41,7,sites,6,{77,99});
     require(a.actors().size()==6,"actor count");
@@ -90,5 +93,12 @@ int main() {
         if (actor.activity==Activity::Browse) require(site.browse,"browse only at browse site");
         if (actor.activity==Activity::Drink) require(site.freshwater,"drink only at water site");
     }
-    std::cout << "fauna population checks passed: 6 actors, deterministic motion, bounded routes, core time separation\n";
+    Population depleted(41,7,sites,6);
+    for(std::size_t i=0;i<sites.size();++i) depleted.setSiteResources(i,false,false);
+    const auto hungry=depleted.actors(); depleted.advance({.1,.1});
+    for(std::size_t i=0;i<hungry.size();++i) {
+        require(depleted.actors()[i].hunger>=hungry[i].hunger,"depleted browse cannot feed");
+        require(depleted.actors()[i].thirst>=hungry[i].thirst,"unavailable water cannot drink");
+    }
+    std::cout << "fauna population checks passed: 6 actors, deterministic motion, bounded routes, core time separation, shared resource availability\n";
 }

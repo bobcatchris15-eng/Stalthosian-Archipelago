@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task_id": "world-population-20261017",
+  "status": "complete",
+  "base_revision": "86ade13",
+  "current_step": "Validated populated watershed and coarse archipelago checkpoint",
+  "completed_steps": [
+    "Integrated bounded autonomous fauna module",
+    "Integrated reviewed Jules regional conditions and AGY coarse archipelago",
+    "Connected active actors to shared terrain/resources and optional draft meshes",
+    "Verified28native tests,30s resource run,proxy load and final separated spawn replay",
+    "Exported actual atlas and independently checked four land components"
+  ],
+  "next_step": "Stream regional terrain/habitats; persist and activate population state",
+  "touched_artifacts": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/archipelago_world.hpp",
+    "stalthos-runtime/domain/world_environment.hpp",
+    "stalthos-runtime/scripts/Run-PopulatedWorld.ps1"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "Release build; CTest; actual native asset and proxy replays; atlas export",
+    "evidence_path": ".clanker/tasks/world-population-20261017/receipt.json"
+  },
+  "resume_instructions": "World/sims/population first; assets best effort. Do not reopen HeroViewer or mesh polish as critical path. Next terrain streaming and population continuation. See receipt for actual evidence and limits. Preserve unrelated dirty/untracked work and read-only planning clone.",
+  "updated": "2026-10-18T00:28:15.385756+00:00",
+  "receipt_path": ".clanker/tasks/world-population-20261017/receipt.json"
+}
