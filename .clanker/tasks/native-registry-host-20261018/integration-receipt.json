@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task_id": "native-registry-host-20261018",
-  "updated": "2026-10-18T18:12:04.0881428Z",
+  "updated": "2026-10-18T18:13:37.0907279Z",
   "status": "native_original_watershed_verified",
   "base_revision": "a77a71af53ff9af8681574be1ea0aab133409ed5",
   "implementation_commits": [
@@ -131,8 +131,11 @@
   ],
   "next_task": "next-task.md",
   "publication": {
-    "status": "pending reviewed publication",
-    "remote": "origin/main"
+    "status": "published",
+    "remote": "origin/main",
+    "verified_checkpoint": "9d43f3ad15923e7733db9b0d2d86cd96d4e148da",
+    "remote_head_matched": true,
+    "scope": "Reviewed native original-watershed adapter, compatibility fix, runtime proofs and checkpoint; final publication metadata follows"
   },
   "secret_scan": {
     "passed": true,
