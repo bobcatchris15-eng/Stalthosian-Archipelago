@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "jules-backlog-20261017",
+  "status": "complete",
+  "base_revision": "6da529846b741d7d035549a05986208cb9b23059",
+  "current_step": "Reviewed 31 new Jules sessions and delivered validated bugfix candidates",
+  "completed_steps": [
+    "Fetch all 31 sessions without applying to root",
+    "Hash exact patches and classify individual apply/overlap",
+    "Reproduce optics and DOI bugs against baseline",
+    "Validate and commit two bounded source bugfixes plus UTF8 regression",
+    "Write per-session dispositions and next work recommendations"
+  ],
+  "touched_artifacts": [
+    ".clanker/tasks/jules-backlog-20261017/",
+    "var/reports/jules-backlog-20261017/",
+    "var/worktrees/jules-backlog-20261017/"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "focused pytest suites; 31-session retrieval/hash/apply inventory",
+    "evidence_path": ".clanker/tasks/jules-backlog-20261017/validation.json"
+  },
+  "receipt_path": ".clanker/tasks/jules-backlog-20261017/REVIEW.md",
+  "resume_instructions": "Root integrated b3ac6ac and 002f11d. Keep fdcbd83 isolated until next toolkit checkpoint. See REVIEW.md per-session dispositions; do not blindly integrate remaining overlapping candidates. Ignored patch inventory preserves SHA256 and exact CLI stdout. No new remote jobs needed until backlog review progresses.",
+  "updated": "2026-10-17T23:44:09.497820+00:00"
+}

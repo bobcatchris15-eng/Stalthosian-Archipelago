@@ -19,11 +19,13 @@
   "jules_session": "5999252246045191178",
   "automation_id": "stalthos-full-draft-construction",
   "jules_dispatch_pool": "Separate remote pool authorized by direct user messages 2026-10-11: up to three concurrent Jules tasks, up to 100 total per day. Local six-dispatch wake limit retained.",
-  "model_policy": "Prioritize AGY Gemini3.8Flash and Jules implementation to preserve Codex quota, per direct user request2026-10-12. Lowest capable model/effort; Codex orchestration, necessary integration, focused review and evidence validation. Local agents only where materially useful.",
+  "model_policy": "Prefer capable AGY/Jules implementation where useful to preserve Codex quota. User also authorizes bounded native workers: choose lightest model and lowest effort that can confidently complete the task, escalate for demonstrated difficulty. Root is coordinator and detail-worker; do small fixes directly. Avoid duplicate suites and idle workers.",
   "max_active_local_workers": 3,
   "max_active_jules_workers": 3,
   "jules_daily_dispatch_ceiling": 100,
-  "pending_jules_sessions": [],
+  "pending_jules_sessions": [
+    "3306157609621882461"
+  ],
   "max_active_agy_workers": 3,
   "agy_dispatch_pool": "Separate Antigravity pool authorized by user 2026-10-11; up to three concurrent agy tasks, independent of native and Jules concurrency pools.",
   "agy_model_family": "Gemini 3.8 Flash",
@@ -35,10 +37,9 @@
   "agy_default_model": "gemini-3.8-flash-low",
   "agy_default_effort": "low",
   "agy_execution": "Isolated bounded tasks; explicit model/effort, print timeout and JSON receipt; inspect changes and validate before integration. Do not bypass permissions or use paid API fallback.",
-  "active_agy_tasks": [
-    "agy-native-animation-crossfade",
-    "agy-splitcrown-needle-sprays",
-    "agy-smalltrotter-seam-diagnosis"
+  "active_agy_tasks": [],
+  "active_native_tasks": [
+    "fauna-population-20261017"
   ],
-  "active_native_tasks": []
+  "implementation_priority": "Direct user2026-10-17: world, sims, systems and populations; meshes/assets best effort and replaceable; HeroViewer and Smalltrotter polishing deferred unless blocking world work."
 }

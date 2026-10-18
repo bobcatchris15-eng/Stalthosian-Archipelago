@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_water_optics.py",
+      "result": "109 passed in 0.29s",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_formats.py tests/test_schemas.py",
+      "result": "324 passed in 38.73s",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_blender.py -k blender_version",
+      "result": "3 passed, 63 deselected in 0.23s",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src python -m pytest -q tests/test_water_optics.py tests/test_blender.py",
+      "result": "175 passed in 174.03s (0:02:54)",
+      "exit_code": 0
+    }
+  ],
+  "candidate_commits": [
+    "b3ac6ac",
+    "002f11d",
+    "fdcbd83"
+  ],
+  "worktree_clean": true,
+  "full_suite_owner": "root"
+}

@@ -651,6 +651,15 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         constexpr double kCrossfadeDurationSeconds = 0.25;
         bool crossfadeWeightsNonzeroOnlyDuringBlend = true;
         uint64_t crossfadeBlendFramesTotal = 0;
+        stalthos::engine::AnimationTopologyAnalysis crossfadeTopology;
+        uint32_t crossfadeTopologyAnalysisCount = 0;
+        if (auto* walk = scene.animations.GetComponent(sceneWalkAnimEntity)) {
+            if (auto* idle = scene.animations.GetComponent(sceneIdleAnimEntity)) {
+                crossfadeTopology = stalthos::engine::analyzeAnimationTopology(
+                    *walk, sceneWalkAnimName, *idle, sceneIdleAnimName);
+                ++crossfadeTopologyAnalysisCount;
+            }
+        }
 
         if (diagnosticTransition && (!creatureLoaded || sceneWalkAnimEntity == wi::ecs::INVALID_ENTITY || sceneIdleAnimEntity == wi::ecs::INVALID_ENTITY)) throw std::runtime_error("transition probe requires a creature with separate walk and idle clips");
 
@@ -1039,19 +1048,18 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 auto* walkAnim = sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneWalkAnimEntity) : nullptr;
                 auto* idleAnim = sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY ? scene.animations.GetComponent(sceneIdleAnimEntity) : nullptr;
 
-                stalthos::domain::AnimationBlend::ClipKind requestedClip = (walking && heroAlive)
+                stalthos::domain::AnimationBlend::ClipKind requestedClip = (actualDistance > 1e-5 && heroAlive)
                     ? stalthos::domain::AnimationBlend::ClipKind::Walk
                     : stalthos::domain::AnimationBlend::ClipKind::Idle;
 
                 if (walkAnim && idleAnim) {
-                    blendState = stalthos::domain::AnimationBlend::advance(blendState, requestedClip, dt, kCrossfadeDurationSeconds);
+                    blendState = stalthos::domain::AnimationBlend::advance(blendState, requestedClip, heroAlive ? dt : 0.0, kCrossfadeDurationSeconds);
                     const auto blendWeights = stalthos::domain::AnimationBlend::resolve(blendState);
                     const double wIdle = blendWeights.idleWeight;
                     const double wWalk = blendWeights.walkWeight;
                     const bool isBlending = (blendState.transitionProgress < 1.0);
 
                     const auto crossfadeOrder = stalthos::engine::determineEvaluationOrder(scene, sceneWalkAnimEntity, sceneWalkAnimName, sceneIdleAnimEntity, sceneIdleAnimName);
-                    const auto crossfadeTopology = stalthos::engine::analyzeAnimationTopology(*crossfadeOrder.firstAnim, crossfadeOrder.firstName, *crossfadeOrder.secondAnim, crossfadeOrder.secondName);
 
                     const double wFirstLogical = crossfadeOrder.firstIsWalk ? wWalk : wIdle;
                     const double wSecondLogical = crossfadeOrder.firstIsWalk ? wIdle : wWalk;
@@ -1312,9 +1320,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                         frameDeltasFinite = false;
                                     }
                                 } else if (channel.path == wi::scene::AnimationComponent::AnimationChannel::Path::ROTATION) {
-                                    const float dot = std::abs(pose.x*prevIt->second.x + pose.y*prevIt->second.y + pose.z*prevIt->second.z + pose.w*prevIt->second.w);
-                                    const float clampedDot = std::clamp(dot, 0.0f, 1.0f);
-                                    const float dRot = 2.0f * std::acos(clampedDot);
+                                    const auto& prev = prevIt->second;
+                                    const double dot = std::abs(double(pose.x)*prev.x + double(pose.y)*prev.y + double(pose.z)*prev.z + double(pose.w)*prev.w);
+                                    const double normNow = double(pose.x)*pose.x + double(pose.y)*pose.y + double(pose.z)*pose.z + double(pose.w)*pose.w;
+                                    const double normPrev = double(prev.x)*prev.x + double(prev.y)*prev.y + double(prev.z)*prev.z + double(prev.w)*prev.w;
+                                    const double normProduct = std::sqrt(normNow * normPrev);
+                                    const float dRot = normProduct > 1e-12 && std::isfinite(normProduct)
+                                        ? static_cast<float>(2.0 * std::acos(std::clamp(dot / normProduct, 0.0, 1.0)))
+                                        : std::numeric_limits<float>::quiet_NaN();
                                     if (std::isfinite(dRot)) {
                                         frameMaxRotDelta = std::max(frameMaxRotDelta, dRot);
                                     } else {
@@ -1697,7 +1710,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         };
         if (creatureLoaded && sceneWalkAnimEntity != wi::ecs::INVALID_ENTITY && sceneIdleAnimEntity != wi::ecs::INVALID_ENTITY) {
             const auto order = stalthos::engine::determineEvaluationOrder(scene, sceneWalkAnimEntity, sceneWalkAnimName, sceneIdleAnimEntity, sceneIdleAnimName);
-            const auto topology = stalthos::engine::analyzeAnimationTopology(*order.firstAnim, order.firstName, *order.secondAnim, order.secondName);
+            const auto& topology = crossfadeTopology;
             sequentialEvaluationJson["engine_evaluation_order_verified"] = true;
             sequentialEvaluationJson["first_evaluated_clip"] = order.firstName;
             sequentialEvaluationJson["first_evaluated_index"] = order.firstIndex;
@@ -1705,8 +1718,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             sequentialEvaluationJson["second_evaluated_index"] = order.secondIndex;
             sequentialEvaluationJson["full_shared_tracks_verified"] = topology.has_full_shared_tracks;
             sequentialEvaluationJson["shared_channel_count"] = topology.shared_channel_count;
-            sequentialEvaluationJson["first_only_channel_count"] = topology.clip_a_only_channel_count;
-            sequentialEvaluationJson["second_only_channel_count"] = topology.clip_b_only_channel_count;
+            sequentialEvaluationJson["first_only_channel_count"] = order.firstIsWalk ? topology.clip_a_only_channel_count : topology.clip_b_only_channel_count;
+            sequentialEvaluationJson["second_only_channel_count"] = order.firstIsWalk ? topology.clip_b_only_channel_count : topology.clip_a_only_channel_count;
+            sequentialEvaluationJson["topology_analysis_count"] = crossfadeTopologyAnalysisCount;
             sequentialEvaluationJson["first_clip_amount_policy"] = topology.has_full_shared_tracks ? "overwrite_1_0_during_blend" : "nominal_weight_fallback";
             sequentialEvaluationJson["second_clip_amount_policy"] = "nominal_weight_during_blend";
             sequentialEvaluationJson["settled_inactive_clip_skipped"] = inactiveClipWritesPrevented;
@@ -1734,7 +1748,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"animation_blend_final_walk_weight", stalthos::domain::AnimationBlend::resolve(blendState).walkWeight},
             {"inactive_clip_state_guarded", inactiveClipWritesPrevented},
             {"walk_phase_follows_signed_distance", walkPhaseFollowsSignedDistance},
-            {"idle_crossfade_verified", (blendState.targetClip == stalthos::domain::AnimationBlend::ClipKind::Idle && blendState.transitionProgress == 1.0)},
+            {"idle_crossfade_settled", (blendState.targetClip == stalthos::domain::AnimationBlend::ClipKind::Idle && blendState.transitionProgress == 1.0)},
             {"idle_reset_to_neutral_retired", "explicit neutral snap retired in favor of continuous crossfade with sequential evaluation correction"},
             {"clip_selection_policy", "bounded explicit-duration crossfade with sequential evaluation amount correction (first clip overwrites amount 1.0, second clip nominal weight); inactive clip paused and skipped after blend"},
             {"sequential_evaluation_crossfade", sequentialEvaluationJson},
