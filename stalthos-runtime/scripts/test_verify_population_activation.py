@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from verify_population_activation import check_interval, load_json, snapshot
+from verify_population_activation import check_interval, check_transition, load_json, snapshot
 
 
 def state():
@@ -29,6 +29,20 @@ def interval():
 class MalformedTelemetry(unittest.TestCase):
     def test_valid_elapsed_interval(self):
         self.assertEqual(check_interval(interval()), (2., 60.))
+
+    def test_positive_elapsed_required(self):
+        evidence=interval()
+        evidence.update(physical_seconds=0, calendar_seconds=0, after=copy.deepcopy(evidence["before"]))
+        with self.assertRaises(ValueError):
+            check_interval(evidence)
+
+    def test_transition_radius_must_match_activation(self):
+        for active, x in ((False, 200.), (True, 100.)):
+            transition=dict(physical_active=active, body_x=x, body_z=24., physical_seconds=2., snapshot=state())
+            check_transition(transition, snapshot(state()), 192.)
+            transition['physical_active']=not active
+            with self.assertRaises(ValueError):
+                check_transition(transition, snapshot(state()), 192.)
 
     def test_missing_actor_field(self):
         s = state()

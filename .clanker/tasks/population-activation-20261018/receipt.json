@@ -1,0 +1,565 @@
+{
+  "schema_version": 1,
+  "task_id": "population-activation-20261018",
+  "status": "validated",
+  "updated": "2026-10-18T11:48:26.398230+00:00",
+  "base_revision": "b66467283c6ff2be0fc6fda1e36267cc72b7abdf",
+  "scope": "Body-driven retained watershed population activation, dormant elapsed needs and exact save/load continuity; no regional population registry yet",
+  "collected_candidate": "1a9b696fa172676c863a4669ec73041c12b73af6",
+  "collected_dirty_host_paths": 4,
+  "native": {
+    "departure": {
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064102-033fbe05",
+      "physical_active_initial": true,
+      "physical_active_final": false,
+      "simulation_frames": 127,
+      "dormant_frames": 3117,
+      "dormant_physical_seconds": 11.558056607376784,
+      "dormant_calendar_seconds": 11.558056607376784,
+      "pose_matrix_checks": 25952,
+      "skin_matrix_checks": 1946400,
+      "hidden_object_checks": 99744,
+      "visible_object_checks": 4064
+    },
+    "dormant": {
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064117-4500b374",
+      "physical_active_initial": false,
+      "physical_active_final": false,
+      "simulation_frames": 0,
+      "dormant_frames": 903,
+      "dormant_physical_seconds": 3.6239448026026366,
+      "dormant_calendar_seconds": 3.6239448026026366,
+      "pose_matrix_checks": 7224,
+      "skin_matrix_checks": 541800,
+      "hidden_object_checks": 28896,
+      "visible_object_checks": 0
+    },
+    "return": {
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064122-652398f4",
+      "physical_active_initial": false,
+      "physical_active_final": true,
+      "simulation_frames": 579,
+      "dormant_frames": 2710,
+      "dormant_physical_seconds": 10.188538004891598,
+      "dormant_calendar_seconds": 10.188538004891598,
+      "pose_matrix_checks": 26312,
+      "skin_matrix_checks": 1973400,
+      "hidden_object_checks": 86720,
+      "visible_object_checks": 18528
+    },
+    "camera": {
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064138-64672e47",
+      "physical_active_initial": true,
+      "physical_active_final": true,
+      "simulation_frames": 1611,
+      "dormant_frames": 0,
+      "dormant_physical_seconds": 0.0,
+      "dormant_calendar_seconds": 0.0,
+      "pose_matrix_checks": 12888,
+      "skin_matrix_checks": 966600,
+      "hidden_object_checks": 0,
+      "visible_object_checks": 51552
+    }
+  },
+  "verification": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_snapshot_continuation": true,
+    "dormant_needs_verified": true,
+    "body_activation_verified": true,
+    "camera_activation_independent": true,
+    "skins_required": true
+  },
+  "regressions": {
+    "streaming-regression": {
+      "passed": true,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064334-ed2ec797",
+      "retained_actor_count": 8,
+      "exact_shared_mesh_edges": true,
+      "body_outbound_return": true,
+      "support_from_rendered_triangles": true,
+      "captures_require_visual_review": true,
+      "receipt": {
+        "body_tile_crossings": 8,
+        "capture_diagnostics": [
+          {
+            "body_x": 91.99923706054688,
+            "body_z": 24.0,
+            "capture": 0,
+            "filename": "populated-terrain-0.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 141.0999755859375,
+            "body_z": 24.0,
+            "capture": 1,
+            "filename": "populated-terrain-1.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 256.0164794921875,
+            "body_z": 24.0,
+            "capture": 2,
+            "filename": "populated-terrain-2.png",
+            "saved": true,
+            "visible_object": true
+          },
+          {
+            "body_x": 400.12384033203125,
+            "body_z": 24.0,
+            "capture": 3,
+            "filename": "populated-terrain-3.png",
+            "saved": true,
+            "visible_object": true
+          }
+        ],
+        "created_tiles": 29,
+        "diagnostic_traversal": true,
+        "evicted_tiles": 20,
+        "exterior_cells_overlap_reference": false,
+        "final_body_x": 24.0,
+        "final_body_z": 24.0,
+        "limitations": "synchronous terrain; body-driven watershed dormancy only; no regional habitat populations or final art/FPS acceptance",
+        "max_body_x": 544.0,
+        "max_proxy_bottom_center_error_m": 0.2737951024901122,
+        "max_rendered_bounds_center_error_m": 3.0517578125e-05,
+        "max_root_ground_error_m": 3.813940566033125e-06,
+        "max_shared_height_error_m": 0.0,
+        "max_shared_normal_component_error": 0.0,
+        "peak_resident_tiles": 13,
+        "population_activation_implemented": true,
+        "population_count_retained": 8,
+        "reference_mesh_retained": true,
+        "regenerated_mesh_mismatches": 0,
+        "regenerated_tiles": 8,
+        "rendered_support_fallbacks": 0,
+        "residency_driver": "body",
+        "resident_tiles": 9,
+        "route_returned": true,
+        "shared_edge_samples": 15006,
+        "support_samples": 5745,
+        "visited_body_tiles": 5
+      }
+    },
+    "continuation": {
+      "passed": true,
+      "actor_count": 8,
+      "exact_initial_state_restored": true,
+      "full_snapshot_fields_verified": true,
+      "first_run_traversal": false,
+      "resumed_motion": true,
+      "water_restore_abs_error": 0.0,
+      "water_consumption_abs_error": 5.122277602076508e-11,
+      "ledger_cap_exhaustions": 0,
+      "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064400-68891b29",
+      "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064409-bd7d0ab8",
+      "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-064400\\first.stl",
+      "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-064400\\second.stl"
+    },
+    "traversal-continuation": {
+      "passed": true,
+      "actor_count": 8,
+      "exact_initial_state_restored": true,
+      "full_snapshot_fields_verified": true,
+      "first_run_traversal": true,
+      "resumed_motion": true,
+      "water_restore_abs_error": 1.1641532182693481e-10,
+      "water_consumption_abs_error": 7.188646206079952e-11,
+      "ledger_cap_exhaustions": 0,
+      "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064414-f1d88105",
+      "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064440-8d595b7b",
+      "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-064414\\first.stl",
+      "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-064414\\second.stl"
+    },
+    "watershed-regression": {
+      "passed": true,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064520-2c09d233",
+      "checks": {
+        "native_mode": true,
+        "outbound_return_crossings": true,
+        "visited_five_body_tiles": true,
+        "resident_budget": true,
+        "retired_tiles": true,
+        "regenerated_exactly": true,
+        "retained_watershed": true,
+        "returned_to_watershed": true,
+        "original_interior_mesh": true,
+        "exact_shared_heights": true,
+        "exact_shared_normals": true,
+        "bottom_center_support": true,
+        "rendered_proxy_bounds": true,
+        "captures_saved": true,
+        "capture_locations_and_visibility": true
+      },
+      "receipt": {
+        "body_tile_crossings": 8,
+        "capture_diagnostics": [
+          {
+            "body_x": 81.325424,
+            "body_z": 24.0,
+            "bounds_center": [
+              81.32542419433594,
+              7.283095836639404,
+              24.0
+            ],
+            "camera_eye": [
+              56.32541275024414,
+              24.783092498779297,
+              -3.999997615814209
+            ],
+            "capture": 0,
+            "projected_center": [
+              -0.173753559589386,
+              -0.1604474037885666,
+              0.002412945730611682
+            ],
+            "visible_object": true
+          },
+          {
+            "body_x": 268.5675613333333,
+            "body_z": 24.0,
+            "bounds_center": [
+              268.56756591796875,
+              84.49020385742188,
+              24.0
+            ],
+            "camera_eye": [
+              243.56753540039062,
+              101.99020385742188,
+              -3.9999918937683105
+            ],
+            "capture": 1,
+            "projected_center": [
+              -0.17375341057777405,
+              -0.16044773161411285,
+              0.0024129445664584637
+            ],
+            "visible_object": true
+          },
+          {
+            "body_x": 455.61717733333336,
+            "body_z": 24.0,
+            "bounds_center": [
+              455.6171875,
+              81.74469757080078,
+              24.0
+            ],
+            "camera_eye": [
+              430.6171569824219,
+              99.24470520019531,
+              -3.999999523162842
+            ],
+            "capture": 2,
+            "projected_center": [
+              -0.1737528145313263,
+              -0.16044826805591583,
+              0.0024129434023052454
+            ],
+            "visible_object": true
+          }
+        ],
+        "captures": [
+          true,
+          true,
+          true
+        ],
+        "created_tiles": 29,
+        "evicted_tiles": 20,
+        "final_body_x": 24.0,
+        "frames": 5339,
+        "interactive": false,
+        "interior_mesh_samples": 594,
+        "limitations": "terrain construction probe; synchronous streaming; accelerated proxy traversal; no population activation or water surface in this probe; no final art or target FPS acceptance",
+        "max_interior_mesh_height_error_m": 1.7763568394002505e-15,
+        "max_proxy_bottom_center_error_m": 3.813639324334872e-06,
+        "max_rendered_bounds_center_error_m": 3.810156243844176e-05,
+        "max_shared_height_error_m": 0.0,
+        "max_shared_normal_component_error": 0.0,
+        "max_source_interpolation_error_m": 0.15245188630177609,
+        "mode": "watershed-join-probe",
+        "occlusion_culling": false,
+        "peak_resident_tiles": 13,
+        "regenerated_mesh_mismatches": 0,
+        "regenerated_tiles": 8,
+        "route_returned": true,
+        "schema_version": 1,
+        "shared_edge_samples": 8970,
+        "support_samples": 5339,
+        "transitions": [
+          {
+            "resident": 9,
+            "tile_x": 0,
+            "tile_z": 0,
+            "x": 24.019396,
+            "z": 24.0
+          },
+          {
+            "resident": 11,
+            "tile_x": 1,
+            "tile_z": 0,
+            "x": 128.17140066666667,
+            "z": 24.0
+          },
+          {
+            "resident": 13,
+            "tile_x": 2,
+            "tile_z": 0,
+            "x": 256.1054753333333,
+            "z": 24.0
+          },
+          {
+            "resident": 13,
+            "tile_x": 3,
+            "tile_z": 0,
+            "x": 384.1148373333333,
+            "z": 24.0
+          },
+          {
+            "resident": 13,
+            "tile_x": 4,
+            "tile_z": 0,
+            "x": 512.1549053333333,
+            "z": 24.0
+          },
+          {
+            "resident": 13,
+            "tile_x": 3,
+            "tile_z": 0,
+            "x": 511.9211133333333,
+            "z": 24.0
+          },
+          {
+            "resident": 13,
+            "tile_x": 2,
+            "tile_z": 0,
+            "x": 383.95812666666666,
+            "z": 24.0
+          },
+          {
+            "resident": 11,
+            "tile_x": 1,
+            "tile_z": 0,
+            "x": 255.90328199999996,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": 0,
+            "tile_z": 0,
+            "x": 127.97795200000003,
+            "z": 24.0
+          }
+        ],
+        "visited_body_tiles": 5,
+        "watershed_tile_evictions": 0,
+        "watershed_tiles_pinned": 4
+      }
+    },
+    "coarse-regression": {
+      "passed": true,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-064533-6fbb5387",
+      "checks": {
+        "native_mode": true,
+        "crossed_five_boundaries": true,
+        "visited_six_body_tiles": true,
+        "resident_budget": true,
+        "retired_tiles": true,
+        "exact_shared_heights": true,
+        "exact_shared_normals": true,
+        "bottom_center_support": true,
+        "rendered_proxy_bounds": true,
+        "captures_saved": true
+      },
+      "receipt": {
+        "body_tile_crossings": 5,
+        "capture_diagnostics": [
+          {
+            "body_x": -73.5234064,
+            "body_z": 24.0,
+            "bounds_center": [
+              -73.52340698242188,
+              89.39891052246094,
+              24.0
+            ],
+            "camera_eye": [
+              -98.52339935302734,
+              106.8989028930664,
+              -3.999999523162842
+            ],
+            "capture": 0,
+            "projected_center": [
+              -0.17375384271144867,
+              -0.16044755280017853,
+              0.0024129461962729692
+            ],
+            "visible_object": true
+          },
+          {
+            "body_x": 99.28300159999998,
+            "body_z": 24.0,
+            "bounds_center": [
+              99.28300476074219,
+              86.94358825683594,
+              24.0
+            ],
+            "camera_eye": [
+              74.28300476074219,
+              104.44358825683594,
+              -3.999997615814209
+            ],
+            "capture": 1,
+            "projected_center": [
+              -0.17375369369983673,
+              -0.1604478508234024,
+              0.0024129461962729692
+            ],
+            "visible_object": true
+          },
+          {
+            "body_x": 272.04565279999997,
+            "body_z": 24.0,
+            "bounds_center": [
+              272.045654296875,
+              84.43942260742188,
+              24.0
+            ],
+            "camera_eye": [
+              247.045654296875,
+              101.93942260742188,
+              -3.9999918937683105
+            ],
+            "capture": 2,
+            "projected_center": [
+              -0.1737539917230606,
+              -0.16044819355010986,
+              0.002412946429103613
+            ],
+            "visible_object": true
+          }
+        ],
+        "captures": [
+          true,
+          true,
+          true
+        ],
+        "created_tiles": 24,
+        "evicted_tiles": 15,
+        "final_body_x": 416.0,
+        "frames": 5978,
+        "interactive": false,
+        "interior_mesh_samples": 0,
+        "limitations": "terrain construction probe; synchronous streaming; accelerated proxy traversal; no population activation or water surface in this probe; no final art or target FPS acceptance",
+        "max_interior_mesh_height_error_m": 0.0,
+        "max_proxy_bottom_center_error_m": 3.8135147093498745e-06,
+        "max_rendered_bounds_center_error_m": 1.8457812529959483e-05,
+        "max_shared_height_error_m": 0.0,
+        "max_shared_normal_component_error": 0.0,
+        "max_source_interpolation_error_m": 2.2287272756216225e-05,
+        "mode": "terrain-stream-probe",
+        "occlusion_culling": false,
+        "peak_resident_tiles": 9,
+        "regenerated_mesh_mismatches": 0,
+        "regenerated_tiles": 0,
+        "route_returned": false,
+        "schema_version": 1,
+        "shared_edge_samples": 1224,
+        "support_samples": 5978,
+        "transitions": [
+          {
+            "resident": 9,
+            "tile_x": -2,
+            "tile_z": 0,
+            "x": -159.9884464,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": -1,
+            "tile_z": 0,
+            "x": -127.9839664,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": 0,
+            "tile_z": 0,
+            "x": 0.0008719999999868833,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": 1,
+            "tile_z": 0,
+            "x": 128.06934079999996,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": 2,
+            "tile_z": 0,
+            "x": 256.06661120000007,
+            "z": 24.0
+          },
+          {
+            "resident": 9,
+            "tile_x": 3,
+            "tile_z": 0,
+            "x": 384.07350080000003,
+            "z": 24.0
+          }
+        ],
+        "visited_body_tiles": 6,
+        "watershed_tile_evictions": 0,
+        "watershed_tiles_pinned": 0
+      }
+    }
+  },
+  "build": "Release Build.ps1 passed pinned engine cache hashes; source hashes bound in evidence-hashes.json",
+  "ctest": "30/30 passed in1.47s",
+  "toolkit": "2073 passed,2 skipped in535.78s;doctor exit0 no warnings/errors;cli list 12commands ok",
+  "verifier_fixtures": "9/9 passed including missing/invalid fields,zero elapsed,opposite-radius transitions,dormant mutations and resource contacts",
+  "resource_history_audit": "save-ledger-audit.json: exact decoded resources/history departure->dormant;8actor session mappings exact through return;4historykeys retained with nondecreasing amounts",
+  "review": "independent-review.md: P1 singular dormant scaling and P2 proof validation gaps resolved; no unresolved findings",
+  "visual_review": {
+    "reviewer": "root",
+    "native_return_capture": "var/reports/runtime/20261018-064445-8fd2ed24/draft-host.png",
+    "population_frame": "var/reports/runtime/20261018-064602-f227d0bb/draft-host.png",
+    "frame_scope": "Controlled copy of returned native save changed body pose only to x20,z0 to frame population; source return save preserved; presentation only",
+    "observed": "Multiple retained imported animals visible in population frame; creek/vegetation present; no obvious skin explosion in inspected stills. White unfinished tree material, steep enclosing blend banks, sparse dressing and draft animal contact remain visible."
+  },
+  "failed_attempts": [
+    {
+      "evidence": "var/reports/runtime/20261018-064220-17fd34d0",
+      "reason": "18s streaming capture1 landed x152.6008 outside <=150 bracket;24s rerun passed unchanged code/thresholds"
+    }
+  ],
+  "preservation": {
+    "checked": 85,
+    "changed": [],
+    "time": "2026-10-18T11:47:03.212896+00:00"
+  },
+  "workers": {
+    "new_local_agents": 2,
+    "peak_local": 2,
+    "dispatches_including_review_followups": 4,
+    "agy": 0,
+    "jules": 0,
+    "old_jules_patches_retrieved": 0
+  },
+  "limitations": [
+    "Only original eight watershed individuals; fixed192m body radius with no hysteresis;renderer allocations retained",
+    "Dormancy uses stored rest flag and elapsed game time; no closed-app wall time catchup;death-step partition equivalence not promised",
+    "No regional habitat registry/spawn;no general retained-population persistence schema;256 resourcehistorykey ceiling remains",
+    "Visible finite terrain edge/steep blend banks/material discontinuity/sparse exterior and unfinished vegetation/animal contacts",
+    "No final art,full foot contact,full draft or target30FPS acceptance"
+  ],
+  "next_task": "Deterministic region-owned habitat sites plus bounded retained population registry; preserve watershed identity/habitat signature; separate coarse estimates from actual individuals; see next-task.md",
+  "graph": {
+    "nodes": 6807,
+    "edges": 12137,
+    "mode": "Synchronous AST refresh,no clustering;348 zero-node metadata warnings;historical baseline untouched",
+    "delta": "graph-delta.json"
+  }
+}

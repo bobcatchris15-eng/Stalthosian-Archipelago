@@ -27,3 +27,34 @@ already dead ages remain frozen. Split and aggregate updates therefore agree
 within floating point rounding for living actors away from death transitions;
 partition-independent death-step needs are not promised. No save format changes
 are required. This primitive does not itself implement host activation policy.
+
+## Populated host activation
+
+The actual populated host retains the original eight watershed individuals and
+switches between physical simulation and dormant evolution using only the body
+position: the watershed is active within 192 m of world origin. Detached camera
+motion does not change this policy or grant HeroSim knowledge. This is a bounded
+watershed policy, not a regional population registry or habitat generator.
+
+Departure retains the complete population, resource sessions and ledger history.
+Dormancy advances age/needs from elapsed game time, retains route/pose/activity,
+and performs no resource contacts. Replica allocations remain retained; object
+renderability/shadow flags are disabled and restored without zeroing transforms.
+Post-engine checks reject singular roots, nonfinite skin matrices and incorrect
+visibility flags. Wall time while the application is closed is not simulated.
+
+`Run.ps1 -PopulatedWorld -PopulatedDeparture` is a bounded diagnostic outbound
+route which holds at x=544 m for a real away save. Reload normally to test dormant
+continuation, or reload with `-PopulatedTraversal` to return from the saved body
+position. The ordinary `-PopulatedTraversal` route still goes out and returns.
+These diagnostic movements are not locomotion or foot-contact acceptance.
+
+`verify_population_activation.py --departure DIR --dormant DIR --return DIR
+--camera DIR --require-skins` consumes four native evidence directories. It checks
+complete snapshots across loads, exact retained route/pose fields, elapsed needs,
+body-radius transitions, no dormant resource contacts, resumed motion, imported
+skin matrix checks and detached-camera independence. Run
+`python stalthos-runtime/scripts/test_verify_population_activation.py` for strict
+malformed-proof fixtures. Full resource history is additionally audited from the
+native STL8 saves in the task receipt. The fixed 256 history-key ceiling remains
+an explicit future scaling constraint; no histories are silently evicted.

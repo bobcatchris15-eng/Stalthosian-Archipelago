@@ -29,8 +29,9 @@ $waterError=[Math]::Abs($firstRuntime.resources_final.creek-($secondRuntime.reso
 if($waterError -gt 1e-8) {throw 'Saved creek depletion did not restore exactly'}
 $consumptionError=[Math]::Abs(($firstRuntime.resources_final.creek-$secondRuntime.resources_final.creek)-$after.water_consumed)
 if($after.water_consumed -le 0 -or $consumptionError -gt 1e-7) {throw 'Resumed creek consumption did not match the shared ledger'}
-$expected=ConvertTo-Json -InputObject $before.actors_final -Depth 10 -Compress
-$actual=ConvertTo-Json -InputObject $after.actors_initial -Depth 10 -Compress
+if($before.schema_version -ne 2 -or $after.schema_version -ne 2 -or $null -eq $before.snapshot_final -or $null -eq $after.snapshot_initial) {throw 'Full population snapshots absent'}
+$expected=ConvertTo-Json -InputObject $before.snapshot_final -Depth 10 -Compress
+$actual=ConvertTo-Json -InputObject $after.snapshot_initial -Depth 10 -Compress
 if($expected -cne $actual) {throw "Population changed across save/load; evidence retained at $report"}
 if(-not $after.population_restored -or -not $after.population_persisted) {throw 'Population continuation flags missing'}
 $advanced=$false
@@ -38,7 +39,7 @@ for($i=0;$i -lt $after.actors_final.Count;$i++) {
     if($after.actors_final[$i].distance_m -gt $after.actors_initial[$i].distance_m) {$advanced=$true}
 }
 if(-not $advanced) {throw 'No resumed actor advanced along its route'}
-$result=[ordered]@{passed=$true;actor_count=$after.actors_initial.Count;exact_initial_state_restored=$true;
+$result=[ordered]@{passed=$true;actor_count=$after.actors_initial.Count;exact_initial_state_restored=$true;full_snapshot_fields_verified=$true;
     first_run_traversal=[bool]$FirstTraversal;resumed_motion=$advanced;water_restore_abs_error=$waterError;water_consumption_abs_error=$consumptionError;ledger_cap_exhaustions=0;first_evidence=$first;second_evidence=$second;first_save=$firstSave;second_save=$secondSave}
 $result | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $report 'receipt.json') -Encoding utf8
 $result | ConvertTo-Json

@@ -1,21 +1,50 @@
 # Current world construction checkpoint - 2026-10-18
 
-Priority: world,simulations,systems,populations. Replaceable assets best effort; HeroViewer/individual Smalltrotter polish off critical path.
+Priority: world,simulations,systems,populations. Wicked Engine selected. Assets
+remain replaceable;HeroViewer/individual Smalltrotter polish off critical path.
 
 ## Validated continuation
 
-Actual normal --populated-world now streams joined exterior terrain around the body. Original192m reference mesh/triangles/material,creek,resources,habitat sites and8local individuals remain; existing local saves need no new world. Exterior rectangular patches split at +/-96m omit original interior cells,cache actual renderer buffers and copy original seam shading normals. Fauna,hero grounding,camera queries and saved exterior poses use composite rendered queries. Populated movement/load bounds +/-12000m; focused modes retain old behavior.
+Body-driven activation now applies to the original8watershed individuals in the
+actual populated host. Within192m of origin they simulate physically;away they
+retain exact route/site/target/pose/injury/resting/activity while elapsed game
+age/needs evolve without resource contacts. Camera movement never changes this
+policy. Dormant object render/shadow flags hide replicas without singular skin
+transforms;allocations remain resident. Existing STL8 saves remain compatible.
+No new world required. No closed-app walltime evolution.
 
-Native24s populated traversal24->544->24 crossed8tile boundaries/5body tiles,created29/evicted20/regenerated8 with0position/normal digest mismatches,peak13/final9residents. All15006shared position/normal comparisons exact.5779support samples with0fallbacks;root-height error3.81e-6m;rendered bounds-center error3.05e-5m. All4captures root+independent inspected:no observed internal open crack,marker visible. Preexisting marker bottom gap reaches0.2738m;root projection is not foot-contact acceptance. Visible finite terrain edge/black void,very steep blend banks,abrupt material and sparse exterior remain engineering presentation debt.
+Native imported departure24->544 save,dormantreload,return544->24 and detached
+camera probes passed strict schema2 verification. All actor snapshot fields match
+exactly across bothloads. Dormancy11.558/3.624/10.189physical/calendar seconds;
+zero active frames while loadedaway;zero dormantresourcecontacts. Exact decoded
+ledger/history while dormant;all8sessionmappings survive;4historykeys preserved
+through return. Positive finite skin checks in all4runs;hidden/visibleflags match.
+Camera728detachedframes with0bodymovement,0activationtransitions. Native local
+population frame shows several imported animals;steepbanks,sparseworld and white
+unfinished tree materials remain visible presentation debt.
 
-Release build passed;CTest30/30 in1.75s;toolkit2073passed/2skipped522.51s. Standard and traversal-save continuations restore8exact actor projections/resume motion;traversal water restoration error0,consumption error2.53e-11. Controlled exteriorSTL8pose400,24 loads,resaves and reloads natively with8exact actor records,zero root/bounds/fallback errors. Original source save preserved. Existing watershed/coarse native regressions passed. Verifier accepts valid and rejects16malformed fixtures;independent review no unresolved finding.
-
-Receipt: `.clanker/tasks/populated-streaming-20261018/receipt.json`;canonical native evidence:`var/reports/runtime/20261018-043923-84100b07`. Previous watershed overlay/probe evidence remains historical.
+Releasebuild passed;CTest30/30in1.47s;toolkit2073passed2skipped535.78s;doctor0.
+Nine malformed-proof fixtures pass. Productionstreaming24s,standard/traversal
+fullsnapshotcontinuation,watershedjoin andcoarsestreaming regressions passed.
+18s streamcapture missed spatialbracket;failed evidence retained;24s rerunpassed.
+Independent review found/fixed singularhiding and proofholes;no unresolved finding.
+Receipt:`.clanker/tasks/population-activation-20261018/receipt.json`.
+Native manifest:`var/reports/population-activation-20261018/evidence.json`.
 
 ## Next concrete work
 
-Body-driven population activation/retention,deterministic regional habitats and explicit coarse dormant evolution. Local8actors currently remain fully simulated while away;inactive saved actors remain frozen. Camera prewarm must not activate populations or grant HeroSim knowledge. Preserve identities,full route/site/target/needs state and resource histories through departure/return/save. Current native JSON compares projected actor fields;full route snapshot verification belongs next acceptance. Resource history cap256keys remains open. Brief:`.clanker/tasks/populated-streaming-20261018/next-task.md`.
+Deterministic region-owned habitats and bounded retainedpopulationregistry.
+Preserve original8IDs/habitatsignature,groundedjoinedterrain and exactroutes/needs/
+resourcehistories. Separate actualindividuals fromcoarseestimates. Fixed256history
+keyceiling remains open;never silentlyevict. Read tasknext-task.md. Existing
+joinedterrainstreaming proof remains in populated-streaming-20261018 receipt.
 
 ## Collection and preservation
 
-No outstanding task at entry;implementation and independent review/followup collected.3native dispatches,peak2local;no AGY/Jules dispatch or old patch retrieval. Old Jules inventory26completed/4awaitingfeedback/1failed,30patches inventoried remains unchanged. No active worker. All84preexistinguntracked files verified unchanged;planning/source assets/open apps/worktrees preserved. Check HALT before work/dispatch. Authorized reviewed publication origin main only;no forcepush/releases/deployment/paidAPI/credentials. No finalart,full-draft,full-foot contact or30FPS acceptance.
+Collected interrupted domaincandidate1a9b696 and4dirtyhostpaths beforedispatch.
+Two newnativeagents;peak2local;4dispatches includingreviewfollowups. NoAGY/Jules
+oroldpatchretrieval. All85preexistinguntrackedfileshashesunchanged. Planning,
+sourceassets,openapps,historicalworktrees preserved. Noactiveworker requirednext.
+CheckHALTbeforework/dispatch. Reviewedpublicationoriginmainauthorized;noforcepush,
+release,deployment,paidAPI,credentials. No finalart,fullfootcontact,full-draft or
+30FPSacceptance. Publication details in taskreceipt after remoteverification.

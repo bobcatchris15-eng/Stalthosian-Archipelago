@@ -1,0 +1,10 @@
+Release Build.ps1: passed pinned engine/cache inputs; executable hash in evidence-hashes.json
+CTest30/30 passed1.47s
+PYTHONPATH=src python -m pytest -q:2073passed2skipped535.78s
+python -m stalthos_toolkit.cli doctor --workspace ../var:exit0 errors[] warnings[]
+python stalthos-runtime/scripts/test_verify_population_activation.py:9passed
+{"passed":true,"actor_count":8,"exact_snapshot_continuation":true,"dormant_needs_verified":true,"body_activation_verified":true,"camera_activation_independent":true,"skins_required":true}
+Native streaming24s,standard/traversal fullsnapshot continuations,watershedjoin/coarse regressions:passed;paths inreceipt
+Ledger audit passed:exact dormantdecodedvalues,8stablemappings,4historykeysretained
+Source+receipt independentreview:no unresolvedfindings
+Root inspected native captures;framedposecopy is presentationonly

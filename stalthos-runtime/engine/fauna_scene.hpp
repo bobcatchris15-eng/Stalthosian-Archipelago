@@ -19,12 +19,15 @@ class FaunaScene {
         wi::ecs::Entity walk = wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity idle = wi::ecs::INVALID_ENTITY;
         double scale = 1;
+        struct Visibility { wi::ecs::Entity entity; bool renderable; bool shadow; };
+        std::vector<Visibility> objects;
     };
     domain::RenderedGroundSurface ground_;
     std::function<double(double,double)> groundQuery_;
     std::vector<Replica> replicas_;
     std::uint64_t groundedUpdates_ = 0;
     bool importedMeshes_ = false;
+    uint64_t poseChecks_=0, boneChecks_=0, hiddenObjectChecks_=0, visibleObjectChecks_=0;
 public:
     void cacheGround(wi::scene::Scene& scene) {
         const auto entity = scene.Entity_FindByName("draft reference ground");
@@ -138,9 +141,56 @@ public:
                     else if(name && (name->name.find("Idle")!=std::string::npos || name->name.find("idle")!=std::string::npos)) replica.idle=e;
                 }
             }
+            for(std::size_t j=0;j<scene.objects.GetCount();++j) {
+                const auto entity=scene.objects.GetEntity(j);
+                if(entity==replica.root || scene.Entity_IsDescendant(entity,replica.root)) {
+                    const auto& object=scene.objects[j];
+                    replica.objects.push_back({entity,(object._flags & wi::scene::ObjectComponent::RENDERABLE)!=0,object.IsCastingShadow()});
+                }
+            }
             replicas_.push_back(replica);
         }
     }
+    // Dormant replicas remain allocated for exact identity retention, but neither
+    // their transforms nor their animations advance until body reactivation.
+    void setPhysical(wi::scene::Scene& scene,bool physical) {
+        for(const auto& r:replicas_) {
+            for(const auto& v:r.objects) if(auto* object=scene.objects.GetComponent(v.entity)) {
+                object->SetRenderable(physical && v.renderable);
+                object->SetCastShadow(physical && v.shadow);
+            }
+            if(!physical) for(auto entity:{r.walk,r.idle}) if(auto* animation=scene.animations.GetComponent(entity)) animation->Pause();
+        }
+    }
+    // Check the actual post-engine matrices, including retained dormant skins.
+    void verifyPhysical(wi::scene::Scene& scene,bool physical) {
+        auto finite=[](DirectX::FXMMATRIX m) { return !DirectX::XMMatrixIsNaN(m) && !DirectX::XMMatrixIsInfinite(m); };
+        for(const auto& r:replicas_) {
+            const auto* root=scene.transforms.GetComponent(r.root);
+            if(!root || !finite(root->GetWorldMatrix()) || std::abs(DirectX::XMVectorGetX(DirectX::XMMatrixDeterminant(root->GetWorldMatrix())))<1e-12f)
+                throw std::runtime_error("fauna root matrix singular or nonfinite");
+            ++poseChecks_;
+            for(const auto& v:r.objects) {
+                const auto* object=scene.objects.GetComponent(v.entity);
+                if(!object || ((object->_flags & wi::scene::ObjectComponent::RENDERABLE)!=0)!=(physical && v.renderable) || object->IsCastingShadow()!=(physical && v.shadow))
+                    throw std::runtime_error("fauna physical visibility mismatch");
+                if(physical) ++visibleObjectChecks_; else ++hiddenObjectChecks_;
+            }
+            for(std::size_t i=0;i<scene.armatures.GetCount();++i) {
+                const auto entity=scene.armatures.GetEntity(i);
+                if(entity!=r.root && !scene.Entity_IsDescendant(entity,r.root)) continue;
+                for(const auto& bone:scene.armatures[i].boneData) {
+                    const auto matrix=bone.GetMatrix();
+                    if(!finite(DirectX::XMLoadFloat4x4(&matrix))) throw std::runtime_error("fauna skin matrix nonfinite");
+                    ++boneChecks_;
+                }
+            }
+        }
+    }
+    uint64_t poseChecks() const {return poseChecks_;}
+    uint64_t boneChecks() const {return boneChecks_;}
+    uint64_t hiddenObjectChecks() const {return hiddenObjectChecks_;}
+    uint64_t visibleObjectChecks() const {return visibleObjectChecks_;}
     void update(wi::scene::Scene& scene,const std::vector<fauna::ActorView>& actors,double clipDuration,double stride) {
         if(actors.size()!=replicas_.size()) throw std::runtime_error("fauna projection/renderer count mismatch");
         for(std::size_t i=0;i<actors.size();++i) {

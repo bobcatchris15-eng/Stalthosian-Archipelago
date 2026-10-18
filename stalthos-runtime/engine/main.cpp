@@ -176,7 +176,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
-    bool populatedWorld = false, populatedTraversal = false;
+    bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -186,6 +186,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
             else if (key == L"--populated-traversal") populatedTraversal = true;
+            else if (key == L"--populated-departure") {populatedTraversal=true;populatedDeparture=true;}
             else if (key == L"--terrain-stream-probe") terrainStreamProbe = true;
             else if (key == L"--watershed-join-probe") { terrainStreamProbe = true; watershedJoinProbe = true; }
             else if (key == L"--disable-terrain-support") disableTerrainSupport = true;
@@ -732,6 +733,42 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"alive",a.alive},{"activity",static_cast<unsigned>(a.activity)}});
             return result;
         };
+        auto populationJson=[](const stalthos::fauna::PopulationSnapshot& snapshot) {
+            json actors=json::array();
+            for(const auto& a:snapshot.actors) actors.push_back({{"id",a.id},{"species",static_cast<unsigned>(a.species)},
+                {"x",a.position.x},{"y",a.position.y},{"z",a.position.z},{"heading",a.headingRadians},
+                {"distance_m",a.distanceTravelledMeters},{"site",a.site},{"target",a.target},{"age",a.calendarAge},
+                {"stage",static_cast<unsigned>(a.stage)},{"hunger",a.hunger},{"thirst",a.thirst},{"fatigue",a.fatigue},
+                {"injury",a.injury},{"is_resting",a.isResting},{"activity",static_cast<unsigned>(a.activity)}});
+            return json{{"seed",snapshot.seed},{"region",snapshot.region},{"habitat_signature",snapshot.habitatSignature},{"actors",actors}};
+        };
+        // This bounded watershed owns the original habitat. Physical activation
+        // depends only on the body; camera residency never grants simulation.
+        auto watershedPhysical=[](double bx,double bz) { return std::hypot(bx,bz)<=192.0; };
+        const double traversalStartX=x;
+        bool faunaPhysical=watershedPhysical(x,z);
+        const bool faunaPhysicalInitial=faunaPhysical;
+        uint64_t faunaDormantFrames=0;
+        double faunaDormantPhysicalSeconds=0,faunaDormantCalendarSeconds=0;
+        json faunaTransitions=json::array(), faunaDormantIntervals=json::array();
+        json faunaFullInitial, dormantStart;
+        double dormantPhysical=0,dormantCalendar=0,dormantFood=0,dormantWater=0;
+        uint64_t dormantEvents=0;
+        std::vector<std::pair<stalthos::Identity,uint64_t>> dormantSessions;
+        auto beginFaunaDormancy=[&]() {
+            dormantStart=populationJson(faunaPopulation->snapshot());
+            dormantPhysical=0;dormantCalendar=0;
+            dormantFood=faunaResources->consumedFood();dormantWater=faunaResources->consumedWater();
+            dormantEvents=faunaResourceEvents;dormantSessions=faunaResources->sessions();
+        };
+        auto endFaunaDormancy=[&](bool reactivated) {
+            faunaDormantIntervals.push_back({{"before",dormantStart},{"after",populationJson(faunaPopulation->snapshot())},
+                {"physical_seconds",dormantPhysical},{"calendar_seconds",dormantCalendar},{"reactivated",reactivated},
+                {"food_consumed",faunaResources->consumedFood()-dormantFood},
+                {"water_consumed",faunaResources->consumedWater()-dormantWater},
+                {"resource_events",faunaResourceEvents-dormantEvents},
+                {"resource_sessions_unchanged",dormantSessions==faunaResources->sessions()}});
+        };
         json faunaInitial=json::array();
         if(populatedWorld) {
             faunaScene.cacheGround(scene);
@@ -753,6 +790,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{});
             faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
             faunaInitial=actorJson(faunaPopulation->actors());
+            faunaFullInitial=populationJson(faunaPopulation->snapshot());
+            if(!faunaPhysical) beginFaunaDormancy();
             auto proxy=[&](std::size_t index) {
                 const auto root=scene.Entity_CreateTransform("best effort fauna proxy "+std::to_string(index));
                 auto part=[&](const char* name,XMFLOAT3 pos,XMFLOAT3 size) {auto e=Box(scene,name,pos,size,{.38f,.27f,.16f,1}); scene.Component_Attach(e,root);};
@@ -764,6 +803,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             };
             faunaScene.load(scene,creature.u8string(),faunaPopulation->actors(),proxy);
             faunaScene.update(scene,faunaPopulation->actors(),creatureClipDuration,creatureStrideLength);
+            faunaScene.setPhysical(scene,faunaPhysical);
             if(plant.empty()) for(const auto& s:faunaSites) if(s.browse)
                 Box(scene,"best effort browse patch",{float(s.position.x),float(s.position.y+.25),float(s.position.z)},{.6f,.25f,.6f},{.23f,.4f,.12f,1});
         }
@@ -973,7 +1013,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if(populatedTraversal) {
                 const double t=std::min(1.0,elapsed/(duration*.95));
-                x=float(24+520*(t<.45?t/.45:t<.55?1:(1-t)/.45));z=24; yaw=pi*.5f;
+                x=float(t<.45?traversalStartX+(544-traversalStartX)*t/.45:t<.55 || populatedDeparture?544:24+520*(1-t)/.45);z=24; yaw=pi*.5f;
             }
             if(populatedTerrain) populatedTerrain->update(scene,x,z);
             if (viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera) {
@@ -1279,6 +1319,20 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     nextConditionsUpdate=clock.physicalSeconds()+1;
                     ++conditionsUpdates;
                 }
+                const bool physicalNow=watershedPhysical(x,z);
+                if(physicalNow!=faunaPhysical) {
+                    faunaTransitions.push_back({{"physical_active",physicalNow},{"body_x",x},{"body_z",z},
+                        {"physical_seconds",clock.physicalSeconds()},{"snapshot",populationJson(faunaPopulation->snapshot())}});
+                    if(physicalNow) endFaunaDormancy(true); else beginFaunaDormancy();
+                    faunaPhysical=physicalNow;
+                    faunaScene.setPhysical(scene,faunaPhysical);
+                }
+                if(!faunaPhysical) {
+                    faunaPopulation->advanceDormant(timeStep);
+                    ++faunaDormantFrames;
+                    dormantPhysical+=timeStep.physicalSeconds;dormantCalendar+=timeStep.calendarSeconds;
+                    faunaDormantPhysicalSeconds+=timeStep.physicalSeconds;faunaDormantCalendarSeconds+=timeStep.calendarSeconds;
+                } else {
                 faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
                 faunaPopulation->advance(timeStep);
                 faunaResources->applyContacts(faunaPopulation->actors(),timeStep.physicalSeconds,resourceLedger);
@@ -1290,6 +1344,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 faunaScene.update(scene,faunaPopulation->actors(),creatureClipDuration,creatureStrideLength);
                 ++faunaSimulationFrames;
                 for(const auto& actor:faunaPopulation->actors()) ++faunaActivityFrames[static_cast<unsigned>(actor.activity)];
+                }
             }
             if(interactive && focused) {
                 const bool inspectionKey=down('V');
@@ -1339,6 +1394,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(faunaPopulation) faunaScene.verifyPhysical(scene,faunaPhysical);
             if(populatedTerrain) {
                 populatedMaxX=std::max(populatedMaxX,double(x));
                 const double renderedGround=populatedTerrain->height(x,z);
@@ -1687,7 +1743,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             streaming["final_body_x"]=x;streaming["final_body_z"]=z;
             streaming["route_returned"]=populatedTraversal && std::abs(x-24)<.01;
             streaming["population_count_retained"]=faunaPopulation->actors().size();
-            streaming["limitations"]="synchronous terrain; local fauna remain simulated while away; no regional fauna activation or final art/FPS acceptance";
+            streaming["population_activation_implemented"]=true;
+            streaming["limitations"]="synchronous terrain; body-driven watershed dormancy only; no regional habitat populations or final art/FPS acceptance";
             WriteJson(output/"populated-terrain.json",streaming);
         }
         if(faunaPopulation) {
@@ -1701,9 +1758,18 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             json sites=json::array();
             for(const auto& site:faunaSites) sites.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},
                 {"browse",site.browse},{"freshwater",site.freshwater},{"neighbors",site.neighbors}});
-            WriteJson(output/"world-population.json",{{"schema_version",1},{"region",1001},{"world_seed",world.worldSeed()},
+            if(!faunaPhysical) endFaunaDormancy(false);
+            WriteJson(output/"world-population.json",{{"schema_version",2},{"region",1001},{"world_seed",world.worldSeed()},
                 {"actors_initial",faunaInitial},{"actors_final",actorJson(faunaPopulation->actors())},{"habitat_sites",sites},
+                {"snapshot_initial",faunaFullInitial},{"snapshot_final",populationJson(faunaPopulation->snapshot())},
+                {"activation_driver","body"},{"activation_radius_m",192.0},{"physical_active_initial",faunaPhysicalInitial},
+                {"physical_active_final",faunaPhysical},{"activation_transitions",faunaTransitions},
+                {"dormant_intervals",faunaDormantIntervals},{"dormant_frames",faunaDormantFrames},
+                {"dormant_physical_seconds",faunaDormantPhysicalSeconds},{"dormant_calendar_seconds",faunaDormantCalendarSeconds},
+                {"dormant_model","retained route and pose; elapsed age/needs only; no resource contact"},
                 {"activity_frames_rest_travel_browse_drink",faunaActivityFrames},{"simulation_frames",faunaSimulationFrames},
+                {"pose_matrix_checks",faunaScene.poseChecks()},{"skin_matrix_checks",faunaScene.boneChecks()},
+                {"hidden_object_checks",faunaScene.hiddenObjectChecks()},{"visible_object_checks",faunaScene.visibleObjectChecks()},
                 {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
                 {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaResources->consumedFood()},
                 {"water_consumed",faunaResources->consumedWater()},{"resources_use_shared_persisted_ledger",true},

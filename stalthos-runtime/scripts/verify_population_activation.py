@@ -81,6 +81,7 @@ def check_interval(interval):
         require(before[key] == after[key], f'interval {key} changed')
     physical = number(interval, 'physical_seconds')
     calendar = number(interval, 'calendar_seconds')
+    require(physical > 0 and calendar > 0, 'dormant probe must have positive elapsed time')
     boolean(interval, 'reactivated')
     require(boolean(interval, 'resource_sessions_unchanged'), 'dormant resource sessions changed')
     for key in ('food_consumed', 'water_consumed', 'resource_events'):
@@ -113,6 +114,15 @@ def check_interval(interval):
                 for key in ('hunger', 'thirst', 'fatigue'):
                     require(a[key] == b[key], 'dead dormant needs changed')
     return physical, calendar
+
+
+def check_transition(t, ids, radius):
+    boolean(t, 'physical_active')
+    number(t, 'body_x', -math.inf)
+    number(t, 'body_z', -math.inf)
+    number(t, 'physical_seconds')
+    require(t['physical_active'] == (math.hypot(t['body_x'], t['body_z']) <= radius), 'transition contradicts body radius')
+    require(snapshot(t['snapshot']) == ids, 'transition identities changed')
 
 
 def check_run(path, skins):
@@ -161,11 +171,7 @@ def check_run(path, skins):
     near(totals[0], p['dormant_physical_seconds'], 'dormant physical duration inconsistent')
     near(totals[1], p['dormant_calendar_seconds'], 'dormant calendar duration inconsistent')
     for t in array(p, 'activation_transitions'):
-        boolean(t, 'physical_active')
-        number(t, 'body_x', -math.inf)
-        number(t, 'body_z', -math.inf)
-        number(t, 'physical_seconds')
-        require(snapshot(t['snapshot']) == ids, 'transition identities changed')
+        check_transition(t, ids, p['activation_radius_m'])
     return p, r
 
 

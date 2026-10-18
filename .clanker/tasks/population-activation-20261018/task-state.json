@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "population-activation-20261018",
+  "status": "complete",
+  "base_revision": "b66467283c6ff2be0fc6fda1e36267cc72b7abdf",
+  "current_step": "Validated body-driven watershed activation/dormant continuation; preparing reviewed origin main publication",
+  "completed_steps": [
+    "Collected interrupted isolated domain commit and four dirty host paths",
+    "Fixed singular dormant skinning path by preserving render flags",
+    "Release build,30CTest,2073toolkit tests passed",
+    "Imported native departure save,dormant reload,return and detachedcamera evidence passed strict verifier",
+    "Exact complete actor snapshots and decoded resourcehistory continuity verified",
+    "Nine malformed-proof tests passed;independent findings closed;representative frame inspected"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/engine/fauna_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/verify_population_activation.py"
+  ],
+  "updated": "2026-10-18T11:48:26.398230+00:00",
+  "next_step": "Deterministic region-owned habitat sites plus bounded retained population registry; preserve watershed identity/habitat signature; separate coarse estimates from actual individuals; see next-task.md",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1;CTest;pytest;9verifierfixtures;4native activationprobes;streaming+continuation+watershed+coarse regressions;save ledgeraudit;independentreview",
+    "evidence_path": ".clanker\\tasks\\population-activation-20261018\\receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\population-activation-20261018\\receipt.json",
+  "resume_instructions": "Check HALT,current-work,receipt,next-task. No outstanding workers;do not refetch old Jules patches. Continue regional habitat/retainedpopulation registry."
+}

@@ -33,7 +33,7 @@ Assert-True $r.reference_mesh_retained 'reference mesh retained'
 Assert-True $r.diagnostic_traversal 'actual populated traversal'
 Assert-True $r.route_returned 'route returned'
 if ($r.exterior_cells_overlap_reference -isnot [bool] -or $r.exterior_cells_overlap_reference -ne $false) { throw 'Exterior overlaps original detailed terrain' }
-if ($r.residency_driver -cne 'body' -or $r.population_activation_implemented -isnot [bool] -or $r.population_activation_implemented -ne $false) { throw 'Incorrect activation scope' }
+if ($r.residency_driver -cne 'body' -or $r.population_activation_implemented -isnot [bool] -or $r.population_activation_implemented -ne $true) { throw 'Incorrect activation scope' }
 if ($r.population_count_retained -ne 8 -or [Math]::Abs($r.final_body_z-24) -gt 0.001 -or $r.max_body_x -lt 540 -or [Math]::Abs($r.final_body_x-24) -gt 0.001 -or
     $r.body_tile_crossings -lt 8 -or $r.visited_body_tiles -lt 5 -or
     $r.peak_resident_tiles -gt 13 -or $r.peak_resident_tiles -lt 9 -or $r.resident_tiles -lt 4 -or
