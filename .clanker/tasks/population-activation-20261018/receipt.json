@@ -561,5 +561,11 @@
     "edges": 12137,
     "mode": "Synchronous AST refresh,no clustering;348 zero-node metadata warnings;historical baseline untouched",
     "delta": "graph-delta.json"
+  },
+  "publication": {
+    "verified_implementation_commit": "cd140f5a25af25ff38d64ede19bcac44c62ff57c",
+    "remote": "origin/main",
+    "remote_head_matched": true,
+    "scope": "Reviewed bounded population activation checkpoint;metadata closure may advance tip"
   }
 }

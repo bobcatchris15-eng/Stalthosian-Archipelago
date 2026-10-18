@@ -3,7 +3,7 @@
   "task_id": "population-activation-20261018",
   "status": "complete",
   "base_revision": "b66467283c6ff2be0fc6fda1e36267cc72b7abdf",
-  "current_step": "Validated body-driven watershed activation/dormant continuation; preparing reviewed origin main publication",
+  "current_step": "Validated body-driven watershed activation/dormant continuation;reviewed implementation published to origin main",
   "completed_steps": [
     "Collected interrupted isolated domain commit and four dirty host paths",
     "Fixed singular dormant skinning path by preserving render flags",
@@ -19,7 +19,7 @@
     "stalthos-runtime/scripts/Run.ps1",
     "stalthos-runtime/scripts/verify_population_activation.py"
   ],
-  "updated": "2026-10-18T11:48:26.398230+00:00",
+  "updated": "2026-10-18T11:50:07.425091+00:00",
   "next_step": "Deterministic region-owned habitat sites plus bounded retained population registry; preserve watershed identity/habitat signature; separate coarse estimates from actual individuals; see next-task.md",
   "validation": {
     "passed": true,
