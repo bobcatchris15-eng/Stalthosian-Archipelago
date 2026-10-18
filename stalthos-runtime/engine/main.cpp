@@ -386,6 +386,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         const auto terrainSurface=Terrain(scene);
         std::optional<stalthos::engine::PopulatedTerrain> populatedTerrain;
+        if(populatedTraversal) {
+            wi::renderer::SetOcclusionCullingEnabled(false);
+            wi::renderer::SetMeshletOcclusionCullingEnabled(false);
+        }
         if(populatedWorld) {
             populatedTerrain.emplace(world.worldSeed(),scene);
             populatedTerrain->update(scene,0,0);
@@ -969,7 +973,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if(populatedTraversal) {
                 const double t=std::min(1.0,elapsed/(duration*.95));
-                x=float(24+520*(t<.5?t*2:(1-t)*2));z=24; yaw=pi*.5f;
+                x=float(24+520*(t<.45?t/.45:t<.55?1:(1-t)/.45));z=24; yaw=pi*.5f;
             }
             if(populatedTerrain) populatedTerrain->update(scene,x,z);
             if (viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera) {
