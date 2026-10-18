@@ -65,6 +65,9 @@ static void contactChecks() {
     collision.sessions={{88,300,0.1}};
     require(r.admit(physical,population(9),collision,{2,1})==RegionalAdmission::SessionConflict,"new imported region cannot alias a bound session");
     require(before==exact(r.continuationSnapshot()),"session conflict admission atomic");
+    require(r.consumeCumulative(8,88,200,0.1)==ResourceAdmission::Conflict,"bookkeeping cannot alias other region actor session");
+    require(before==exact(r.continuationSnapshot()),"bookkeeping alias rejection atomic");
+    require(r.restoreContinuation(r.continuationSnapshot()),"successful public binding preserves self restore closure");
     for(auto result:{r.contact(7,id,88,0,100,0.5,camera),r.contact(7,id,89,0,100,0.5,physical),
         r.contact(7,999,88,0,100,0.5,physical),r.contact(7,id,88,1,101,0.5,physical),
         r.contact(7,id,88,0,200,0.5,physical)}) require(!result.event,"invalid contact no event");
@@ -148,10 +151,26 @@ static void importedAndAvailabilityChecks() {
     require(!r.bindContactSession(7,actor(r,7),77,physical),"unbound imported history cannot be stolen");
     auto bad=r.continuationSnapshot(); bad.regions[0].bindings.push_back({actor(r,7),77});
     rejected(r,bad,"restore cannot claim imported legacy session");
+    bad=r.continuationSnapshot(); bad.regions[0].ledger.sessions.clear();
+    rejected(r,bad,"restore cannot remove imported history");
+    require(!r.bindContactSession(7,actor(r,7),77,physical),"imported binding remains denied after history deletion attempt");
+    bad=r.continuationSnapshot(); bad.regions[0].ledger.sessions[0].amount=0.25;
+    rejected(r,bad,"restore cannot decrease imported history amount");
+    bad=r.continuationSnapshot(); bad.regions[0].ledger.resources[0].consumedQuantity=0.25;
+    bad.regions[0].ledger.sessions[0].amount=0.25;
+    rejected(r,bad,"restore cannot rewind before imported quantities/history");
+    auto unkeyed=ledger(100); unkeyed.resources[0].consumedQuantity=0.5;
+    RegionalPopulationRegistry baseline(population(7),unkeyed,{2,2});
+    bad=baseline.continuationSnapshot(); bad.regions[0].ledger.resources[0].consumedQuantity=0.25;
+    rejected(baseline,bad,"unkeyed imported depletion remains a restore floor");
     require(r.snapshot(7)->ledger.sessions[0].sessionId==77,"complete imported ledger kept");
     require(r.bindContactSession(7,actor(r,7),88,physical),"fresh actor key accepted");
+    const auto admissionFloor=r.continuationSnapshot();
     require(r.contact(7,actor(r,7),88,0,100,1.5,physical).event.has_value(),"deplete actual food");
     const auto saved=r.continuationSnapshot();
+    require(r.restoreContinuation(admissionFloor),"post-admission rewind preserves imported floor");
+    require(exact(r.continuationSnapshot())==exact(admissionFloor),"valid rewind exact");
+    require(r.restoreContinuation(saved),"restore forward after valid rewind");
     RegionalPopulationRegistry copy(population(7),history,{2,2});
     copy.configureContacts(7,{{0,100,{0,0,0}},{1,101,{4,0,0}}});
     require(copy.restoreContinuation(saved),"restore depleted availability derived from ledger");

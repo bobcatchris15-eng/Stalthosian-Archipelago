@@ -74,6 +74,13 @@ copy and commits by map swap: malformed late regions/keys/bindings leave the liv
 registry unchanged. Restore rejects imported-key theft, reassigned existing
 actor/session ownership, retained bound history missing its actor, cross-region
 session aliases, missing/extra regions and reservation/configuration drift.
+Admission-time resource consumption and each imported key/amount are permanent
+restore floors, including unkeyed depletion: continuation cannot remove imported
+keys or refund quantities predating registry ownership. Rewinding later adapter
+state to a valid post-admission checkpoint remains supported. Direct binding also
+checks the immutable imported-session set independently of live ledger contents.
+The bookkeeping API rejects sessions bound in another region so successful public
+operations cannot create a snapshot that violates continuation session ownership.
 Fresh equivalent registries can restore valid adapter-owned continuation history.
 
 **Integration limits:** no physical-region boundary/habitat construction,

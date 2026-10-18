@@ -77,9 +77,10 @@ private:
         std::vector<RegionalResourceAnchor> anchors;
         std::map<Identity, std::uint64_t> sessions;
         std::set<std::uint64_t> importedSessions;
+        ResourceLedgerDto importedBaseline;
         Entry(Population p, ResourceLedger l, RegionalReservation r)
-            : population(std::move(p)), ledger(std::move(l)), reservation(r) {
-            for (const auto& key:ledger.continuationSnapshot().sessions) importedSessions.insert(key.sessionId);
+            : population(std::move(p)), ledger(std::move(l)), reservation(r), importedBaseline(ledger.continuationSnapshot()) {
+            for (const auto& key:importedBaseline.sessions) importedSessions.insert(key.sessionId);
         }
     };
     std::map<RegionId, Entry> regions_;
@@ -235,6 +236,7 @@ public:
         // Never claim an imported legacy key, another actor, or another region's
         // session. Old unbound keys remain complete, bookkeeping-only history.
         for (const auto& regionEntry:regions_) {
+            if (regionEntry.second.importedSessions.count(session)) return false;
             for (const auto& bound:regionEntry.second.sessions) if (bound.second==session) return false;
             for (const auto& key:regionEntry.second.ledger.continuationSnapshot().sessions)
                 if (key.sessionId==session) return false;
@@ -316,6 +318,18 @@ public:
                     const auto old=std::find_if(resources.begin(),resources.end(),[&](const ResourceDto& v) { return v.id==r.id; });
                     if (old==resources.end() || old->kind!=r.kind || old->initialQuantity!=r.initialQuantity) return false;
                 }
+                // Admission history is a permanent floor. Rewinding later adapter
+                // state is allowed, but cannot erase or refund imported world history.
+                for (const auto& baseline:entry.importedBaseline.resources) {
+                    const auto restored=std::find_if(saved.ledger.resources.begin(),saved.ledger.resources.end(),
+                        [&](const ResourceDto& resource) { return resource.id==baseline.id; });
+                    if (restored==saved.ledger.resources.end() || restored->consumedQuantity<baseline.consumedQuantity) return false;
+                }
+                for (const auto& baseline:entry.importedBaseline.sessions) {
+                    const auto restored=std::find_if(saved.ledger.sessions.begin(),saved.ledger.sessions.end(),
+                        [&](const ResourceSessionDto& key) { return key.sessionId==baseline.sessionId && key.resourceId==baseline.resourceId; });
+                    if (restored==saved.ledger.sessions.end() || restored->amount<baseline.amount) return false;
+                }
                 entry.population.restore(saved.population);
                 if (!entry.ledger.restore(saved.ledger)) return false;
                 const auto priorBindings=entry.sessions;
@@ -368,6 +382,9 @@ public:
         const auto found = regions_.find(region);
         if (found == regions_.end()) return ResourceAdmission::MissingResource;
         if (!found->second.active) return ResourceAdmission::InvalidRequest;
+        for (const auto& other:regions_) if (other.first!=region)
+            for (const auto& binding:other.second.sessions)
+                if (binding.second==session) return ResourceAdmission::Conflict;
         return found->second.ledger.tryConsumeCumulative(session, resource, total);
     }
 };
