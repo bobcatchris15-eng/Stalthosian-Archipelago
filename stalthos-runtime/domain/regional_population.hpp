@@ -23,11 +23,42 @@ struct RegionalReservation {
 struct RegionalCapacity {
     std::size_t regions = 0, individuals = 0, resources = 0, historyKeys = 0;
 };
+// An anchor associates one existing ledger resource with a real habitat site.
+// Positions are supplied by world construction, never by a contact request.
+struct RegionalResourceAnchor {
+    std::size_t site = 0;
+    std::uint64_t resource = 0;
+    Vec3 position{};
+};
+struct RegionalContactBinding {
+    Identity actor = 0;
+    std::uint64_t session = 0;
+};
+struct RegionalContactEvent {
+    Identity actor = 0;
+    std::uint64_t resource = 0;
+    ResourceKind kind = ResourceKind::Shrub;
+    double amount = 0;
+};
+struct RegionalContactResult {
+    ResourceAdmission admission = ResourceAdmission::InvalidRequest;
+    std::optional<RegionalContactEvent> event;
+};
 struct RetainedRegionSnapshot {
     PopulationSnapshot population;
     ResourceLedgerDto ledger;
     RegionalReservation reservation;
     bool active = false;
+    bool contactsConfigured = false;
+    std::vector<RegionalResourceAnchor> anchors;
+    std::vector<RegionalContactBinding> bindings;
+};
+// Detached in-memory continuation, deliberately not a disk save representation.
+// Restore requires the same already-admitted immutable regional world layout.
+struct RegionalContinuationDto {
+    std::uint64_t seed = 0;
+    RegionId legacyRegion = 0;
+    std::vector<RetainedRegionSnapshot> regions;
 };
 
 class RegionalPopulationRegistry {
@@ -42,8 +73,14 @@ private:
         ResourceLedger ledger;
         RegionalReservation reservation;
         bool active = false;
+        bool contactsConfigured = false;
+        std::vector<RegionalResourceAnchor> anchors;
+        std::map<Identity, std::uint64_t> sessions;
+        std::set<std::uint64_t> importedSessions;
         Entry(Population p, ResourceLedger l, RegionalReservation r)
-            : population(std::move(p)), ledger(std::move(l)), reservation(r) {}
+            : population(std::move(p)), ledger(std::move(l)), reservation(r) {
+            for (const auto& key:ledger.continuationSnapshot().sessions) importedSessions.insert(key.sessionId);
+        }
     };
     std::map<RegionId, Entry> regions_;
     std::uint64_t seed_;
@@ -84,7 +121,27 @@ private:
         used_.historyKeys += reservation.historyKeys;
         return RegionalAdmission::Accepted;
     }
+    static double distanceSquared(Vec3 a, Vec3 b) noexcept {
+        const double x=a.x-b.x, y=a.y-b.y, z=a.z-b.z;
+        return x*x+y*y+z*z;
+    }
+    static void refreshAvailability(Entry& entry) {
+        if (!entry.contactsConfigured) return;
+        std::map<std::uint64_t,ResourceDto> resources;
+        for (const auto& resource:entry.ledger.snapshot()) resources.emplace(resource.id,resource);
+        std::vector<std::pair<bool,bool>> available(entry.population.sites().size(),{false,false});
+        for (const auto& anchor:entry.anchors) {
+            const auto found=resources.find(anchor.resource);
+            if (found!=resources.end() && found->second.consumedQuantity<found->second.initialQuantity) {
+                if (found->second.kind==ResourceKind::Shrub) available[anchor.site].first=true;
+                else available[anchor.site].second=true;
+            }
+        }
+        for (std::size_t site=0; site<available.size(); ++site)
+            entry.population.setSiteResources(site,available[site].first,available[site].second);
+    }
 public:
+    static constexpr double contactRadiusMeters = 1.25;
     // Bootstrap is mandatory: the original population and ALL retained legacy
     // history are imported unchanged. Used history counts inside its reservation,
     // never once as used keys and again as reserved keys.
@@ -107,8 +164,12 @@ public:
         const auto found = regions_.find(region);
         if (found == regions_.end()) return std::nullopt;
         const auto& entry = found->second;
-        return RetainedRegionSnapshot{entry.population.snapshot(), entry.ledger.continuationSnapshot(),
-                                      entry.reservation, entry.active};
+        RetainedRegionSnapshot out;
+        out.population=entry.population.snapshot(); out.ledger=entry.ledger.continuationSnapshot();
+        out.reservation=entry.reservation; out.active=entry.active;
+        out.contactsConfigured=entry.contactsConfigured; out.anchors=entry.anchors;
+        for (const auto& session:entry.sessions) out.bindings.push_back({session.first,session.second});
+        return out;
     }
     // Physical activation preserves routes/needs. Camera queries only read snapshots.
     // Activation grants no perception or resource relief by itself.
@@ -122,13 +183,183 @@ public:
     bool advance(RegionId region, const TimeStep& dt) {
         const auto found = regions_.find(region);
         if (found == regions_.end()) return false;
+        if (!std::isfinite(dt.physicalSeconds) || dt.physicalSeconds<0 ||
+            !std::isfinite(dt.calendarSeconds) || dt.calendarSeconds<0)
+            throw std::invalid_argument("invalid regional time step");
         auto& entry = found->second;
-        if (entry.active) entry.population.advance(dt, false);
+        if (entry.active) {
+            refreshAvailability(entry);
+            entry.population.advance(dt, false);
+        }
         else entry.population.advanceDormant(dt);
         return true;
     }
-    // Ledger bookkeeping only: contact validation, actor binding, and accepted-delta
-    // needs relief remain host integration work. This method grants no relief.
+    // Configuration is immutable once supplied, and validates anchors against
+    // the population's actual habitat and the registry's existing resource kinds.
+    bool configureContacts(RegionId region, const std::vector<RegionalResourceAnchor>& anchors) {
+        const auto found=regions_.find(region);
+        if (found==regions_.end() || found->second.contactsConfigured) return false;
+        auto& entry=found->second;
+        if (anchors.size()>entry.reservation.resources) return false;
+        const auto resources=entry.ledger.snapshot();
+        std::set<std::pair<std::size_t,ResourceKind>> slots;
+        std::set<std::uint64_t> ids;
+        for (const auto& anchor:anchors) {
+            if (anchor.site>=entry.population.sites().size() || !finite(anchor.position) ||
+                distanceSquared(anchor.position,entry.population.sites()[anchor.site].position)>
+                    contactRadiusMeters*contactRadiusMeters || !ids.insert(anchor.resource).second) return false;
+            const auto resource=std::find_if(resources.begin(),resources.end(),[&](const ResourceDto& r) { return r.id==anchor.resource; });
+            if (resource==resources.end()) return false;
+            const auto& site=entry.population.sites()[anchor.site];
+            if ((resource->kind==ResourceKind::Shrub ? !site.browse : !site.freshwater) ||
+                !slots.emplace(anchor.site,resource->kind).second) return false;
+        }
+        auto copy=anchors; // allocate before committing configuration
+        entry.anchors.swap(copy); entry.contactsConfigured=true;
+        return true;
+    }
+    bool bindContactSession(RegionId region, Identity actor, std::uint64_t session,
+                            RegionalAdmissionOrigin origin) {
+        if (origin!=RegionalAdmissionOrigin::PhysicalArrival || !session) return false;
+        const auto found=regions_.find(region);
+        if (found==regions_.end() || !found->second.active || !found->second.contactsConfigured) return false;
+        auto& entry=found->second;
+        const auto actual=std::find_if(entry.population.actors().begin(),entry.population.actors().end(),
+            [&](const ActorView& a) { return a.id==actor && a.alive; });
+        if (actual==entry.population.actors().end()) return false;
+        const auto prior=entry.sessions.find(actor);
+        if (prior!=entry.sessions.end()) return prior->second==session;
+        // Never claim an imported legacy key, another actor, or another region's
+        // session. Old unbound keys remain complete, bookkeeping-only history.
+        for (const auto& regionEntry:regions_) {
+            for (const auto& bound:regionEntry.second.sessions) if (bound.second==session) return false;
+            for (const auto& key:regionEntry.second.ledger.continuationSnapshot().sessions)
+                if (key.sessionId==session) return false;
+        }
+        entry.sessions.emplace(actor,session);
+        return true;
+    }
+    RegionalContactResult contact(RegionId region, Identity actor, std::uint64_t session,
+                                  std::size_t site, std::uint64_t resource, double cumulativeTotal,
+                                  RegionalAdmissionOrigin origin) {
+        RegionalContactResult out;
+        if (origin!=RegionalAdmissionOrigin::PhysicalArrival) return out;
+        const auto found=regions_.find(region);
+        if (found==regions_.end()) return out;
+        auto& entry=found->second;
+        if (!entry.active || !entry.contactsConfigured) return out;
+        const auto binding=entry.sessions.find(actor);
+        if (binding==entry.sessions.end() || binding->second!=session) return out;
+        const auto actors=entry.population.snapshot();
+        const auto actual=std::find_if(actors.actors.begin(),actors.actors.end(),
+            [&](const ActorSnapshot& a) { return a.id==actor; });
+        if (actual==actors.actors.end() || actual->stage==LifeStage::Dead || actual->site!=site) return out;
+        const auto anchor=std::find_if(entry.anchors.begin(),entry.anchors.end(),
+            [&](const RegionalResourceAnchor& a) { return a.site==site && a.resource==resource; });
+        if (anchor==entry.anchors.end() || distanceSquared(actual->position,anchor->position)>
+            contactRadiusMeters*contactRadiusMeters) return out;
+        const auto history=entry.ledger.continuationSnapshot();
+        const auto record=std::find_if(history.resources.begin(),history.resources.end(),
+            [&](const ResourceDto& r) { return r.id==resource; });
+        if (record==history.resources.end() ||
+            actual->activity!=(record->kind==ResourceKind::Shrub ? Activity::Browse : Activity::Drink)) return out;
+        double prior=0;
+        for (const auto& key:history.sessions) if (key.sessionId==session && key.resourceId==resource) prior=key.amount;
+        out.admission=entry.ledger.tryConsumeCumulative(session,resource,cumulativeTotal);
+        if (out.admission==ResourceAdmission::NewKey || out.admission==ResourceAdmission::Update) {
+            const double delta=cumulativeTotal-prior;
+            entry.population.applyAcceptedResourceContact(actor,record->kind==ResourceKind::Shrub,
+                delta*(record->kind==ResourceKind::Shrub ? 0.1 : 0.2));
+            out.event=RegionalContactEvent{actor,resource,record->kind,delta};
+        }
+        return out;
+    }
+    RegionalContinuationDto continuationSnapshot() const {
+        RegionalContinuationDto out{seed_,legacyRegion_,{}};
+        for (const auto& entry:regions_) out.regions.push_back(*snapshot(entry.first));
+        return out;
+    }
+    // Validate on a detached copy; even a late invalid binding leaves all live
+    // populations, ledger histories, availability and bindings unchanged.
+    bool restoreContinuation(const RegionalContinuationDto& dto) {
+        if (dto.seed!=seed_ || dto.legacyRegion!=legacyRegion_ || dto.regions.size()!=regions_.size()) return false;
+        try {
+            auto next=*this;
+            std::set<RegionId> regions;
+            std::set<Identity> actors;
+            std::map<std::uint64_t, std::pair<RegionId,Identity>> sessions;
+            for (const auto& saved:dto.regions) {
+                const auto found=next.regions_.find(saved.population.region);
+                if (found==next.regions_.end() || !regions.insert(saved.population.region).second) return false;
+                auto& entry=found->second;
+                if (saved.reservation.resources!=entry.reservation.resources ||
+                    saved.reservation.historyKeys!=entry.reservation.historyKeys ||
+                    saved.contactsConfigured!=entry.contactsConfigured || saved.anchors.size()!=entry.anchors.size() ||
+                    saved.bindings.size()>entry.population.actors().size()) return false;
+                for (std::size_t i=0;i<saved.anchors.size();++i) {
+                    const auto& a=saved.anchors[i]; const auto& b=entry.anchors[i];
+                    if (a.site!=b.site || a.resource!=b.resource || a.position.x!=b.position.x ||
+                        a.position.y!=b.position.y || a.position.z!=b.position.z) return false;
+                }
+                const auto original=entry.population.snapshot();
+                if (saved.population.actors.size()!=original.actors.size()) return false;
+                std::set<Identity> identities;
+                for (const auto& a:original.actors) identities.insert(a.id);
+                for (const auto& a:saved.population.actors)
+                    if (!identities.erase(a.id) || !actors.insert(a.id).second) return false;
+                const auto resources=entry.ledger.snapshot();
+                if (saved.ledger.resources.size()!=resources.size()) return false;
+                for (const auto& r:saved.ledger.resources) {
+                    const auto old=std::find_if(resources.begin(),resources.end(),[&](const ResourceDto& v) { return v.id==r.id; });
+                    if (old==resources.end() || old->kind!=r.kind || old->initialQuantity!=r.initialQuantity) return false;
+                }
+                entry.population.restore(saved.population);
+                if (!entry.ledger.restore(saved.ledger)) return false;
+                const auto priorBindings=entry.sessions;
+                entry.sessions.clear();
+                for (const auto& binding:saved.bindings) {
+                    // Admission-time history has no asserted actor provenance;
+                    // restoration must not promote those keys into actor contacts.
+                    for (const auto& region:regions_) {
+                        if (region.second.importedSessions.count(binding.session)) return false;
+                        for (const auto& key:region.second.ledger.continuationSnapshot().sessions)
+                            if (key.sessionId==binding.session && !std::any_of(region.second.sessions.begin(),region.second.sessions.end(),
+                                [&](const auto& owner) { return owner.first==binding.actor && owner.second==binding.session; })) return false;
+                        const auto known=region.second.sessions.find(binding.actor);
+                        if (known!=region.second.sessions.end() &&
+                            (region.first!=saved.population.region || known->second!=binding.session)) return false;
+                        for (const auto& knownSession:region.second.sessions)
+                            if (knownSession.second==binding.session && knownSession.first!=binding.actor) return false;
+                    }
+                    const auto prior=priorBindings.find(binding.actor);
+                    if (prior!=priorBindings.end() && prior->second!=binding.session) return false;
+                    for (const auto& oldBinding:priorBindings)
+                        if (oldBinding.second==binding.session && oldBinding.first!=binding.actor) return false;
+                    if (!saved.contactsConfigured || !binding.session || !std::any_of(saved.population.actors.begin(),saved.population.actors.end(),
+                        [&](const ActorSnapshot& a) { return a.id==binding.actor; }) ||
+                        !entry.sessions.emplace(binding.actor,binding.session).second ||
+                        !sessions.emplace(binding.session,std::make_pair(saved.population.region,binding.actor)).second) return false;
+                }
+                for (const auto& oldBinding:priorBindings) {
+                    const bool retainedHistory=std::any_of(saved.ledger.sessions.begin(),saved.ledger.sessions.end(),
+                        [&](const ResourceSessionDto& key) { return key.sessionId==oldBinding.second; });
+                    const auto retainedBinding=entry.sessions.find(oldBinding.first);
+                    if (retainedHistory && (retainedBinding==entry.sessions.end() || retainedBinding->second!=oldBinding.second)) return false;
+                }
+                entry.active=saved.active;
+                refreshAvailability(entry);
+            }
+            // A bound session cannot alias any other region's imported history.
+            for (const auto& region:next.regions_) for (const auto& key:region.second.ledger.continuationSnapshot().sessions) {
+                const auto bound=sessions.find(key.sessionId);
+                if (bound!=sessions.end() && bound->second.first!=region.first) return false;
+            }
+            regions_.swap(next.regions_);
+            return true;
+        } catch (const std::exception&) { return false; }
+    }
+    // Explicit bookkeeping-only compatibility API. It bypasses contact validation
+    // and grants no relief/events; new physical consumers should use contact().
     ResourceAdmission consumeCumulative(RegionId region, std::uint64_t session,
                                          std::uint64_t resource, double total) noexcept {
         const auto found = regions_.find(region);

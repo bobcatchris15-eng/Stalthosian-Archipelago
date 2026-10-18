@@ -278,6 +278,7 @@ public:
         refreshViews();
     }
     const std::vector<ActorView>& actors() const noexcept { return views_; }
+    const std::vector<HabitatSite>& sites() const noexcept { return sites_; }
     PopulationSnapshot snapshot() const {
         PopulationSnapshot out{seed_,region_,habitatSignature(),{}}; out.actors.reserve(actors_.size());
         for (const auto& a:actors_) out.actors.push_back({a.id,a.species,a.position,a.heading,a.distance,a.site,a.target,
