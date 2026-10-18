@@ -1,6 +1,6 @@
 # Retained regional population registry foundation
 
-Status: **Decided domain foundation; native host integration To test/unimplemented.**
+Status: **Decided domain foundation; original-eight native ownership adapter verified; multiregion host saves unimplemented.**
 
 `domain/regional_population.hpp` owns retained `Population` instances and their
 `ResourceLedger` instances. Mandatory bootstrap takes the existing legacy
@@ -35,11 +35,11 @@ for active regions. Per-region ledgers enforce reserved key capacity and retain
 replay/update behavior at capacity. They form disjoint global resource namespaces.
 
 `configureContacts` associates existing resource IDs with supplied world anchors
-and the population's actual read-only habitat sites. Each resource has one anchor;
-each site has at most one anchor per resource kind. Configuration checks finite
+and the population's actual read-only habitat sites. A shared resource may have anchors at several distinct sites;
+each site has at most one anchor per resource kind. Anchor count is bounded by the region resource reservation (global maximum 4096). Configuration checks finite
 positions, site bounds, matching browse/freshwater kind and a fixed 0.8 m 3D
 reach from the habitat site. Configuration is immutable. Actual rendered ground
-and world-resource anchor provenance remain responsibilities of future native
+and world-resource anchor provenance remain responsibilities of native
 world construction; the domain adapter cannot verify rendered geometry.
 
 Physical active arrival may bind each living retained actor to one nonzero,
@@ -88,8 +88,8 @@ cross-region movement, native host archive/save wiring, or native
 visual acceptance is implemented. A host must transfer **all** retained legacy
 keys into registry ownership; a separate host ledger would escape these budgets.
 Legacy contact ownership migration is supported by the admission-only saved
-provenance argument described below; native host wiring remains unfinished. The current populated legacy world and
-STL8 behavior are untouched. Native multi-region save/load and real rendered
+provenance argument described below. The original-eight native adapter now transfers
+that authority while retaining STL8 encoding and the legacy habitat. Native multi-region save/load and real rendered
 resource-consequence evidence are still required before claiming population
 expansion.
 
@@ -128,8 +128,8 @@ ownership but contact validation still denies relief/events. Continuation cannot
 remove, rotate or steal imported ownership, claim unrelated imported keys, or
 refund admission-time depletion/history. The existing four global budgets and
 256-key cap remain unchanged; replay produces no relief and cumulative updates
-produce only their accepted delta. Native host adapter and disk format are
-unchanged. `tests/regional_legacy_import.cpp` verifies import, exact continuation,
+produce only their accepted delta. The disk format is unchanged; the original-eight
+native adapter uses this admission API. `tests/regional_legacy_import.cpp` verifies import, exact continuation,
 malformed mappings, atomic rejection, retained dead ownership and full-cap replay,
 update and new-key denial. This is domain infrastructure, not native gameplay or
 visual/performance acceptance.
@@ -163,3 +163,17 @@ versions, enums, booleans and nonfinite values, duplicate identities and session
 ownership. This is a domain archive library with disk transport tests. It is not
 wired to the Wicked host and does not establish native multiregion gameplay,
 visual, foot-contact, full-draft or performance acceptance.
+
+## Original watershed host adapter
+
+`engine/native_population_registry.hpp` transfers the original eight animals,
+complete shared ledger and explicit saved sessions into registry ownership. The
+Wicked host destroys its bootstrap ledger after admission; NPC contacts, hero
+bookkeeping, telemetry and STL8 save capture use that owner. Hero sessions cannot
+alias bound NPC sessions and grant no NPC relief. Multiple rendered-ground creek
+bank sites reference the same water resource and depletion total. Physical
+mouth-to-water-surface contact remains unverified. This adapter reserves the
+legacy full 4096 resource/256 history budgets; exterior admission needs an explicit
+reservation migration, not a second ledger. Native regional archive saves remain
+unimplemented. See [host save design](host-regional-save-design.md) for the
+proposed coherent container and failure evidence required before expansion.

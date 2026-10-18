@@ -4,7 +4,7 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe)
 $ErrorActionPreference = 'Stop'
 $diagnosticModes = @($DiagnosticWalk, $DiagnosticReverseWalk, $DiagnosticNeeds, $DiagnosticTransition) | Where-Object { $_ }
 if ($diagnosticModes.Count -gt 1) {
@@ -75,6 +75,7 @@ if ($DiagnosticReverseWalk) { $start.ArgumentList.Add('--diagnostic-reverse-walk
 if ($DiagnosticNeeds) { $start.ArgumentList.Add('--diagnostic-needs') }
 if ($DiagnosticTransition) { $start.ArgumentList.Add('--diagnostic-transition') }
 if ($PopulatedWorld) { $start.ArgumentList.Add('--populated-world') }
+if ($PopulatedResourceProbe) { $start.ArgumentList.Add('--populated-resource-probe') }
 if ($PopulatedTraversal) { $start.ArgumentList.Add('--populated-traversal') }
 if ($PopulatedDeparture) { $start.ArgumentList.Add('--populated-departure') }
 if ($TerrainStreamProbe) { $start.ArgumentList.Add('--terrain-stream-probe') }

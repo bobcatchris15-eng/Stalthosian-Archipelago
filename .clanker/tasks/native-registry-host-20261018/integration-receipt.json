@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "task_id": "native-registry-host-20261018",
+  "updated": "2026-10-18T18:12:04.0881428Z",
+  "status": "native_original_watershed_verified",
+  "base_revision": "a77a71af53ff9af8681574be1ea0aab133409ed5",
+  "implementation_commits": [
+    "7a0c17c",
+    "85895dc"
+  ],
+  "review_commits": [
+    "3990d4e",
+    "4168541",
+    "f92813a"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "a0f042ff547b6d566a23ab8a0c4f67e4ebe49c77625cd6187c3c980d8bdfa9f0"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "78c0e29697e7e723930fa169392b57900a277d0fca1710a3558101bc97c000fe"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_archive.hpp",
+      "sha256": "1f87a6e4209da7f56a471ed5f601e70194cd6ae8a04198123ba62b943e6c5c7a"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "86b97bef198e3536bacc32bd6cf54830e837087f0fbf6e829c1417d63ebc4ecb"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "baa5eee05058a009aa08cdaed7fb3d0b88a8ccf57f035f8e24eeb878de3d6983"
+    },
+    {
+      "path": "stalthos-runtime/tests/native_population_registry.cpp",
+      "sha256": "0b73e589241ff62ed7e9f284cf08ce1c7d9ec893c555672e6599a3e42468ad76"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "799c7c55c2d36d71192ca9cb987c5c9327332454b2aa8ddf32a70ff18e47997f"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Verify-PopulationContinuation.ps1",
+      "sha256": "39e6b897ffcf4db1a4ca3d3434707941c72e0e2c7e7419dc56d05c8597f7f7ca"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Verify-RegistrySharedConsumption.ps1",
+      "sha256": "9d75c4095ad53923154b506f5ce7bacc266a7f836c873ad52807743eee90e180"
+    },
+    {
+      "path": "stalthos-runtime/docs/regional-population.md",
+      "sha256": "ea4f13f4b6e32c2f8ead19f3557a307b7f927efd3599c079f8ffb8f9474f5df1"
+    },
+    {
+      "path": "stalthos-runtime/docs/host-regional-save-design.md",
+      "sha256": "bad7887485bd2cf370895ef389a92767e0567148d14f8231b96f40b4aae9c3cb"
+    }
+  ],
+  "build": "Final pinned Wicked Release Build.ps1 passed; var/build/stalthos-runtime/build.log + build-receipt.json",
+  "executable_sha256": "3f2e7bf188f21bc291002510e5656cf44680db5245cbe4068df7a44a78610578",
+  "ctest": "Final 36/36 passed 3.54 s",
+  "toolkit": "2073 passed, 2 skipped in 606.84 s",
+  "doctor": "Exit 0; no warnings/errors",
+  "native_legacy_migration": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "full_snapshot_fields_verified": true,
+    "registry_owns_population": true,
+    "registry_owns_shared_ledger": true,
+    "exact_session_ownership_restored": true,
+    "exact_complete_ledger_restored": true,
+    "legacy_migration_verified": true,
+    "legacy_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-114441\\first.stl",
+    "first_run_traversal": false,
+    "resumed_motion": true,
+    "water_restore_abs_error": 0.0,
+    "water_consumption_abs_error": 4.773020867432365E-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-131018-2e4a4df9",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-131028-cc72663c",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-131018\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-131018\\second.stl"
+  },
+  "native_shared_consumption": {
+    "passed": true,
+    "diagnostic_probe": true,
+    "manual_input_verified": false,
+    "hero_drink_contacts": 1,
+    "hero_water_consumed": 0.5,
+    "npc_water_consumed": 0.1290168041363362,
+    "combined_depletion": 0.6290168041363375,
+    "depletion_abs_error": 1.3322676295501878E-15,
+    "complete_ledger_and_history_restored": true,
+    "exact_actor_snapshots_restored": true,
+    "exact_session_ownership_restored": true,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-131033-a071daed",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-131043-909e4350",
+    "save": "E:\\Stalthosian Archipelago\\var\\reports\\registry-shared-consumption\\20261018-131033\\shared.stl"
+  },
+  "independent_actual_legacy_decode": "9 resources,4 history keys,8 bindings exactly match initial migrated native telemetry",
+  "independent_review": "independent-review.json; no unresolved material findings; empty legacy regression found/fixed/reverified",
+  "preservation": {
+    "checked": 90,
+    "changed": [],
+    "time": "2026-10-18T18:10:59.3964479Z"
+  },
+  "workers": {
+    "agent_dispatches": 3,
+    "recovery_fix_followups": 2,
+    "peak_local": 2,
+    "agy": 0,
+    "jules": 0,
+    "old_patches_retrieved": 0,
+    "outstanding": 0
+  },
+  "limits": [
+    "One watershed; STL8 only; native regional transactional saves unimplemented",
+    "Legacy adapter reserves all4096 resources/256 history keys; explicit allocation migration required for expansion",
+    "No exterior physical region boundaries/ownership/habitats/travel proof",
+    "Bank-ground water contact abstraction; no physical mouth-to-water/manual input/visual/full-draft/30FPS acceptance"
+  ],
+  "failed_attempts": [
+    "User interruption stopped initial agents/processes; reconstructed NUL-corrupted owned files and reran checks",
+    "First candidate cherry-pick collided with own untracked task-state; preserved as session start then reconciled",
+    "Initial graph update --code-only option unsupported; retried supported code update --no-cluster",
+    "Independent review found zero-actor legacy compatibility rejection; fixed before final acceptance"
+  ],
+  "next_task": "next-task.md",
+  "publication": {
+    "status": "pending reviewed publication",
+    "remote": "origin/main"
+  },
+  "secret_scan": {
+    "passed": true,
+    "method": "builtin added-line credential pattern scan; not exhaustive",
+    "added_lines": 1514
+  },
+  "graph": {
+    "mode": "synchronous local code AST; no clustering or semantic document extraction",
+    "nodes": 7094,
+    "edges": 12868,
+    "delta": "graph-delta.json",
+    "nodes_added": 87,
+    "nodes_removed": 67,
+    "edges_added": 362,
+    "edges_removed": 155,
+    "historical_baseline_marker_preserved": true
+  }
+}

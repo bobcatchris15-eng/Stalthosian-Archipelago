@@ -177,7 +177,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool interactive = false, diagnosticWalk = false, diagnosticReverseWalk = false, diagnosticNeeds = false, diagnosticCamera = false;
     bool diagnosticTransition = false, durationSpecified = false;
     bool disableTerrainSupport = false;
-    bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false;
+    bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -186,6 +186,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--populated-resource-probe") populatedResourceProbe = true;
             else if (key == L"--populated-traversal") populatedTraversal = true;
             else if (key == L"--populated-departure") {populatedTraversal=true;populatedDeparture=true;}
             else if (key == L"--terrain-stream-probe") terrainStreamProbe = true;
@@ -226,6 +227,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagCount > 1) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
+        if(populatedResourceProbe && (!populatedWorld || interactive || diagnosticCamera || diagCount || populatedTraversal || !loadState.empty())) throw std::runtime_error("populated resource probe requires a fresh timed populated world without other diagnostics");
         if(populatedTraversal && (!populatedWorld || interactive || diagnosticCamera)) throw std::runtime_error("populated traversal requires timed populated world without camera diagnostics");
         if (terrainStreamProbe && (populatedWorld || diagCount || diagnosticCamera || !loadState.empty() || !saveState.empty() || !creature.empty() || !plant.empty() || !woodlandAdultTree.empty() || !woodlandSaplingTree.empty() || successorId))
             throw std::runtime_error("terrain stream probe must run separately from watershed, assets and persistence");
@@ -402,6 +404,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             populatedTerrain->update(scene,0,0);
             productionGround=[&](double gx,double gz){return populatedTerrain->height(gx,gz);};
         }
+        if(populatedResourceProbe) {x=0;z=0;} // Real creek location; eligibility still gates the contact.
         const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
@@ -1672,7 +1675,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if (eligibilityShrub) ++shrubEligibleFrames;
 
-            bool tryInteract = false;
+            bool tryInteract = populatedResourceProbe && heroAlive && eligibilityWater && appliedDrinkContacts==0 && elapsed>=.5;
 
             if (diagnosticNeeds && heroAlive) {
                 diagnosticTimer += dt;
@@ -2053,7 +2056,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             sequentialEvaluationJson["paused_walk_clip_forced_evaluation"] = creatureClip.has_value();
         }
         WriteJson(output/"runtime-receipt.json",{{"schema_version",1},{"ok",runCalls>0 && screenshot},{"stage","engine-host feasibility"},
-            {"populated_world",populatedWorld},{"autonomous_population_count",faunaPopulation ? faunaPopulation->actors().size() : 0},
+            {"populated_world",populatedWorld},{"populated_resource_probe",populatedResourceProbe},{"autonomous_population_count",faunaPopulation ? faunaPopulation->actors().size() : 0},
             {"engine_revision","df44c3db4c4927492bc9c791eac715d98d7ed091"},{"process_id",GetCurrentProcessId()},
             {"render_size",{app.canvas.GetPhysicalWidth(),app.canvas.GetPhysicalHeight()}},{"run_calls",runCalls},
             {"scenery_objects",sceneryCounts.objectCount},{"scenery_vertices",sceneryCounts.vertexCount},{"scenery_triangles",sceneryCounts.triangleCount},

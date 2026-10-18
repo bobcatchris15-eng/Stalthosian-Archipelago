@@ -1,32 +1,36 @@
 {
   "schema_version": 1,
   "task_id": "native-registry-host-20261018",
-  "status": "running",
-  "base_revision": "a77a71a",
-  "current_step": "Candidate ready for independent review and merged native runtime proof",
+  "status": "complete",
+  "base_revision": "a77a71af53ff9af8681574be1ea0aab133409ed5",
+  "current_step": "Original watershed native registry ownership verified after independent compatibility fix",
   "completed_steps": [
-    "Read HALT and task handoff",
-    "Implemented sole registry authority adapter and native wiring",
-    "Reconstructed interruption-corrupted files and audited NUL bytes",
-    "Domain Release build passed",
-    "CTest 36/36 passed in 4.65 seconds",
-    "Review correction: legal empty legacy STL8 accepted without admitting empty new regions; CTest36/36 passed3.65s"
+    "Full shared authority and multi-bank creek contacts integrated",
+    "Independent adversarial review and empty legacy compatibility fix verified",
+    "Pinned Wicked build;36/36 CTest;2073 toolkit tests and doctor passed",
+    "Native old-save migration and complete shared hero/NPC restart verified",
+    "90 preserved files unchanged; explicit staging and credential pattern scan"
   ],
+  "next_step": "Coherent host regional save transaction and bounded reservation migration before exterior expansion",
   "touched_artifacts": [
-    "stalthos-runtime/engine/main.cpp",
-    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/CMakeLists.txt",
     "stalthos-runtime/domain/regional_population.hpp",
     "stalthos-runtime/domain/regional_archive.hpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/main.cpp",
     "stalthos-runtime/tests/native_population_registry.cpp",
-    "stalthos-runtime/CMakeLists.txt"
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Verify-PopulationContinuation.ps1",
+    "stalthos-runtime/scripts/Verify-RegistrySharedConsumption.ps1",
+    "stalthos-runtime/docs/regional-population.md",
+    "stalthos-runtime/docs/host-regional-save-design.md"
   ],
-  "updated": "2026-10-18T18:08:20.670809+00:00",
-  "resume_instructions": "Run domain CTest, fix fixture failures; root reviews and builds pinned Wicked native host. Native water anchors retain rendered-ground bank abstraction, not anatomical water-surface proof.",
-  "next_step": "Root reviews candidate, builds Wicked host, runs exact original-eight migration and continuation.",
+  "updated": "2026-10-18T18:12:04.1431643Z",
   "validation": {
     "passed": true,
-    "command": "Build.ps1 -DomainOnly; ctest --test-dir var/build/stalthos-runtime -C Release --output-on-failure",
-    "evidence_path": "var/build/stalthos-runtime/Testing/Temporary/LastTest.log"
+    "command": "Build.ps1;CTest;pytest;doctor;native legacy migration and shared consumption probes;independent adversarial tests",
+    "evidence_path": ".clanker/tasks/native-registry-host-20261018/integration-receipt.json"
   },
-  "receipt_path": ".clanker/tasks/native-registry-host-20261018/receipt.json"
+  "receipt_path": ".clanker/tasks/native-registry-host-20261018/integration-receipt.json",
+  "resume_instructions": "Check HALT/current-work/integration-receipt and next-task. No workers outstanding. One region only; native multiregion saves still unimplemented."
 }

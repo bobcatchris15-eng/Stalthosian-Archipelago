@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "task_id": "native-registry-host-20261018",
+  "status": "running",
+  "base_revision": "a77a71af53ff9af8681574be1ea0aab133409ed5",
+  "current_step": "Recover interrupted isolated adapter; implement and independently validate original-eight native ownership",
+  "completed_steps": [
+    "Checked HALT and current durable receipts",
+    "Preserved initial untracked hashes; isolated implementation and review worktrees",
+    "Strengthened native migration verifier; proposed coherent host save design"
+  ],
+  "next_step": "Review candidate, full pinned Wicked build and native legacy migration continuation",
+  "touched_artifacts": [
+    "stalthos-runtime/scripts/Verify-PopulationContinuation.ps1",
+    "stalthos-runtime/docs/host-regional-save-design.md"
+  ],
+  "updated": "2026-10-18T18:00:47.8210211Z",
+  "resume_instructions": "Read this state, current-work and isolated host/review worktree status; incomplete adapter file was NUL after chat interruption, must reconstruct before review. No integration yet."
+}
