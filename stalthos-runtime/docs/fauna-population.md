@@ -9,3 +9,21 @@ Restore into a `Population` constructed with the same seed, region, and caller s
 STL8 adds stable actor-to-resource session mappings and restores cumulative ledger
 contacts across repeated loads. Original STL7 population payloads remain readable
 without mappings. Dead animals retain their exact position along a habitat route.
+
+
+`advanceDormant(TimeStep)` performs cheap elapsed lifecycle and needs evolution on
+copies, committing only after every actor validates. Both time components retain
+their usual meanings: calendar time advances age/hunger/thirst, physical time
+advances fatigue using the stored resting flag. It does not move bodies, choose
+activities or routes, browse, drink, query resources, or create resource contacts.
+Living actors retain their exact activity, route, pose, identity, injury and
+resting flag so mid-route snapshots remain valid. The host retains resource
+session mappings/history separately; dormancy never touches them. Zero elapsed
+time is a no-op; invalid time and arithmetic overflow leave all actors unchanged.
+
+Death follows existing active-step semantics: transition to Rest, retain corpse
+position/route and last needs. Needs are not advanced on a step ending dead, and
+already dead ages remain frozen. Split and aggregate updates therefore agree
+within floating point rounding for living actors away from death transitions;
+partition-independent death-step needs are not promised. No save format changes
+are required. This primitive does not itself implement host activation policy.

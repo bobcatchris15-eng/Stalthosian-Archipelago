@@ -1,0 +1,54 @@
+{
+  "blockers": [],
+  "findings": [
+    "Resource ledgers/session mappings are external to Population; this primitive cannot mutate them"
+  ],
+  "outcome": "done",
+  "evidence": [
+    ".clanker/tasks/population-dormancy-20261018/validation.txt",
+    "Isolated Release build targets Stalthos_fauna_population and StalthosPersistence succeeded with /W4 /WX /permissive-",
+    "git diff --check passed"
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/tests/fauna_population.cpp",
+    "stalthos-runtime/docs/fauna-population.md"
+  ],
+  "acceptance": [
+    {
+      "how_checked": "Focused domain-fauna_population test: exact unchanged identity/route/pose/injury and expected NeedsCore/Lifecycle values",
+      "condition": "Cheap dormant lifecycle/needs updates on copies without motion, route choices or resource contacts",
+      "met": true
+    },
+    {
+      "how_checked": "Generated mid-route fixture restored after elapsed dormancy, dormant death and resumed active step",
+      "condition": "Preserve living mid-route activity and restorable corpse state",
+      "met": true
+    },
+    {
+      "how_checked": "Strict increased hunger/thirst for all initial activities; existing STL8 write/read restores actor snapshots and resource sessions",
+      "condition": "No food/water benefit and no persistence format change",
+      "met": true
+    },
+    {
+      "how_checked": "Living actor split 1s/30 calendar twice versus aggregate 2s/60 within 1e-14",
+      "condition": "Split-vs-aggregate consistency where applicable",
+      "met": true
+    },
+    {
+      "how_checked": "Negative/nonfinite steps and max-double age on final dead actor compared against every exact snapshot field",
+      "condition": "Invalid inputs and later actor overflow leave population unchanged",
+      "met": true
+    },
+    {
+      "how_checked": "Existing domain-fauna_population and domain-persistence tests pass; advance implementation unchanged",
+      "condition": "Existing behavior unchanged",
+      "met": true
+    }
+  ],
+  "task_id": "population-dormancy-20261018",
+  "assumptions_made": [
+    "Elapsed physical time evolves fatigue using stored resting flag, including resting recovery; it does not simulate contact or locomotion",
+    "Dead actor and death-step needs follow existing advance semantics, so split equivalence excludes death transitions"
+  ]
+}

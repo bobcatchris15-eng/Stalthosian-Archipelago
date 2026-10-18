@@ -247,6 +247,23 @@ public:
         actors_.swap(next);
         refreshViews();
     }
+    // Coarse inactive evolution: retain route intent and exact physical state.
+    // Resource contacts are owned by the host and never occur in this path.
+    void advanceDormant(const TimeStep& dt) {
+        if (!std::isfinite(dt.physicalSeconds)||dt.physicalSeconds<0||!std::isfinite(dt.calendarSeconds)||dt.calendarSeconds<0)
+            throw std::invalid_argument("invalid fauna time step");
+        if (dt.physicalSeconds==0 && dt.calendarSeconds==0) return;
+        auto next=actors_;
+        for (auto& a: next) {
+            auto life=a.life; auto needsState=a.needs;
+            life.advance(dt); needsState.advance(dt);
+            // Match active lifecycle semantics: corpses retain their last needs.
+            if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
+            a.life=life; a.needs=needsState;
+        }
+        actors_.swap(next);
+        refreshViews();
+    }
     const std::vector<ActorView>& actors() const noexcept { return views_; }
     PopulationSnapshot snapshot() const {
         PopulationSnapshot out{seed_,region_,habitatSignature(),{}}; out.actors.reserve(actors_.size());

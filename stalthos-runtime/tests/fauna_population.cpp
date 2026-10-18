@@ -1,4 +1,5 @@
 #include "../domain/fauna_population.hpp"
+#include "../domain/persistence.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -12,7 +13,72 @@ static void require(bool ok, const char* message) { if (!ok) throw std::runtime_
 static std::vector<HabitatSite> habitat() {
     return {{{0,0,0},true,false,{1}},{{2,0,0},false,true,{0,2}},{{4,0,0},true,false,{1,3}},{{6,0,0},false,true,{2}}};
 }
+static void sameActor(const ActorSnapshot& x, const ActorSnapshot& y) {
+    require(x.id==y.id && x.species==y.species && x.site==y.site && x.target==y.target && x.activity==y.activity && x.stage==y.stage,"dormant identity/route/stage retained");
+    require(x.position.x==y.position.x && x.position.y==y.position.y && x.position.z==y.position.z && x.headingRadians==y.headingRadians && x.distanceTravelledMeters==y.distanceTravelledMeters,"dormant pose/distance retained");
+    require(x.calendarAge==y.calendarAge && x.hunger==y.hunger && x.thirst==y.thirst && x.fatigue==y.fatigue && x.injury==y.injury && x.isResting==y.isResting,"dormant needs retained");
+}
+static void dormantChecks() {
+    const auto sites=habitat();
+    Population dormant(41,7,sites,4);
+    dormant.advance({0.1,0}); // Include an actual mid-route actor.
+    auto before=dormant.snapshot();
+    before.actors[0].injury=0.37;
+    dormant.restore(before);
+    require(before.actors[0].site!=before.actors[0].target && before.actors[0].position.x!=sites[before.actors[0].site].position.x,"dormancy fixture is mid-route");
+    dormant.advanceDormant({2,60});
+    auto after=dormant.snapshot();
+    for(std::size_t i=0;i<before.actors.size();++i) {
+        auto expected=before.actors[i];
+        Lifecycle life(expected.species); life.restoreState(expected.species,expected.calendarAge,expected.stage); life.advance({2,60});
+        needs::NeedsCore needs(expected.species); needs.restoreState(expected.hunger,expected.thirst,expected.fatigue,expected.injury,expected.isResting); needs.advance({2,60});
+        expected.calendarAge=life.calendarAge(); expected.stage=life.stage();
+        expected.hunger=needs.hunger(); expected.thirst=needs.thirst(); expected.fatigue=needs.fatigue();
+        sameActor(expected,after.actors[i]);
+        require(after.actors[i].hunger>before.actors[i].hunger && after.actors[i].thirst>before.actors[i].thirst,"dormant browse/drink grant no food or water");
+    }
+    Population restored(41,7,sites,0); restored.restore(after);
+    for(std::size_t i=0;i<after.actors.size();++i) sameActor(after.actors[i],restored.snapshot().actors[i]);
+    // Split elapsed updates agree within rounding, away from death transitions.
+    Population split(41,7,sites,0); split.restore(before);
+    split.advanceDormant({1,30}); split.advanceDormant({1,30});
+    for(std::size_t i=0;i<after.actors.size();++i) {
+        auto actual=split.snapshot().actors[i]; const auto& expected=after.actors[i];
+        require(std::abs(actual.hunger-expected.hunger)<1e-14 && std::abs(actual.thirst-expected.thirst)<1e-14 && std::abs(actual.fatigue-expected.fatigue)<1e-14,"dormant split elapsed consistency");
+        actual.hunger=expected.hunger; actual.thirst=expected.thirst; actual.fatigue=expected.fatigue; sameActor(expected,actual);
+    }
+    const TimeStep invalid[]={{-1,0},{0,-1},{std::numeric_limits<double>::quiet_NaN(),0},{0,std::numeric_limits<double>::infinity()}};
+    for(const auto& dt:invalid) {
+        bool rejected=false; try { dormant.advanceDormant(dt); } catch(const std::invalid_argument&) { rejected=true; }
+        require(rejected,"dormant invalid step rejected");
+        for(std::size_t i=0;i<after.actors.size();++i) sameActor(after.actors[i],dormant.snapshot().actors[i]);
+    }
+    dormant.advanceDormant({0,0});
+    for(std::size_t i=0;i<after.actors.size();++i) sameActor(after.actors[i],dormant.snapshot().actors[i]);
+    // A later actor overflow must not commit earlier actors' needs or ages.
+    auto huge=after; huge.actors.back().calendarAge=std::numeric_limits<double>::max(); huge.actors.back().stage=LifeStage::Dead; huge.actors.back().activity=Activity::Rest;
+    dormant.restore(huge);
+    bool overflow=false; try { dormant.advanceDormant({1,std::numeric_limits<double>::max()}); } catch(const std::overflow_error&) { overflow=true; }
+    require(overflow,"dormant calendar overflow rejected");
+    for(std::size_t i=0;i<huge.actors.size();++i) sameActor(huge.actors[i],dormant.snapshot().actors[i]);
+    // Dormant death on a route remains restorable and retains exact corpse pose.
+    dormant.restore(before); dormant.advanceDormant({0,40000});
+    const auto dead=dormant.snapshot(); restored.restore(dead);
+    for(std::size_t i=0;i<dead.actors.size();++i) {
+        require(dead.actors[i].stage==LifeStage::Dead && dead.actors[i].activity==Activity::Rest,"dormant calendar death");
+        sameActor(dead.actors[i],restored.snapshot().actors[i]);
+    }
+    persistence::SaveData data; data.seed=41; data.faunaPopulation=after;
+    data.faunaResourceSessions={{after.actors[0].id,700}};
+    const auto path=std::filesystem::path("test_dormant_population.sav");
+    persistence::writeSave(path,data); const auto loaded=persistence::readSave(path); std::filesystem::remove(path);
+    require(loaded.faunaPopulation.has_value() && loaded.faunaResourceSessions==data.faunaResourceSessions,"dormant save and resource session history preserved");
+    restored.restore(*loaded.faunaPopulation);
+    for(std::size_t i=0;i<after.actors.size();++i) sameActor(after.actors[i],restored.snapshot().actors[i]);
+    restored.advance({0.1,0}); // Resumption must accept the retained route intent.
+}
 int main() {
+    dormantChecks();
     const auto sites=habitat();
     Population distributed(41,7,sites,8);
     require(distributed.actors()[1].position.x!=distributed.actors()[5].position.x,"initial browsers use distinct available sites");

@@ -1,0 +1,9 @@
+Test project E:/Stalthosian Archipelago/var/worktrees/population-dormancy-20261018/var/build/domain
+    Start  2: domain-persistence
+1/2 Test  #2: domain-persistence ...............   Passed    0.19 sec
+    Start 25: domain-fauna_population
+2/2 Test #25: domain-fauna_population ..........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.21 sec

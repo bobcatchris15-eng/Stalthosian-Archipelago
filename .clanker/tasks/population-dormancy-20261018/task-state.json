@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "base_revision": "b66467283c6ff2be0fc6fda1e36267cc72b7abdf",
+  "task_id": "population-dormancy-20261018",
+  "updated": "2026-10-18T10:32:48.5159020Z",
+  "completed_steps": [
+    "read contracts",
+    "implemented dormant evolution and regression coverage",
+    "isolated Release build and focused CTest pass",
+    "receipt written"
+  ],
+  "resume_instructions": "Run isolated domain build/tests; inspect diff and commit only owned paths.",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/tests/fauna_population.cpp",
+    "stalthos-runtime/docs/fauna-population.md"
+  ],
+  "current_step": "focused validation passed; ready for coordinator review",
+  "validation": {
+    "evidence_path": ".clanker/tasks/population-dormancy-20261018/validation.txt",
+    "command": "ctest --test-dir var/build/domain -C Release -R domain-(fauna_population|persistence)$ --output-on-failure",
+    "passed": true
+  },
+  "receipt_path": ".clanker/tasks/population-dormancy-20261018/receipt.json"
+}
