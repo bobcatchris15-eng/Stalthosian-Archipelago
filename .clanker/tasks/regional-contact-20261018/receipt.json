@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task_id": "regional-contact-20261018",
-  "updated": "2026-10-18T14:57:26.495809+00:00",
+  "updated": "2026-10-18T14:59:15.425399+00:00",
   "status": "validated_domain_infrastructure",
   "base_revision": "91eddb69701546b9513eb9376c6fce75ed8470c9",
   "candidate": "e95e04b06f1a02fd44a0de46513a121ede3ab42f",
@@ -103,6 +103,9 @@
   "next_task": "next-task.md",
   "publication": {
     "remote": "origin/main",
-    "status": "reviewed and validated; checkpoint ready for authorized publication"
+    "status": "published",
+    "verified_checkpoint": "b16fb59623e4a4b222201f4eff363663d2f2f321",
+    "remote_head_matched": true,
+    "scope": "Reviewed implementation and checkpoint; publication metadata closure may advance tip"
   }
 }
