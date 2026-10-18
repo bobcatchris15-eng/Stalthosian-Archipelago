@@ -3,7 +3,7 @@
   "task_id": "regional-habitat-admission-20261018",
   "status": "complete",
   "base_revision": "b91dfc51be788d7092cc9d08444c956164210e60",
-  "current_step": "Verified bounded habitat candidates and safe history-cap contacts;checkpoint publication pending",
+  "current_step": "Validated bounded habitat candidates and safe full-history contacts;reviewed implementation published origin/main",
   "completed_steps": [
     "Collected prior receipt;no HALT;preserved85untracked hashes",
     "Integrated two bounded isolated packets and reviewed root contact/ground-query wiring",
@@ -20,7 +20,7 @@
     "stalthos-runtime/engine/fauna_resources.hpp",
     "stalthos-runtime/engine/main.cpp"
   ],
-  "updated": "2026-10-18T12:53:41.310634+00:00",
+  "updated": "2026-10-18T12:54:15.093963+00:00",
   "next_step": "Bounded retainedpopulationregistry;see next-task.md",
   "receipt_path": ".clanker\\tasks\\regional-habitat-admission-20261018\\receipt.json",
   "validation": {

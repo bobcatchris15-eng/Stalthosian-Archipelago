@@ -195,5 +195,11 @@
     "nodes_added": 57,
     "edges_added": 118,
     "mode": "Synchronous AST refresh,no clustering;353 zero-node metadata/source warnings;historical baseline untouched"
+  },
+  "publication": {
+    "verified_implementation_commit": "8fb0d0b882d36d106198e816fb43808bc1da4c09",
+    "remote": "origin/main",
+    "remote_head_matched": true,
+    "scope": "Reviewed bounded habitat candidate and history-admission checkpoint;metadata closure may advance tip"
   }
 }
