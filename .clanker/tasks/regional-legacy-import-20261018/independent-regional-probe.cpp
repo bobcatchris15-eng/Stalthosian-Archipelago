@@ -35,4 +35,3 @@ int main() { try {
     std::cout<<"INDEPENDENT_REGIONAL_PROBE_OK mutations=6000 all_bits=true provenance=true\n";
     return 0;
 } catch(const std::exception& e) { std::cerr<<e.what()<<'\n'; return 1; } }
-

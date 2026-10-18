@@ -10,5 +10,3 @@ int main() {
  std::cout<<"species_original="<<int(before)<<" species_supplied="<<int(a.species)<<" encoded="<<encoded<<" restored="<<restored<<" resulting="<<int(r.snapshot(7)->population.actors[0].species)<<'\n';
  return (!restored && r.snapshot(7)->population.actors[0].species==before)?0:1;
 }
-
-

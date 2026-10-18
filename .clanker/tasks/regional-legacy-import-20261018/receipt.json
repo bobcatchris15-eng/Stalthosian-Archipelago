@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task_id": "regional-legacy-import-20261018",
-  "updated": "2026-10-18T16:51:40.206765+00:00",
+  "updated": "2026-10-18T16:52:13.695012+00:00",
   "status": "validated_domain_infrastructure",
   "base_revision": "d2d1ec2be3f3aa452ffd04129234c50a7499f521",
   "implementation_commits": [
@@ -95,7 +95,10 @@
   "next_task": "next-task.md",
   "publication": {
     "remote": "origin/main",
-    "status": "pending final checkpoint"
+    "status": "published",
+    "verified_checkpoint": "81a2f15ee8044c81f45302a39123c4c51eb9ee96",
+    "remote_head_matched": true,
+    "scope": "Reviewed implementation and checkpoint; publication metadata closure advances tip"
   },
   "preservation": {
     "time": "2026-10-18T16:49:44.2096321Z",
@@ -105,7 +108,8 @@
   "secret_scan": {
     "source_added_lines": 467,
     "passed": true,
-    "method": "builtin pattern scan, not exhaustive credential detection"
+    "method": "builtin pattern scan, not exhaustive credential detection",
+    "checkpoint_added_lines": 623
   },
   "graph": {
     "mode": "synchronous code-only AST, no clustering or semantic docs extraction",
@@ -116,6 +120,7 @@
     "nodes_removed": 28,
     "edges_added": 354,
     "edges_removed": 233,
-    "note": "Historical preserved .clanker/graph baseline/marker untouched; zero-node-source warnings retained in graph refresh log"
+    "note": "Historical preserved .clanker/graph baseline/marker untouched; zero-node-source warnings retained in graph refresh log",
+    "zero_node_source_warnings": 372
   }
 }
