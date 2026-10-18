@@ -1,0 +1,13 @@
+# Next bounded world construction task
+
+Check HALT and read current-work plus this task's receipt before dispatch. Collect outstanding work first. Keep world, simulation, systems and populations ahead of replaceable asset polish.
+
+The regional registry now has actor-bound resource contact and detached in-memory continuation infrastructure. It is still not connected to the Wicked host. The native world still uses the original eight watershed animals and STL8. Do not call this new regional gameplay, disk persistence, or population expansion.
+
+Next close the legacy contact-provenance and persistence contract. The existing host saves explicit actor/session mappings; design a bounded validated import that transfers those mappings and the COMPLETE shared ledger into registry ownership without allowing an arbitrary imported bookkeeping key to be claimed by another actor. Preserve original eight IDs, habitat signature 6489859816375510053, all resource quantities and replay keys, global reservation budgets, and STL1-STL8 compatibility. Inspect engine/fauna_resources.hpp and domain/persistence.hpp narrowly. Do not retain a separate mutable host ledger that escapes registry budgets.
+
+Then implement a compatible versioned regional archive using the validated continuation DTO, with explicit external habitat reconstruction/configuration requirements. Test full multi-region departure, elapsed dormancy, return and save/load equality; invalid archives must leave live state unchanged. Bound file sizes/counts before allocations. New archive behavior must not silently discard old history, regenerate identities, alter seed/habitat/anchors, or reinterpret coarse island estimates as retained individuals. Contact anchors must come from actual rendered-ground habitat/resources before native activation wiring.
+
+Before claiming native expansion, wire a physical arrival path into real exterior regional habitat, resource availability and accepted-delta relief, and collect native multi-region save/load, activation and observable depletion evidence. Camera prewarm cannot create populations or HeroSim knowledge. Physical bounds, border ownership and cross-region movement remain separate unfinished contracts. Existing terrain/activation receipts are historical evidence unless rerun.
+
+Preserve unrelated dirty/untracked files, planning inputs, immutable assets and open applications. No old Jules patch retrieval. Use isolated bounded ownership, at most six dispatches and 35 active minutes per wake. Reviewed origin/main publication remains authorized; no force push, release, deployment, paid API or credential changes.

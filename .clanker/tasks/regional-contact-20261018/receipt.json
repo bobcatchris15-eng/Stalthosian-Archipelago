@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "task_id": "regional-contact-20261018",
+  "updated": "2026-10-18T14:57:26.495809+00:00",
+  "status": "validated_domain_infrastructure",
+  "base_revision": "91eddb69701546b9513eb9376c6fce75ed8470c9",
+  "candidate": "e95e04b06f1a02fd44a0de46513a121ede3ab42f",
+  "implementation_commits": [
+    "21dccf3",
+    "527e9b5",
+    "6d7fe97"
+  ],
+  "native_registry_integrated": false,
+  "disk_format_changed": false,
+  "scope": "Actor-bound regional resource contacts and exact detached in-memory continuation into same admitted world",
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "02ace911a472543af6b1a535fd80f471f962bdaf7fe4c0b66a9a5d9ef8fbc650"
+    },
+    {
+      "path": "stalthos-runtime/domain/fauna_population.hpp",
+      "sha256": "6acaad6c4b9eab622fc1ecad8e856673f122223269cb464b5446640f6b7628ab"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "7786aae7426ca9311c929698b8b2f94dcf561de9d44f707b533115913ba18acc"
+    },
+    {
+      "path": "stalthos-runtime/tests/regional_contacts.cpp",
+      "sha256": "4e3abb6901a2fe6932c379e0713cfaad744eee751dd7800280bbc9e07d6f3576"
+    },
+    {
+      "path": "stalthos-runtime/docs/regional-population.md",
+      "sha256": "4245e44e7b9f672e262e689507f45a6bab2b59cdb22d81962a29e04601ece2b8"
+    }
+  ],
+  "review": "independent-review.json; final verdict PASS; initial imported history erasure/session theft reproduced and fixed",
+  "ctest": "Merged 33/33 passed in1.63s; independent33/33 in1.58s",
+  "build": "Build.ps1 pinned Wicked Release passed; var/build/stalthos-runtime/build.log and build-receipt.json",
+  "toolkit": "PYTHONPATH=src python -m pytest -q:2073passed2skipped in508.58s",
+  "doctor": "python -m stalthos_toolkit.cli doctor exit0, no warnings/errors;cli list12commands",
+  "native_existing_host_regression": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "full_snapshot_fields_verified": true,
+    "first_run_traversal": false,
+    "resumed_motion": true,
+    "water_restore_abs_error": 0.0,
+    "water_consumption_abs_error": 4.423775928907858e-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-095622-20539adb",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-095631-72fbc220",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-095622\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-095622\\second.stl"
+  },
+  "native_visual": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-095631-72fbc220/draft-host.png",
+    "observed": "Proxy animals beside creek, sparse low foliage, steep enclosing terrain; unfinished scenery. Existing-host regression only."
+  },
+  "limits": {
+    "regions": 8,
+    "individuals": 64,
+    "resources": 4096,
+    "history_keys": 256
+  },
+  "preservation": {
+    "time": "2026-10-18T14:57:44.1494106Z",
+    "checked": 85,
+    "changed": []
+  },
+  "workers": {
+    "dispatches": 2,
+    "peak_local": 2,
+    "agy": 0,
+    "jules": 0,
+    "outstanding": 0,
+    "old_patches_retrieved": 0
+  },
+  "graph": {
+    "nodes": 6968,
+    "edges": 12540,
+    "zero_node_source_warnings": 366,
+    "mode": "Synchronous AST refresh without clustering; historical baseline/marker untouched",
+    "delta": "graph-delta.json",
+    "note": "Final synchronous AST refresh; documentation semantic extraction was not run. Graph source warnings explicitly retained."
+  },
+  "limitations": [
+    "No native registry/contact adapter wiring or new regional gameplay",
+    "No versioned registry disk format or native multi-region save/load",
+    "Imported unbound legacy sessions require explicit actor provenance before contact ownership migration",
+    "No real exterior habitat/resources, physical bounds or cross-region travel",
+    "No allocation-failure injection proof",
+    "No final art/footcontact/full-draft/30FPS acceptance"
+  ],
+  "failed_attempts": [
+    "Initial toolkit output redirect used incorrect relative path; corrected absolute path before tests ran",
+    "Initial CLI package module had no __main__; correct stalthos_toolkit.cli doctor/list subsequently passed",
+    "Worker initial /WX shadow warning corrected",
+    "Review initial imported-history deletion/session theft reproduced; final independent probe rejects all three stages"
+  ],
+  "next_task": "next-task.md",
+  "publication": {
+    "remote": "origin/main",
+    "status": "reviewed and validated; checkpoint ready for authorized publication"
+  }
+}

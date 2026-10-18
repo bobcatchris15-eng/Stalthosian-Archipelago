@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "task_id": "regional-contact-20261018",
+  "status": "complete",
+  "base_revision": "91eddb69701546b9513eb9376c6fce75ed8470c9",
+  "current_step": "Reviewed and validated regional contact/continuation infrastructure",
+  "completed_steps": [
+    "HALT absent; read current checkpoint and narrow receipt",
+    "Prior checkpoint confirms no outstanding workers or uncollected patches",
+    "Preserved existing untracked file hashes; isolated worktree created",
+    "Graphify bounded registry/contact query; AGY OpenCode Jules executables present",
+    "Independent review reproduced and fixed imported replay history theft",
+    "Integrated three reviewed commits",
+    "Merged pinned Wicked Release build and CTest33/33 passed",
+    "Toolkit2073passed2skipped; doctor/list successful",
+    "Native exact eight-actor continuation passed; frame inspected",
+    "Graph AST refresh and preintegration secret scan passed;85hashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/tests/regional_contacts.cpp",
+    "stalthos-runtime/docs/regional-population.md"
+  ],
+  "updated": "2026-10-18T14:57:26.497128+00:00",
+  "next_step": "Validated legacy contact provenance import and compatible regional archive before native host wiring",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1;CTest Release33/33;PYTHONPATH=src python -m pytest -q;Verify-PopulationContinuation.ps1",
+    "evidence_path": ".clanker/tasks/regional-contact-20261018/receipt.json"
+  },
+  "receipt_path": ".clanker/tasks/regional-contact-20261018/receipt.json"
+}

@@ -5,47 +5,48 @@ Assets remain replaceable; HeroViewer/individual Smalltrotter polish is off path
 
 ## Current bounded construction
 
-Regional retained-population domain foundation collected and independently reviewed.
-Mandatory legacy Population/complete ResourceLedger bootstrap preserves supplied
-IDs, habitat signature, routes, needs, quantities and replay history. Explicit
-physical-arrival admission; camera cannot admit or activate retained populations.
-Detached snapshots prevent outside mutation. No erasure/replacement API.
+Reviewed actor-bound regional resource contacts and detached in-memory continuation
+are integrated. Contacts validate physical origin, active region, actual living
+actor/site/activity, immutable actor/session ownership, configured resource kind
+and 0.8 m 3D reach. Only accepted NewKey/Update cumulative differences emit an
+event and grant relief. Replay, denial, camera, dormant, dead or missing actors
+receive none. Availability derives from ledger quantities before active advance.
 
-Limits: eight retained regions,64 actual individuals,16 per Population,4096 global
-reserved resource slots,256 global reserved history keys. Used keys count within
-reservation, not twice. Cross-region actor/resource conflicts, malformed ledger,
-seed mismatch and capacity rejection leave retained state unchanged. Per-region
-owned ledgers enforce reservation budgets; full history permits existing replay/
-update but rejects new keys. Departure/elapsed dormancy/return retains exact
-expected complete snapshot and ledger in native C++ domain tests.
+Continuation restores atomically against the same admitted immutable world:
+regions, actors, seed/habitat, resources, anchors and reservations. Complete
+imported history and depletion have immutable admission floors. Independent
+review reproduced an initial history-deletion/session-theft exploit; final probe
+rejects deletion, rebinding and fresh relief. Cross-region bound-session aliases
+are rejected during new admission and bookkeeping. Global original limits remain
+8 regions, 64 individuals, 4096 resource reservations, 256 history reservations.
 
-This foundation is NOT wired into Wicked host and has no registry save/restore
-format. Ledger consumption alone grants no actor relief; contact binding/reach,
-resource-site availability synchronization and accepted-delta relief remain next.
-Physical bounds,real exterior population habitat and cross-region travel remain.
-Native world still has original eight watershed individuals; STL8 unchanged.
-Original habitat signature6489859816375510053 remains the preservation contract.
+This is still DOMAIN INFRASTRUCTURE, not Wicked host integration or disk saves.
+Imported unbound legacy history cannot acquire invented actor provenance. The
+next task needs explicit validated legacy actor/session import and compatible
+versioned regional persistence before native wiring. Physical bounds, real
+exterior habitats/resources and cross-region travel remain unfinished. Native
+world still has original eight watershed animals; STL8 is unchanged. Original
+habitat signature 6489859816375510053 remains the preservation contract.
 
-Merged pinned Wicked Release build passed;CTest32/32 passed1.52s;independent MSVC
-registry diagnostic passed. Native existing-host eight-actor exactsavecontinuation
-passed, resumed movement/shared-water consumption and no history-cap exhaustion.
-This native regression uses proxies; inspected frame shows animals/creek/shrubs,
-steep enclosing walls,sparse unfinished scenery. No new regional visual evidence,
-finalart,footcontact,full-draft or30FPS acceptance. Toolkit2073passed2skipped in504.61s;doctor0;
-graph6915nodes12374edges;358zero-node source warnings. Scan and publication in receipt.
+Merged pinned Wicked Release build passed. Merged CTest 33/33 passed in 1.63 s;
+independent full domain CTest 33/33 in 1.58 s plus malformed/contact/theft probes.
+Toolkit 2073 passed, 2 skipped in 508.58 s; doctor exit 0, no warnings/errors.
+Native existing-host exact eight-actor continuation passed, resumed movement,
+shared-water consumption and zero history-cap exhaustion. This regression is
+NOT regional adapter runtime evidence. Inspected native frame still shows proxy
+animals, creek, sparse foliage and steep enclosing terrain. No new visual,
+foot-contact, full-draft or 30 FPS acceptance is claimed.
 
-Receipt: .clanker/tasks/regional-registry-20261018/receipt.json
-Next: .clanker/tasks/regional-registry-20261018/next-task.md
+Receipt: .clanker/tasks/regional-contact-20261018/receipt.json
+Next: .clanker/tasks/regional-contact-20261018/next-task.md
 Contract: stalthos-runtime/docs/regional-population.md
-Prior native streaming/activation evidence remains in regional-habitat-admission-
-20261018 receipt; not rerun or newly claimed by this foundation packet.
+Implementation: 21dccf3, 527e9b5, 6d7fe97 on main.
 
 ## Preservation and collection
 
-Previous isolated tasks already collected; no outstanding prior worker. One new
-implementation and one independent reviewer;2 dispatches,peak2local,noAGY/Jules,
-no oldpatch retrieval. Both completed. All85 preexistinguntracked hashes preserved
-at final audit; graph marker restored byte-for-byte. Planning/sourceassets/open
-apps/historicalworktrees untouched. Check HALT before work/dispatch. Reviewed
-publication to originmain authorized;no forcepush/releases/deployment/paidAPI/
-credentials. Next wake must retain explicit foundation-only integration limits.
+Prior tasks were already collected; no old Jules patch retrieved. Two local
+dispatches (implementation and independent review), peak two, no AGY/Jules jobs;
+both completed. All 85 preexisting untracked files retain their starting hashes.
+Planning inputs, source assets, open applications and historical worktrees stay
+preserved. HALT checked before work/dispatch/integration. Reviewed origin/main
+publication authorized; no force push, release, deployment, paid API or credentials.

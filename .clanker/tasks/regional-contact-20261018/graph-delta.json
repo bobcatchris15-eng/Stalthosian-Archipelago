@@ -1,0 +1,48 @@
+{
+  "base_digest": "306e07107cf3b008",
+  "current_digest": "252c0cb39a59d94d",
+  "nodes_added": 58,
+  "nodes_removed": 5,
+  "edges_added": 172,
+  "edges_removed": 6,
+  "edges_added_not_extracted": 0,
+  "central_nodes_touched": [
+    "iostream",
+    "stalthos_runtime_domain_fauna_population_habitatsite",
+    "stalthos_runtime_domain_fauna_population_population_restore",
+    "stalthos_runtime_domain_fauna_population_population_snapshot",
+    "stalthos_runtime_domain_foundation_vec3",
+    "stalthos_runtime_domain_regional_population_regionalpopulationregistry",
+    "stalthos_runtime_domain_resource_ledger_resourcedto",
+    "stalthos_runtime_domain_resource_ledger_resourceledgerdto",
+    "stdexcept"
+  ],
+  "boundary_nodes_touched": [
+    "stalthos_runtime_domain_regional_population_regionalcontactbinding_session",
+    "stalthos_runtime_domain_regional_population_regionalpopulationregistry_bindcontactsession"
+  ],
+  "pressure": 133,
+  "churn": 419,
+  "recommend_validation": true,
+  "sample": {
+    "nodes_added": [
+      "clanker_current_work_current_bounded_construction",
+      "clanker_general_project_state_current_bounded_construction",
+      "clanker_tasks_regional_contact_20261018_next_task",
+      "clanker_tasks_regional_contact_20261018_next_task_next_bounded_world_construction_task",
+      "clanker_tasks_regional_registry_20261018_next_task",
+      "clanker_tasks_regional_registry_20261018_next_task_next_bounded_world_construction_task",
+      "stalthos_runtime_domain_regional_population_hpp_identity",
+      "stalthos_runtime_domain_regional_population_hpp_resourcekind",
+      "stalthos_runtime_domain_regional_population_hpp_vector",
+      "stalthos_runtime_domain_regional_population_regionalcontactbinding"
+    ],
+    "nodes_removed": [
+      "clanker_current_work_next_concrete_work",
+      "clanker_current_work_validated_continuation",
+      "clanker_general_project_state_next_concrete_work",
+      "clanker_general_project_state_validated_continuation",
+      "resourcekind"
+    ]
+  }
+}
