@@ -380,14 +380,8 @@ struct TempFileCleanup {
 };
 } // namespace detail
 
-inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
-    detail::validate(data); // Reject before touching the previous save or a temp file.
-    auto tempPath = path;
-    tempPath += ".tmp";
-    detail::TempFileCleanup cleanup{tempPath};
-    std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
-    if (!os) throw std::runtime_error("failed to open temp file for save");
-
+inline void encodeSave(std::ostream& os, const SaveData& data) {
+    detail::validate(data);
     os.write("STL8", 4);
     detail::write_u32(os, 8);
     detail::write_double(os, data.physicalSeconds);
@@ -511,21 +505,25 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
             detail::write_double(os, tree.changedAt);
         }
     }
-    os.flush();
-    if (!os.good()) throw std::runtime_error("failed to write save data completely");
-    os.close();
-    if (os.fail()) throw std::runtime_error("failed to close save data completely");
-
-    std::error_code ec;
-    std::filesystem::rename(tempPath, path, ec);
-    if (ec) throw std::runtime_error("failed to commit save atomically");
-    cleanup.keep = true;
+    if (!os.good()) throw std::runtime_error("failed to encode save");
 }
 
-inline SaveData readSave(const std::filesystem::path& path) {
-    const auto fileSize = detail::serializedFileSize(path);
-    std::ifstream is(path, std::ios::binary);
-    if (!is) throw std::runtime_error("failed to open save file");
+inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
+    detail::validate(data);
+    auto tempPath=path; tempPath += ".tmp";
+    detail::TempFileCleanup cleanup{tempPath};
+    std::ofstream os(tempPath,std::ios::binary|std::ios::trunc);
+    if(!os) throw std::runtime_error("failed to open temp file for save");
+    encodeSave(os,data); os.flush();
+    if(!os.good()) throw std::runtime_error("failed to flush save");
+    os.close(); if(os.fail()) throw std::runtime_error("failed to close save");
+    std::error_code ec; std::filesystem::rename(tempPath,path,ec);
+    if(ec) throw std::runtime_error("failed to commit save atomically");
+    cleanup.keep=true;
+}
+
+inline SaveData decodeSave(std::istream& is, std::uint64_t fileSize) {
+    if(fileSize>MAX_SAVE_BYTES) throw std::runtime_error("save exceeds size limit");
     char magic[4];
     if (!is.read(magic, 4))
         throw std::runtime_error("invalid magic or corrupt file");
@@ -822,6 +820,13 @@ inline SaveData captureSave(const SimCore& sim, const StalthosState& world,
     for (const auto& value : snapshot.regions) data.regions.push_back({value.region, value.trees, value.revision});
     detail::validate(data);
     return data;
+}
+
+inline SaveData readSave(const std::filesystem::path& path) {
+    const auto size=detail::serializedFileSize(path);
+    std::ifstream is(path,std::ios::binary);
+    if(!is) throw std::runtime_error("failed to open save");
+    return decodeSave(is,size);
 }
 
 inline std::pair<SimCore, StalthosState> restoreSave(const SaveData& data) {

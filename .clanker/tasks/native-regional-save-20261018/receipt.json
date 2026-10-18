@@ -1,0 +1,86 @@
+{
+  "task_id": "native-regional-save-20261018",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Preserve STL1-STL8 imports",
+      "met": true,
+      "how_checked": "domain-persistence all20 fixture tests passed; native main.cpp unchanged; exact generic legacy read in host_save"
+    },
+    {
+      "condition": "Exact host/registry/world binding and detached validation",
+      "met": true,
+      "how_checked": "domain-host_save bit-exact host/STLR binding, expected configuration, seed/clocks/hero region, external registry species/resources/anchors validation and detached owner construction; live source unchanged on failure"
+    },
+    {
+      "condition": "One file transaction and Windows replacement/failure retention",
+      "met": true,
+      "how_checked": "domain-host_save actual preexisting Windows destination replacement, four injected transaction-stage failures, real sharing-lock replacement failure; byte-identical readable prior save retained"
+    },
+    {
+      "condition": "Refuse lossy multiregion export",
+      "met": true,
+      "how_checked": "valid two-region DTO encodes; explicit STL8 export throws and creates no file"
+    },
+    {
+      "condition": "Native transactional save integration and actual native restart",
+      "met": false,
+      "how_checked": "Initial wiring removed after independent review found saved-derived species baseline bypass; orchestrator narrowed scope to foundation without native adoption"
+    },
+    {
+      "condition": "No exterior habitat expansion",
+      "met": true,
+      "how_checked": "Only library persistence, tests, CMake registration and design checkpoint changed"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/domain/host_save.hpp",
+    "stalthos-runtime/tests/host_save.cpp",
+    "stalthos-runtime/docs/host-regional-save-design.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/native-regional-save-20261018/ctest.log",
+    "var/build/stalthos-runtime/build.log",
+    "Final CTest37/37 passed2.68s on Windows MSVC Release; focused4/4 passed0.98s",
+    "git diff --check passed; main.cpp and native_population_registry.hpp no diff"
+  ],
+  "findings": [
+    "An admitted registry built from saved population is not independent immutable species/identity proof. Native adoption requires trusted legacy admission provenance without rejecting arbitrary legal STL1-STL8 imports.",
+    "Codec encode/decode validate syntax and mutual binding only. restore/write require independent external registry and expected configuration; restore returns whole detached clock/host/registry owner.",
+    "Checksum and generation are transaction metadata, not authentication/anti-rollback guarantees.",
+    "Initial persistence test failed due changed error wording; restored original wording and final tests pass.",
+    "Intermediate codec edit accidentally removed decoding block; corrected and final37/37 suite passed."
+  ],
+  "blockers": [
+    "Native adoption deferred pending legacy immutable admission design"
+  ],
+  "assumptions_made": [
+    "Orchestrator explicitly authorized bounded library foundation after species provenance finding; original native integration remains incomplete",
+    "FNV-1a checksum is sufficient accidental-corruption detection for prototype container; no security claim",
+    "Four stage hooks test abort retention, not every OS/device failure"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "3dc24c591645f37c5aafe6785d89c37938d8562020a4e3ee664201ec841a4398"
+    },
+    {
+      "path": "stalthos-runtime/domain/persistence.hpp",
+      "sha256": "88226f0553a1378126fec9c449e5773eddb4c9365ac1a1c604142faf95352ceb"
+    },
+    {
+      "path": "stalthos-runtime/domain/host_save.hpp",
+      "sha256": "9cdc1c19109c13d25d68b169f4f9a575ed88503bb4db12737da82711c3068c58"
+    },
+    {
+      "path": "stalthos-runtime/tests/host_save.cpp",
+      "sha256": "c2590f9d1dc7d3061070e35ed5da5c591f24d3b4f258ba44302f2792923d6513"
+    },
+    {
+      "path": "stalthos-runtime/docs/host-regional-save-design.md",
+      "sha256": "91abce3001552f0c9475eb074faa7ae9569e1f9d8f025c1d2765ab6644928fa1"
+    }
+  ]
+}

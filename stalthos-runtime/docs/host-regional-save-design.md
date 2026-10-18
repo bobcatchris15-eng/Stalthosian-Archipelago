@@ -1,6 +1,6 @@
 # Coherent native regional save integration
 
-Status: **Proposed design; not implemented.** The original watershed ownership
+Status: **Native integration remains proposed. Domain transaction foundation implemented; not adopted by the native host.** The original watershed ownership
 adapter can continue capturing its one retained population, complete shared
 ledger and explicit actor/session mappings in STL8. That does not persist an
 expanded regional registry. Do not enable additional retained regions in the
@@ -85,3 +85,58 @@ use the same registry authority after restoration.
 These are acceptance conditions for future implementation. This document does
 not claim disk integration, crash recovery, native multiregion gameplay, visual
 acceptance or measured frame rate.
+
+
+## Bounded foundation checkpoint - 2026-10-18
+
+`domain/host_save.hpp` implements the bounded STL9 container and single-file
+transaction as a library. The native executable still reads/writes STL1-STL8
+through its established path. No native multi-region adoption or new gameplay
+acceptance is claimed. Existing legal legacy imports remain supported, including
+empty populations and legal saved actor species/identities.
+
+The container has a 72-byte little-endian header (magic/version, external
+configuration identity, nonzero generation, seed, physical/calendar clocks,
+hero region, payload lengths), exact STL8 and STLR payloads, and an eight-byte
+FNV-1a checksum covering header and payloads. This checksum detects accidental
+corruption; it provides no authentication or anti-rollback guarantee. Generation
+is transaction metadata, not a separately persisted payload generation. The
+caller owns configuration versioning and captures both snapshots at one boundary.
+Unknown versions, non-STL8 embedded hosts, bounds, trailing bytes, header/host
+identity/clock disagreement and full legacy-region state disagreement reject.
+
+API distinction is deliberate:
+
+- `decode`/`read` and `encode` validate syntax, checksum and mutual payload binding.
+  They return detached data; they do not admit immutable world configuration.
+- `restore(candidate, admittedRegistry, expectedConfiguration)` copies an externally
+  admitted registry, validates the full continuation on that copy, reconstructs
+  host state, and returns a detached `RestoredWorld` containing clock, host and
+  registry. The caller replaces its complete live owner only after this succeeds.
+- `write(path, candidate, admittedRegistry, expectedConfiguration, failure)` requires
+  that same external semantic admission before creating a temporary sibling and
+  after normal readback. It uses Windows `ReplaceFileW` for an existing destination
+  and `MoveFileExW` without replacement for a new destination. It never deletes
+  the destination as fallback. Stream flush/close plus namespace replacement does
+  not establish power-loss durability.
+- `exportLegacy` is explicit and refuses a multi-region DTO before touching disk.
+  Its existing STL8 writer retains its prior Windows overwrite limitations.
+
+The admitted registry must originate from independent immutable world definitions
+and trusted admission provenance. Constructing it from the candidate's saved
+population before validation defeats species/identity checks: a coherently
+modified species in both payloads would then become its own reference. Independent
+review found this in the initial native wiring; that wiring was removed. Native
+migration must resolve how arbitrary legal legacy actor admissions become trusted
+external configuration without rejecting previously legal imports or treating the
+same save as independent proof. Restricting all legacy imports to the generated
+eight is not an approved resolution. This remains the next design seam.
+
+Windows domain tests cover exact container roundtrip, existing destination
+replacement, real sharing-lock replacement failure, injected write/close/readback/
+replace failures retaining prior bytes and readability, semantic species/resource/
+anchor rejection against external admission, legacy compatibility, and explicit
+multi-region export refusal. The four failure hooks test transaction stage aborts;
+they do not emulate every device/OS failure mode. No native restart, rendered
+habitat travel, power-loss recovery, visual quality or frame-rate proof follows
+from these library tests.

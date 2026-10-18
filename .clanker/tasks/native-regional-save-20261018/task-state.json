@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "native-regional-save-20261018",
+  "status": "complete",
+  "base_revision": "16518a0",
+  "current_step": "bounded foundation complete; original native adoption deferred",
+  "completed_steps": [
+    "read protocol and checkpoint",
+    "isolated worktree created",
+    "legacy stream codec extracted",
+    "STL9 codec transaction and detached owner implemented",
+    "native startup species provenance gap found; native wiring reverted",
+    "Final domain CTest37/37 passed2.68s",
+    "Independent foundation review passed",
+    "Receipt written"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/domain/host_save.hpp",
+    "stalthos-runtime/tests/host_save.cpp",
+    "stalthos-runtime/docs/host-regional-save-design.md"
+  ],
+  "updated": "2026-10-18T23:58:21.925584+00:00",
+  "resume_instructions": "Foundation done only. Read receipt/design checkpoint; native main and adapter unchanged. Do not claim native STL9 adoption. Design trusted legacy admission before native hookup.",
+  "next_step": "Orchestrator reviews and integrates foundation; design trusted legacy admission before native hookup",
+  "blockers": [
+    "Native immutable admission provenance for arbitrary valid legacy species/identities requires design before adoption"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "ctest --test-dir var/build/stalthos-runtime -C Release --output-on-failure",
+    "evidence_path": ".clanker/tasks/native-regional-save-20261018/ctest.log"
+  },
+  "receipt_path": ".clanker/tasks/native-regional-save-20261018/receipt.json"
+}
