@@ -93,5 +93,12 @@
     "nodes": 6915,
     "mode": "Synchronous AST refresh without clustering;historical baseline preserved",
     "zero_node_source_warnings": 358
+  },
+  "publication": {
+    "remote_head_matched": true,
+    "implementation": "e22bc62",
+    "scope": "Reviewed foundation only;metadata closure may advance tip",
+    "verified_checkpoint": "6ccfbe937e902f03254de4dc742247a70ce9623f",
+    "remote": "origin/main"
   }
 }
