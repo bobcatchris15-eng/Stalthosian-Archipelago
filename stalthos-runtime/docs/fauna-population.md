@@ -1,0 +1,9 @@
+# Active fauna population draft
+
+`fauna::Population` instantiates up to 16 deterministic, active-region actors on caller-supplied habitat sites. The host owns the terrain, site graph, physical grounding and renderer. The simulation moves only along supplied neighbor edges; it never invents terrain or changes vertical grounding. It has no camera input and does not persist biographies.
+
+Actors begin as adults from the shared `Lifecycle` profiles with seeded initial needs, location and activity. Initial browsers are placed at marked browse sites with hunger raised enough to keep them browsing; drinkers start at freshwater sites with thirst raised; resting actors have elevated fatigue. Shared `NeedsCore` rates use `TimeStep.calendarSeconds` for hunger and thirst and `TimeStep.physicalSeconds` for fatigue and motion. Browse and drink only satisfy needs at marked browse and freshwater sites. Speeds are provisional at 0.18–0.4499 m/s. Updating a large time step is bounded by actor/site caps and a breadth-first path search; one call advances at most the next route edge, so hosts should provide ordinary frame-sized steps for continuous movement.
+
+IDs and all initial choices use a stable integer mixer scoped by world seed, region and purpose. Identity allocation makes at most 128 deterministic attempts per actor and throws on exhaustion. ID 0, the reserved hero ID 1 and caller-excluded IDs are skipped. Count zero is valid; a positive count requires a connected supplied graph with both browse and freshwater sites. The site limit is 5,000 and actor limit is 16.
+
+This is a visible-life draft, not a complete ecology: there are no births, relationships, threats, migration, offscreen cohorts, or persistence. Resource effects are per-actor need changes and do not alter foliage. Species and speed tuning remain provisional.
