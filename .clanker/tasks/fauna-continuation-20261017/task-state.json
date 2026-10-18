@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "fauna-continuation-20261017",
+  "status": "complete",
+  "base_revision": "38193aaea779bea1d19ba41a3dd954517fa5dc01",
+  "current_step": "candidate committed and receipt recorded",
+  "completed_steps": [
+    "read required Clanker contracts and inspect domain models",
+    "implemented atomic Population snapshot and restore",
+    "added exact continuation, mismatch, old/dead lifecycle and off-route tests",
+    "added optional STL7 fauna payload with STL1..6 readers retained",
+    "added persistence roundtrip, identity, bounds, corruption, truncation, and STL6 compatibility tests",
+    "built and ran both relevant Release targets",
+    "wrote receipt and passed diff check"
+  ],
+  "next_step": "root integration and independent merged-tree validation",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/persistence.hpp",
+    "stalthos-runtime/tests/fauna_population.cpp",
+    "stalthos-runtime/tests/persistence.cpp",
+    "stalthos-runtime/docs/fauna-population.md"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "cmake --build var/build/fauna-continuation --config Release --target Stalthos_fauna_population StalthosPersistence; var/build/fauna-continuation/Release/Stalthos_fauna_population.exe; var/build/fauna-continuation/Release/StalthosPersistence.exe",
+    "evidence_path": "var/build/fauna-continuation"
+  },
+  "assumptions": [
+    "Habitat signature covers ordered site positions and ordered neighbor topology; resource availability remains caller-owned and must match for exact continuation.",
+    "Persistence validates route indices against the hard habitat-site cap; the owning Population validates them against actual supplied site count and topology during restore."
+  ],
+  "updated": "2026-10-17T23:59:00-05:00",
+  "resume_instructions": "Both Release targets pass. Review git diff for the five assigned source/test/doc files, write the Clinker receipt, run git diff --check, and commit only those files plus the task receipt/state under .clanker/tasks/fauna-continuation-20261017."
+}

@@ -130,17 +130,17 @@ void testMalformedFilesAndBounds() {
 
     data = SaveData{}; data.activeTransients = {{20, 1}, {21, 2}};
     writeSave(path, data);
-    // STL6 lifecycle presence adds one byte, needs presence adds one byte, resource ledger presence adds one byte, camera presence adds one byte before the active list.
-    overwriteU64(path, 66, 20);
+    // STL7 lifecycle presence adds one byte, needs presence adds one byte, resource ledger presence adds one byte, camera presence adds one byte before the active list.
+    overwriteU64(path, 67, 20);
     rejects([&] { (void)readSave(path); }, "duplicate or conflicting entity identity");
 
     data = SaveData{};
     data.retained.push_back({3, 4, HeroSpecies::Smalltrotter, RetentionReason::Caregiver, true, true});
     writeSave(path, data);
-    // The retained active flag follows the STL6 header and record fields at byte 73.
+    // The retained active flag follows the STL7 header and record fields at byte 73.
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(73); detail::write_u8(io, 2); io.flush();
+        io.seekp(74); detail::write_u8(io, 2); io.flush();
         check(io.good(), "failed to mutate retained boolean fixture");
     }
     rejects([&] { (void)readSave(path); }, "invalid retained boolean flag");
@@ -272,7 +272,7 @@ void testLifecycleStl3RoundtripAndValidation() {
     writeSave(path, data);
     const auto encoded = bytes(path);
     check(encoded.size() == detail::encodedSize(data), "STL4 exact encoded size mismatch");
-    check(std::string(encoded.data(), encoded.data() + 4) == "STL6", "new save did not use STL6");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL7", "new save did not use STL7");
     const auto loaded = readSave(path);
     check(loaded.heroLifecycle && loaded.heroLifecycle->heroId == 44 &&
         loaded.heroLifecycle->species == HeroSpecies::Reedcrest &&
@@ -343,8 +343,8 @@ void testStl2MigrationAndStl3Corruption() {
     check(knownSpecies.species() == HeroSpecies::Smalltrotter && knownSpecies.calendarAge() == 0.0,
         "legacy fallback overrode the retained hero's known species");
     writeSave(path, old);
-    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '6',
-        "STL2 read/write migration did not emit STL6");
+    check(bytes(path).size() == detail::encodedSize(old) && bytes(path)[0] == 'S' && bytes(path)[3] == '7',
+        "STL2 read/write migration did not emit STL7");
 
     SaveData data; data.hero = ActiveEntity{2, 3};
     data.heroLifecycle = HeroLifecycleSnapshot{2, HeroSpecies::Smalltrotter, 0.0, LifeStage::Hatchling};
@@ -363,7 +363,7 @@ void testStl2MigrationAndStl3Corruption() {
     writeSave(path, data);
     {
         std::fstream io(path, std::ios::binary | std::ios::in | std::ios::out);
-        io.seekp(4); detail::write_u32(io, 7); io.flush();
+        io.seekp(4); detail::write_u32(io, 8); io.flush();
     }
     rejects([&] { (void)readSave(path); }, "unsupported save version");
     std::filesystem::remove(path);
@@ -400,8 +400,8 @@ void testStl5RoundtripResources() {
 
     writeSave(path, data);
     const auto fileBytes = bytes(path);
-    check(std::string(fileBytes.data(), fileBytes.data() + 4) == "STL6", "new save did not use STL6");
-    check(fileBytes.size() == detail::encodedSize(data), "STL6 size mismatch");
+    check(std::string(fileBytes.data(), fileBytes.data() + 4) == "STL7", "new save did not use STL7");
+    check(fileBytes.size() == detail::encodedSize(data), "STL7 size mismatch");
 
     auto loaded = readSave(path);
     ResourceLedger restored;
@@ -643,8 +643,8 @@ void testSavedDepletedQuantitiesRestoreAcrossLives() {
 
     // Verify encoded size and magic
     const auto file1 = bytes(path);
-    check(std::string(file1.data(), file1.data() + 4) == "STL6", "save was not STL6");
-    check(file1.size() == detail::encodedSize(data1), "STL6 size mismatch");
+    check(std::string(file1.data(), file1.data() + 4) == "STL7", "save was not STL7");
+    check(file1.size() == detail::encodedSize(data1), "STL7 size mismatch");
 
     // Hero 1 dies!
     world.heroDied();
@@ -721,8 +721,8 @@ void testNeedsStl4RoundtripAndValidation() {
     data.heroNeeds = captureHeroNeeds(source, data.hero->id);
     writeSave(path, data);
     const auto encoded = bytes(path);
-    check(encoded.size() == detail::encodedSize(data), "STL6 needs exact encoded size mismatch");
-    check(std::string(encoded.data(), encoded.data() + 4) == "STL6", "new save did not use STL6");
+    check(encoded.size() == detail::encodedSize(data), "STL7 needs exact encoded size mismatch");
+    check(std::string(encoded.data(), encoded.data() + 4) == "STL7", "new save did not use STL7");
 
     const auto loaded = readSave(path);
     check(loaded.heroNeeds && loaded.heroNeeds->heroId == 55 &&
@@ -878,11 +878,11 @@ void testLegacyStl5Compatibility() {
     check(loaded.pose && loaded.pose->cameraMode == 1, "STL5 legacy pose cameraMode 1 preserved");
     check(loaded.resourceLedger.has_value() && loaded.resourceLedger->resources.size() == 1, "STL5 resource ledger preserved");
 
-    // Write migrated save and verify it upgrades to STL6
+    // Write migrated save and verify it upgrades to STL7
     writeSave(path, loaded);
     const auto migratedBytes = bytes(path);
-    check(std::string(migratedBytes.data(), migratedBytes.data() + 4) == "STL6", "migrated save was not STL6");
-    check(migratedBytes.size() == detail::encodedSize(loaded), "STL6 migrated size mismatch");
+    check(std::string(migratedBytes.data(), migratedBytes.data() + 4) == "STL7", "migrated save was not STL7");
+    check(migratedBytes.size() == detail::encodedSize(loaded), "STL7 migrated size mismatch");
 
     const auto reloaded = readSave(path);
     check(!reloaded.cameraState.has_value(), "migrated save camera state remains optional nullopt");
@@ -891,8 +891,8 @@ void testLegacyStl5Compatibility() {
     std::filesystem::remove(path);
 }
 
-void testStl6CameraStateRoundtripAndValidation() {
-    const auto path = std::filesystem::path("test_camera_stl6.sav");
+void testStl7CameraStateRoundtripAndValidation() {
+    const auto path = std::filesystem::path("test_camera_stl7.sav");
     SaveData data;
     data.pose = HostPose{{1.0, 2.0, 3.0}, 0.5, 2}; // Legacy mode 2 (frontal)
     data.cameraState = CameraStateSnapshot{
@@ -906,8 +906,8 @@ void testStl6CameraStateRoundtripAndValidation() {
 
     writeSave(path, data);
     const auto fileBytes = bytes(path);
-    check(std::string(fileBytes.data(), fileBytes.data() + 4) == "STL6", "new save did not use STL6");
-    check(fileBytes.size() == detail::encodedSize(data), "STL6 size mismatch");
+    check(std::string(fileBytes.data(), fileBytes.data() + 4) == "STL7", "new save did not use STL7");
+    check(fileBytes.size() == detail::encodedSize(data), "STL7 size mismatch");
 
     auto loaded = readSave(path);
     check(loaded.cameraState.has_value(), "camera state missing");
@@ -922,11 +922,11 @@ void testStl6CameraStateRoundtripAndValidation() {
     // Verify legacy host pose cameraMode semantics are intact and distinct from cameraState
     check(loaded.pose.has_value() && loaded.pose->cameraMode == 2, "legacy camera mode 2 mismatch");
 
-    // Test optional omission in STL6
+    // Test optional omission in STL7
     SaveData dataWithoutCam = data;
     dataWithoutCam.cameraState.reset();
     writeSave(path, dataWithoutCam);
-    check(bytes(path).size() == detail::encodedSize(dataWithoutCam), "STL6 without camera size mismatch");
+    check(bytes(path).size() == detail::encodedSize(dataWithoutCam), "STL7 without camera size mismatch");
     auto loadedWithoutCam = readSave(path);
     check(!loadedWithoutCam.cameraState.has_value(), "camera state should be omitted");
 
@@ -988,7 +988,7 @@ void testStl6CameraStateRoundtripAndValidation() {
     rejects([&] { writeSave(path, invalid); }, "invalid camera orbit parameters");
     // Corrupted binary payload and presence tests on readSave
     // Offset calculation:
-    // Header: STL6 (4) + version(4) + phys(8) + cal(8) + seed(8) + retLimit(8) = 40
+    // Header: STL7 (4) + version(4) + phys(8) + cal(8) + seed(8) + retLimit(8) = 40
     // hero: 0 (presence) = 41
     // pose: 1 (presence) + 24 (pos) + 8 (heading) + 1 (cameraMode) = 34 => 75
     // lifecycle: 0 (presence) => 76
@@ -1036,6 +1036,41 @@ void testStl6CameraStateRoundtripAndValidation() {
 
     std::filesystem::remove(path);
 }
+void testStl7FaunaPopulationRoundtripAndValidation() {
+    const auto path=std::filesystem::path("test_fauna_stl7.sav"); SaveData data; data.seed=42;
+    fauna::PopulationSnapshot pop; pop.seed=42; pop.region=7; pop.habitatSignature=99;
+    pop.actors.push_back({123,HeroSpecies::Smalltrotter,{1,2,3},0.5,4.0,0,1,500.0,LifeStage::Hatchling,0.2,0.3,0.4,0.1,true,fauna::Activity::Travel}); data.faunaPopulation=pop;
+    writeSave(path,data); const auto raw=bytes(path); check(std::string(raw.data(),raw.data()+4)=="STL7","fauna save did not use STL7");
+    const auto loaded=readSave(path); check(loaded.faunaPopulation.has_value(),"fauna payload missing"); const auto& a=loaded.faunaPopulation->actors.at(0);
+    check(a.id==123 && a.site==0 && a.target==1 && a.stage==LifeStage::Hatchling && a.isResting && a.activity==fauna::Activity::Travel,"fauna discrete state mismatch");
+    check(a.position.x==1 && a.position.y==2 && a.position.z==3 && a.injury==0.1,"fauna scalar state mismatch");
+    auto invalid=data; invalid.faunaPopulation->actors.push_back(pop.actors[0]); rejects([&]{writeSave(path,invalid);},"duplicate or conflicting fauna identity");
+    invalid=data; invalid.hero=ActiveEntity{123,7}; rejects([&]{writeSave(path,invalid);},"duplicate or conflicting fauna identity");
+    invalid=data; invalid.faunaPopulation->seed=43; rejects([&]{writeSave(path,invalid);},"fauna population world identity mismatch");
+    invalid=data; invalid.faunaPopulation->actors[0].hunger=std::numeric_limits<double>::quiet_NaN(); rejects([&]{writeSave(path,invalid);},"invalid fauna needs");
+    invalid=data; invalid.faunaPopulation->actors[0].site=fauna::Population::maxSites; rejects([&]{writeSave(path,invalid);},"fauna route index out of range");
+    writeSave(path,data);
+    { std::fstream io(path,std::ios::binary|std::ios::in|std::ios::out); io.seekp(46); detail::write_u8(io,2); io.flush(); }
+    rejects([&]{(void)readSave(path);},"corrupt fauna population presence flag");
+    writeSave(path,data);
+    { std::fstream io(path,std::ios::binary|std::ios::in|std::ios::out); io.seekp(71); detail::write_u32(io,17); io.flush(); }
+    rejects([&]{(void)readSave(path);},"fauna actors exceed size bound");
+    writeSave(path,data); { auto truncated=bytes(path); truncated.resize(150); std::ofstream io(path,std::ios::binary|std::ios::trunc); io.write(truncated.data(),static_cast<std::streamsize>(truncated.size())); }
+    rejects([&]{(void)readSave(path);},"truncated");
+    writeSave(path,data);
+    // Presence header follows the prior STL6 fields; first actor species follows id.
+    { std::fstream io(path,std::ios::binary|std::ios::in|std::ios::out); io.seekp(83); detail::write_u8(io,255); io.flush(); }
+    rejects([&]{(void)readSave(path);},"invalid fauna species"); std::filesystem::remove(path);
+}
+void testLegacyStl6Compatibility() {
+    const auto path=std::filesystem::path("test_legacy_stl6.sav"); std::ofstream os(path,std::ios::binary|std::ios::trunc);
+    os.write("STL6",4); detail::write_u32(os,6); detail::write_double(os,0); detail::write_double(os,0); detail::write_u64(os,0); detail::write_u64(os,64);
+    for(int i=0;i<6;++i) detail::write_u8(os,0); // hero, pose, lifecycle, needs, ledger, camera
+    detail::write_u32(os,0); detail::write_u32(os,0); detail::write_u32(os,0); detail::write_u32(os,0); os.close();
+    const auto loaded=readSave(path); check(!loaded.faunaPopulation,"STL6 invented fauna population");
+    writeSave(path,loaded); const auto migrated=bytes(path); check(std::string(migrated.data(),migrated.data()+4)=="STL7","STL6 migration did not emit STL7");
+    std::filesystem::remove(path);
+}
 } // namespace
 
 int main() {
@@ -1056,13 +1091,15 @@ int main() {
         {"corrupt resource ledger rollback and size caps", testCorruptResourceLedgerRollbackAndCaps},
         {"saved depleted quantities restore across lives", testSavedDepletedQuantitiesRestoreAcrossLives},
         {"STL5 legacy compatibility", testLegacyStl5Compatibility},
-        {"STL6 camera state roundtrip and validation", testStl6CameraStateRoundtripAndValidation}
+        {"STL7 camera state roundtrip and validation", testStl7CameraStateRoundtripAndValidation},
+        {"STL7 fauna population roundtrip and validation", testStl7FaunaPopulationRoundtripAndValidation},
+        {"STL6 compatibility", testLegacyStl6Compatibility}
     };
     int failed = 0;
     for (const auto& scenario : scenarios) {
         try { scenario.second(); std::cout << "PASS " << scenario.first << '\n'; }
         catch (const std::exception& e) { ++failed; std::cerr << "FAIL " << scenario.first << ": " << e.what() << '\n'; }
     }
-    std::cout << (17 - failed) << "/17 tests passed\n";
+    std::cout << (19 - failed) << "/19 tests passed\n";
     return failed ? 1 : 0;
 }

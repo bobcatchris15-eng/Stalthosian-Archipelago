@@ -5,6 +5,7 @@
 #include "needs.hpp"
 #include "resource_ledger.hpp"
 #include "camera_framing.hpp"
+#include "fauna_population.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -68,6 +69,7 @@ struct SaveData {
     std::optional<HostPose> pose;
     std::optional<ResourceLedgerDto> resourceLedger;
     std::optional<CameraStateSnapshot> cameraState;
+    std::optional<fauna::PopulationSnapshot> faunaPopulation;
 };
 
 constexpr std::size_t MAX_ACTIVE_TRANSIENTS = 500'000;
@@ -76,6 +78,7 @@ constexpr std::size_t MAX_DEAD_HEROES = 10'000;
 constexpr std::size_t MAX_REGIONS = 100'000;
 constexpr std::size_t MAX_TREES_PER_REGION = 50'000;
 constexpr std::size_t MAX_TOTAL_TREES = 1'000'000;
+constexpr std::size_t MAX_FAUNA_ACTORS = 16;
 constexpr std::uint64_t MAX_SAVE_BYTES = 64ull * 1024ull * 1024ull;
 
 namespace detail {
@@ -142,7 +145,7 @@ inline std::uint64_t checkedAdd(std::uint64_t total, std::uint64_t amount) {
 }
 
 inline std::uint64_t encodedSize(const SaveData& data) {
-    // STL6 header, times, seed, retention limit, identities, optional pose,
+    // STL7 header, times, seed, retention limit, identities, optional pose,
     // optional lifecycle, optional needs, optional resource ledger, and optional camera state.
     std::uint64_t size = 8 + 16 + 8 + 8 + 1 + (data.hero ? 16 : 0) + 1 + (data.pose ? 33 : 0) +
         1 + (data.heroLifecycle ? 18 : 0) + 1 + (data.heroNeeds ? 42 : 0) + 1;
@@ -151,6 +154,7 @@ inline std::uint64_t encodedSize(const SaveData& data) {
         size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.resourceLedger->sessions.size()) * 24);
     }
     size = checkedAdd(size, 1 + (data.cameraState ? 50 : 0));
+    size = checkedAdd(size, 1 + (data.faunaPopulation ? 28 + static_cast<std::uint64_t>(data.faunaPopulation->actors.size()) * 108 : 0));
     size = checkedAdd(size, 4);
     size = checkedAdd(size, static_cast<std::uint64_t>(data.activeTransients.size()) * 16);
     size = checkedAdd(size, 4 + static_cast<std::uint64_t>(data.retained.size()) * 20);
@@ -292,6 +296,7 @@ inline void validate(const SaveData& data) {
     if (data.retentionLimit > MAX_RETAINED) throw std::runtime_error("retention limit exceeds size bound");
     if (data.retained.size() > data.retentionLimit) throw std::runtime_error("retained records exceed retention limit");
     if (data.activeTransients.size() > MAX_ACTIVE_TRANSIENTS) throw std::runtime_error("too many active transients");
+    if (data.faunaPopulation && data.faunaPopulation->actors.size() > MAX_FAUNA_ACTORS) throw std::runtime_error("too many active fauna actors");
     if (data.retained.size() > MAX_RETAINED) throw std::runtime_error("too many retained entities");
     if (data.deadHeroes.size() > MAX_DEAD_HEROES) throw std::runtime_error("too many dead heroes");
     if (data.regions.size() > MAX_REGIONS) throw std::runtime_error("too many regions");
@@ -306,6 +311,19 @@ inline void validate(const SaveData& data) {
         if (value.active && !value.alive) throw std::runtime_error("dead retained entity cannot be active");
     }
     for (const auto& value : data.deadHeroes) claimIdentity(deadIds, value.id);
+    if (data.faunaPopulation) {
+        if (data.faunaPopulation->seed != data.seed || data.faunaPopulation->region == 0) throw std::runtime_error("fauna population world identity mismatch");
+        std::set<Identity> faunaIds;
+        for (const auto& actor : data.faunaPopulation->actors) {
+            if (!actor.id || actor.id == 1 || !faunaIds.insert(actor.id).second || activeIds.count(actor.id) || retainedIds.count(actor.id) || deadIds.count(actor.id))
+                throw std::runtime_error("duplicate or conflicting fauna identity");
+            if (!valid(actor.species) || static_cast<unsigned>(actor.stage) > static_cast<unsigned>(LifeStage::Dead) || static_cast<unsigned>(actor.activity) > static_cast<unsigned>(fauna::Activity::Drink)) throw std::runtime_error("invalid fauna enum");
+            if (actor.site >= fauna::Population::maxSites || actor.target >= fauna::Population::maxSites) throw std::runtime_error("fauna route index out of range");
+            if (!finite(actor.position) || !std::isfinite(actor.headingRadians) || !std::isfinite(actor.distanceTravelledMeters) || actor.distanceTravelledMeters < 0.0) throw std::runtime_error("invalid fauna motion");
+            if (!std::isfinite(actor.hunger) || actor.hunger < 0 || actor.hunger > 1 || !std::isfinite(actor.thirst) || actor.thirst < 0 || actor.thirst > 1 || !std::isfinite(actor.fatigue) || actor.fatigue < 0 || actor.fatigue > 1 || !std::isfinite(actor.injury) || actor.injury < 0 || actor.injury > 1) throw std::runtime_error("invalid fauna needs");
+            try { Lifecycle life(actor.species); life.restoreState(actor.species,actor.calendarAge,actor.stage); } catch (...) { throw std::runtime_error("invalid fauna lifecycle"); }
+        }
+    }
     for (const auto& value : data.retained) {
         const bool isHero = data.hero && data.hero->id == value.id;
         if (isHero && (!value.alive || !value.active || data.hero->region != value.region)) throw std::runtime_error("inconsistent retained hero");
@@ -361,8 +379,8 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
     std::ofstream os(tempPath, std::ios::binary | std::ios::trunc);
     if (!os) throw std::runtime_error("failed to open temp file for save");
 
-    os.write("STL6", 4);
-    detail::write_u32(os, 6);
+    os.write("STL7", 4);
+    detail::write_u32(os, 7);
     detail::write_double(os, data.physicalSeconds);
     detail::write_double(os, data.calendarSeconds);
     detail::write_u64(os, data.seed);
@@ -430,6 +448,21 @@ inline void writeSave(const std::filesystem::path& path, const SaveData& data) {
         detail::write_double(os, data.cameraState->orbitElevation);
         detail::write_double(os, data.cameraState->orbitDistance);
     }
+    detail::write_u8(os, data.faunaPopulation ? 1 : 0);
+    if (data.faunaPopulation) {
+        const auto& pop=*data.faunaPopulation;
+        detail::write_u64(os,pop.seed); detail::write_u64(os,pop.region); detail::write_u64(os,pop.habitatSignature);
+        detail::write_u32(os,static_cast<std::uint32_t>(pop.actors.size()));
+        for (const auto& a:pop.actors) {
+            detail::write_u64(os,a.id); detail::write_u8(os,static_cast<std::uint8_t>(a.species));
+            detail::write_double(os,a.position.x); detail::write_double(os,a.position.y); detail::write_double(os,a.position.z);
+            detail::write_double(os,a.headingRadians); detail::write_double(os,a.distanceTravelledMeters);
+            detail::write_u64(os,a.site); detail::write_u64(os,a.target); detail::write_double(os,a.calendarAge);
+            detail::write_u8(os,static_cast<std::uint8_t>(a.stage)); detail::write_double(os,a.hunger); detail::write_double(os,a.thirst);
+            detail::write_double(os,a.fatigue); detail::write_double(os,a.injury); detail::write_u8(os,a.isResting?1:0);
+            detail::write_u8(os,static_cast<std::uint8_t>(a.activity));
+        }
+    }
 
     auto active = data.activeTransients;
     std::sort(active.begin(), active.end(), [](const auto& a, const auto& b) { return a.id < b.id; });
@@ -489,9 +522,10 @@ inline SaveData readSave(const std::filesystem::path& path) {
     const bool stl4 = std::strncmp(magic, "STL4", 4) == 0;
     const bool stl5 = std::strncmp(magic, "STL5", 4) == 0;
     const bool stl6 = std::strncmp(magic, "STL6", 4) == 0;
-    if (!legacy && !stl2 && !stl3 && !stl4 && !stl5 && !stl6) throw std::runtime_error("invalid magic or corrupt file");
+    const bool stl7 = std::strncmp(magic, "STL7", 4) == 0;
+    if (!legacy && !stl2 && !stl3 && !stl4 && !stl5 && !stl6 && !stl7) throw std::runtime_error("invalid magic or corrupt file");
     const auto version = detail::read_u32(is);
-    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4) || (stl5 && version != 5) || (stl6 && version != 6)) throw std::runtime_error("unsupported save version");
+    if ((legacy && version != 1) || (stl2 && version != 2) || (stl3 && version != 3) || (stl4 && version != 4) || (stl5 && version != 5) || (stl6 && version != 6) || (stl7 && version != 7)) throw std::runtime_error("unsupported save version");
 
     SaveData data;
     if (!legacy) data.physicalSeconds = detail::read_double(is);
@@ -509,7 +543,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         if (hasPose > 1) throw std::runtime_error("corrupt pose presence flag");
         if (hasPose) data.pose = HostPose{{detail::read_double(is), detail::read_double(is), detail::read_double(is)}, detail::read_double(is), detail::read_u8(is)};
     }
-    if (stl3 || stl4 || stl5 || stl6) {
+    if (stl3 || stl4 || stl5 || stl6 || stl7) {
         const auto hasLifecycle = detail::read_u8(is);
         if (hasLifecycle > 1) throw std::runtime_error("corrupt lifecycle presence flag");
         if (hasLifecycle) {
@@ -525,7 +559,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
             data.heroLifecycle = life;
         }
     }
-    if (stl4 || stl5 || stl6) {
+    if (stl4 || stl5 || stl6 || stl7) {
         const auto hasNeeds = detail::read_u8(is);
         if (hasNeeds > 1) throw std::runtime_error("corrupt needs presence flag");
         if (hasNeeds) {
@@ -544,7 +578,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
             data.heroNeeds = needs;
         }
     }
-    if (stl5 || stl6) {
+    if (stl5 || stl6 || stl7) {
         const auto hasResourceLedger = detail::read_u8(is);
         if (hasResourceLedger > 1) throw std::runtime_error("corrupt resource ledger presence flag");
         if (hasResourceLedger) {
@@ -576,7 +610,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         }
     }
 
-    if (stl6) {
+    if (stl6 || stl7) {
         const auto hasCameraState = detail::read_u8(is);
         if (hasCameraState > 1) throw std::runtime_error("corrupt camera state presence flag");
         if (hasCameraState) {
@@ -591,6 +625,25 @@ inline SaveData readSave(const std::filesystem::path& path) {
             cam.orbitDistance = detail::read_double(is);
             detail::validate(cam);
             data.cameraState = cam;
+        }
+    }
+
+    if (stl7) {
+        const auto present=detail::read_u8(is); if (present>1) throw std::runtime_error("corrupt fauna population presence flag");
+        if (present) {
+            fauna::PopulationSnapshot pop; pop.seed=detail::read_u64(is); pop.region=detail::read_u64(is); pop.habitatSignature=detail::read_u64(is);
+            const auto actors=detail::read_u32(is); if (actors>MAX_FAUNA_ACTORS || static_cast<std::uint64_t>(actors)*108>fileSize) throw std::runtime_error("fauna actors exceed size bound");
+            pop.actors.reserve(actors);
+            for (std::uint32_t i=0;i<actors;++i) {
+                fauna::ActorSnapshot a; a.id=detail::read_u64(is); const auto species=detail::read_u8(is);
+                if (species>static_cast<std::uint8_t>(HeroSpecies::Longstride)) throw std::runtime_error("invalid fauna species"); a.species=static_cast<HeroSpecies>(species);
+                a.position={detail::read_double(is),detail::read_double(is),detail::read_double(is)}; a.headingRadians=detail::read_double(is); a.distanceTravelledMeters=detail::read_double(is);
+                const auto site=detail::read_u64(is),target=detail::read_u64(is); if(site>std::numeric_limits<std::size_t>::max()||target>std::numeric_limits<std::size_t>::max()) throw std::runtime_error("fauna route index out of range"); a.site=static_cast<std::size_t>(site); a.target=static_cast<std::size_t>(target);
+                a.calendarAge=detail::read_double(is); const auto stage=detail::read_u8(is); if(stage>static_cast<std::uint8_t>(LifeStage::Dead)) throw std::runtime_error("invalid fauna stage"); a.stage=static_cast<LifeStage>(stage);
+                a.hunger=detail::read_double(is); a.thirst=detail::read_double(is); a.fatigue=detail::read_double(is); a.injury=detail::read_double(is);
+                const auto resting=detail::read_u8(is), activity=detail::read_u8(is); if(resting>1) throw std::runtime_error("invalid fauna resting flag"); if(activity>static_cast<std::uint8_t>(fauna::Activity::Drink)) throw std::runtime_error("invalid fauna activity"); a.isResting=resting==1; a.activity=static_cast<fauna::Activity>(activity); pop.actors.push_back(a);
+            }
+            data.faunaPopulation=std::move(pop);
         }
     }
 
@@ -666,7 +719,7 @@ inline SaveData readSave(const std::filesystem::path& path) {
         legacySize = detail::checkedAdd(legacySize, 4);
         for (const auto& region : data.regions) legacySize = detail::checkedAdd(legacySize, 12 + static_cast<std::uint64_t>(region.trees.size()) * 17);
         if (legacySize != fileSize) throw std::runtime_error("save size does not match encoded records");
-    } else if ((stl6 ? detail::encodedSize(data) : (stl5 ? detail::encodedSizeStl5(data) : (stl4 ? detail::encodedSizeStl4(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data))))) != fileSize)
+    } else if ((stl7 ? detail::encodedSize(data) : (stl6 ? detail::encodedSize(data)-1 : (stl5 ? detail::encodedSizeStl5(data) : (stl4 ? detail::encodedSizeStl4(data) : (stl3 ? detail::encodedSizeStl3(data) : detail::encodedSizeStl2(data)))))) != fileSize)
         throw std::runtime_error("save size does not match encoded records");
     return data;
 }

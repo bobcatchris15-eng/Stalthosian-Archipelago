@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <set>
 #include <stdexcept>
 #include <vector>
@@ -38,6 +39,27 @@ struct ActorView {
     Activity activity;
 };
 
+struct ActorSnapshot {
+    Identity id = 0;
+    HeroSpecies species = HeroSpecies::Smalltrotter;
+    Vec3 position{};
+    double headingRadians = 0.0;
+    double distanceTravelledMeters = 0.0;
+    std::size_t site = 0;
+    std::size_t target = 0;
+    double calendarAge = 0.0;
+    LifeStage stage = LifeStage::Hatchling;
+    double hunger = 0.0, thirst = 0.0, fatigue = 0.0, injury = 0.0;
+    bool isResting = false;
+    Activity activity = Activity::Rest;
+};
+struct PopulationSnapshot {
+    std::uint64_t seed = 0;
+    RegionId region = 0;
+    std::uint64_t habitatSignature = 0;
+    std::vector<ActorSnapshot> actors;
+};
+
 class Population {
     struct Actor {
         Identity id{};
@@ -51,9 +73,9 @@ class Population {
         needs::NeedsCore needs{HeroSpecies::Smalltrotter};
         Activity activity = Activity::Rest;
         Actor(Identity identity, HeroSpecies kind, double age, std::size_t at, Vec3 initialPosition, Activity mode,
-              double initialHunger, double initialThirst, double initialFatigue)
+              double initialHunger, double initialThirst, double initialFatigue, LifeStage initialStage = LifeStage::Adult)
             : id(identity), species(kind), position(initialPosition), site(at), target(at), life(kind), needs(kind), activity(mode) {
-            life.restoreState(kind, age, LifeStage::Adult);
+            life.restoreState(kind, age, initialStage);
             needs.restoreState(initialHunger, initialThirst, initialFatigue, 0, mode == Activity::Rest);
         }
     };
@@ -63,6 +85,18 @@ class Population {
     std::vector<HabitatSite> sites_;
     std::vector<Actor> actors_;
     std::vector<ActorView> views_;
+
+    std::uint64_t habitatSignature() const noexcept {
+        std::uint64_t h = UINT64_C(1469598103934665603);
+        auto add = [&h](std::uint64_t v) { for (int i=0;i<8;++i) { h ^= (v >> (i*8)) & 0xff; h *= UINT64_C(1099511628211); } };
+        add(sites_.size());
+        for (const auto& site : sites_) {
+            std::uint64_t bits=0; std::memcpy(&bits,&site.position.x,8); add(bits);
+            std::memcpy(&bits,&site.position.y,8); add(bits); std::memcpy(&bits,&site.position.z,8); add(bits);
+            add(site.neighbors.size()); for (auto n:site.neighbors) add(n);
+        }
+        return h;
+    }
 
     static std::uint64_t mix(std::uint64_t x) noexcept {
         x += UINT64_C(0x9e3779b97f4a7c15);
@@ -214,6 +248,36 @@ public:
         refreshViews();
     }
     const std::vector<ActorView>& actors() const noexcept { return views_; }
+    PopulationSnapshot snapshot() const {
+        PopulationSnapshot out{seed_,region_,habitatSignature(),{}}; out.actors.reserve(actors_.size());
+        for (const auto& a:actors_) out.actors.push_back({a.id,a.species,a.position,a.heading,a.distance,a.site,a.target,
+            a.life.calendarAge(),a.life.stage(),a.needs.hunger(),a.needs.thirst(),a.needs.fatigue(),a.needs.injury(),a.needs.isResting(),a.activity});
+        return out;
+    }
+    void restore(const PopulationSnapshot& saved, const std::set<Identity>& excludedIds = {}) {
+        if (saved.seed!=seed_ || saved.region!=region_ || saved.habitatSignature!=habitatSignature()) throw std::invalid_argument("fauna snapshot habitat identity mismatch");
+        if (saved.actors.size()>maxActors) throw std::invalid_argument("fauna snapshot exceeds 16 active actors");
+        std::set<Identity> ids=excludedIds; std::vector<Actor> replacement; replacement.reserve(saved.actors.size());
+        for (const auto& s:saved.actors) {
+            if (!s.id || s.id==1 || ids.count(s.id)) throw std::invalid_argument("fauna snapshot identity conflict");
+            if (s.site>=sites_.size() || s.target>=sites_.size() || !finite(s.position) || !std::isfinite(s.headingRadians) || !std::isfinite(s.distanceTravelledMeters) || s.distanceTravelledMeters<0) throw std::invalid_argument("invalid fauna snapshot motion");
+            if (static_cast<unsigned>(s.species)>static_cast<unsigned>(HeroSpecies::Longstride) || static_cast<unsigned>(s.stage)>static_cast<unsigned>(LifeStage::Dead) || static_cast<unsigned>(s.activity)>static_cast<unsigned>(Activity::Drink)) throw std::invalid_argument("invalid fauna snapshot enum");
+            const auto at=sites_[s.site].position;
+            if (s.activity==Activity::Travel && s.site!=s.target) {
+                const auto hop=nextHop(s.site,s.target); const auto end=sites_[hop].position;
+                const double vx=end.x-at.x, vy=end.y-at.y, vz=end.z-at.z;
+                const double wx=s.position.x-at.x, wy=s.position.y-at.y, wz=s.position.z-at.z;
+                const double len2=vx*vx+vy*vy+vz*vz;
+                const double t=len2>0?(wx*vx+wy*vy+wz*vz)/len2:0;
+                const double px=at.x+t*vx, py=at.y+t*vy, pz=at.z+t*vz;
+                if (t < -1e-6 || t > 1.0+1e-6 || distance(s.position,{px,py,pz})>1e-6) throw std::invalid_argument("fauna snapshot position is outside its current route");
+            } else if (distance(s.position,at)>1e-6) throw std::invalid_argument("fauna snapshot stationary position does not match habitat site");
+            ids.insert(s.id); Actor a{s.id,s.species,s.calendarAge,s.site,s.position,s.activity,s.hunger,s.thirst,s.fatigue,s.stage};
+            a.distance=s.distanceTravelledMeters; a.heading=s.headingRadians; a.target=s.target;
+            a.needs.restoreState(s.hunger,s.thirst,s.fatigue,s.injury,s.isResting); replacement.push_back(std::move(a));
+        }
+        actors_.swap(replacement); refreshViews();
+    }
     // Resource ownership stays with the shared world ledger. The host supplies
     // current contact availability before each active-region step.
     void setSiteResources(std::size_t index, bool browse, bool freshwater) {

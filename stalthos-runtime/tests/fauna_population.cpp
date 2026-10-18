@@ -50,6 +50,32 @@ int main() {
         require(x.distanceTravelledMeters<=2.251,"5s movement is speed bounded");
     }
     require(a.actors()[0].fatigue>before[0].fatigue,"physical time advances fatigue");
+    Population uninterrupted(41,7,sites,6), resumed(41,7,sites,6);
+    uninterrupted.advance({7.25,11.5}); resumed.advance({7.25,11.5});
+    const auto saved=resumed.snapshot();
+    Population restored(41,7,sites,0);
+    restored.restore(saved);
+    for (int i=0;i<40;++i) { uninterrupted.advance({0.75,1.25}); restored.advance({0.75,1.25}); }
+    const auto continued=uninterrupted.snapshot(), roundtripped=restored.snapshot();
+    require(continued.actors.size()==roundtripped.actors.size(),"restore actor count");
+    for(std::size_t i=0;i<continued.actors.size();++i) {
+        const auto& x=continued.actors[i]; const auto& y=roundtripped.actors[i];
+        require(x.id==y.id && x.species==y.species && x.site==y.site && x.target==y.target && x.activity==y.activity && x.stage==y.stage,"restore identity and route state");
+        require(x.position.x==y.position.x && x.position.y==y.position.y && x.position.z==y.position.z && x.headingRadians==y.headingRadians && x.distanceTravelledMeters==y.distanceTravelledMeters,"continued motion matches exactly after restore");
+        require(x.calendarAge==y.calendarAge && x.hunger==y.hunger && x.thirst==y.thirst && x.fatigue==y.fatigue && x.injury==y.injury && x.isResting==y.isResting,"continued needs match exactly after restore");
+    }
+    auto badSnapshot=saved; badSnapshot.region++;
+    bool rejectedRestore=false; try { restored.restore(badSnapshot); } catch(const std::invalid_argument&) { rejectedRestore=true; }
+    require(rejectedRestore,"habitat identity mismatch rejected");
+    const auto unchanged=restored.snapshot();
+    badSnapshot=saved; badSnapshot.actors[0].position.x+=1000;
+    rejectedRestore=false; try { restored.restore(badSnapshot); } catch(const std::invalid_argument&) { rejectedRestore=true; }
+    require(rejectedRestore && restored.snapshot().actors.size()==unchanged.actors.size(),"off-route position rejected atomically");
+    auto oldSnapshot=saved; auto& oldActor=oldSnapshot.actors[0];
+    const auto& profile=getHeroProfile(oldActor.species); oldActor.calendarAge=profile.hatchlingDuration+profile.juvenileDuration+profile.adultDuration+1; oldActor.stage=LifeStage::Old;
+    restored.restore(oldSnapshot); require(restored.snapshot().actors[0].stage==LifeStage::Old,"old stage restore");
+    oldActor.calendarAge+=profile.oldDuration; oldActor.stage=LifeStage::Dead; oldActor.activity=Activity::Rest; oldActor.isResting=true;
+    restored.restore(oldSnapshot); require(restored.snapshot().actors[0].stage==LifeStage::Dead,"dead stage restore");
     a.advance({10,0});
     bool browsing=false, drinking=false;
     for (const auto& actor:a.actors()) {
