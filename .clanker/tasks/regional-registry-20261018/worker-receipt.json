@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task": "regional-registry-20261018",
+  "status": "candidate_ready_for_review",
+  "utc": "2026-10-18T13:46:13.4263628Z",
+  "base_revision": "cfecfc0d151343810ef55f601693e29c260b90f3",
+  "scope": "Domain foundation only; no native host, resource relief binding, persistence or source asset changes",
+  "caps": {
+    "history_reservations": 256,
+    "resource_reservations": 4096,
+    "individuals": 64,
+    "regions": 8,
+    "per_region_individuals": 16
+  },
+  "validation": {
+    "diagnostic": "REGIONAL_POPULATION_FOUNDATION_OK regions=8 individuals=64 history=256 camera_denied=true retained_departure_return=true host_integrated=false",
+    "test_log": "var/build/stalthos-runtime/Testing/Temporary/LastTest.log",
+    "build": "MSVC 19.51 Release /W4 /WX Build.ps1 -DomainOnly succeeded",
+    "toolkit": "Not run by this worker; delegated root validation",
+    "native_host": "Not modified or run by this worker",
+    "ctest": "32/32 passed; final run 1.52 seconds; complete expected elapsed dormant and return snapshots/ledger compared"
+  },
+  "preservation": "Mandatory supplied legacy population and complete history bootstrap; no IDs/signatures changed; STL8 source untouched; only isolated ownership paths modified",
+  "limits": [
+    "No host integration or persistence archive",
+    "No actor-bound contact validation or accepted-delta resource relief",
+    "No boundary ownership or cross-region movement",
+    "No resource insert/reservation resize API",
+    "No integrated visual/full-draft/30FPS acceptance"
+  ],
+  "next": "Review foundation; then actor-bound resource coupling and exact versioned multi-region save/load before native integration",
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "60bd13ca77d1211c9fad2e3c06fa6dc45bcf8ba33601fa1616314894ec394ffb"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "c6d8472429dee98ae62a36bce913e743a692f0ffae85042da7d976a55d27bb3a"
+    },
+    {
+      "path": "stalthos-runtime/tests/regional_population.cpp",
+      "sha256": "d1e596c12c31ded107f14644af9bef4835fbe6f93f3f46d3311ec29ac903eacf"
+    },
+    {
+      "path": "stalthos-runtime/docs/regional-population.md",
+      "sha256": "eeb9c8c7056b896ba39ea6d7c2dc897bf18889790ec0f90351b42849e5eb7cea"
+    }
+  ]
+}
