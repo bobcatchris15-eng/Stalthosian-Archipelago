@@ -148,6 +148,21 @@ void test_seed_and_region_variation() {
 
 int main() {
     try {
+        // Category changes must not cause physical wind/temperature jumps.
+        // Check sunrise/sunset explicitly and a complete two-week weather cycle.
+        for(double boundary:{21600.0,64800.0}) {
+            const auto before=sample(12345,1,boundary-.1,{1,0,.5,0});
+            const auto after=sample(12345,1,boundary+.1,{1,0,.5,0});
+            if(std::abs(after.temperatureC-before.temperatureC)>.001)
+                throw std::runtime_error("Canopy temperature jumps at day boundary.");
+        }
+        auto prior=sample(12345,1,0);
+        for(int second=600;second<=86400*14;second+=600) {
+            const auto current=sample(12345,1,second);
+            if(std::abs(current.windMetersPerSecond-prior.windMetersPerSecond)>.2)
+                throw std::runtime_error("Wind jumps at weather category boundary.");
+            prior=current;
+        }
         test_exact_repeat();
         test_time_zero();
         test_huge_time();

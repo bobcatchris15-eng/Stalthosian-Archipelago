@@ -1,0 +1,3 @@
+Command: PYTHONPATH=src python -m pytest -q (stalthos-toolkit/)
+Actual final output: 2073 passed, 2 skipped in 522.39s (0:08:42)
+Exit code: 0

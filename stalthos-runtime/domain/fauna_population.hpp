@@ -263,7 +263,7 @@ public:
             if (s.site>=sites_.size() || s.target>=sites_.size() || !finite(s.position) || !std::isfinite(s.headingRadians) || !std::isfinite(s.distanceTravelledMeters) || s.distanceTravelledMeters<0) throw std::invalid_argument("invalid fauna snapshot motion");
             if (static_cast<unsigned>(s.species)>static_cast<unsigned>(HeroSpecies::Longstride) || static_cast<unsigned>(s.stage)>static_cast<unsigned>(LifeStage::Dead) || static_cast<unsigned>(s.activity)>static_cast<unsigned>(Activity::Drink)) throw std::invalid_argument("invalid fauna snapshot enum");
             const auto at=sites_[s.site].position;
-            if (s.activity==Activity::Travel && s.site!=s.target) {
+            if ((s.activity==Activity::Travel || s.stage==LifeStage::Dead) && s.site!=s.target) {
                 const auto hop=nextHop(s.site,s.target); const auto end=sites_[hop].position;
                 const double vx=end.x-at.x, vy=end.y-at.y, vz=end.z-at.z;
                 const double wx=s.position.x-at.x, wy=s.position.y-at.y, wz=s.position.z-at.z;

@@ -9,6 +9,7 @@
 #include <limits>
 #include <map>
 #include <optional>
+#include <set>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -45,6 +46,7 @@ private:
     std::vector<Event> events_;
     double consumedFood_ = 0;
     double consumedWater_ = 0;
+    bool historyRestored_ = false;
 
     static double distanceSquared(Vec3 a, Vec3 b) noexcept {
         const double x=a.x-b.x, y=a.y-b.y, z=a.z-b.z;
@@ -82,8 +84,15 @@ private:
 public:
     FaunaResources(const std::vector<fauna::HabitatSite>& sites,
                    const std::vector<Vec3>& shrubPositions,
-                   std::uint64_t& nextInteractionSession)
+                   std::uint64_t& nextInteractionSession,
+                   const std::vector<std::pair<Identity,std::uint64_t>>& savedSessions = {})
         : sites_(sites), resourcesBySite_(sites.size()), nextSession_(&nextInteractionSession) {
+        if(savedSessions.size()>fauna::Population::maxActors) throw std::invalid_argument("too many fauna resource sessions");
+        std::set<std::uint64_t> used;
+        for(const auto& item:savedSessions) {
+            if(!item.first || !item.second || !used.insert(item.second).second || !sessions_.emplace(item).second)
+                throw std::invalid_argument("invalid fauna resource session mapping");
+        }
         if (shrubPositions.size()>3896) throw std::invalid_argument("fauna shrub resource ids exceed bounded range");
         for (const auto& p: shrubPositions) if (!finite(p)) throw std::invalid_argument("non-finite shrub resource position");
         for (std::size_t i=0;i<sites.size();++i) {
@@ -105,6 +114,20 @@ public:
 
     // Call before Population::advance so depleted contacts cannot be selected.
     void refreshAvailability(fauna::Population& population, const ResourceLedger& ledger) {
+        if(!historyRestored_) {
+            std::map<std::uint64_t,Identity> actorBySession;
+            std::set<Identity> actorIds;
+            for(const auto& actor:population.actors()) actorIds.insert(actor.id);
+            for(const auto& entry:sessions_) {
+                if(!actorIds.count(entry.first)) throw std::invalid_argument("resource session has no population actor");
+                actorBySession.emplace(entry.second,entry.first);
+            }
+            for(const auto& entry:ledger.continuationSnapshot().sessions) {
+                const auto actor=actorBySession.find(entry.sessionId);
+                if(actor!=actorBySession.end()) cumulative_.emplace(ContactKey{actor->second,entry.resourceId},entry.amount);
+            }
+            historyRestored_=true;
+        }
         ensureSessions(population.actors());
         const auto resources=resourceMap(ledger);
         for (std::size_t i=0;i<resourcesBySite_.size();++i) {
@@ -172,6 +195,9 @@ public:
     double consumedFood() const noexcept { return consumedFood_; }
     double consumedWater() const noexcept { return consumedWater_; }
     const std::vector<Event>& events() const noexcept { return events_; }
+    std::vector<std::pair<Identity,std::uint64_t>> sessions() const {
+        return {sessions_.begin(),sessions_.end()};
+    }
 };
 
 } // namespace stalthos::engine

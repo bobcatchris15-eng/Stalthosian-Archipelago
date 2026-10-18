@@ -1,53 +1,21 @@
-# Current world construction checkpoint — 2026-10-17
+# Current world construction checkpoint — 2026-10-18
 
-Direct user priority: world, simulations, systems and population. Meshes/assets
-are best effort and replaceable. HeroViewer/Smalltrotter polish is off the critical
-path unless it blocks world construction. Root coordinates and implements details;
-use light capable workers with bounded ownership and independently verified output.
+Priority: world, simulations, systems and populations. Population meshes are replaceable. HeroViewer and individual Smalltrotter polish remain off the critical path.
 
-## Validated now
+## Validated continuation
 
-Eight autonomous active-region animals run on actual terrain-derived dry habitat
-routes, sharing existing lifecycle/needs components and clock. Browse/drink use
-the hero resource ledger and shrub depletion presentation. Draft creature imports
-are optional; a proxy-only save/load runtime also passed. Final spawn fix distributes
-browsers/drinkers across available sites. No camera-driven simulation activation.
+Eight native active-region animals now retain identities, exact positions, routes, lifecycle and needs through save/load. STL8 adds stable actor/resource sessions so repeated loads continue cumulative depletion without spending new ledger history entries. Original STL1–STL7 remain readable. Generated midroute deaths restore at their exact corpse position; malformed positions fail closed.
 
-Actual30s run:8 actors,4 moving,4 activity categories,0.778708 food and0.519139 water
-consumed,9580 contacts,26 condition updates. Save/load creek continuation error0.
-Final10s separated spawn replay also consumed both resource types. NativeRelease
-build and28/28 CTest passed. Toolkit earlier same-session2073pass/2skip; no further
-toolkit changes in world packet. Exact evidence tasks/world-population-20261017/receipt.json.
+Native Release built; 28/28 CTest passed, including 20 persistence cases. Toolkit: 2073 passed/2 skipped (522.39s). Two-session proxy replay restored all eight actor projections exactly, resumed motion, creek restoration error 0, consumption reconciliation error 4.08e-11, no ledger-cap failures. Evidence: `.clanker/tasks/fauna-continuation-20261017/receipt.json`. Domain resource regression covers 100 reloads with only two history keys.
 
-Integrated Jules regional weather and AGY coarse archipelago: Main Island,
-Rainridge, Stone Island, Outer Reach. Actual64x64 atlas flood fill found4 distinct
-land components; plot under var/reports/world-population-20261017/world-atlas.png.
-Regional conditions consume actual continuous moisture and drive Wicked rain/wind.
-Coarse regional counts are seeded capacity estimates, NOT thousands of simulated
-animals. Coarse islands remain rounded and moisture differs from descriptive
-metadata (especially Stone); preserve these limitations.
+Four coarse islands and populated watershed remain as in `.clanker/tasks/world-population-20261017/receipt.json`. Weather wind and canopy temperature now vary continuously across weather/day categories. Detailed terrain remains a 192m patch. No final visuals, full-draft completion or target 30 FPS acceptance.
 
-## Next world work
+## Next concrete work
 
-1. Stream/stitch coarse terrain into explorable regions with habitat patches,
-   authored coasts/drainage and regional vegetation communities.
-2. Persist population state and implement activation/retention/coarse cohorts.
-3. Add observable interactions and environmental consequences; improve collision/
-   resource crowding and replace bounded resource history with production epochs.
+Implement a bounded terrain tile sampler/stitching contract using existing coarse archipelago elevation/moisture, with shared-edge height and normal checks. Then integrate an explorable streamed neighborhood and region-specific habitat patches. Connect population activation/retention and coarse evolution to body-driven regions; inactive saved actors currently remain frozen. Resource history remains bounded to 256 actor/resource keys; production epochs and crowding remain open.
 
-Detailed rendered patch remains192m; no full four-island playability, final
-visual/gait acceptance, or target-hardware30FPS claim. Run with
-stalthos-runtime/scripts/Run-PopulatedWorld.ps1 (-Interactive optional).
+## Collection and preservation
 
-## Backlog and preservation
+Existing fauna-continuation worker collected and integrated; independent review complete. No new AGY/Jules dispatch and no old patch retrieval. Old Jules inventory remains 26 completed/4 awaiting feedback/1 failed, 30 patches inventoried; do not refetch. No active construction workers remain after checkpoint.
 
-Jules31-session audit collected26completed,4awaitingfeedback,1failed/30patches.
-Three fixes integrated;3 rejected as written;24 deferred;1 no-diff already handled.
-New Jules3306157609621882461 completed/reviewed/integrated. Do not refetch old patches.
-AGY archipelago and native fauna/environment reviews completed; no active workers.
-Earlier seam/needle/crossfade checkpoint published86ade13. Artwork refinement remains
-provisional and deferred. See tasks/continuation-20261017/receipt.json.
-
-Rauken-Archipelago stays read-only. Preserve unrelated untracked logs/receipts/objs.
-Validated origin/main publication authorized; no force/release/deployment/paid API.
-Check .clanker/HALT before dispatch. Full draft remains incomplete.
+Preserve unrelated untracked logs/receipts/objs and open applications. `Rauken-Archipelago/` remains read-only. Check `.clanker/HALT` before work/dispatch. Authorized validated publication is origin main only; no force push, release, deployment or paid API.

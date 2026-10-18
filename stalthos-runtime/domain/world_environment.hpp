@@ -98,7 +98,7 @@ inline Conditions sample(std::uint64_t worldSeed, RegionId region, double calend
     }
 
     // Wind
-    double windMetersPerSecond = 1.0 + w2 * 4.0 + (weather == Weather::Storm ? 15.0 : 0.0) + (weather == Weather::Rain ? 5.0 : 0.0);
+    double windMetersPerSecond = 1.0 + w2 * 4.0 + 15.0 * rainfall * rainfall;
     // Shelter reduces wind locally
     windMetersPerSecond *= (1.0 - site.shelter * 0.8);
 
@@ -110,11 +110,8 @@ inline Conditions sample(std::uint64_t worldSeed, RegionId region, double calend
     double temperatureC = baseTemp + diurnalTemp + seasonalTemp;
     
     // Canopy shades and cools during day, warms during night
-    if (dayFraction > 0.25 && dayFraction < 0.75) {
-        temperatureC -= site.canopy * 3.0; // Cooling
-    } else {
-        temperatureC += site.canopy * 1.5; // Insulation
-    }
+    const double daylight = 0.5 + 0.5 * std::sin((dayFraction - 0.25) * 2.0 * 3.141592653589793);
+    temperatureC += site.canopy * (1.5 - 4.5 * daylight);
     // Rain cools
     temperatureC -= rainfall * 3.0;
 

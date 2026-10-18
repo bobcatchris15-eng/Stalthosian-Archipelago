@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "actor_count": 8,
+  "exact_initial_state_restored": true,
+  "resumed_motion": true,
+  "water_restore_abs_error": 0.0,
+  "water_consumption_abs_error": 4.07452821482579e-11,
+  "ledger_cap_exhaustions": 0,
+  "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-013532-803c846f",
+  "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-013541-747834a3",
+  "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-013532\\first.stl",
+  "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-013532\\second.stl",
+  "schema_version": 1,
+  "task_id": "fauna-continuation-20261017",
+  "status": "validated",
+  "native_build": "Wicked Release build passed",
+  "native_ctest": "28/28 passed; 1.50s",
+  "persistence_tests": "20/20 passed; independently recompiled",
+  "resource_regression": "100 reloads with two retained history keys",
+  "executable_sha256": "4a43e5ddc4699dd6a8171ea79fedff708795d636171af2ad37a64c5121cc1666",
+  "graph": {
+    "nodes": 6603,
+    "edges": 11712,
+    "mode": "AST update without clustering; zero-node JSON warnings retained"
+  },
+  "review": ".clanker/tasks/fauna-continuation-20261017/independent-review.md",
+  "limitations": [
+    "192m detailed patch; coarse islands not streamed",
+    "inactive population snapshot frozen; activation/retention/coarse evolution open",
+    "256 actor/resource keys; production epochs still needed",
+    "no final art or target hardware 30 FPS acceptance"
+  ],
+  "updated": "2026-10-18T06:41:49.623438+00:00",
+  "native_stl7_migration": {
+    "passed": true,
+    "fixture": "original STL7 layout derived from eight-actor native STL8 save by removing the extension",
+    "exact_actor_projection_restored": true,
+    "new_magic": "STL8",
+    "evidence": "var/reports/runtime/20261018-014116-d63991f5"
+  },
+  "toolkit": "2073 passed, 2 skipped in 522.39s (0:08:42)",
+  "secret_scan": "Built-in staged added-line credential pattern scan: zero matches; limited pattern scan, not credential audit",
+  "publication": "ready for authorized origin main publication"
+}

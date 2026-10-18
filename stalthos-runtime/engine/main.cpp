@@ -320,6 +320,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if (s.sessionId > maxPersistedSessionId) maxPersistedSessionId = s.sessionId;
             }
         }
+        if(loadedSaveData) for(const auto& s:loadedSaveData->faunaResourceSessions)
+            maxPersistedSessionId=std::max(maxPersistedSessionId,s.second);
         if (maxPersistedSessionId == std::numeric_limits<uint64_t>::max()) {
             throw std::runtime_error("resource ledger session id overflow");
         }
@@ -686,6 +688,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         const auto heroAnimationCount=scene.animations.GetCount();
         bool previousInspectionKey = false, previousToggleKey = false;
         std::optional<stalthos::fauna::Population> faunaPopulation;
+        bool faunaPopulationRestored=false;
         stalthos::engine::FaunaScene faunaScene;
         std::optional<stalthos::engine::FaunaResources> faunaResources;
         std::vector<stalthos::fauna::HabitatSite> faunaSites;
@@ -711,10 +714,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto& p:cachedShrubs) food.push_back({p.x,p.y,p.z});
             faunaSites=faunaScene.habitat(landscape,food);
             std::set<stalthos::Identity> excluded{heroId};
+            for(const auto& active:world.snapshot().active) excluded.insert(active.first);
             for(const auto& r:world.snapshot().retained) excluded.insert(r.id);
             for(const auto& d:world.snapshot().deadHeroes) excluded.insert(d.first);
             faunaPopulation.emplace(world.worldSeed(),1001,faunaSites,8,excluded);
-            faunaResources.emplace(faunaSites,food,nextInteractionSession);
+            if(loadedSaveData && loadedSaveData->faunaPopulation) {
+                faunaPopulation->restore(*loadedSaveData->faunaPopulation,excluded);
+                faunaPopulationRestored=true;
+            }
+            faunaResources.emplace(faunaSites,food,nextInteractionSession,
+                loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{});
             faunaResources->refreshAvailability(*faunaPopulation,resourceLedger);
             faunaInitial=actorJson(faunaPopulation->actors());
             auto proxy=[&](std::size_t index) {
@@ -1567,6 +1576,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
             if(data.hero) data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,data.hero->id);
             data.resourceLedger = stalthos::persistence::captureResourceLedger(resourceLedger);
+            if(faunaPopulation) {
+                data.faunaPopulation=faunaPopulation->snapshot();
+                data.faunaResourceSessions=faunaResources->sessions();
+            } else if(loadedSaveData) {
+                data.faunaPopulation=loadedSaveData->faunaPopulation;
+                data.faunaResourceSessions=loadedSaveData->faunaResourceSessions;
+            }
             const auto& cameraState = viewController.getState();
             data.cameraState = stalthos::persistence::CameraStateSnapshot{
                 static_cast<std::uint8_t>(cameraState.mode), static_cast<std::uint8_t>(cameraState.focus),
@@ -1609,7 +1625,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
                 {"resource_contact_events",faunaResourceEvents},{"food_consumed",faunaResources->consumedFood()},
                 {"water_consumed",faunaResources->consumedWater()},{"resources_use_shared_persisted_ledger",true},
-                {"population_persisted",false},{"meshes_best_effort",true},{"frame_time_measured",false}});
+                {"population_persistence_supported",true},{"population_persisted",!saveState.empty()},
+                {"population_restored",faunaPopulationRestored},
+                {"meshes_best_effort",true},{"frame_time_measured",false}});
         }
         json transitionPhasesJson = json::array();
         json transitionCapturesJson = json::object();

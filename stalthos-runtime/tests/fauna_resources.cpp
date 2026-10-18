@@ -53,5 +53,17 @@ int main() {
     const auto saved=ledger.continuationSnapshot();
     require(saved.sessions.size()==2,"one cumulative ledger key per actor-resource contact");
     require(saved.sessions[0].sessionId!=saved.sessions[1].sessionId,"actor sessions remain distinct");
+    ResourceLedger longLived(16,2);
+    require(longLived.load({{100,ResourceKind::Creek,100,0},{200,ResourceKind::Shrub,100,0}}),"load long-lived resources");
+    std::vector<std::pair<Identity,std::uint64_t>> mappings;
+    for(int reload=0;reload<100;++reload) {
+        FaunaResources resumed(sites,shrubs,nextSession,mappings);
+        resumed.refreshAvailability(population,longLived);
+        resumed.applyContacts({browser,drinker},1,longLived);
+        mappings=resumed.sessions();
+        require(longLived.continuationSnapshot().sessions.size()==2,"reload must reuse bounded consumption history");
+    }
+    const auto final=longLived.snapshot();
+    require(std::abs(final[0].consumedQuantity-1)<1e-10 && std::abs(final[1].consumedQuantity-1.5)<1e-10,"cumulative consumption resumes for 100 reloads");
     std::cout << "fauna resource checks passed: shrub and creek mapping, contact range, cumulative clamping, unique sessions\n";
 }

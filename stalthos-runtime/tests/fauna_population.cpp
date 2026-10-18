@@ -76,6 +76,24 @@ int main() {
     restored.restore(oldSnapshot); require(restored.snapshot().actors[0].stage==LifeStage::Old,"old stage restore");
     oldActor.calendarAge+=profile.oldDuration; oldActor.stage=LifeStage::Dead; oldActor.activity=Activity::Rest; oldActor.isResting=true;
     restored.restore(oldSnapshot); require(restored.snapshot().actors[0].stage==LifeStage::Dead,"dead stage restore");
+    // A generated death during travel must preserve its exact corpse position.
+    Population dying(1,7,sites,4);
+    dying.advance({0.01,0});
+    dying.advance({0,40000});
+    const auto deathSnapshot=dying.snapshot();
+    Population corpses(1,7,sites,0);
+    corpses.restore(deathSnapshot);
+    bool midrouteDeath=false;
+    for(std::size_t i=0;i<deathSnapshot.actors.size();++i) {
+        const auto& dead=deathSnapshot.actors[i];
+        require(dead.stage==LifeStage::Dead,"large calendar step reaches death");
+        require(corpses.snapshot().actors[i].position.x==dead.position.x,"dead position survives restore exactly");
+        midrouteDeath|=dead.position.x!=sites[dead.site].position.x;
+    }
+    require(midrouteDeath,"regression includes a generated midroute death");
+    auto invalidCorpse=deathSnapshot; invalidCorpse.actors[0].position.z+=1;
+    rejectedRestore=false; try { corpses.restore(invalidCorpse); } catch(const std::invalid_argument&) { rejectedRestore=true; }
+    require(rejectedRestore,"off-route corpse still rejected");
     a.advance({10,0});
     bool browsing=false, drinking=false;
     for (const auto& actor:a.actors()) {

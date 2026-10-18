@@ -27,8 +27,11 @@ Important construction limits:
 
 - The rendered detailed patch remains 192 m across. Coarse terrain is not yet
   stitched to it or streamed into explorable islands.
-- Active population identities/state are not saved yet. Resource depletion uses
-  the existing persisted ledger, so a saved world retains consumed resources.
+- STL8 saves carry active population identities, positions, route targets,
+  lifecycle and needs. Older STL1-STL6 saves start a seeded population on first
+  activation. Restore checks the reconstructed habitat geometry/topology and
+  fails explicitly on an incompatible patch. Resource depletion continues in
+  the same persisted ledger. Coarse offscreen population evolution remains open.
 - Species currently share the available creature mesh. Proxy animals have no
   authored gait. Neither mode establishes final anatomy or animation acceptance.
 - Coarse island masses still read rounded; detailed coasts, connected drainage,
@@ -37,6 +40,15 @@ Important construction limits:
   Stone Island. The conditions sampler deliberately consumes the actual field.
 - No target-hardware frame-time or 30 FPS acceptance is claimed.
 
+Run `scripts/Verify-PopulationContinuation.ps1` for a bounded proxy-only native
+save/load check: it requires exact actor state at the restored first frame and
+resumed route movement. Resaving without active population mode preserves its
+stored snapshot; that inactive snapshot does not yet advance offscreen.
+
 The next construction work is terrain streaming and regional habitat population,
-population continuation/activation, and observable environmental consequences.
+population activation/coarse evolution, and observable environmental consequences.
 HeroViewer and individual mesh polish remain replaceable supporting work.
+
+STL8 adds stable actor-to-resource session mappings and restores cumulative ledger
+contacts across repeated loads. Original STL7 population payloads remain readable
+without mappings. Dead animals retain their exact position along a habitat route.

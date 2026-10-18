@@ -1,0 +1,10 @@
+{
+  "base_digest": "b0840abf75def355",
+  "current_digest": "160607f8ffd0e189",
+  "nodes_added": 2731,
+  "nodes_removed": 125,
+  "edges_added": 5485,
+  "edges_removed": 192,
+  "recommend_validation": true,
+  "note": "Baseline predates multiple independently reviewed construction checkpoints; this is cumulative structural movement, not this wake only."
+}
