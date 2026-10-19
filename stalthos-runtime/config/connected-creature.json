@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "asset_root": "var/bristle-coherence-parent-verified-20261013",
+  "creature": "runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+  "metadata": "runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+  "creature_sha256": "a05dc160f7b2f74a5fc8fff8cae9e701159595364b7070b17d25afe1db9eb3e3",
+  "metadata_sha256": "6516fef2c8475e52663988590a511ed063e044022f82c710b25beb19c2e29149",
+  "sole_offset_m": 0,
+  "review_receipt": ".clanker/tasks/agy-bristle-validation-resume/receipt.json"
+}

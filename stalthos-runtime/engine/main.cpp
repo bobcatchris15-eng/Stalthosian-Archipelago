@@ -184,6 +184,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
     unsigned autonomyProbe=0;
+    bool connectedEmbodimentProbe=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -195,6 +196,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--hero-autonomy-override-probe") {autonomyProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-camera-probe") {autonomyProbe=3;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--weather-preview") {weatherPreview=true;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--connected-embodiment-probe") {connectedEmbodimentProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--connected-world") {connectedWorld=true;populatedWorld=true;}
             else if (key == L"--connected-route-walk") {connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--populated-resource-probe") populatedResourceProbe = true;
@@ -239,7 +241,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
-        if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera || !creature.empty())) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic/asset mode");
+        if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
         if(autonomyProbe && (interactive || connectedRouteWalk || weatherPreview || diagnosticCamera)) throw std::runtime_error("hero autonomy probe requires timed connected world with no other diagnostic");
         if(weatherPreview && (interactive || connectedRouteWalk || duration<6)) throw std::runtime_error("weather preview requires timed connected world, duration at least6s and no route walk");
         if(connectedRouteWalk && interactive) throw std::runtime_error("connected route walk is a bounded forward-intent proof; use ConnectedWorld Interactive for ordinary controls");
@@ -266,6 +268,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         auto& world=simulationOwner.world;
         const stalthos::world::ConnectedRouteLayout connectedLayout;
         float x=connectedWorld?float(connectedLayout.dryBankX):12.f,z=connectedWorld?float(connectedLayout.centerZ):0.f,yaw=connectedWorld?1.57079632679f:0.f; int cameraMode=0;
+        if(connectedEmbodimentProbe) x=104; // Explicit exterior startup fixture; ordinary integrator thereafter.
+        if(autonomyProbe && autonomyProbe!=3 && !creature.empty()) x=10.5f; // Explicit near-water imported-body proof at measured pace.
         if(autonomyProbe==3) x=40; // Synthetic initial outside-perception body; never moved by camera probe.
         stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
@@ -1462,7 +1466,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 scene.weather.ambient={float(.24-.08*conditions.cloud),float(.24-.07*conditions.cloud),float(.24-.04*conditions.cloud)};
                 scene.weather.fogStart=30;scene.weather.fogDensity=float(.0025*conditions.rainfall);
                 scene.lights.GetComponent(sun)->intensity=clearSunIntensity*float(1-.78*conditions.cloud);
-                const auto* bodyObject=scene.objects.GetComponent(hero);
+                const auto* bodyObject=!creatureLoaded?scene.objects.GetComponent(hero):nullptr;
                 if(bodyObject) if(const auto* mesh=scene.meshes.GetComponent(bodyObject->meshID)) for(const auto& subset:mesh->subsets) {
                     auto* material=scene.materials.GetComponent(subset.materialID);
                     const float shade=float(1-.48*localWeather.wetness);
@@ -1916,6 +1920,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(populatedTerrain) {
             auto streaming=populatedTerrain->receipt();
             streaming["diagnostic_traversal"]=populatedTraversal;
+            streaming["imported_body_exterior_startup_fixture"]=connectedEmbodimentProbe;
+            streaming["proxy_bounds_metric_applicable"]=!creatureLoaded;
+            streaming["full_animal_route_crossing_proven"]=false;
             streaming["continuous_forward_intent_proof"]=connectedRouteWalk;
             streaming["connected_route_max_sampled_grade"]=connectedMaxGrade;
             streaming["connected_route_max_vertical_step_m"]=connectedMaxStep;
@@ -2229,7 +2236,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"successor_saved_prior_death_truth_preserved",successorSavedDeathTruthPreserved},{"saved_dead_hero_count",savedDeadHeroCount},
             {"terrain_surface_applied",terrainSurface.applied()},{"terrain_surface_status",static_cast<int>(terrainSurface.status)},{"terrain_texture_width",terrainSurface.textureWidth},{"terrain_texture_bytes",terrainSurface.textureBytes},{"terrain_uv_vertices",terrainSurface.uvVertexCount},{"meadow_batch_objects",meadowCounts.batchObjectCount},{"meadow_tufts",meadowCounts.tuftCount},{"meadow_vertices",meadowCounts.vertexCount},{"meadow_triangles",meadowCounts.triangleCount},{"meadow_rejected_wet_samples",meadowCounts.rejectedWetSamples},{"organic_rock_objects",organicRockCounts.objectCount},{"organic_rock_triangles",organicRockCounts.triangleCount},{"inspection_camera",inspectionCamera},{"camera_distance_m",cameraDistance},
             {"shore_objects",shoreCounts.objectCount},{"shore_vertices",shoreCounts.vertexCount},{"shore_triangles",shoreCounts.triangleCount},{"shore_surface_triangles",shoreCounts.surfaceTriangleCount},{"shore_bed_triangles",shoreCounts.bedTriangleCount},{"shore_bank_triangles",shoreCounts.bankTriangleCount},
-            {"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
+            {"connected_embodiment_mode",creatureLoaded?"imported_reviewed_draft":"proxy"},{"imported_wet_material_response_supported",false},{"near_water_creature_startup_fixture",autonomyProbe!=0 && autonomyProbe!=3 && creatureLoaded},{"creature_loaded",creatureLoaded},{"creature_source_front_axis","+X"},{"creature_host_forward_axis","+Z"},{"creature_parent_yaw_offset_radians",creatureLoaded?-pi*.5f:0.f},{"creature_sole_offset_m",creatureLoaded?creatureSoleOffset:0.0},{"creature_tail_ground_clearance_accepted",false},{"creature_path",creature.u8string()},{"creature_mesh_objects",creatureMeshes},{"creature_skin_count",creatureSkins},{"creature_animation_count",creatureAnimations},{"creature_transform_channels",creatureChannels},
             {"locomotion_pace_policy", "proposed one cycle per second, maximum one meter per second; proxy fallback two meters per second"},{"walk_duration_s",creatureClipDuration},{"walk_stride_length_m",creatureStrideLength},{"imported_animation_length_s",engineClipLength},{"actor_root_translation_channels_removed",removedActorRootTranslationChannels},{"actor_root_translation_target_name",actorRootTranslationTargetName},{"actor_root_translation_target_is_skin_bone",false},{"body_signed_distance_last_m",lastSignedBodyDistance},{"body_distance_accumulated_signed_m",creatureDistanceAccumulated},{"animation_phase_expected_s",lastExpectedPhase},{"animation_phase_actual_s",creaturePhase},
             {"animation_timer_min",std::isfinite(minimumAnimationTimer)?minimumAnimationTimer:0},{"animation_timer_max",maximumAnimationTimer},{"animation_playing_frames",animationPlayingFrames},{"animated_target_channel_count",channelPoseBaseline.size()},
             {"animated_channel_local_pose_delta",localBoneDelta},{"animated_channel_pose_changed",localBoneDelta>1e-5f},{"motion_early_saved",earlyScreenshot},{"motion_late_saved",lateScreenshot},

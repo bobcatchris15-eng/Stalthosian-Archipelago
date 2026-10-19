@@ -1,0 +1,81 @@
+{
+  "task_id": "connected-embodiment-20261018",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Reuse reviewed existing Smalltrotter artifact/metadata/native body path",
+      "met": true,
+      "how_checked": "PinnedGLB a05dc160...eb3e3 andJSON6516fef2...29149 match actual pre/post hashes and parent rig manifest; namedreceipt verified. Native imports4objects1skin2clips, existing importer/roottranslation removal/crossfade/sole0 unchanged"
+    },
+    {
+      "condition": "Connected normalplay supports existing Creature plus explicit proxy fallback",
+      "met": true,
+      "how_checked": "Removed connectedCreature rejection only; pinned Run-ConnectedWorld wrapper forwards existing Creature/metadata/sole, -Proxy branch and announced missing fallback; PowerShell parser passed. No manual keyboard test claimed"
+    },
+    {
+      "condition": "Actual model animation/rendered-ground movement and local autonomy contact",
+      "met": true,
+      "how_checked": "25s embodiednearwaterprobe exit0 moved1.2895m, one eligible.5contact/relief/ledgerkey;12s exteriorprobe exit0 moved104\u2192105.660m, bonepose delta.632748, phaseerror2e-14, rooterror4.77e-7m, nofallbacks; playerframesviewed"
+    },
+    {
+      "condition": "Preserve measured pace/materials and report diagnostic limits",
+      "met": true,
+      "how_checked": "Pace.16128 unchanged; proxy tintdisabled importedhierarchy; exterior nativeSole resolvedfalse/footacceptfalse and proxyboundsinapplicable explicit. Startupfixtures/no fullrouteanimalclaim documented"
+    },
+    {
+      "condition": "No modeling/assets/gait/save scope or publication",
+      "met": true,
+      "how_checked": "Only runtimewiring/launcherconfig/docs/taskreceipts changed; sourceassets posthashes unchanged; no push/children"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/config/connected-creature.json",
+    "stalthos-runtime/docs/connected-embodiment.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/connected-embodiment-20261018/native-proofs.json",
+    ".clanker/tasks/connected-embodiment-20261018/native-model-autonomy.log",
+    ".clanker/tasks/connected-embodiment-20261018/native-model-exterior.log",
+    "var/reports/runtime/20261018-231544-f48ca1f1/draft-host.png",
+    "var/reports/runtime/20261018-231453-3c19a0dc/hero-autonomy-2.png"
+  ],
+  "findings": [
+    "Nearwater startup10.5,24 and exterior104,24 are explicitly diagnostic; no trialteleport, no full176m modelroute proof. Existing pace.16128m/s makes fullroute longerthan120s cap.",
+    "Existing juvenile asset versus unchangedhero lifecycle stage; no newstageassetselection.",
+    "Waterproxy/modelwading/submergence and anatomicalreach unchanged/logged; no footlock or finalart acceptance.",
+    "Importedwetmaterialresponse notported; authoredhierarchymaterials preserved, proxy tintskipped.",
+    "Native sole/fourfoot diagnosticreference-bounded; exterior unresolved rather than falselypassed.",
+    "Minor metadata labels broad: imported_body_exterior_startup_fixture also true if intentionally running exteriorprobe -Proxy; tested fixture actuallyimported. connected_embodiment_mode reviewed label assumes pinnedwrapper; generic Run.ps1 can acceptother validmetadata. These are logged ratherthan expanding cosmetictelemetrypolish."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Approved startupfixtures allow shortembodiment proof at measuredpace; no speed/stride changes",
+    "ExplicitrootAssetRoot used forisolated readonly assetaccess; normalcheckout wrapper defaultsrootvar",
+    "Workingdraft accepted after model/animation/support/contact role works; defer visual/anatomy refinements"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "0051c9afaa890a7b8d3cc1b95e2ce3cd43f3c0bb2ef4a0548bf7a4bcae42d75c"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "1819f851ba8a06d7a0dff8d6b47ed0e5bfbde1ebc96ff6443d3ac5c3c5e3982c"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "14c677d687da15cbca54bc92eeab6731dc80e12dc0beccd6a3394dfda0e9c5d0"
+    },
+    {
+      "path": "stalthos-runtime/config/connected-creature.json",
+      "sha256": "c581701e2e437ce80ca29acda81f447ad79cda9eb7a92c56f97511f7b60b3c03"
+    },
+    {
+      "path": "stalthos-runtime/docs/connected-embodiment.md",
+      "sha256": "ce9ea46e76d926d684d5a29ca0c7539034ba294f5fed35bc23a221beb5469403"
+    }
+  ]
+}

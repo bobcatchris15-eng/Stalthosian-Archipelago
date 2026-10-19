@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "source_asset_hashes_preserved": true,
+  "manifest": "E:\\Stalthosian Archipelago\\var\\bristle-coherence-parent-verified-20261013\\reports\\manifests\\creature.smalltrotter.st1.rig.json",
+  "named_receipt": ".clanker/tasks/agy-bristle-validation-resume/receipt.json",
+  "asset_pins": {
+    "schema_version": 1,
+    "asset_root": "var/bristle-coherence-parent-verified-20261013",
+    "creature": "runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+    "metadata": "runtime/creatures/creature.smalltrotter.st1/creature.smalltrotter.st1.independent_juvenile.walk_cycle.json",
+    "creature_sha256": "a05dc160f7b2f74a5fc8fff8cae9e701159595364b7070b17d25afe1db9eb3e3",
+    "metadata_sha256": "6516fef2c8475e52663988590a511ed063e044022f82c710b25beb19c2e29149",
+    "sole_offset_m": 0,
+    "review_receipt": ".clanker/tasks/agy-bristle-validation-resume/receipt.json"
+  },
+  "metadata_duration_s": 2,
+  "measured_stride_m": 0.16128,
+  "existing_pace_m_s": 0.16128,
+  "autonomy": {
+    "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\connected-embodiment-20261018\\var\\reports\\runtime\\20261018-231453-3c19a0dc",
+    "creature_mesh_objects": 4,
+    "skins": 1,
+    "clips": 2,
+    "bone_pose_delta": 0.6326584219932556,
+    "signed_body_distance_m": 1.2895242041857904,
+    "animation_phase_error": 1.199040866595169e-14,
+    "sole_offset_m": 0.0,
+    "executable_sha256": "d20cb994a6fdf83eba504887a81c321c57ed886718cbc58bdb34b03697070ae3",
+    "contact": {
+      "amount": 0.5,
+      "body_x": 9.210928916931152,
+      "body_z": 23.99706268310547,
+      "elapsed": 11.9197642,
+      "eligible": true,
+      "session": 9,
+      "thirst_after": 0.30197943783687575,
+      "thirst_before": 0.8019794378368758
+    },
+    "hero_ledger_keys": [
+      {
+        "amount": 0.5,
+        "resource_id": 100,
+        "session_id": 9
+      }
+    ]
+  },
+  "exterior": {
+    "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\connected-embodiment-20261018\\var\\reports\\runtime\\20261018-231544-f48ca1f1",
+    "creature_mesh_objects": 4,
+    "skins": 1,
+    "clips": 2,
+    "bone_pose_delta": 0.632748007774353,
+    "signed_body_distance_m": 1.6600799560546875,
+    "animation_phase_error": 2.2537527399890678e-14,
+    "sole_offset_m": 0.0,
+    "executable_sha256": "d20cb994a6fdf83eba504887a81c321c57ed886718cbc58bdb34b03697070ae3",
+    "final_body_x": 105.66007995605469,
+    "final_body_z": 24.0,
+    "root_ground_error_m": 4.767134669236839e-07,
+    "rendered_support_fallbacks": 0,
+    "native_sole_diagnostic": {
+      "foot_contact_accepted": false,
+      "initialization_issue": "",
+      "method": "native_body_proxy_skinned_surface",
+      "resolved": false
+    }
+  }
+}

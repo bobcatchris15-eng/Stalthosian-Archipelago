@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "connected-embodiment-20261018",
+  "status": "complete",
+  "base_revision": "0b88ad3",
+  "current_step": "connected animal embodiment draft complete; rootintegrate/final native confirmation",
+  "completed_steps": [
+    "verified namedreceipt and artifact manifest hashes",
+    "verified duration2 stride.16128 existingpace.16128 sole0",
+    "approved near-water/exterior startup fixtures, no trialteleports",
+    "removed only creature guard; existing importer/animation/adapter reused",
+    "added pinned convenience launcher/proxy fallback",
+    "startup-only nearwater/exterior fixtures wired",
+    "authored material protection/proxy metric applicability explicit",
+    "nativeReleasebuild passed",
+    "launcherparse andpre/post asset/manifest pinsverified",
+    "25sactualmodelautonomy and12sexteriorwalk passed",
+    "dryandwaterplayerframesviewed",
+    "proofreceiptwritten"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/config/connected-creature.json",
+    "stalthos-runtime/docs/connected-embodiment.md"
+  ],
+  "updated": "2026-10-19T04:17:58.526543+00:00",
+  "resume_instructions": "Embodimentworkingdraftdone. Sourceassetsreadonly hashesverified. Existing measuredpace/sole0, no fullrouteanimalproof. Nativefootdiagnosticunresolvedoutsidefixture. No modeling/gait/texturepolish; rootintegrates thennextsystem.",
+  "validation": {
+    "passed": true,
+    "command": "Run-ConnectedWorld.ps1 pinnedasset AutonomyProbe25s/ExteriorProbe12s; native-proofs assertions; PowerShell parser",
+    "evidence_path": ".clanker/tasks/connected-embodiment-20261018/native-proofs.json"
+  },
+  "receipt_path": ".clanker/tasks/connected-embodiment-20261018/receipt.json",
+  "next_step": "Root integrate/build/prove; callworkingdraftgood and move nextsubsystem peruser"
+}

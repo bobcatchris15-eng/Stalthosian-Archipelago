@@ -1,0 +1,28 @@
+[CmdletBinding()]
+param([double]$Duration=30,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
+      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe)
+$ErrorActionPreference='Stop'
+$root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at a time'}
+$options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance}
+if($Interactive) {$options.Interactive=$true}
+if($AutonomyProbe) {$options.HeroAutonomyProbe=$true}
+if($ExteriorProbe) {$options.ConnectedEmbodimentProbe=$true}
+if(-not $Proxy) {
+    $pin=Get-Content -LiteralPath (Join-Path $root 'stalthos-runtime/config/connected-creature.json') -Raw | ConvertFrom-Json
+    $assets=if($AssetRoot) {[IO.Path]::GetFullPath($AssetRoot)} else {$root}
+    $candidateRoot=Join-Path $assets $pin.asset_root
+    $creature=Join-Path $candidateRoot $pin.creature
+    $metadata=Join-Path $candidateRoot $pin.metadata
+    if((Test-Path -LiteralPath $creature -PathType Leaf) -and (Test-Path -LiteralPath $metadata -PathType Leaf)) {
+        if((Get-FileHash -LiteralPath $creature -Algorithm SHA256).Hash.ToLowerInvariant() -ne $pin.creature_sha256 -or
+           (Get-FileHash -LiteralPath $metadata -Algorithm SHA256).Hash.ToLowerInvariant() -ne $pin.metadata_sha256) {
+            throw 'Reviewed connected creature artifact changed; verify provenance or use -Proxy explicitly'
+        }
+        $options.Creature=$creature;$options.CreatureAnimationMetadata=$metadata;$options.CreatureSoleOffset=[double]$pin.sole_offset_m
+        Write-Output 'Connected embodiment: pinned reviewed Smalltrotter draft, existing metadata/pace, sole offset0'
+    } else {
+        Write-Warning 'Reviewed local Smalltrotter/metadata unavailable; using explicit announced proxy fallback. Pass -AssetRoot for the repository holding reviewed var artifacts.'
+    }
+} else {Write-Output 'Connected embodiment: explicit proxy mode'}
+& (Join-Path $PSScriptRoot 'Run.ps1') @options

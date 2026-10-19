@@ -4,8 +4,9 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe)
 $ErrorActionPreference = 'Stop'
+if($ConnectedEmbodimentProbe) {$ConnectedWorld=$true}
 if($HeroAutonomyProbe -or $HeroAutonomyOverrideProbe -or $HeroAutonomyCameraProbe) {$ConnectedWorld=$true}
 if($WeatherPreview) {$ConnectedWorld=$true}
 if($ConnectedWorld -or $ConnectedRouteWalk) {$PopulatedWorld=$true}
@@ -85,6 +86,7 @@ if ($WeatherPreview) { $start.ArgumentList.Add('--weather-preview') }
 if ($HeroAutonomyProbe) { $start.ArgumentList.Add('--hero-autonomy-probe') }
 if ($HeroAutonomyOverrideProbe) { $start.ArgumentList.Add('--hero-autonomy-override-probe') }
 if ($HeroAutonomyCameraProbe) { $start.ArgumentList.Add('--hero-autonomy-camera-probe') }
+if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment-probe') }
 if ($PopulatedResourceProbe) { $start.ArgumentList.Add('--populated-resource-probe') }
 if ($PopulatedTraversal) { $start.ArgumentList.Add('--populated-traversal') }
 if ($PopulatedDeparture) { $start.ArgumentList.Add('--populated-departure') }
