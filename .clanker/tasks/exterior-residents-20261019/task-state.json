@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-residents-20261019",
+  "status": "complete",
+  "base_revision": "2572a17",
+  "current_step": "working draft validated; root integration next",
+  "touched_artifacts": [
+    "stalthos-runtime/domain/exterior_residents.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/tests/exterior_residents.cpp"
+  ],
+  "resume_instructions": "Bounded working draft; preserve original8 state and nonconnected habitat; no exterior resources/saveformat; native22s proof then commit"
+}

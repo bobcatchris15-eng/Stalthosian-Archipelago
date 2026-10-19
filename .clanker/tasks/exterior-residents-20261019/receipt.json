@@ -1,0 +1,62 @@
+{
+  "task_id": "exterior-residents-20261019",
+  "outcome": "done",
+  "base_revision": "2572a17",
+  "acceptance": [
+    {
+      "how_checked": "native22swall normal movement withcreation-only hero104fixture;4newresident IDs retained, distance5.071/7.485/6.401/7.252m, age+17.43857simsec;2s8s19scaptures viewed",
+      "condition": "live visible retained residents beyond96m",
+      "met": true
+    },
+    {
+      "how_checked": "12initial/finalIDs, same sessionowners, sharedledger; independenthelper exactalloriginal8actorbytes excepthabitatsignature; originalnodesonlyoneappendedjoin; IDsunique/exclusion inclblockednewcandidate",
+      "condition": "same existing population owners and original8 preservation",
+      "met": true
+    },
+    {
+      "how_checked": "288actual renderedtrianglegroundsamples maxgrade.323474<.6, originalcreekmask/nonpositiveexteriorguard; existingFaunaScene actualgroundquery+groundedupdates+postenginepose/visibilitychecks passed; captures viewed; no numericalNPCfeetcontactclaim",
+      "condition": "dry graph and rendered NPC placement",
+      "met": true
+    }
+  ],
+  "tests": [
+    "finalnativeReleasebuild passed",
+    "focusedCTest1/1passed",
+    "independentreviewer /W4 /WX helperprobespassed",
+    "git diff --check clean"
+  ],
+  "evidence": [
+    "var/reports/runtime/20261019-031208-8de37e84",
+    "var/reports/runtime/20261019-031044-1261a8f6 initialfinitequeryfailure retained"
+  ],
+  "artifacts": [
+    {
+      "sha256": "4E2F467445E774FCC99FC7BEB2B6F8EC66D856CD7F398DDE636EAB714F90699D",
+      "path": "stalthos-runtime/CMakeLists.txt"
+    },
+    {
+      "sha256": "214A23F24CFC5CB864A226B33D9E2AC3DACEA95E1FB91B7E505127E4B1E8E9D6",
+      "path": "stalthos-runtime/engine/main.cpp"
+    },
+    {
+      "sha256": "D455AD360B6560ED742A4B6BA3F4F50A6DAED4DF01A510A9A569CFE918BFC5F9",
+      "path": "stalthos-runtime/scripts/Run.ps1"
+    },
+    {
+      "sha256": "C768060F30C353380995FAE82B2ABA1D1E5FB926FED14F5917035443FA67E1BA",
+      "path": "stalthos-runtime/domain/exterior_residents.hpp"
+    },
+    {
+      "sha256": "FA4330FFC1CCDB2EE8723E5F82F85098A95EAE570C266F6BB345ABC643072C7C",
+      "path": "stalthos-runtime/tests/exterior_residents.cpp"
+    }
+  ],
+  "limitations": [
+    "samecoarse192mbodyactivationgroup notmultiregion",
+    "no localexteriorfood/wateranchors/hydrology",
+    "sparsegraph provisionalproxyvisuals noanatomyfeet/FPSacceptance",
+    "connectedpreview save/load refused unchanged",
+    "existinggeneratednewactor restflag mayremain untilfirst ordinaryadvance aftercreationTravel assignment; no observedroleblocker",
+    "root integratedvalidationpending"
+  ]
+}

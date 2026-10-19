@@ -1,3 +1,4 @@
+#include "domain/exterior_residents.hpp"
 #include "native_save.hpp"
 #include "domain/weather_response.hpp"
 #include "domain/hero_autonomy.hpp"
@@ -184,7 +185,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
     unsigned autonomyProbe=0,wildlifeProbe=0;
-    bool connectedEmbodimentProbe=false;
+    bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -192,6 +193,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-probe") {autonomyProbe=1;connectedWorld=true;populatedWorld=true;}
@@ -271,7 +273,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         auto& world=simulationOwner.world;
         const stalthos::world::ConnectedRouteLayout connectedLayout;
         float x=connectedWorld?float(connectedLayout.dryBankX):12.f,z=connectedWorld?float(connectedLayout.centerZ):0.f,yaw=connectedWorld?1.57079632679f:0.f; int cameraMode=0;
-        if(connectedEmbodimentProbe) x=104; // Explicit exterior startup fixture; ordinary integrator thereafter.
+        if(connectedEmbodimentProbe || exteriorResidentsProbe) x=104; // Explicit exterior startup fixture; ordinary integrator thereafter.
         if(autonomyProbe && autonomyProbe!=3 && !creature.empty()) x=10.5f; // Explicit near-water imported-body proof at measured pace.
         if(autonomyProbe==3) x=40; // Synthetic initial outside-perception body; never moved by camera probe.
         stalthos::domain::HeroViewController viewController;
@@ -882,7 +884,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto& r:world.snapshot().retained) excluded.insert(r.id);
             for(const auto& d:world.snapshot().deadHeroes) excluded.insert(d.first);
             stalthos::fauna::Population legacyPopulation(world.worldSeed(),1001,faunaSites,8,excluded);
-            if(loadedSaveData && loadedSaveData->faunaPopulation) {
+            if(connectedWorld) {
+                const auto habitat=stalthos::fauna::exteriorHabitat(faunaSites,[&](double gx,double gz){return populatedTerrain->height(gx,gz);},[&](double gx,double gz){return landscape.inBounds(gx,gz)?landscape.waterContains(gx,gz):populatedTerrain->height(gx,gz)<=0;});
+                legacyPopulation=stalthos::fauna::withExteriorResidents(legacyPopulation,habitat,excluded);faunaSites=habitat.sites;
+                json nodes=json::array();for(const auto& site:faunaSites)nodes.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},{"neighbors",site.neighbors},{"browse",site.browse},{"freshwater",site.freshwater}});
+                WriteJson(output/"exterior-residents-habitat.json",{{"sites",nodes},{"resident_sites",habitat.residents},{"max_measured_grade",habitat.maxMeasuredGrade},{"sample_count",habitat.samples},{"sample_m",.5},{"max_grade",.6},{"original_eight_state_preserved",true},{"new_residents",4},{"activation","same coarse body-radius192m watershed group; no separate region"},{"exterior_resource_anchors",0}});
+            }            if(loadedSaveData && loadedSaveData->faunaPopulation) {
                 legacyPopulation.restore(*loadedSaveData->faunaPopulation,excluded);
                 faunaPopulationRestored=true;
             }
@@ -1597,7 +1604,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
-            if(wildlifeProbe) for(std::size_t phase=0;phase<3;++phase) if(!wildlifeCaptured[phase] && elapsed>=(phase==0?2:phase==1?8:19)) {
+            if(wildlifeProbe || exteriorResidentsProbe) for(std::size_t phase=0;phase<3;++phase) if(!wildlifeCaptured[phase] && elapsed>=(phase==0?2:phase==1?8:19)) {
                 const auto filename="wildlife-awareness-"+std::to_string(phase)+".png";wildlifeCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());wildlifeCaptures.push_back({{"filename",filename},{"saved",wildlifeCaptured[phase]},{"body_x",x},{"body_z",z}});
             }
             if(weatherPreview) for(std::size_t phase=0;phase<3;++phase) if(!weatherCaptured[phase] && elapsed>=duration*(double(phase)/3+1.0/6)) {
