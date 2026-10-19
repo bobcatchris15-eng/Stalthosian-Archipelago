@@ -1,4 +1,5 @@
 #include "native_save.hpp"
+#include "domain/weather_response.hpp"
 // Initial Wicked host for the full draft. Geometry here is diagnostic blockout.
 #include "WickedEngine.h"
 #include "json.hpp"
@@ -180,7 +181,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool disableTerrainSupport = false;
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
-    bool connectedWorld=false,connectedRouteWalk=false;
+    bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -188,6 +189,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--weather-preview") {weatherPreview=true;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--connected-world") {connectedWorld=true;populatedWorld=true;}
             else if (key == L"--connected-route-walk") {connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--populated-resource-probe") populatedResourceProbe = true;
@@ -233,6 +235,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera || !creature.empty())) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic/asset mode");
+        if(weatherPreview && (interactive || connectedRouteWalk || duration<6)) throw std::runtime_error("weather preview requires timed connected world, duration at least6s and no route walk");
         if(connectedRouteWalk && interactive) throw std::runtime_error("connected route walk is a bounded forward-intent proof; use ConnectedWorld Interactive for ordinary controls");
         if(populatedResourceProbe && (!populatedWorld || interactive || diagnosticCamera || diagCount || populatedTraversal || !loadState.empty())) throw std::runtime_error("populated resource probe requires a fresh timed populated world without other diagnostics");
         if(populatedTraversal && (!populatedWorld || interactive || diagnosticCamera)) throw std::runtime_error("populated traversal requires timed populated world without camera diagnostics");
@@ -737,6 +740,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         bool previousInspectionKey = false, previousToggleKey = false;
         json connectedTrajectory=json::array();
         double connectedMaxGrade=0,connectedMaxStep=0;
+        stalthos::environment::BodyWeatherResponse bodyWeather;
+        stalthos::environment::LocalWeatherResponse localWeather;
+        json weatherResponseSamples=json::array(),weatherResponseCaptures=json::array();
+        std::array<bool,3> weatherCaptured{};
+        double nextWeatherSample=0;
+        const float clearSunIntensity=scene.lights.GetComponent(sun)->intensity;
         bool faunaPopulationRestored=false;
         stalthos::engine::FaunaScene faunaScene;
         std::vector<stalthos::fauna::HabitatSite> faunaSites;
@@ -1408,10 +1417,33 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     if(speed!=0 && heroAlive) animation.Play(); else animation.Pause();
                 }
             }
+            if(connectedWorld) {
+                auto conditions=stalthos::environment::sample(world.worldSeed(),1001,clock.calendarSeconds(),{0,0,.35,0});
+                const unsigned phase=unsigned(std::clamp(int(elapsed/(duration/3)),0,2));
+                if(weatherPreview) conditions=stalthos::environment::previewWeather(conditions,phase);
+                const double shelter=weatherPreview?(phase==2?.85:0):stalthos::environment::routeWindShelter(x,z,connectedLayout);
+                localWeather=bodyWeather.advance(conditions,timeStep.physicalSeconds,shelter);
+                stalthos::engine::applyWeatherToScene(scene,conditions,{.8f,0,.6f});
+                scene.weather.rain_amount=0; // Pinned native emitter AV on rain transition; use lighting/wetting draft.
+                scene.weather.skyExposure=float(1-.55*conditions.cloud);
+                scene.weather.ambient={float(.24-.08*conditions.cloud),float(.24-.07*conditions.cloud),float(.24-.04*conditions.cloud)};
+                scene.weather.fogStart=30;scene.weather.fogDensity=float(.0025*conditions.rainfall);
+                scene.lights.GetComponent(sun)->intensity=clearSunIntensity*float(1-.78*conditions.cloud);
+                const auto* bodyObject=scene.objects.GetComponent(hero);
+                if(bodyObject) if(const auto* mesh=scene.meshes.GetComponent(bodyObject->meshID)) for(const auto& subset:mesh->subsets) {
+                    auto* material=scene.materials.GetComponent(subset.materialID);
+                    const float shade=float(1-.48*localWeather.wetness);
+                    material->SetBaseColor({.48f*shade,.30f*shade,.16f*shade,1});material->SetRoughness(float(.85-.5*localWeather.wetness));
+                }
+                if(elapsed>=nextWeatherSample) {
+                    weatherResponseSamples.push_back({{"elapsed",elapsed},{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"rainfall",conditions.rainfall},{"cloud",conditions.cloud},{"body_wetness",localWeather.wetness},{"exposed_wind",conditions.windMetersPerSecond},{"local_wind",localWeather.wind},{"comfort_proxy",localWeather.comfort},{"shelter",shelter},{"synthetic_weather",weatherPreview},{"synthetic_shelter",weatherPreview && phase==2},{"body_x",x},{"body_z",z}});
+                    nextWeatherSample=elapsed+.25;
+                }
+            }
             if(faunaPopulation) {
                 if(regionalConditions.empty() || clock.physicalSeconds()>=nextConditionsUpdate) {
                     regionalConditions=stalthos::engine::sampleRegionConditions(archipelago,world.worldSeed(),clock.calendarSeconds());
-                    stalthos::engine::applyWeatherToScene(scene,regionalConditions.front().conditions,{.8f,0,.6f});
+                    if(!connectedWorld) stalthos::engine::applyWeatherToScene(scene,regionalConditions.front().conditions,{.8f,0,.6f});
                     nextConditionsUpdate=clock.physicalSeconds()+1;
                     ++conditionsUpdates;
                 }
@@ -1488,6 +1520,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(weatherPreview) for(std::size_t phase=0;phase<3;++phase) if(!weatherCaptured[phase] && elapsed>=duration*(double(phase)/3+1.0/6)) {
+                const auto filename="weather-response-"+std::to_string(phase)+".png";
+                weatherCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());
+                weatherResponseCaptures.push_back({{"filename",filename},{"saved",weatherCaptured[phase]},{"phase",phase},{"synthetic_shelter",phase==2}});
+            }
             if(faunaPopulation) faunaScene.verifyPhysical(scene,faunaPhysical);
             if(populatedTerrain) {
                 populatedMaxX=std::max(populatedMaxX,double(x));
@@ -1832,6 +1869,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
+        if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",false}});
         if(populatedTerrain) {
             auto streaming=populatedTerrain->receipt();
             streaming["diagnostic_traversal"]=populatedTraversal;

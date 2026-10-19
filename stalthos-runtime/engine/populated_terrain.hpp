@@ -31,7 +31,7 @@ class PopulatedTerrain {
         if(dressed_ || !connected_) return; dressed_=true;
         // A bounded composition belongs to this route, not camera activation.
         const auto grass=scene.Entity_CreateMaterial("sandy lowland dry grasses");
-        auto* material=scene.materials.GetComponent(grass);material->SetBaseColor({.67f,.63f,.38f,1});material->SetRoughness(.94f);material->SetDoubleSided(true);material->SetUseVertexColors(true);
+        auto* material=scene.materials.GetComponent(grass);material->SetBaseColor({.67f,.63f,.38f,1});material->SetRoughness(.94f);material->SetDoubleSided(true);material->SetUseVertexColors(true);material->SetUseWind(true);
         meadow_detail::MeadowBatchGeometry batch;
         for(int ix=0;ix<60;++ix) for(int iz=0;iz<30;++iz) {
             const auto key=std::uint64_t(ix*7919+iz*104729+42);
@@ -41,7 +41,9 @@ class PopulatedTerrain {
             if(std::abs(gz-route_.layout().centerZ)<2.8 || domain::hashUnit(domain::hashMix(key+2))<.32) continue;
             meadow_detail::appendTuft(batch,gx,route_.triangleHeight(gx,gz),gz,domain::Habitat::OpenLowland,key);++routeTufts_;
         }
-        routeScenery_.push_back(meadow_detail::createMeadowBatchEntity(scene,"east lowland grass mosaic",std::move(batch),grass));
+        const auto grassEntity=meadow_detail::createMeadowBatchEntity(scene,"east lowland grass mosaic",std::move(batch),grass);
+        if(auto* mesh=scene.meshes.GetComponent(grassEntity)) {mesh->vertex_windweights.resize(mesh->vertex_positions.size());for(std::size_t i=0;i<mesh->vertex_windweights.size();++i) mesh->vertex_windweights[i]=uint8_t(i%5<2?0:i%5==4?255:120);mesh->CreateRenderData();}
+        routeScenery_.push_back(grassEntity);
         const auto rockMaterial=scene.Entity_CreateMaterial("weathered sandstone route landmarks");
         scene.materials.GetComponent(rockMaterial)->SetBaseColor({.47f,.40f,.29f,1});scene.materials.GetComponent(rockMaterial)->SetRoughness(.97f);
         // Weathered rock clusters frame the saddle and two meadow edges. Natural

@@ -1,0 +1,98 @@
+{
+  "task_id": "weather-response-20261018",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Visible normal connected-world weather input integration",
+      "met": true,
+      "how_checked": "ConnectedWorld uses existing calendar environment sample; clouds/rain input map sun/sky/ambient/fog and wind; normal original modes retain prior path. Native12s diagnostic visibly changed clear\u2192overcast lighting; no visible rainfall claim"
+    },
+    {
+      "condition": "One local understandable response with physicaltime wetness",
+      "met": true,
+      "how_checked": "Body material darkening/roughness follows physicaldt wetness. Native samples0\u2192.645741 and captures visible wetbody. Coarse actualbody rocklee field reduces wind/comfort proxy; focused/independent probes preserve rainfall wetness across shelter"
+    },
+    {
+      "condition": "Explicit diagnostic synthetic weather/shelter without clock alteration",
+      "met": true,
+      "how_checked": "weather-response.json labels synthetic phases; clockphysical=calendar at default scale, body24,24 unchanged; no movement/lifecycle clock override. Thirdphase is synthetic shelter, not navigation/occlusion proof"
+    },
+    {
+      "condition": "Relevant tests and native visual smoke",
+      "met": true,
+      "how_checked": "MSVC native Release build passed after minimalemitterdisable; focused domain-weather_response1/1 passed0.10s; final12s native exit0, all3captures saved/viewed"
+    },
+    {
+      "condition": "Preserve modes/saves/no solver/assets/polish expansion",
+      "met": true,
+      "how_checked": "Connected-only integration, no saveformat or ecology/lifecycle coupling, existingdefault weatherguarded; no sourceassets/planning/push/children"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/weather_response.hpp",
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/weather_response.cpp",
+    "stalthos-runtime/docs/weather-response.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/weather-response-20261018/ctest-focused.log",
+    ".clanker/tasks/weather-response-20261018/native-weather-stable.log",
+    ".clanker/tasks/weather-response-20261018/native-weather-receipt.json",
+    "var/reports/runtime/20261018-220323-09baf347/weather-response-0.png through2.png",
+    "var/reports/runtime/20261018-220117-31d2ce86/launch.json and weather-response-0.png retain crashed native attempt"
+  ],
+  "findings": [
+    "Native pinned rain_amount emitter transition crashed initial run with access violation -1073741819 after clearphase. Orchestrator approved minimalfallback scene.weather.rain_amount=0 forconnected preview; repeat12s run stable. No rootcauseenginefix or visible rainfall claimed.",
+    "Overcast approximated via lighting/skyexposure/fog, not authored/volumetric clouds.",
+    "Wetbody is visible player consequence. Wind/comfort shelter currently telemetry/helper only, not HUD/needs/damage/movement; rainfall unaffected by wind shelter.",
+    "Synthetic shelter proof does not demonstrate playernavigation or geometric rainocclusion.",
+    "Existing frame dtcap meant12s wall diagnostic accumulated~8.9s physicaltime; wetness usesactualphysicaltime and does not accelerate clocks.",
+    "Grasswindweights approximate; no effects/art/performance acceptance.",
+    "Per user workingdraft policy role works and oddities logged; move next subsystem without expanding weather project."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Approved minimalfallback retained visible overcast+wetbody as working weather draft; native rainrenderer disabled",
+    "Normal conditions useexisting long weathercycle; short proof explicitly overrides inputconditions only",
+    "Localcomfort proxyfictional not thermalphysiology or gameplaydamage"
+  ],
+  "native_proof": {
+    "stable_executable_sha256": "c129c2c053939a366d1aaa5d7e950218237b6640103566b04fa4887146e8d6bf",
+    "crash_executable_sha256": "62c21f8535202def303808ccb5969f91624bb8039cec2363b817f01998446052",
+    "stable_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\weather-response-20261018\\var\\reports\\runtime\\20261018-220323-09baf347",
+    "crash_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\weather-response-20261018\\var\\reports\\runtime\\20261018-220117-31d2ce86"
+  },
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "3a5ce9734deabe9f42fbb56f19d38a6ddaa2cb92285b073c6e54d2b77027f12f"
+    },
+    {
+      "path": "stalthos-runtime/domain/weather_response.hpp",
+      "sha256": "73210d7ef57ba727f221ebc6c1b06350b2e60274ed569723842e3554f6e926b8"
+    },
+    {
+      "path": "stalthos-runtime/engine/populated_terrain.hpp",
+      "sha256": "2b71c9184c58aa5a4179f6980c58e1bf3683fe9e4d8b63bb4daa92e0fb3696c7"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "12fda05f19f49df07b68c94527167de9bda9073b10999177a224d015e9ce250c"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "0cf58951a641a2e6c6cfe1929b8cd3b02def4f7a0ec67d6761beed787ae376ef"
+    },
+    {
+      "path": "stalthos-runtime/tests/weather_response.cpp",
+      "sha256": "d17706006a284a3af1d7dd6bb7274776325fdf001e17ea68b556ceaaed824670"
+    },
+    {
+      "path": "stalthos-runtime/docs/weather-response.md",
+      "sha256": "64ac1a1465cf1e43326869549014d37acc61126bee2e597012fb306b3c76ecd2"
+    }
+  ]
+}
