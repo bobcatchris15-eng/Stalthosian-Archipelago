@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "working_draft_accepted_move_next_subsystem",
+  "implementation_commit": "5716d3d",
+  "native_release_build": "passed final frozen source",
+  "ctest": "40/40 passed2.48s",
+  "native_evidence": "var\\reports\\runtime\\20261018-220707-6d4a50d3",
+  "sample_count": 38,
+  "body_wetness_initial": 0.0,
+  "body_wetness_final": 0.6616490294007576,
+  "max_clock_difference_s": 0.0,
+  "all_three_captures_saved": true,
+  "final_clear_overcast_wetbody_views_inspected": true,
+  "native_rain_emitter_disabled": true,
+  "visible_rainfall_claimed": false,
+  "synthetic_shelter_not_navigation": true,
+  "independent_review": ".clanker/tasks/weather-response-review-20261018/independent-review.json",
+  "known_oddities": [
+    "Native rain emitter AV; emitter disabled; rain is wetting input only",
+    "Cloud cover is lighting proxy, not volumetric clouds",
+    "Wind shelter/comfort is telemetry-only approximation, no needs/damage or roof occlusion",
+    "Grass wind weights/proxy body materials are provisional"
+  ],
+  "next_subsystem": "ordinary autonomous hero behaviour with direct input priority",
+  "executable_sha256": "df4d0aeae2aec939399325347f005ef0aab98f53c4377717278856bd495c8e1d",
+  "updated": "2026-10-19T03:08:30.975513+00:00"
+}

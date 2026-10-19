@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "evidence": "E:/Stalthosian Archipelago/var/reports/runtime/20261018-215907-47043217",
+  "sample_count": 15970,
+  "ordinary_proxy_speed_m_s": 2,
+  "body_end_x": 202.04583740234375,
+  "body_end_z": 24.0,
+  "total_integrated_distance_m": 178.04583740234375,
+  "max_speed_dt_displacement_error_m": 7.628928869962692E-06,
+  "max_sampled_grade": 0.32350221893491127,
+  "max_lateral_drift_m": 0.0,
+  "crossed_reference_boundary96": true,
+  "crossed_tile_boundary128": true,
+  "reached_meadow": true,
+  "scope": "Independent native body trajectory check against ordinary speed*dt integrator; player captures and emitted mesh support reviewed separately"
+}

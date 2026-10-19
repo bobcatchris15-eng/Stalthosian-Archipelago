@@ -1,0 +1,8 @@
+constant_rain_dt_partition_independent=1
+lee_reduces_wind_without_waterproofing=1
+zero_physical_time_no_wetness_change=1
+drying_dt_partition_independent=1
+calendar_scale_does_not_change_physical_wetting=1
+weather_preserves_existing_clock_semantics=1
+actual_body_rock_lee_field_has_pocket_and_exposure=1
+INDEPENDENT_WEATHER_RESPONSE_OK wetness=0.40755 wind_exposed=12 wind_lee=3.84

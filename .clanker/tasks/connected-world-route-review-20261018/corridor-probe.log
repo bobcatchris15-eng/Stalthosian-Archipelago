@@ -1,0 +1,12 @@
+core_max_gradient=0.102898 at=96,12
+full_blend_max_gradient=1.10077 at=246,150
+join_epsilon_jump=2.17882e-06
+max_2m_lateral_height_change=2.20032
+center_y 96 8.60574
+center_y 112 9.52869
+center_y 128 10.1713
+center_y 160 10.8668
+center_y 200 11.4372
+center_y 240 11.9343
+center_y 280 12.4175
+independent_float_mesh_vs_triangle_helper_samples=1350 max_error_m=4.7626e-07

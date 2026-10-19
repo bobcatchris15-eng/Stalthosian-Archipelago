@@ -1,63 +1,51 @@
 # Current world construction checkpoint - 2026-10-18
 
-Priority: world, simulations, systems and populations. Wicked Engine selected.
-Meshes/assets remain replaceable; individual creature polish stays off path.
-Latest direct user correction: get the world WORKING AND REFINABLE. Save-state
-is useful but not fun. Prioritize playable places and visible consequences;
-further persistence work is only for concrete blockers encountered along the way.
-Hourly heartbeat targets this chat; no HALT or blocking human asks observed.
+WORLD WORKING AND REFINABLE. User completion rule: when a subsystem draft works,
+call it good, log oddities and move to NEXT SUBSYSTEM. Broad connected coverage
+outranks polish/exhaustive edgecases. Wicked Engine; assets remain replaceable.
+Read .clanker/DRAFT_COVERAGE.md and current next-task, not old transcripts/audits.
 
-## Verified native single-file original-watershed saves
+## Working drafts accepted: connected route and weather/body wetting
 
-Native populated saves now use one STL9 host+regional transaction. Original eight,
-complete shared ledger/history and explicit actor/session ownership remain under
-registry authority. Nonpopulated modes retain STL8 writes; STL1-STL8 reads remain.
-Startup validates detached clock/world/registry ownership against external habitat,
-anchors, required resource kinds, supported catalog and limits before the first
-simulation/contact tick. Native load explicitly permits only watershed1001.
-Saved individual identities/species/quantities are validated declarations, not
-historically authenticated truth; arbitrary legal legacy imports remain supported.
-Checksum/generation do not provide authentication or anti-rollback guarantees.
+ConnectedWorld is the normal populated host with a drybank spawn, real rendered
+pass and exterior dry-grass/outcrop meadow. Final95s native body proof24->202.0458m
+at ordinary2m/s crossed96m watershed and128m streamed joins.15970samples match
+speed*dt within7.63e-6m; emitted-ground support/seams passed, final passage-facing
+player captures inspected. No teleported body or camera-only traversal claim.
+Layout settings drive route/landmarks/proof; original192m terrain preserved.
 
-Final native Release build passed. Integrated CTest38/38 passed4.80s; toolkit
-2073 passed,2 skipped614.69s; doctor exit0 with no warnings/errors. Final actual
-historical STL8 migration and STL9 restart preserve all8 full snapshots, full
-ledger/history and actor/session ownership, then resume movement and water use.
-Disk headers verify STL9 generations1/2/3; native load/save over the same existing
-Windows destination passed. Five actual malformed native loads reject at checksum,
-config, payload binding, anchors and habitat boundaries with prior destination
-bytes unchanged and no success receipt. Independent synthetic terminal native run
-preserves selected hero2, dead hero1 and all8 animals; not natural-death gameplay.
+Weather uses existing calendar conditions for overcast light/wind and physicaldt
+for visibly darker/smoother wetbody. Final12s native demonstration exited0 with
+3captures and38samples, wetness0->.661649 and physical/calendar clocks unchanged.
+Independent review accepts both working drafts. Final native Release build passed;
+CTest40/40 passed2.48s. Toolkit2073passed2skipped620.54s; no toolkit sources changed.
 
-Receipt: .clanker/tasks/native-save-adoption-20261018/integration-receipt.json
-Review: .clanker/tasks/native-save-adoption-review-20261018/independent-review.json
-Next: .clanker/tasks/native-save-adoption-20261018/next-task.md
-Design: stalthos-runtime/docs/host-regional-save-design.md
+Use: .\stalthos-runtime\scripts\Run.ps1 -ConnectedWorld -Interactive -CameraDistance 10
+Route receipt: .clanker/tasks/connected-world-route-20261018/integration-receipt.json
+Weather receipt: .clanker/tasks/weather-response-20261018/integration-receipt.json
+Reviews: connected-world-route-review-20261018 and weather-response-review-20261018.
 
-## Next construction and limits
+## Logged oddities; move on rather than polish these now
 
-Next build a continuous player-traversable route out of the enclosed populated
-watershed into a distinct exterior habitat using normal controls, coherent ground
-support, readable terrain and tunable layout/content. Integrate existing terrain
-work into the populated world rather than leaving it only in isolated probes.
-Then add visible life and observable environmental reactions along that route.
-Require native traversal and captures showing what changed for the player.
+Route sparse/proxy bodies, provisional rocks, foot offset on slopes, steep far
+flanks and no authored eastern end/island geography. No exterior retained fauna.
+Connected preview refuses save/load; existing original-watershed STL9 mode remains.
+Native rain emitter crashed on transition and is disabled in connected mode.
+Rainfall remains wetting input: NO visible rainfall claim. Overcast is lighting,
+not volumetric clouds; shelter/comfort is wind-only approximate telemetry, not
+roof occlusion, needs/damage coupling or proven shelter navigation. Synthetic
+weather/shelter phases are explicit. No final art/contact/full-draft/FPS acceptance.
 
-Reservation migration and broader save support are deferred implementation needs,
-not prerequisites for constructing terrain and places. Preserve working saves;
-solve persistence only when it concretely blocks the current world experience.
-Clearly report unsupported preview persistence and never silently discard state.
-Camera prewarm must not activate physical populations or grant HeroSim knowledge.
-Terrain streaming/stitching remains unfinished; coarse capacities are not animals.
-No hot reload, power-loss durability, anatomical water contact, final visuals,
-full-draft completion or target-hardware30FPS acceptance. Prior native frame shows
-proxy cubes, sparse foliage and enclosing terrain; asset polish stays off path.
+## NEXT SUBSYSTEM: ordinary autonomous hero activity
 
-## Preservation and handoff
+Next brief: .clanker/tasks/weather-response-20261018/next-task.md
+When uncommanded, choose/carry out one ordinary local activity using existing
+needs/senses/intentions and normal movement/resource contact; direct input wins.
+Do not reopen weather effects, route polish or generalized persistence first.
 
-Prior untracked hashes retained except authorized graph cache revision marker.
-No planning/source assets, open applications or historical-worktree cleanup.
-Two local bounded workers, peak2, zeroAGY/Jules; both finished. Durable task and
-review evidence retained. Explicit staging and credential pattern scan required
-for checkpoint; reviewed origin main publication authorized, no force push,
-release, deployment, paid APIs or credential mutation.
+Preservation: prior untracked hashes retained except authorized graph cache marker;
+no source/planning/apps/history cleanup. Two local workers reused sequentially,
+peak2; four bounded implementation/review assignments total, noAGY/Jules. Usage
+limit interruption left durable state; resumed files checked zeroNUL. Workers
+finished. Explicit owned-path checkpoint/secret scan and reviewed origin main
+publication authorized; no force push/releases/deployment/paid APIs/credentials.

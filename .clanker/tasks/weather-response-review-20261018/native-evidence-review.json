@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "evidence": "E:/Stalthosian Archipelago/var/worktrees/weather-response-20261018/var/reports/runtime/20261018-220323-09baf347",
+  "sample_count": 37,
+  "scene_captures": 3,
+  "max_existing_clock_error_s": 0.0,
+  "initial_body_wetness": 0.0,
+  "final_sampled_body_wetness": 0.6457414155583093,
+  "exposed_rain_wind": 12,
+  "synthetic_lee_wind": 3.84,
+  "native_rain_emitter_disabled": true,
+  "visible_rainfall_claimed": false,
+  "synthetic_shelter_not_navigation": true,
+  "views_inspected": [
+    "weather-response-0.png",
+    "weather-response-1.png",
+    "weather-response-2.png"
+  ]
+}
