@@ -180,6 +180,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool disableTerrainSupport = false;
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
+    bool connectedWorld=false,connectedRouteWalk=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -187,6 +188,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--connected-world") {connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--connected-route-walk") {connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--populated-resource-probe") populatedResourceProbe = true;
             else if (key == L"--populated-traversal") populatedTraversal = true;
             else if (key == L"--populated-departure") {populatedTraversal=true;populatedDeparture=true;}
@@ -228,6 +231,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagCount > 1) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
+        if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
+        if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera || !creature.empty())) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic/asset mode");
+        if(connectedRouteWalk && interactive) throw std::runtime_error("connected route walk is a bounded forward-intent proof; use ConnectedWorld Interactive for ordinary controls");
         if(populatedResourceProbe && (!populatedWorld || interactive || diagnosticCamera || diagCount || populatedTraversal || !loadState.empty())) throw std::runtime_error("populated resource probe requires a fresh timed populated world without other diagnostics");
         if(populatedTraversal && (!populatedWorld || interactive || diagnosticCamera)) throw std::runtime_error("populated traversal requires timed populated world without camera diagnostics");
         if (terrainStreamProbe && (populatedWorld || diagCount || diagnosticCamera || !loadState.empty() || !saveState.empty() || !creature.empty() || !plant.empty() || !woodlandAdultTree.empty() || !woodlandSaplingTree.empty() || successorId))
@@ -249,7 +255,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::engine::NativeSimulationOwner simulationOwner{stalthos::SimCore{},stalthos::StalthosState(42),{}};
         auto& clock=simulationOwner.clock;
         auto& world=simulationOwner.world;
-        float x=12,z=0,yaw=0; int cameraMode=0;
+        const stalthos::world::ConnectedRouteLayout connectedLayout;
+        float x=connectedWorld?float(connectedLayout.dryBankX):12.f,z=connectedWorld?float(connectedLayout.centerZ):0.f,yaw=connectedWorld?1.57079632679f:0.f; int cameraMode=0;
         stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
         stalthos::HeroSpecies heroSpecies=stalthos::HeroSpecies::Smalltrotter;
@@ -406,7 +413,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::renderer::SetMeshletOcclusionCullingEnabled(false);
         }
         if(populatedWorld) {
-            populatedTerrain.emplace(world.worldSeed(),scene);
+            populatedTerrain.emplace(world.worldSeed(),scene,connectedWorld);
             populatedTerrain->update(scene,0,0);
             productionGround=[&](double gx,double gz){return populatedTerrain->height(gx,gz);};
         }
@@ -728,6 +735,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
         const auto heroAnimationCount=scene.animations.GetCount();
         bool previousInspectionKey = false, previousToggleKey = false;
+        json connectedTrajectory=json::array();
+        double connectedMaxGrade=0,connectedMaxStep=0;
         bool faunaPopulationRestored=false;
         stalthos::engine::FaunaScene faunaScene;
         std::vector<stalthos::fauna::HabitatSite> faunaSites;
@@ -902,7 +911,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 state.orbit.distance = cameraDistance;
             } else {
                 using Framing = stalthos::domain::CameraFraming;
-                state.orbit = Framing::followPreset(cameraMode==1 ? Framing::kPi*.5 : cameraMode==2 ? 0 : Framing::kPi);
+                state.orbit = Framing::followPreset(connectedWorld ? yaw+Framing::kPi : cameraMode==1 ? Framing::kPi*.5 : cameraMode==2 ? 0 : Framing::kPi);
                 if (cameraDistanceSpecified) state.orbit.distance = cameraDistance;
             }
             if (loadedSaveData && loadedSaveData->cameraState) {
@@ -1055,7 +1064,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             bool userWalk = userSteering && down('W');
             bool userReverse = userSteering && down('S');
-            bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk;
+            bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
                 double targetX = x;
@@ -1078,7 +1087,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             float speed = 0.f;
             const float previousX=x, previousZ=z;
 
-            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk;
+            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             const bool reverseIntent = diagnosticReverseWalk || (diagnosticTransition && activeTransitionPhaseIndex == 3) || (!forwardIntent && userReverse);
             if (heroAlive && creatureLoaded) {
                 using Pace = stalthos::domain::LocomotionPace;
@@ -1096,6 +1105,13 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 x=float(t<.45?traversalStartX+(544-traversalStartX)*t/.45:t<.55 || populatedDeparture?544:24+520*(1-t)/.45);z=24; yaw=pi*.5f;
             }
             if(populatedTerrain) populatedTerrain->update(scene,x,z);
+            if(connectedRouteWalk) {
+                const double distance=std::hypot(double(x-previousX),double(z-previousZ));
+                const double gy=Ground(x,z),oldGy=Ground(previousX,previousZ);
+                if(distance>1e-6) connectedMaxGrade=std::max(connectedMaxGrade,std::abs(gy-oldGy)/distance);
+                connectedMaxStep=std::max(connectedMaxStep,std::abs(gy-oldGy));
+                connectedTrajectory.push_back({{"elapsed",elapsed},{"dt",dt},{"x",x},{"z",z},{"ground_y",gy},{"forward_intent",forwardIntent},{"integrator_speed_m_s",speed},{"step_distance_m",distance}});
+            }
             if (viewController.getState().focus == stalthos::domain::InputFocus::FreeCamera) {
                 double panX = 0, panZ = 0;
                 if (down('W')) panZ -= 1.0;
@@ -1489,8 +1505,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                         populatedProxyError=std::max(populatedProxyError,std::abs(double(bottom.y)-renderedGround));
                     }
                 }
-                const std::array<double,4> thresholds{72,110,256,400};
-                for(std::size_t i=0;i<thresholds.size();++i) if(populatedTraversal && !populatedCaptured[i] && x>=thresholds[i]) {
+                const std::array<double,4> thresholds=connectedWorld?std::array<double,4>{connectedLayout.joinX-24,connectedLayout.joinX+14,connectedLayout.meadowX-30,connectedLayout.meadowX}:std::array<double,4>{72,110,256,400};
+                for(std::size_t i=0;i<thresholds.size();++i) if((populatedTraversal || connectedRouteWalk) && !populatedCaptured[i] && x>=thresholds[i]) {
                     const auto filename="populated-terrain-"+std::to_string(i)+".png";
                     const bool saved=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());
                     populatedCaptured[i]=saved;
@@ -1819,6 +1835,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(populatedTerrain) {
             auto streaming=populatedTerrain->receipt();
             streaming["diagnostic_traversal"]=populatedTraversal;
+            streaming["continuous_forward_intent_proof"]=connectedRouteWalk;
+            streaming["connected_route_max_sampled_grade"]=connectedMaxGrade;
+            streaming["connected_route_max_vertical_step_m"]=connectedMaxStep;
+            streaming["connected_route_body_reached_meadow"]=connectedRouteWalk && x>=connectedLayout.meadowX;
+            streaming["connected_preview_save_supported"]=false;
+            if(connectedRouteWalk) WriteJson(output/"connected-route-trajectory.json",connectedTrajectory);
             streaming["max_body_x"]=populatedMaxX;
             streaming["max_root_ground_error_m"]=populatedRootError;
             streaming["max_proxy_bottom_center_error_m"]=populatedProxyError;

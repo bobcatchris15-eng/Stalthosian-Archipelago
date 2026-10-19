@@ -1,0 +1,71 @@
+{
+  "body_tile_crossings": 1,
+  "capture_diagnostics": [
+    {
+      "body_x": 72.00899505615234,
+      "body_z": 24.0,
+      "capture": 0,
+      "filename": "populated-terrain-0.png",
+      "saved": true,
+      "visible_object": true
+    },
+    {
+      "body_x": 110.00960540771484,
+      "body_z": 24.0,
+      "capture": 1,
+      "filename": "populated-terrain-1.png",
+      "saved": true,
+      "visible_object": true
+    },
+    {
+      "body_x": 170.00381469726562,
+      "body_z": 24.0,
+      "capture": 2,
+      "filename": "populated-terrain-2.png",
+      "saved": true,
+      "visible_object": true
+    },
+    {
+      "body_x": 200.00730895996094,
+      "body_z": 24.0,
+      "capture": 3,
+      "filename": "populated-terrain-3.png",
+      "saved": true,
+      "visible_object": true
+    }
+  ],
+  "connected_preview_save_supported": false,
+  "connected_route_body_reached_meadow": true,
+  "connected_route_max_sampled_grade": 0.3234940338722094,
+  "connected_route_max_vertical_step_m": 0.05760788917541504,
+  "connected_world_preview": true,
+  "continuous_forward_intent_proof": true,
+  "created_tiles": 12,
+  "diagnostic_traversal": false,
+  "evicted_tiles": 1,
+  "exterior_cells_overlap_reference": false,
+  "final_body_x": 202.00869750976562,
+  "final_body_z": 24.0,
+  "limitations": "synchronous terrain; body-driven watershed dormancy only; no regional habitat populations or final art/FPS acceptance",
+  "max_body_x": 202.00869750976562,
+  "max_proxy_bottom_center_error_m": 0.26970445479037153,
+  "max_rendered_bounds_center_error_m": 1.52587890625e-05,
+  "max_root_ground_error_m": 4.7680805437266827e-07,
+  "max_shared_height_error_m": 0.0,
+  "max_shared_normal_component_error": 0.0,
+  "peak_resident_tiles": 11,
+  "population_activation_implemented": true,
+  "population_count_retained": 8,
+  "reference_mesh_retained": true,
+  "regenerated_mesh_mismatches": 0,
+  "regenerated_tiles": 0,
+  "rendered_support_fallbacks": 0,
+  "residency_driver": "body",
+  "resident_tiles": 11,
+  "route_grass_tufts": 1128,
+  "route_organic_rocks": 25,
+  "route_returned": false,
+  "shared_edge_samples": 2989,
+  "support_samples": 18078,
+  "visited_body_tiles": 2
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "connected-world-route-20261018",
+  "status": "complete",
+  "base_revision": "9224936",
+  "current_step": "working route draft complete; root final camera build/run and next subsystem",
+  "completed_steps": [
+    "read checkpoint/contracts",
+    "measured original inner/exterior route grade",
+    "approved exterior-only connected preview",
+    "exterior route height and mesh normals integrated",
+    "normal-control preview and save refusal implemented",
+    "grass mosaic/organic landmark dressing with rendered triangle placement",
+    "grade/layout tests and trajectory/captures wired",
+    "Native95s continuous shared-integrator route passed",
+    "All4player captures saved/viewed",
+    "Focused actual-triangle test1/1 passed",
+    "Receipt written and oddities logged"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/connected_route.hpp",
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/connected_route.cpp",
+    "stalthos-runtime/docs/connected-world-preview.md"
+  ],
+  "updated": "2026-10-19T02:02:09.760237+00:00",
+  "resume_instructions": "Working route done. Read receipt. Root final rebuild must include approved one-line camera azimuth. No more route/scenery polish; move next subsystem per user. Preview save/load unsupported, original mode unchanged.",
+  "validation": {
+    "passed": true,
+    "command": "ctest -R domain-connected_route; Run.ps1 -ConnectedRouteWalk -Duration95 -CameraDistance10",
+    "evidence_path": ".clanker/tasks/connected-world-route-20261018/native-route-receipt.json"
+  },
+  "receipt_path": ".clanker/tasks/connected-world-route-20261018/receipt.json",
+  "next_step": "Root integrate/final camera facing nativeproof; move to player-visible weather/environment responses, no route polishing"
+}

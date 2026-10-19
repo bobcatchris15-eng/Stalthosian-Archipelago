@@ -1,0 +1,96 @@
+{
+  "task_id": "connected-world-route-20261018",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Smallest real exterior integration in normal populated host",
+      "met": true,
+      "how_checked": "ConnectedWorld flag selects same populated host/body/renderer with exterior actual mesh route; existing mesh/source default untouched; normal W/S/A/D controls retained"
+    },
+    {
+      "condition": "Continuous native body traversal with supported joined ground",
+      "met": true,
+      "how_checked": "Actual95s ConnectedRouteWalk forward intent shared2m/s branch reachedx202.0087;18,078supportsamples, rooterror4.77e-7m, sharedheight/normalerror0, fallback0, captures72/110/170/200 allhero visible"
+    },
+    {
+      "condition": "Recognizable exterior and tunable layout",
+      "met": true,
+      "how_checked": "Viewed native stages show green creekbank transition to sandy grass mosaic with weathered organic outcrop clusters;1128tufts25rocks. Layout drives spawn/join/meadow/width/trail/landmarkanchors"
+    },
+    {
+      "condition": "Working original save behavior preserved, preview unsupported persistence explicit",
+      "met": true,
+      "how_checked": "Connected flag defaultfalse; original terrain and save methods not changed, preview rejects load/save before launch. Pure test exact original192m surface unchanged"
+    },
+    {
+      "condition": "Relevant tests/build/player captures",
+      "met": true,
+      "how_checked": "MSVC native Release build passed after explicit Translate fix; focused domain-connected_route1/1 passed0.17s. Actual95s native exit0. Final camera initial azimuth source-only delta plus default-equivalent layout expressions require root rebuild/proof"
+    },
+    {
+      "condition": "No polish scope/persistence redesign/children/push",
+      "met": true,
+      "how_checked": "Runtime/doc/task paths only; no planning/assets/save-format/reservations changes or worker dispatch"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/connected_route.hpp",
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/connected_route.cpp",
+    "stalthos-runtime/docs/connected-world-preview.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/connected-world-route-20261018/ctest-focused.log",
+    ".clanker/tasks/connected-world-route-20261018/native-route-receipt.json",
+    ".clanker/tasks/connected-world-route-20261018/native-route.log",
+    "var/reports/runtime/20261018-205917-fc46541c/connected-route-trajectory.json",
+    "var/reports/runtime/20261018-205917-fc46541c/populated-terrain-0.png through3.png"
+  ],
+  "findings": [
+    "Original east exterior rosey8.6\u219284.2 withgrade.897; working route lowers tested meadow tox200y~11.4. Inner drybank24\u219296 renderedgrade.323 remains.",
+    "Initial camera global-Z azimuth showed broadside north wall while body walked east. Approved one-line connected initial azimuth yaw+pi applied after worker proof; root will build/run final forward-facing captures.",
+    "Proxy bottom-center maxerror.2697m on slope despite root-grounderror4.77e-7; provisional proxy/orientation geometry remains an oddity, no anatomical foot-contact claim.",
+    "Lowered band continues east beyond tested meadow; no terminal longitudinal blend/full island acceptance. Far flanks steep/sparse; no additional polish per latest user steering.",
+    "Grass/rocks bounded alwaysresident composition; no exterior retained fauna/resource reaction system added.",
+    "First native compile hit ambiguous Translate initializer and was corrected. Initial grade test erroneously tested subgrid analyticalnoise instead of actual2m triangles; fixed and passed."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "User/orchestrator approved optional connected preview preserving working original saves; no preview save support",
+    "Working draft accepted with logged cosmetic/edge/proxy oddities; next subsystem should visible environmental reactions/life",
+    "Nativeproof default layout values match finallayout expressions; final one-line camera initialization remains untested native until integration"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "f9ca2c739988d0923fbda70cb57a2a32cdb03e309eedc772175e08e1fa35c56e"
+    },
+    {
+      "path": "stalthos-runtime/domain/connected_route.hpp",
+      "sha256": "e001755c75f0de18c06cb9821f6dc47610f7680c1b25ee2c0d7e74e451509558"
+    },
+    {
+      "path": "stalthos-runtime/engine/populated_terrain.hpp",
+      "sha256": "aaa187eb2c598c2a5f2e82688b8193a65dd658d14bfa0399454bea30930bd0f6"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "862861fad2baf8c0a7144d94f199e58cb1db8fe74d4e7108f2c72493c1732b85"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "35609a03901b25e38fb5f8a54ba71fb7a4d6c2d343f02d939953730127fcdfa1"
+    },
+    {
+      "path": "stalthos-runtime/tests/connected_route.cpp",
+      "sha256": "efe81ce309c22a9ffb03ce5aabd926edb0d92f62246be95848cd79ffc5b1bd2f"
+    },
+    {
+      "path": "stalthos-runtime/docs/connected-world-preview.md",
+      "sha256": "4ebca2f5ec71b8cb8d30b38aeddc0e6b480beb21a04e2f502ecf70e28411e0db"
+    }
+  ]
+}

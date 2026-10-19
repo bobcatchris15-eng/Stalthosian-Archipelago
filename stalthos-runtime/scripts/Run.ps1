@@ -4,8 +4,10 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk)
 $ErrorActionPreference = 'Stop'
+if($ConnectedWorld -or $ConnectedRouteWalk) {$PopulatedWorld=$true}
+if(($ConnectedWorld -or $ConnectedRouteWalk) -and ($LoadState -or $SaveState)) {throw 'Connected world preview does not support save/load; existing saves use original populated mode'}
 $diagnosticModes = @($DiagnosticWalk, $DiagnosticReverseWalk, $DiagnosticNeeds, $DiagnosticTransition) | Where-Object { $_ }
 if ($diagnosticModes.Count -gt 1) {
     throw 'Conflicting diagnostic modes specified: only one of DiagnosticWalk, DiagnosticReverseWalk, DiagnosticNeeds, or DiagnosticTransition may be active'
@@ -75,6 +77,8 @@ if ($DiagnosticReverseWalk) { $start.ArgumentList.Add('--diagnostic-reverse-walk
 if ($DiagnosticNeeds) { $start.ArgumentList.Add('--diagnostic-needs') }
 if ($DiagnosticTransition) { $start.ArgumentList.Add('--diagnostic-transition') }
 if ($PopulatedWorld) { $start.ArgumentList.Add('--populated-world') }
+if ($ConnectedWorld) { $start.ArgumentList.Add('--connected-world') }
+if ($ConnectedRouteWalk) { $start.ArgumentList.Add('--connected-route-walk') }
 if ($PopulatedResourceProbe) { $start.ArgumentList.Add('--populated-resource-probe') }
 if ($PopulatedTraversal) { $start.ArgumentList.Add('--populated-traversal') }
 if ($PopulatedDeparture) { $start.ArgumentList.Add('--populated-departure') }

@@ -2,6 +2,10 @@
 #include "WickedEngine.h"
 #include "json.hpp"
 #include "domain/watershed_terrain.hpp"
+#include "domain/connected_route.hpp"
+#include "organic_rocks.hpp"
+#include "meadow_scene.hpp"
+#include "terrain_surface.hpp"
 #include "domain/rendered_ground_surface.hpp"
 #include <map>
 #include <set>
@@ -16,6 +20,44 @@ class PopulatedTerrain {
     using Key=std::pair<std::int64_t,std::int64_t>;
     struct Patch { wi::ecs::Entity entity; domain::RenderedGroundSurface ground; std::vector<DirectX::XMFLOAT3> normals; };
     world::WatershedTerrain source_;
+    world::ConnectedRoute route_;
+    bool connected_;
+    domain::ReferenceLandscape reference_;
+    std::size_t routeTufts_=0,routeRocks_=0;
+    std::vector<wi::ecs::Entity> routeScenery_;
+    bool dressed_=false;
+    world::TerrainVertex sample(double x,double z) const {return connected_?route_.sample(x,z):source_.sample(x,z);}
+    void dressRoute(wi::scene::Scene& scene) {
+        if(dressed_ || !connected_) return; dressed_=true;
+        // A bounded composition belongs to this route, not camera activation.
+        const auto grass=scene.Entity_CreateMaterial("sandy lowland dry grasses");
+        auto* material=scene.materials.GetComponent(grass);material->SetBaseColor({.67f,.63f,.38f,1});material->SetRoughness(.94f);material->SetDoubleSided(true);material->SetUseVertexColors(true);
+        meadow_detail::MeadowBatchGeometry batch;
+        for(int ix=0;ix<60;++ix) for(int iz=0;iz<30;++iz) {
+            const auto key=std::uint64_t(ix*7919+iz*104729+42);
+            const double gx=route_.layout().joinX+4+ix*((route_.layout().meadowX-route_.layout().joinX+40)/60)+domain::hashUnit(domain::hashMix(key))*1.7;
+            const double gz=route_.layout().centerZ-40+iz*2.7+domain::hashUnit(domain::hashMix(key+1))*1.9;
+            // Leave a broad readable dry trail; clusters widen into the meadow.
+            if(std::abs(gz-route_.layout().centerZ)<2.8 || domain::hashUnit(domain::hashMix(key+2))<.32) continue;
+            meadow_detail::appendTuft(batch,gx,route_.triangleHeight(gx,gz),gz,domain::Habitat::OpenLowland,key);++routeTufts_;
+        }
+        routeScenery_.push_back(meadow_detail::createMeadowBatchEntity(scene,"east lowland grass mosaic",std::move(batch),grass));
+        const auto rockMaterial=scene.Entity_CreateMaterial("weathered sandstone route landmarks");
+        scene.materials.GetComponent(rockMaterial)->SetBaseColor({.47f,.40f,.29f,1});scene.materials.GetComponent(rockMaterial)->SetRoughness(.97f);
+        // Weathered rock clusters frame the saddle and two meadow edges. Natural
+        // faceted meshes reuse the established organic-rock generator, never boxes.
+        const auto& layout=route_.layout();
+        const std::array<std::pair<double,double>,5> clusters{{{layout.joinX+16,layout.centerZ-16},{layout.joinX+30,layout.centerZ+20},{layout.meadowX-24,layout.centerZ-28},{layout.meadowX+4,layout.centerZ+29},{layout.meadowX+24,layout.centerZ-18}}};
+        for(std::size_t c=0;c<clusters.size();++c) for(int n=0;n<5;++n) {
+            const auto key=std::uint64_t(c*401+n*31+123);
+            const double gx=clusters[c].first+std::sin(double(n)*2.4)*4,gz=clusters[c].second+std::cos(double(n)*2.4)*3;
+            auto geometry=detail::createOrganicRockMesh(domain::PlacementKind::Boulder,n==0?3.1:1.2+double(n)*.15,key);
+            const auto entity=scene.Entity_CreateMeshFromData("weathered east route outcrop",geometry.indices.size(),geometry.indices.data(),geometry.positions.size(),geometry.positions.data());
+            const auto* object=scene.objects.GetComponent(entity);auto* mesh=scene.meshes.GetComponent(object->meshID);for(auto& subset:mesh->subsets) subset.materialID=rockMaterial;
+            auto* transform=scene.transforms.GetComponent(entity);transform->Translate(DirectX::XMFLOAT3{float(gx),float(route_.triangleHeight(gx,gz)+geometry.groundOffset),float(gz)});transform->UpdateTransform();mesh->CreateRenderData();
+            routeScenery_.push_back(entity);++routeRocks_;
+        }
+    }
     domain::RenderedGroundSurface local_;
     std::map<std::pair<int,int>,DirectX::XMFLOAT3> boundary_;
     std::map<Key,std::vector<Patch>> resident_;
@@ -26,7 +68,7 @@ class PopulatedTerrain {
     double seamHeight_=0,seamNormal_=0;
     Key previous_{INT64_MAX,INT64_MAX};
 public:
-    explicit PopulatedTerrain(std::uint64_t seed,wi::scene::Scene& scene):source_(seed,{64,2.0,1.0}) {
+    explicit PopulatedTerrain(std::uint64_t seed,wi::scene::Scene& scene,bool connected=false):source_(seed,{64,2.0,1.0}),route_(seed),connected_(connected),reference_(seed) {
         const auto entity=scene.Entity_FindByName("draft reference ground");
         const auto* object=scene.objects.GetComponent(entity);
         const auto* mesh=object?scene.meshes.GetComponent(object->meshID):nullptr;
@@ -36,7 +78,7 @@ public:
             if(std::abs(p.x)==96 || std::abs(p.z)==96) boundary_[{int(p.x),int(p.z)}]=mesh->vertex_normals.at(i);
         }
     }
-    double analytical(double x,double z) const {return source_.height(x,z);}
+    double analytical(double x,double z) const {return connected_?route_.height(x,z):source_.height(x,z);}
     double height(double x,double z) const {
         if(local_.inBounds(x,z)) return local_.sampleHeight(x,z);
         // Include adjacent resident pieces at exact shared edges.
@@ -45,6 +87,7 @@ public:
         throw std::out_of_range("populated rendered ground is not resident");
     }
     void update(wi::scene::Scene& scene,double x,double z) {
+        dressRoute(scene);
         const auto body=source_.bodyTile({x,0,z}); const Key key{body.x,body.z};
         if(key==previous_) return;
         if(previous_.first!=INT64_MAX) ++crossings_;
@@ -70,7 +113,7 @@ public:
                 std::vector<DirectX::XMFLOAT3> positions,normals;std::vector<std::uint32_t> indices;
                 const int nx=(right-left)/2+1,nz=(front-back)/2+1;
                 for(int vz=back;vz<=front;vz+=2) for(int vx=left;vx<=right;vx+=2) {
-                    const auto v=source_.sample(vx,vz);
+                    const auto v=sample(vx,vz);
                     positions.push_back({float(vx),float(v.position.y),float(vz)});
                     auto n=DirectX::XMFLOAT3(float(v.normal.x),float(v.normal.y),float(v.normal.z));
                     const auto old=boundary_.find({vx,vz});if(old!=boundary_.end()) n=old->second;
@@ -80,7 +123,20 @@ public:
                 const auto entity=scene.Entity_CreateMeshFromData("populated exterior terrain",indices.size(),indices.data(),positions.size(),positions.data());
                 const auto* object=scene.objects.GetComponent(entity);auto* mesh=scene.meshes.GetComponent(object->meshID);
                 mesh->vertex_normals=normals;
-                for(const auto& subset:mesh->subsets) {auto* material=scene.materials.GetComponent(subset.materialID);material->SetBaseColor({.32f,.38f,.22f,1});material->SetRoughness(.96f);}
+                for(const auto& subset:mesh->subsets) {auto* material=scene.materials.GetComponent(subset.materialID);material->SetBaseColor(connected_?DirectX::XMFLOAT4{1,1,1,1}:DirectX::XMFLOAT4{.32f,.38f,.22f,1});material->SetRoughness(.96f);}
+                if(connected_) {
+                    for(const auto& vertex:positions) {
+                        using Habitat=domain::Habitat;
+                        const auto habitat=reference_.habitat(std::clamp(double(vertex.x),-96.0,96.0),std::clamp(double(vertex.z),-96.0,96.0));
+                        wi::Color green(83,97,56);
+                        if(habitat==Habitat::Creek) green=wi::Color(91,81,63);else if(habitat==Habitat::Riparian) green=wi::Color(72,93,48);else if(habitat==Habitat::Woodland) green=wi::Color(61,80,42);else if(habitat==Habitat::Bluff || habitat==Habitat::Outcrop) green=wi::Color(112,104,89);
+                        const float t=std::clamp((vertex.x-96.f)/56.f,0.f,1.f);
+                        const float mosaic=1.f-t*.04f+t*.04f*std::sin(vertex.x*.12f)*std::sin(vertex.z*.19f);
+                        mesh->vertex_colors.push_back(wi::Color(uint8_t((green.getR()*(1-t)+131*t)*mosaic),uint8_t((green.getG()*(1-t)+122*t)*mosaic),uint8_t((green.getB()*(1-t)+76*t)*mosaic)).rgba);
+                    }
+                    for(const auto& subset:mesh->subsets) scene.materials.GetComponent(subset.materialID)->SetUseVertexColors(true);
+                    applyTerrainSurface(scene,entity,reference_,42);
+                }
                 mesh->CreateRenderData();
                 Patch patch{entity,{},mesh->vertex_normals};
                 if(!patch.ground.build(mesh->vertex_positions.data(),mesh->vertex_positions.size(),mesh->indices.data(),mesh->indices.size())) throw std::runtime_error(patch.ground.errorMessage());
@@ -103,6 +159,6 @@ public:
             }
         }
     }
-    nlohmann::json receipt() const {return {{"created_tiles",created_},{"evicted_tiles",evicted_},{"regenerated_tiles",regenerated_},{"regenerated_mesh_mismatches",mismatches_},{"peak_resident_tiles",peak_},{"resident_tiles",resident_.size()},{"body_tile_crossings",crossings_},{"visited_body_tiles",visited_.size()},{"shared_edge_samples",seamChecks_},{"max_shared_height_error_m",seamHeight_},{"max_shared_normal_component_error",seamNormal_},{"reference_mesh_retained",true},{"exterior_cells_overlap_reference",false},{"residency_driver","body"},{"population_activation_implemented",false}};}
+    nlohmann::json receipt() const {return {{"connected_world_preview",connected_},{"route_grass_tufts",routeTufts_},{"route_organic_rocks",routeRocks_},{"created_tiles",created_},{"evicted_tiles",evicted_},{"regenerated_tiles",regenerated_},{"regenerated_mesh_mismatches",mismatches_},{"peak_resident_tiles",peak_},{"resident_tiles",resident_.size()},{"body_tile_crossings",crossings_},{"visited_body_tiles",visited_.size()},{"shared_edge_samples",seamChecks_},{"max_shared_height_error_m",seamHeight_},{"max_shared_normal_component_error",seamNormal_},{"reference_mesh_retained",true},{"exterior_cells_overlap_reference",false},{"residency_driver","body"},{"population_activation_implemented",false}};}
 };
 }
