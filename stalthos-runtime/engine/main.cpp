@@ -1,5 +1,6 @@
 #include "native_save.hpp"
 #include "domain/weather_response.hpp"
+#include "domain/hero_autonomy.hpp"
 // Initial Wicked host for the full draft. Geometry here is diagnostic blockout.
 #include "WickedEngine.h"
 #include "json.hpp"
@@ -182,6 +183,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
+    unsigned autonomyProbe=0;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
     try {
@@ -189,6 +191,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--hero-autonomy-probe") {autonomyProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-autonomy-override-probe") {autonomyProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-autonomy-camera-probe") {autonomyProbe=3;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--weather-preview") {weatherPreview=true;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--connected-world") {connectedWorld=true;populatedWorld=true;}
             else if (key == L"--connected-route-walk") {connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
@@ -235,6 +240,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera || !creature.empty())) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic/asset mode");
+        if(autonomyProbe && (interactive || connectedRouteWalk || weatherPreview || diagnosticCamera)) throw std::runtime_error("hero autonomy probe requires timed connected world with no other diagnostic");
         if(weatherPreview && (interactive || connectedRouteWalk || duration<6)) throw std::runtime_error("weather preview requires timed connected world, duration at least6s and no route walk");
         if(connectedRouteWalk && interactive) throw std::runtime_error("connected route walk is a bounded forward-intent proof; use ConnectedWorld Interactive for ordinary controls");
         if(populatedResourceProbe && (!populatedWorld || interactive || diagnosticCamera || diagCount || populatedTraversal || !loadState.empty())) throw std::runtime_error("populated resource probe requires a fresh timed populated world without other diagnostics");
@@ -260,6 +266,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         auto& world=simulationOwner.world;
         const stalthos::world::ConnectedRouteLayout connectedLayout;
         float x=connectedWorld?float(connectedLayout.dryBankX):12.f,z=connectedWorld?float(connectedLayout.centerZ):0.f,yaw=connectedWorld?1.57079632679f:0.f; int cameraMode=0;
+        if(autonomyProbe==3) x=40; // Synthetic initial outside-perception body; never moved by camera probe.
         stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
         stalthos::HeroSpecies heroSpecies=stalthos::HeroSpecies::Smalltrotter;
@@ -325,6 +332,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         needs.emplace(heroSpecies);
         if (loadedNeeds && loadedNeeds->species == heroSpecies)
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
+        if(autonomyProbe) needs->restoreState(0,.8,0,0,false); // Explicit synthetic need setup only.
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
         stalthos::InteractionsCore interactions(256);
         std::optional<stalthos::ResourceLedger> bootstrapLedger(std::in_place,4096,256);
@@ -691,6 +699,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         renderPath.setShadowsEnabled(true); app.ActivatePath(&renderPath);
         wi::scene::GetCamera().CreatePerspective(width,height,.1f,1000,pi/3);
         stalthos::HeroSim heroIntent;
+        stalthos::domain::HeroDrinkAutonomy heroAutonomy;
+        stalthos::domain::DrinkAction autonomyAction;
+        json autonomySamples=json::array(),autonomyContacts=json::array(),autonomyCaptures=json::array();
+        std::array<bool,3> autonomyCaptured{};
+        unsigned previousInteractionOwner=0;
+        double nextAutonomySample=0;
+        bool syntheticDirect=false;
+        const bool heroAutonomyEnabled=connectedWorld && !connectedRouteWalk && !weatherPreview;
         uint64_t runCalls=0; bool screenshot=false, userClosed=false, earlyScreenshot=false, lateScreenshot=false;
         std::vector<std::string> lifecycleTransitions;
         std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> channelPoseBaseline; float localBoneDelta=0, minimumAnimationTimer=std::numeric_limits<float>::infinity(), maximumAnimationTimer=0; uint64_t animationPlayingFrames=0;
@@ -941,6 +957,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             return landscape.height(cx, cz);
         };
         stalthos::domain::ControllerOutput cameraOut;
+        if(autonomyProbe==3) {
+            auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
+            const double creek=8*std::sin(z/43.0)+2*std::sin(z/17.0);state.detachedAnchor={creek,Ground(float(creek),z),z};viewController.setState(state);
+        }
         cameraOut.cameraState = stalthos::domain::CameraFraming::computeFraming(
             {static_cast<double>(x), static_cast<double>(Ground(x, z)), static_cast<double>(z)},
             yaw,
@@ -1071,8 +1091,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     activeTransitionPhaseIndex = targetPhaseIndex;
                 }
             }
+            syntheticDirect=autonomyProbe==2 && elapsed>=2 && elapsed<4;
             bool userWalk = userSteering && down('W');
-            bool userReverse = userSteering && down('S');
+            bool userReverse = (userSteering && down('S')) || syntheticDirect;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
@@ -1092,12 +1113,24 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 yaw += static_cast<float>(diff * std::min(1.0, 5.0 * dt));
             }
             bool userSteerDirect = userSteering && (down('S') || down('A') || down('D') || down('W'));
-            heroIntent.setDirect(walking || userSteerDirect);
+            const bool directInput=walking || userSteerDirect || syntheticDirect || down('E');
+            heroIntent.setDirect(directInput);
+            autonomyAction={};
+            if(heroAutonomyEnabled && heroAlive) {
+                std::optional<stalthos::Vec3> water;
+                if(landscape.inBounds(x,z)) {const double creek=8*std::sin(z/43.0)+2*std::sin(z/17.0);water=stalthos::Vec3{creek,Ground(float(creek),z),z};}
+                autonomyAction=heroAutonomy.update(heroIntent,*needs,{x,Ground(x,z),z},yaw,timeStep.physicalSeconds,directInput,water,getResourceRemaining(100)>0,eligibilityWater);
+                yaw+=float(autonomyAction.turn);
+            }
             float speed = 0.f;
             const float previousX=x, previousZ=z;
 
-            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
+            const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2) || autonomyAction.forward;
             const bool reverseIntent = diagnosticReverseWalk || (diagnosticTransition && activeTransitionPhaseIndex == 3) || (!forwardIntent && userReverse);
+            if(heroAutonomyEnabled && elapsed>=nextAutonomySample) {
+                autonomySamples.push_back({{"elapsed",elapsed},{"dt",dt},{"body_x",x},{"body_z",z},{"thirst",needs->thirst()},{"direct",directInput},{"synthetic_direct",syntheticDirect},{"auto_forward",autonomyAction.forward},{"auto_contact",autonomyAction.contact},{"auto_active",autonomyAction.active},{"body_attention",heroIntent.perception.attention().has_value()},{"authority",unsigned(heroIntent.authority())},{"target_x",heroIntent.goal()?heroIntent.goal()->target.x:0},{"target_z",heroIntent.goal()?heroIntent.goal()->target.z:0},{"camera_target_x",cameraOut.cameraState.target.x},{"camera_target_z",cameraOut.cameraState.target.z}});
+                nextAutonomySample=elapsed+.1;
+            }
             if (heroAlive && creatureLoaded) {
                 using Pace = stalthos::domain::LocomotionPace;
                 speed = static_cast<float>(Pace::calculate(creatureStrideLength, creatureClipDuration,
@@ -1764,10 +1797,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
 
-            bool interactDown = down('E') || tryInteract;
+            const bool autoInteract=heroAutonomyEnabled && autonomyAction.contact && !directInput && eligibilityWater;
+            bool interactDown = down('E') || tryInteract || autoInteract;
+            const unsigned interactionOwner=down('E')?1:autoInteract?2:tryInteract?3:0;
             if (heroAlive && interactDown) {
                 // Ensure idempotence: holding E produces one session. Re-pressing increments session.
-                if (!previousInteractDown) {
+                if (!previousInteractDown || interactionOwner!=previousInteractionOwner) {
                     if (nextInteractionSession == 0) throw std::runtime_error("interaction session ID overflow");
                     physicalInteractionSession = nextInteractionSession++;
                     interactions.beginSession(physicalInteractionSession);
@@ -1783,7 +1818,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                 for (const auto& res : resourceSnapshot()) cachedResourceDtos[res.id] = res;
                                 double dummyResource = available;
                                 if (interactions.applyContact(physicalInteractionSession, 100, eligibilityWater, actualDrink, dummyResource)) {
-                                    needs->drink(actualDrink);
+                                    const double beforeThirst=needs->thirst();needs->drink(actualDrink);
+                                    if(autoInteract) {
+                                        autonomyContacts.push_back({{"elapsed",elapsed},{"body_x",bodyPos.x},{"body_z",bodyPos.z},{"session",physicalInteractionSession},{"amount",actualDrink},{"thirst_before",beforeThirst},{"thirst_after",needs->thirst()},{"eligible",eligibilityWater}});
+                                        heroAutonomy.completedContact(heroIntent);
+                                    }
                                     ++appliedDrinkContacts; waterContactApplied = true;
                                 }
                             }
@@ -1817,8 +1856,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     }
                 }
             }
-            previousInteractDown = interactDown;
+            previousInteractDown = interactDown;previousInteractionOwner=interactionOwner;
 
+            if(autonomyProbe) for(std::size_t phase=0;phase<3;++phase) if(!autonomyCaptured[phase] && (phase==0?elapsed>=1:phase==1?elapsed>=5:!autonomyContacts.empty())) {
+                const auto filename="hero-autonomy-"+std::to_string(phase)+".png";autonomyCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());autonomyCaptures.push_back({{"filename",filename},{"saved",autonomyCaptured[phase]},{"body_x",x},{"body_z",z}});
+            }
             if(!earlyScreenshot && elapsed>=std::min(1.,duration*.25)) earlyScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-early.png").u8string());
             if(!lateScreenshot && elapsed>=std::min(1.35,duration*.75)) lateScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-late.png").u8string());
             if(!screenshot && elapsed>=std::min(5.,duration*.5)) screenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"draft-host.png").u8string());
@@ -1869,6 +1911,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
+        if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"synthetic_need",autonomyProbe!=0},{"synthetic_direct_interval",autonomyProbe==2},{"synthetic_camera_initialization",autonomyProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink only; no pathfinding or anatomical reach acceptance"}});
         if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",false}});
         if(populatedTerrain) {
             auto streaming=populatedTerrain->receipt();

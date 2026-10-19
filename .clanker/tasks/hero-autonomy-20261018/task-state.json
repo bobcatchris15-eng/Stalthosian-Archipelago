@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-autonomy-20261018",
+  "status": "complete",
+  "base_revision": "54cdbe5",
+  "current_step": "ordinary drink draft works; all3native proofs passed; rootintegrate thenmove nextsubsystem",
+  "completed_steps": [
+    "read actual needs/intent/contact code",
+    "approved bounded drink-only proposal",
+    "isolated worktree created",
+    "drink-only controller and body perception wired",
+    "direct priority and interaction-owner boundaries wired",
+    "three explicit native probe modes/captures/telemetry wired",
+    "first native compile reached section limit; /bigobj added",
+    "nativeReleasebuild /bigobj passed",
+    "focused domain1/1 passed0.09s",
+    "native approach/override/camera-only allpassed",
+    "exact hero session/thirst/sharedledger verificationpassed",
+    "contactcaptureviewed visible submergedproxy",
+    "receiptwritten"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/hero_autonomy.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/hero_autonomy.cpp",
+    "stalthos-runtime/docs/hero-autonomy.md"
+  ],
+  "updated": "2026-10-19T04:07:50.227654+00:00",
+  "resume_instructions": "Workingdrinkdraftdone. Readreceipt/proofs. Rootintegrate; do not extend intoforage/rest/generalAI/anatomy. No pushes. Originalmode/saveunchanged, connectedpreviewunsupportedpersistence.",
+  "validation": {
+    "passed": true,
+    "command": "ctest -R domain-hero_autonomy; Run.ps1 HeroAutonomyProbe25s/Override25s/Camera6s; native-proofs assertions",
+    "evidence_path": ".clanker/tasks/hero-autonomy-20261018/native-proofs.json"
+  },
+  "receipt_path": ".clanker/tasks/hero-autonomy-20261018/receipt.json",
+  "next_step": "Root integratesandverifies; nextanimalawareness/alarm workingdraft, no drinkpolish"
+}

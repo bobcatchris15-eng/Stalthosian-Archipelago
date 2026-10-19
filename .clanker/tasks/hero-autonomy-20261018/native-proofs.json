@@ -1,0 +1,90 @@
+{
+  "approach": {
+    "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230435-b889fd18",
+    "sample_count": 206,
+    "contacts": [
+      {
+        "amount": 0.5,
+        "body_x": 9.200514793395996,
+        "body_z": 23.9899959564209,
+        "elapsed": 11.8748911,
+        "eligible": true,
+        "session": 9,
+        "thirst_after": 0.3018605836010875,
+        "thirst_before": 0.8018605836010875
+      }
+    ],
+    "body_first": [
+      24.0,
+      24.0
+    ],
+    "body_last": [
+      9.200514793395996,
+      23.9899959564209
+    ],
+    "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+    "hero_ledger_keys": [
+      {
+        "amount": 0.5,
+        "resource_id": 100,
+        "session_id": 9
+      }
+    ],
+    "creek_total_depletion": 0.9404363663436375,
+    "npc_water_consumption": 0.4404363663436385,
+    "shared_ledger_abs_error": 9.992007221626409e-16
+  },
+  "override": {
+    "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230534-ae59c182",
+    "sample_count": 208,
+    "contacts": [
+      {
+        "amount": 0.5,
+        "body_x": 9.698956489562988,
+        "body_z": 27.0162296295166,
+        "elapsed": 13.0754955,
+        "eligible": true,
+        "session": 9,
+        "thirst_after": 0.30210035669785174,
+        "thirst_before": 0.8021003566978517
+      }
+    ],
+    "body_first": [
+      24.0,
+      24.0
+    ],
+    "body_last": [
+      9.698956489562988,
+      27.0162296295166
+    ],
+    "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+    "hero_ledger_keys": [
+      {
+        "amount": 0.5,
+        "resource_id": 100,
+        "session_id": 9
+      }
+    ],
+    "creek_total_depletion": 0.9410134457750285,
+    "npc_water_consumption": 0.44101344577502755,
+    "shared_ledger_abs_error": 9.992007221626409e-16,
+    "direct_samples": 14,
+    "direct_body_displacement": 2.862176731310479
+  },
+  "camera": {
+    "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230600-822b2ce1",
+    "sample_count": 31,
+    "contacts": [],
+    "body_first": [
+      40.0,
+      24.0
+    ],
+    "body_last": [
+      40.0,
+      24.0
+    ],
+    "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+    "camera_target_min_x": 7.186163218992699
+  },
+  "passed": true
+}

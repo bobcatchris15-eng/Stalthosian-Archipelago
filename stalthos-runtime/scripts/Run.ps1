@@ -4,8 +4,9 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe)
 $ErrorActionPreference = 'Stop'
+if($HeroAutonomyProbe -or $HeroAutonomyOverrideProbe -or $HeroAutonomyCameraProbe) {$ConnectedWorld=$true}
 if($WeatherPreview) {$ConnectedWorld=$true}
 if($ConnectedWorld -or $ConnectedRouteWalk) {$PopulatedWorld=$true}
 if(($ConnectedWorld -or $ConnectedRouteWalk) -and ($LoadState -or $SaveState)) {throw 'Connected world preview does not support save/load; existing saves use original populated mode'}
@@ -81,6 +82,9 @@ if ($PopulatedWorld) { $start.ArgumentList.Add('--populated-world') }
 if ($ConnectedWorld) { $start.ArgumentList.Add('--connected-world') }
 if ($ConnectedRouteWalk) { $start.ArgumentList.Add('--connected-route-walk') }
 if ($WeatherPreview) { $start.ArgumentList.Add('--weather-preview') }
+if ($HeroAutonomyProbe) { $start.ArgumentList.Add('--hero-autonomy-probe') }
+if ($HeroAutonomyOverrideProbe) { $start.ArgumentList.Add('--hero-autonomy-override-probe') }
+if ($HeroAutonomyCameraProbe) { $start.ArgumentList.Add('--hero-autonomy-camera-probe') }
 if ($PopulatedResourceProbe) { $start.ArgumentList.Add('--populated-resource-probe') }
 if ($PopulatedTraversal) { $start.ArgumentList.Add('--populated-traversal') }
 if ($PopulatedDeparture) { $start.ArgumentList.Add('--populated-departure') }

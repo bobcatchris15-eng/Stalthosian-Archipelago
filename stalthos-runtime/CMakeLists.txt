@@ -30,7 +30,7 @@ else()
     target_compile_options(StalthosLifecycle PRIVATE -Wall -Wextra -Werror -pedantic)
 endif()
 add_test(NAME domain-lifecycle COMMAND StalthosLifecycle)
-foreach(MODULE animation_blend needs relationships activation_plan environment_palette habitat_dressing shore_mesh locomotion_clip locomotion_pace animation_transition terrain_texture rendered_ground_surface body_terrain_support foot_support_plane foot_terrain_diagnostic resource_ledger resource_presentation woodland_stands camera_framing hero_view_controller fauna_population world_environment archipelago_world fauna_resources terrain_tiles watershed_terrain regional_habitat regional_population regional_contacts regional_legacy_import regional_archive native_population_registry host_save native_save connected_route weather_response)
+foreach(MODULE animation_blend needs relationships activation_plan environment_palette habitat_dressing shore_mesh locomotion_clip locomotion_pace animation_transition terrain_texture rendered_ground_surface body_terrain_support foot_support_plane foot_terrain_diagnostic resource_ledger resource_presentation woodland_stands camera_framing hero_view_controller fauna_population world_environment archipelago_world fauna_resources terrain_tiles watershed_terrain regional_habitat regional_population regional_contacts regional_legacy_import regional_archive native_population_registry host_save native_save connected_route weather_response hero_autonomy)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/${MODULE}.cpp")
         add_executable(Stalthos_${MODULE} "tests/${MODULE}.cpp")
         target_include_directories(Stalthos_${MODULE} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -62,7 +62,7 @@ if(STALTHOS_BUILD_WICKED_HOST)
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/ModelImporter_GLTF.cpp" "${IMPORTER}")
     add_executable(Stalthos WIN32 engine/main.cpp "${CMAKE_CURRENT_BINARY_DIR}/ModelImporter_GLTF.cpp" ${ENGINE_OBJECTS})
     target_include_directories(Stalthos PRIVATE "${WICKED_ENGINE_ROOT}/WickedEngine" "${WICKED_ENGINE_ROOT}/Editor" "${CMAKE_CURRENT_SOURCE_DIR}")
-    target_compile_options(Stalthos PRIVATE /utf-8 /arch:AVX /EHsc $<$<CONFIG:Release>:/O2>)
+    target_compile_options(Stalthos PRIVATE /bigobj /utf-8 /arch:AVX /EHsc $<$<CONFIG:Release>:/O2>)
     target_compile_definitions(Stalthos PRIVATE WIN32 _WINDOWS WIN32=1 _HAS_EXCEPTIONS=0 NDEBUG
         _XM_AVX_INTRINSICS_ _XM_SSE4_INTRINSICS_ _XM_F16C_INTRINSICS_ _XM_FMA3_INTRINSICS_
         WICKED_CMAKE_BUILD UNICODE _UNICODE

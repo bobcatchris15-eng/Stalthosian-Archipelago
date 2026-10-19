@@ -1,0 +1,92 @@
+{
+  "task_id": "hero-autonomy-20261018",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Ordinary connected uncommanded drink loop reusing needs/perception/intent",
+      "met": true,
+      "how_checked": "NeedsCore suggestion\u2192BodyPerception24m\u2192HeroSim goal\u2192boundedturn+normalforwardinput; actual25s probe seededneed only, x24\u21929.2005 eligiblewatercontact"
+    },
+    {
+      "condition": "Real relief/depletion one shared authority",
+      "met": true,
+      "how_checked": "Native session9 consumed .5 once, thirst .80186058\u2192.30186058, exactlyonehero ledgerkey; totalcreekdepletion .940436=.5hero+.440436NPC to1e-15"
+    },
+    {
+      "condition": "Immediate direct input precedence and release resumption",
+      "met": true,
+      "how_checked": "Actual override probe2\u20134s:14sampledAuthorityDirect states noautoactive/forward/contact; directreverse movedbody, release resumed ordinarydrink andone.5contact. Ownerchange boundary gives manualE freshsession"
+    },
+    {
+      "condition": "Camera-only movement cannot grant body resource knowledge",
+      "met": true,
+      "how_checked": "Actual6s camera-only initialbody40,24 unchanged; detachedcamtargetx40\u21927.186 nearcreek;31samples noattention/goal/autowalk/contact"
+    },
+    {
+      "condition": "Focused tests/native build/captures",
+      "met": true,
+      "how_checked": "Native Release buildpassed after /bigobj fix; focused domain-hero_autonomy1/1 passed0.09s; all3nativeprocessesexit0, approach/contactcapturesviewed"
+    },
+    {
+      "condition": "Preserve modes/saves/keep bounded firstdraft",
+      "met": true,
+      "how_checked": "Connectedonlyordinaryautonomy; route/weatherdiagnosticsdisabledautonomy, originalmodesunchanged; nofoundation/saveformat/asset/planning edits, no push/children"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/hero_autonomy.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/hero_autonomy.cpp",
+    "stalthos-runtime/docs/hero-autonomy.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/hero-autonomy-20261018/ctest-focused.log",
+    ".clanker/tasks/hero-autonomy-20261018/native-proofs.json",
+    ".clanker/tasks/hero-autonomy-20261018/native-approach.log",
+    ".clanker/tasks/hero-autonomy-20261018/native-override.log",
+    ".clanker/tasks/hero-autonomy-20261018/native-camera.log",
+    "var/reports/runtime/20261018-230435-b889fd18/hero-autonomy-2.png"
+  ],
+  "findings": [
+    "MSVC hostTU exceededCOFFsectioncount; required /bigobj added. No source refactor/polish.",
+    "Contactproxy is submerged butvisiblethroughcreekwater; existing eligibility unchanged, no anatomicalreach/swimming acceptance.",
+    "Normalfreshneeds remainunchanged; activityacts onlywhenDrink ishighest suggestion. No rest/forage/pathfinder activity, dangerousroute avoidance or completeAIframework.",
+    "Observationlocalradius24m, rememberedgoal frombodyobservation; cameracoordinates neverfeedcontroller.",
+    "Probes explicitly seedthirst.8; override injects2\u20134sreverseinput; camera probebody40,24+detachedanchor arestartupfixtures, no bodyteleportduringtrial.",
+    "Contactcapture visible intendedrole; peruserworkingdraftpolicy callgood/log/move next subsystem ratherthan polish anatomy/otheractivities."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Approved drink-only ordinaryloop inconnectedpreview, originalmodespreserved",
+    "Resourceeligibility andrestofcontactlogicexistingcontracts authoritative, no mouthcontactclaim",
+    "DirectE remainsmanualoperation and may legitimatelystartowncontact; no auto/manualsharing same session"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "5f126bfc96b81681ca0c0214b0e0bf0aa9affb29416888c2ea825b9b15932b2a"
+    },
+    {
+      "path": "stalthos-runtime/domain/hero_autonomy.hpp",
+      "sha256": "607d6ff19f63b7b3ed228f79ce9337d06f5b224807079ed4ef7a51bcebb96344"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "d47771e09c90433fe7bb2f930d47b5becc5db4d9b477de9ebd729ae6065d52aa"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "a72a8ce90173bd1360f8e089773b29e51d9df40f95e5f2f31f1461ca801310a2"
+    },
+    {
+      "path": "stalthos-runtime/tests/hero_autonomy.cpp",
+      "sha256": "f1a5367be491d0d4078676f609e2e4521c2146a64fbcf41a2ec180a2f0909b36"
+    },
+    {
+      "path": "stalthos-runtime/docs/hero-autonomy.md",
+      "sha256": "44d0c7fb7381736784c2a40a8b4129485250c5639409d8f0ee0732f91c4f0d7b"
+    }
+  ]
+}
