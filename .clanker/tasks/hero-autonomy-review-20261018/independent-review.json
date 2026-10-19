@@ -1,0 +1,42 @@
+{
+  "scope":{
+    "graph_digest":"not computed; bounded direct hero behaviour review",
+    "base_digest":"54cdbe58f1bc64f23e3647a0591a6633239b2fde; reviewed worker0b88ad303aa2882094c3f30bb08a774945ba4f72",
+    "artifacts":[
+      "domain/hero_autonomy.hpp sha256607d6ff19f63b7b3ed228f79ce9337d06f5b224807079ed4ef7a51bcebb96344",
+      "engine/main.cpp sha256d47771e09c90433fe7bb2f930d47b5becc5db4d9b477de9ebd729ae6065d52aa",
+      ".clanker/tasks/hero-autonomy-review-20261018/adversarial.cpp",
+      ".clanker/tasks/hero-autonomy-review-20261018/adversarial.log",
+      ".clanker/tasks/hero-autonomy-review-20261018/verify-native.ps1",
+      ".clanker/tasks/hero-autonomy-review-20261018/native-evidence-review.json"
+    ]
+  },
+  "goal_alignment":{"verdict":"advances_goal","drift":[]},
+  "findings":[
+    {
+      "severity":"observation",
+      "claim":"Ordinary connected hero drink loop works as a draft: body-local need/observation chooses goal, bounded turn and normal2m/s approach reach existing water eligibility, one authoritative contact consumes water and relieves thirst.",
+      "evidence":"Own MSVC /W4 /WX probe passes full15.3m flat-fixture integration with actual NativePopulationRegistry+InteractionsCore and one.5transfer/onekey/exact.5NeedsCore relief. Independently checked native230435:206samples, meaningful physical approach, eligible contact at11.874891s/body9.2005,23.99; session9 exactlyone ledgerkey amount.5 and thirst.80186058 to.30186058. NativeNPC consumption remains separately accounted. Viewed actual before/contact screenshots."
+    },
+    {
+      "severity":"observation",
+      "claim":"Direct authority immediately cancels autonomous movement/contact; camera-only resource viewing cannot give remote body knowledge.",
+      "evidence":"Own helper probe cancels even when contacteligible with no auto turn/forward/contact. Native230534 has14syntheticdirectsamples allDirect authority with noauto, then resumed approach and onecontact. Native230600 has31samples body40,24 unchanged, camera reaching~7.186x, no bodyattention, noactivegoal/forward/contact. Own HeroView cameraattention does not grant farbody perception."
+    },
+    {
+      "severity":"minor",
+      "claim":"Log wading/submerged proxy, rough turn/pathing, long ordinary needs trigger and drink-only repertoire; these do not block the working role and should not reopen anatomy/reach/AI polish.",
+      "evidence":"Actual hero-autonomy-2.png shows submerged translucent proxy under current unchanged water eligibility. Docs accurately identify no mouth contact, swimming, general pathfinding, forage/rest or needs retuning."
+    }
+  ],
+  "unproven_claims":[],
+  "validation_debt":[
+    "Root owns final integrated build/native positive. Reviewed isolated executable sha256002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd.",
+    "Diagnostic thirst.8, reverseinput interval and remote-camera initial setup are synthetic, using ordinary decision/movement/contact. No independent physical keyboard driving, natural long-time need trigger, general pathfinding or anatomical contact acceptance. Connected preview persistence remains unsupported."
+  ],
+  "asks":[],
+  "effort":{
+    "probes_run":9,
+    "attempted":"Read actual NeedsCore/HeroSim/BodyPerception/native movement and manual contact paths before implementation; advised minimal drink role and flagged auto self-direct cancellation/session replay/camera knowledge traps. Reviewed helper/native diff and unchanged shared ledger authority. Independently compiled six bounded helper/ledger/need tests, exit0. Independently parsed all3native cases and real per-session full ledger keys; checked206approach/208override/31camera samples, direct priority, bounded movement and zero camera-only bodyknowledge. Viewed before and actual contact captures. No duplicate GPU launches; accepted working draft and logged roughness under move-on rule."
+  }
+}

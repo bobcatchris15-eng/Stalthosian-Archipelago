@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "integrated_revision": "07ab1ab",
+  "release_build_exit_code": 0,
+  "ctest": "41/41 passed 3.61s",
+  "toolkit": "2073 passed 2 skipped 543.56s; source unchanged",
+  "exterior_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-231946-72d9ffb2",
+  "exterior_samples": 2168,
+  "first_x": 104.0000991821289,
+  "last_x": 105.62606048583984,
+  "step_error_m": 3.814599850965328e-06,
+  "ground_error_m": 4.7669163905084133e-07,
+  "rendered_support_fallbacks": 0,
+  "actual_capture_viewed": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-231946-72d9ffb2\\draft-host.png",
+  "full_animal_route_crossing_proven": false,
+  "anatomical_sole_contact_accepted": false,
+  "next_subsystem": "nearby wildlife awareness and avoidance",
+  "preservation": "130 original untracked paths unchanged except authorized graph built-at marker",
+  "embodied_autonomy_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-232014-d7ee191d",
+  "embodied_contact": {
+    "amount": 0.5,
+    "body_x": 9.211002349853516,
+    "body_z": 23.99706268310547,
+    "elapsed": 11.9040833,
+    "eligible": true,
+    "session": 9,
+    "thirst_after": 0.301979714700088,
+    "thirst_before": 0.801979714700088
+  },
+  "hero_ledger_keys": [
+    {
+      "amount": 0.5,
+      "resource_id": 100,
+      "session_id": 9
+    }
+  ]
+}

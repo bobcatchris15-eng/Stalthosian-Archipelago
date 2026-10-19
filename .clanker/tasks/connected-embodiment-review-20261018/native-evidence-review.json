@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "autonomy_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\connected-embodiment-20261018\\var\\reports\\runtime\\20261018-231453-3c19a0dc",
+  "exterior_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\connected-embodiment-20261018\\var\\reports\\runtime\\20261018-231544-f48ca1f1",
+  "imported_meshes": 4,
+  "skins": 1,
+  "clips": 2,
+  "sole_offset_m": 0,
+  "measured_pace_m_s": 0.16128,
+  "hero_contact_session": 9,
+  "hero_contact_amount": 0.5,
+  "exact_thirst_relief": 0.5,
+  "exterior_samples": 1934,
+  "exterior_first_x": 104.00011444091797,
+  "exterior_last_x": 105.66007995605469,
+  "max_speed_dt_step_error_m": 3.8131470141422596E-06,
+  "max_root_ground_error_m": 4.767134669236839E-07,
+  "rendered_support_fallbacks": 0,
+  "source_asset_hashes_unchanged": true,
+  "outside_fixture_sole_contact_accepted": false,
+  "full_animal_route_crossing_proven": false,
+  "views_inspected": [
+    "hero-autonomy-1.png",
+    "draft-host.png"
+  ],
+  "tested_executable_sha256": "d20cb994a6fdf83eba504887a81c321c57ed886718cbc58bdb34b03697070ae3"
+}

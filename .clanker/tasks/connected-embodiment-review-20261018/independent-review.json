@@ -1,0 +1,46 @@
+{
+  "scope":{
+    "graph_digest":"not computed; bounded renderer integration review",
+    "base_digest":"0b88ad303aa2882094c3f30bb08a774945ba4f72; reviewed workerf1046487e2a7ca0148eb2f8951aa6b680bbb908a",
+    "artifacts":[
+      "engine/main.cpp sha2560051c9afaa890a7b8d3cc1b95e2ce3cd43f3c0bb2ef4a0548bf7a4bcae42d75c",
+      "scripts/Run-ConnectedWorld.ps1 sha25614c677d687da15cbca54bc92eeab6731dc80e12dc0beccd6a3394dfda0e9c5d0",
+      ".clanker/tasks/connected-embodiment-review-20261018/asset-inspection.json",
+      ".clanker/tasks/connected-embodiment-review-20261018/native-evidence-review.json",
+      ".clanker/tasks/connected-embodiment-review-20261018/verify-native.ps1"
+    ]
+  },
+  "goal_alignment":{"verdict":"advances_goal","drift":[]},
+  "findings":[
+    {
+      "severity":"observation",
+      "claim":"Existing reviewed Smalltrotter renderer is integrated into connected play as a working draft, with explicit proxy fallback and unchanged source assets/metadata/pace/materials.",
+      "evidence":"Read-only GLB inspection4meshes/1skin/2clips with226channels each. Wrapper pins sourceGLB sha256a05dc160f7b2f74a5fc8fff8cae9e701159595364b7070b17d25afe1db9eb3e3 and metadata6516fef2c8475e52663988590a511ed063e044022f82c710b25beb19c2e29149, sole0; own postproof hashes match. Native actual4meshes/1skin/2clips loaded. Viewed dry exterior231544 draft-host.png: visible recognizable imported animal in route meadow."
+    },
+    {
+      "severity":"observation",
+      "claim":"Short exterior ordinary imported-body walking uses true asset pace and rendered ground, without trial teleport or fabricated full-route proof.",
+      "evidence":"Own checker over1934native trajectorysamples verifies.16128m/s ordinarypace, firstx104.000114 to105.660080, max speed*dt displacement error3.81315e-6m, root-ground error4.76713e-7m and zero rendered support fallbacks. Native animated pose delta.632748 with changingphase; source placement x104 is startup-only. Full_animal_route_crossing_proven=false explicitly."
+    },
+    {
+      "severity":"observation",
+      "claim":"Existing autonomy/contact still completes with actual imported body.",
+      "evidence":"Own parsed231453 native evidence: near-water synthetic startup10.5,24, ordinary imported motion1.2895m, eligible session9 contact at11.9198s; exactly one shared ledger key amount.5 and exact.5thirst relief. Viewed imported-body native water capture; no alternative contact/ledger path."
+    },
+    {
+      "severity":"minor",
+      "claim":"Carry existing draft oddities forward: submerged/wading body, rough anatomy/gait, bounds-specific sole diagnostic unresolved outside fixture, imported wet-material response deferred, proxy-oriented visibility label not applicable to imported hierarchy.",
+      "evidence":"Actualwater capture and exterior native_sole_diagnostic resolved=false/foot_contact_accepted=false; proxy_bounds_metric_applicable=false; source deliberately protects authored materials from proxy painting. One generic capture visible_object=false despite actual clearly visible animal, reflecting old root-object metric. These are logged limits rather than blockers to integrated visible animal role."
+    }
+  ],
+  "unproven_claims":[],
+  "validation_debt":[
+    "Root owns final integrated build/smoke. Reviewed isolated native executable sha256d20cb994a6fdf83eba504887a81c321c57ed886718cbc58bdb34b03697070ae3.",
+    "Near-water10.5 and exterior104 startup poses and forward-intent/seeded thirst are synthetic diagnostic setup; no full imported-animal route crossing, anatomical sole/nasal contact, gait polish, authored material wetness, source asset improvement, persistence or FPS acceptance."
+  ],
+  "asks":[],
+  "effort":{
+    "probes_run":3,
+    "attempted":"Inspected exact existing launcher/metadata/importer/ground adapter and actualGLB JSON only, avoiding old mesh transcripts. Flagged true assetpace.16128 versusproxy2 to avoid invalid fast proof, advised approved startupfixtures and sole0/material preservation. Reviewed minimal guard/wrapper/source diff, pin checks and fallback. Independently parsed both actualnative runs for metadata/import/animation, authoritativecontact/thirst/ledger, exterior1934step integration and renderedgroundsupport. Viewed water and dry exterior native frames. Rehashed sourceassets unchanged; no duplicate GPU launches or new asset/code changes. Accepted draft and logged limits rather than anatomy/gait polish."
+  }
+}

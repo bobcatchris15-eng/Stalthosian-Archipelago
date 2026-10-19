@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "working_draft_accepted_move_next_subsystem",
+  "implementation_commit": "e02ea31",
+  "native_release_build": "passed with host /bigobj",
+  "ctest": "41/41 passed2.81s",
+  "toolkit": "2073passed2skipped543.56s; no toolkit source changes",
+  "native_evidence": "var\\reports\\runtime\\20261018-231112-1771e2b4",
+  "sample_count": 200,
+  "contact": {
+    "amount": 0.5,
+    "body_x": 9.203635215759277,
+    "body_z": 23.9955997467041,
+    "elapsed": 11.819323,
+    "eligible": true,
+    "session": 9,
+    "thirst_after": 0.30187060950218025,
+    "thirst_before": 0.8018706095021803
+  },
+  "hero_ledger_key": {
+    "amount": 0.5,
+    "resource_id": 100,
+    "session_id": 9
+  },
+  "total_creek_consumption": 0.942095453614606,
+  "npc_consumption": 0.44209545361460156,
+  "ledger_error": 4.440892098500626e-15,
+  "independent_review": ".clanker/tasks/hero-autonomy-review-20261018/independent-review.json",
+  "direct_priority_camera_proofs": "Independent frozen-source native override/camera trials accepted in native-evidence-review.json; parent reran positive on integrated executable",
+  "known_oddities": [
+    "Drink only; no forage/rest/general pathfinder",
+    "Radial body awareness proxy, no detailed sensory occlusion",
+    "Wading/submerged proxy, no anatomical mouth contact or swimming acceptance",
+    "Connected preview remains unsaved"
+  ],
+  "next_subsystem": "Reuse existing animal embodiment renderer in connected world",
+  "executable_sha256": "0d4031df62a169624de8d0403e05551df9fc88a2a5e5c52a335ff57cb392f659",
+  "updated": "2026-10-19T04:13:11.171138+00:00"
+}

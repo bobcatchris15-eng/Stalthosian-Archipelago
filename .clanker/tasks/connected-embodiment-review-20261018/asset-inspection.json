@@ -1,0 +1,22 @@
+{
+  "asset_sha256": "a05dc160f7b2f74a5fc8fff8cae9e701159595364b7070b17d25afe1db9eb3e3",
+  "metadata_sha256": "6516fef2c8475e52663988590a511ed063e044022f82c710b25beb19c2e29149",
+  "bytes": 1410760,
+  "meshes": 4,
+  "skins": 1,
+  "animations": [
+    {
+      "channels": 226,
+      "name": "Smalltrotter_NeutralIdle"
+    },
+    {
+      "channels": 226,
+      "name": "Smalltrotter_WalkCycle"
+    }
+  ],
+  "duration_s": 2,
+  "measured_stride_m": 0.16128,
+  "ordinary_pace_m_s": 0.16128,
+  "sole_offset_m": 0,
+  "scope": "Read-only source artifact inspection; native execution reviewed separately"
+}

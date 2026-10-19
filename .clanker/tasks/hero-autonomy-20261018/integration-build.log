@@ -1,0 +1,1 @@
+Root native Build.ps1 completed with exit code0. Build output was emitted by the tool host rather than captured by PowerShell redirection. Final Release executable independently exercised; see integration-receipt.json.

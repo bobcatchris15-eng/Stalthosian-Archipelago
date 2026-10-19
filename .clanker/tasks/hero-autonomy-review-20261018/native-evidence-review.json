@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "probe_mode": 1,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230435-b889fd18",
+      "sample_count": 206,
+      "contact_count": 1,
+      "direct_priority_samples": 0,
+      "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+      "passed": true
+    },
+    {
+      "probe_mode": 2,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230534-ae59c182",
+      "sample_count": 208,
+      "contact_count": 1,
+      "direct_priority_samples": 14,
+      "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+      "passed": true
+    },
+    {
+      "probe_mode": 3,
+      "evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\hero-autonomy-20261018\\var\\reports\\runtime\\20261018-230600-822b2ce1",
+      "sample_count": 31,
+      "contact_count": 0,
+      "direct_priority_samples": 0,
+      "executable_sha256": "002056bc54c9809c916d3ddf54cb31e3ba90c6cb7ec12a731199aa15aff72bfd",
+      "passed": true
+    }
+  ],
+  "scope": "Independently inspected native decisions, contacts, per-session full ledger, need relief, sampled movement/direct priority/camera-only separation; synthetic setup explicitly retained"
+}

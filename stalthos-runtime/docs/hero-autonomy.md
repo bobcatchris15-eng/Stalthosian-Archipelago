@@ -28,7 +28,7 @@ choice/movement/contact logic:
 .\stalthos-runtime\scripts\Run.ps1 -HeroAutonomyCameraProbe -Duration 6 -CameraDistance 10
 ```
 
-The override probe injects ordinary reverse input during seconds2–4, then releases
+The override probe injects ordinary reverse input during seconds2-4, then releases
 it. The camera-only probe starts the body at(40,24), outside water sensing range,
 and initializes a detached camera toward the creek. These startup/input setups
 are synthetic; autonomous approach and consumption are real. The camera probe
