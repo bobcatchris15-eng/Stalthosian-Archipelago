@@ -2,6 +2,9 @@
 
 Priority: world, simulations, systems and populations. Wicked Engine selected.
 Meshes/assets remain replaceable; individual creature polish stays off path.
+Latest direct user correction: get the world WORKING AND REFINABLE. Save-state
+is useful but not fun. Prioritize playable places and visible consequences;
+further persistence work is only for concrete blockers encountered along the way.
 Hourly heartbeat targets this chat; no HALT or blocking human asks observed.
 
 ## Verified native single-file original-watershed saves
@@ -33,14 +36,19 @@ Design: stalthos-runtime/docs/host-regional-save-design.md
 
 ## Next construction and limits
 
-The legacy adapter reserves all4096 resources/256 history keys. Implement explicit
-bounded reservation migration preserving every resource/key/owner and imported
-floor; full history must fail expansion honestly. Then add real exterior rendered
-habitats/resources, bounds/border ownership and physical links. Extend the native
-single-region admission only with coherent full registry continuation and native
-two-region departure/dormancy/away-save/return/depletion proof. Camera prewarm must
-not activate physical populations or grant HeroSim knowledge. Terrain streaming/
-stitching remains unfinished; coarse capacities are not retained individuals.
+Next build a continuous player-traversable route out of the enclosed populated
+watershed into a distinct exterior habitat using normal controls, coherent ground
+support, readable terrain and tunable layout/content. Integrate existing terrain
+work into the populated world rather than leaving it only in isolated probes.
+Then add visible life and observable environmental reactions along that route.
+Require native traversal and captures showing what changed for the player.
+
+Reservation migration and broader save support are deferred implementation needs,
+not prerequisites for constructing terrain and places. Preserve working saves;
+solve persistence only when it concretely blocks the current world experience.
+Clearly report unsupported preview persistence and never silently discard state.
+Camera prewarm must not activate physical populations or grant HeroSim knowledge.
+Terrain streaming/stitching remains unfinished; coarse capacities are not animals.
 No hot reload, power-loss durability, anatomical water contact, final visuals,
 full-draft completion or target-hardware30FPS acceptance. Prior native frame shows
 proxy cubes, sparse foliage and enclosing terrain; asset polish stays off path.
