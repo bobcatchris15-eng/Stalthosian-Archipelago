@@ -31,6 +31,10 @@ public:
         }
         refreshViews();
     }
+    explicit NativePopulationRegistry(fauna::RegionalPopulationRegistry restored)
+        :registry_(std::move(restored)),region_(registry_.legacyRegion()) {refreshViews();}
+    const fauna::RegionalPopulationRegistry& registry() const {return registry_;}
+    fauna::RegionalContinuationDto continuation() const {return registry_.continuationSnapshot();}
     fauna::PopulationSnapshot snapshot() const {return registry_.snapshot(region_)->population;}
     ResourceLedgerDto ledger() const {return registry_.snapshot(region_)->ledger;}
     fauna::RegionalCapacity capacity() const {return registry_.capacity();}

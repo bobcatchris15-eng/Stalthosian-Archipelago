@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "actor_count": 8,
+  "exact_initial_state_restored": true,
+  "full_snapshot_fields_verified": true,
+  "registry_owns_population": true,
+  "registry_owns_shared_ledger": true,
+  "exact_session_ownership_restored": true,
+  "exact_complete_ledger_restored": true,
+  "legacy_migration_verified": false,
+  "legacy_save": "",
+  "first_run_traversal": false,
+  "resumed_motion": true,
+  "water_restore_abs_error": 1.1641532182693481E-10,
+  "water_consumption_abs_error": 6.170012764594723E-11,
+  "ledger_cap_exhaustions": 0,
+  "first_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\native-save-adoption-20261018\\var\\reports\\runtime\\20261018-195855-00810fae",
+  "second_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\native-save-adoption-20261018\\var\\reports\\runtime\\20261018-195859-a2a05121",
+  "first_save": "E:\\Stalthosian Archipelago\\var\\worktrees\\native-save-adoption-20261018\\var\\reports\\population-continuation\\20261018-195855\\first.stl",
+  "second_save": "E:\\Stalthosian Archipelago\\var\\worktrees\\native-save-adoption-20261018\\var\\reports\\population-continuation\\20261018-195855\\second.stl"
+}

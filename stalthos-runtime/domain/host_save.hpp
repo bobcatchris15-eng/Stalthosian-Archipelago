@@ -88,8 +88,10 @@ inline Candidate read(const std::filesystem::path& path,std::uint64_t configurat
     return decode(bytes,configuration);
 }
 // This owner is detached. The caller may replace its entire live owner only
-// after construction succeeds. The admitted registry MUST be constructed from
-// external immutable configuration/provenance, never from this candidate DTO.
+// after construction succeeds. The admitted registry supplies external world
+// topology/configuration and an explicit individual/resource provenance policy.
+// Save-declared identities/species/quantities can be admitted for legacy
+// compatibility, but are then consistency checks, not independent history proof.
 struct RestoredWorld {
     SimCore clock;
     StalthosState host;

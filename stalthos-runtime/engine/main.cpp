@@ -1,3 +1,4 @@
+#include "native_save.hpp"
 // Initial Wicked host for the full draft. Geometry here is diagnostic blockout.
 #include "WickedEngine.h"
 #include "json.hpp"
@@ -245,8 +246,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(populatedWorld && (diagnosticTransition || diagnosticNeeds || diagnosticWalk || diagnosticReverseWalk))
             throw std::runtime_error("populated world and focused hero diagnostics must run separately");
         if (std::filesystem::exists(output / "runtime-receipt.json")) throw std::runtime_error("use a fresh evidence directory");
-        stalthos::SimCore clock;
-        stalthos::StalthosState world(42);
+        stalthos::engine::NativeSimulationOwner simulationOwner{stalthos::SimCore{},stalthos::StalthosState(42),{}};
+        auto& clock=simulationOwner.clock;
+        auto& world=simulationOwner.world;
         float x=12,z=0,yaw=0; int cameraMode=0;
         stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
@@ -258,8 +260,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         uint64_t successorPriorDeadId=0; bool successorDeathTruthPreserved=false;
         bool successorSavedDeathTruthPreserved=false; std::size_t savedDeadHeroCount=0;
         std::optional<stalthos::persistence::SaveData> loadedSaveData;
+        std::optional<stalthos::persistence::host_save::Candidate> loadedHostSave;
+        const auto hostConfiguration=stalthos::engine::nativeSaveConfiguration(populatedWorld);
         if (!loadState.empty()) {
-            loadedSaveData = stalthos::persistence::readSave(loadState);
+            loadedHostSave=stalthos::persistence::host_save::read(loadState,hostConfiguration);
+            if(loadedHostSave->regional && !populatedWorld) throw std::runtime_error("native STL9 requires populated world configuration");
+            loadedSaveData = loadedHostSave->host;
             const auto& data = *loadedSaveData;
             auto restored = stalthos::persistence::restoreSave(data);
             clock = std::move(restored.first); world = std::move(restored.second);
@@ -312,7 +318,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
         stalthos::InteractionsCore interactions(256);
         std::optional<stalthos::ResourceLedger> bootstrapLedger(std::in_place,4096,256);
-        std::optional<stalthos::engine::NativePopulationRegistry> faunaPopulation;
+        auto& faunaPopulation=simulationOwner.fauna;
         auto ledgerSnapshot=[&]() {return faunaPopulation ? faunaPopulation->ledger() : bootstrapLedger->continuationSnapshot();};
         auto resourceSnapshot=[&]() {return ledgerSnapshot().resources;};
         auto resourceHistoryCapacity=[&]() {const auto used=ledgerSnapshot().sessions.size(); return stalthos::ResourceHistoryCapacity{used,256,256-used};};
@@ -849,9 +855,17 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     anchors.push_back({site,200+*shrub,food[*shrub]});
                 }
             }
+            stalthos::engine::validateNativeResources(bootstrapLedger->continuationSnapshot(),anchors);
             faunaPopulation.emplace(std::move(legacyPopulation),bootstrapLedger->continuationSnapshot(),
                 loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{},
                 anchors,nextInteractionSession);
+            if(loadedHostSave && loadedHostSave->regional) {
+                auto detached=stalthos::engine::restoreNativeSave(*loadedHostSave,*faunaPopulation,populatedWorld);
+                simulationOwner=std::move(detached); // One complete owner assignment before any simulation/contact.
+                // Successor selection is a new explicit user transition, applied only
+                // after complete persisted restoration; it must not be overwritten.
+                if(successorId) world.setHero(heroId,world.snapshot().deadHeroes.back().second);
+            }
             bootstrapLedger.reset(); // No mutable ledger remains outside registry authority.
             faunaLedgerInitial=ledgerJson(faunaPopulation->ledger());
             faunaSessionsInitial=faunaPopulation->sessions();
@@ -1774,9 +1788,17 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 static_cast<std::uint8_t>(cameraState.mode), static_cast<std::uint8_t>(cameraState.focus),
                 cameraState.detachedAnchor, cameraState.orbit.azimuth, cameraState.orbit.elevation,
                 cameraState.orbit.distance};
-            stalthos::persistence::writeSave(saveState,data);
+            if(faunaPopulation) {
+                const auto previous=loadedHostSave?loadedHostSave->generation:0;
+                if(previous==std::numeric_limits<uint64_t>::max()) throw std::runtime_error("native save generation exhausted");
+                stalthos::persistence::host_save::Candidate candidate{data,faunaPopulation->continuation(),hostConfiguration,previous+1};
+                stalthos::persistence::host_save::write(saveState,candidate,faunaPopulation->registry(),hostConfiguration);
+            } else {
+                if(loadedHostSave && loadedHostSave->regional) throw std::runtime_error("refusing regional save without registry");
+                stalthos::persistence::writeSave(saveState,data);
+            }
             if(successorId) {
-                const auto saved=stalthos::persistence::readSave(saveState);
+                const auto saved=stalthos::persistence::host_save::read(saveState,hostConfiguration).host;
                 savedDeadHeroCount=saved.deadHeroes.size();
                 successorSavedDeathTruthPreserved=std::any_of(saved.deadHeroes.begin(),saved.deadHeroes.end(),
                     [&](const auto& dead) { return dead.id==successorPriorDeadId; });
@@ -1835,7 +1857,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"pose_matrix_checks",faunaScene.poseChecks()},{"skin_matrix_checks",faunaScene.boneChecks()},
                 {"hidden_object_checks",faunaScene.hiddenObjectChecks()},{"visible_object_checks",faunaScene.visibleObjectChecks()},
                 {"grounded_actor_updates",faunaScene.groundedUpdates()},{"camera_drives_simulation",false},
-                {"registry_owns_population",true},{"registry_owns_shared_ledger",true},{"regional_save_supported",false},
+                {"registry_owns_population",true},{"registry_owns_shared_ledger",true},{"native_single_region_transaction_supported",true},{"native_multiregion_gameplay_supported",false},
                 {"registry_capacity",{{"regions",faunaPopulation->capacity().regions},{"individuals",faunaPopulation->capacity().individuals},{"resources_reserved",faunaPopulation->capacity().resources},{"history_reserved",faunaPopulation->capacity().historyKeys}}},
                 {"resource_ledger_initial",faunaLedgerInitial},{"resource_ledger_final",ledgerJson(faunaPopulation->ledger())},
                 {"resource_sessions_initial",faunaSessionsInitial},{"resource_sessions_final",faunaPopulation->sessions()},
@@ -2066,7 +2088,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"landscape_candidate_placements",landscape.placements().size()},
             {"calendar_seconds",clock.calendarSeconds()},{"domain_world_seed",world.worldSeed()},
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
-            {"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
+            {"native_saved_format",saveState.empty()?"none":(faunaPopulation?"STL9":"STL8")},{"individual_admission_provenance",loadedSaveData && loadedSaveData->faunaPopulation?"validated_save_declared":"generated"},{"resource_admission_provenance",loadedSaveData && loadedSaveData->resourceLedger?"validated_save_declared":"native_defaults"},{"historical_identity_authenticated",false},{"native_save_loaded_generation",loadedHostSave?loadedHostSave->generation:0},{"native_save_saved_generation",!saveState.empty() && faunaPopulation?(loadedHostSave?loadedHostSave->generation:0)+1:0},{"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
             {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
             {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"native_sole_diagnostic",nativeSoleDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
             {"diagnostic_transition_phases", transitionPhasesJson},

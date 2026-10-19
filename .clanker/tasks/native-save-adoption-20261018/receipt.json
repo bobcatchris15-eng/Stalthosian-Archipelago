@@ -1,0 +1,95 @@
+{
+  "task_id": "native-save-adoption-20261018",
+  "outcome": "done",
+  "acceptance": [
+    {
+      "condition": "Explicit saved-individual admission preserving legal legacy behavior",
+      "met": true,
+      "how_checked": "Approved policy implemented/documented; focused native_save accepts arbitrary legal IDs/species, noncanonical quantities/extra resources, empty; no historical authentication claim"
+    },
+    {
+      "condition": "One coherent native STL9 capture/load and detached whole owner",
+      "met": true,
+      "how_checked": "Native2s+2s Verify-PopulationContinuation actual save/restart passed exact8 full actor snapshots, complete ledger/history and session mappings; owner assignment before first tick"
+    },
+    {
+      "condition": "Preserve STL1-STL8 import path",
+      "met": true,
+      "how_checked": "Generic read handles legacy without new defaults restriction; helper legal declaration/empty tests pass; root will run pinned historical STL8 native fixture after integration"
+    },
+    {
+      "condition": "Independent external topology/resources kinds/anchors/catalog/capacity",
+      "met": true,
+      "how_checked": "Population.restore validates external habitat signature and legal catalog/lifecycle; validateNativeResources checks required anchored IDs/kinds while retaining saved legal ledger; reviewer actual native invalid anchor/habitat/config/checksum/binding exits1 retained prior file"
+    },
+    {
+      "condition": "Narrow domain tests and native build/run proof",
+      "met": true,
+      "how_checked": "MSVC Release native build passed; focused host_save/native_save2/2 passed0.22s; actual positive native proof passed. Final telemetry-only source edits require root integrated rebuild; no final38/38 worker claim"
+    },
+    {
+      "condition": "No exterior expansion/push/unrelated changes",
+      "met": true,
+      "how_checked": "Isolated worktree; native STL9 load explicitly supports only region1001; no publication or planning modifications"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/host_save.hpp",
+    "stalthos-runtime/engine/native_save.hpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/native_save.cpp",
+    "stalthos-runtime/docs/host-regional-save-design.md"
+  ],
+  "evidence": [
+    ".clanker/tasks/native-save-adoption-20261018/ctest-focused.log",
+    ".clanker/tasks/native-save-adoption-20261018/native-continuation.log",
+    "var/reports/population-continuation/20261018-195855/receipt.json",
+    "Parent review .clanker/tasks/native-save-adoption-review-20261018/native-negative-receipt.json"
+  ],
+  "findings": [
+    "Individual/resource provenance explicitly save-declared; coherent valid modifications accepted by policy rather than falsely authenticated.",
+    "Startup-only restoration; no live reload API. Lifecycle/needs/controller initialized from validated snapshot before first simulation tick.",
+    "Successor world selection would be overwritten by complete restore; fixed by applying explicit successor after restoration. Focused terminal/successor test passes; reviewer actual native successor proof underway.",
+    "Initial arbitrary-species test changed species without adjusting age/stage; corrected fixture profile ages, focused tests passed.",
+    "Final reporting edits clarify native_saved_format none when no save, supported single-region transaction vs unsupported multiregion gameplay, snapshot-presence-aware provenance. Native executable proof predates these reporting-only edits; root integrated rebuild required."
+  ],
+  "blockers": [],
+  "assumptions_made": [
+    "Orchestrator approved save-declared identity/species/quantity admission policy before implementation",
+    "Generic host_save library validates caller admission contract; native policy explicitly admits saved declarations and independent world geometry/configuration",
+    "Only original native watershed supported; expanded native admission remains deferred"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "c3d3717a32996ff22bc02f7b8af033f6a99435c0ee49a965ec20f009a2528cb7"
+    },
+    {
+      "path": "stalthos-runtime/domain/host_save.hpp",
+      "sha256": "19e27d37c8f71bc5d36f7ea5bca80a17733c6c03b51f12f971ecb2fb2e8f8b4a"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_save.hpp",
+      "sha256": "67807c8be76d16d431eeb7a628562c89dd9c20e9877d09f69cc3e9bdda9c5d8a"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "04d0711bb75088e9914529caff80e5f7d47c25590090b9e5658e5b5a960b270b"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "ec328ca0f663251cb4e42d2db5101d44f653af79056e0ee28640965ad93be3a4"
+    },
+    {
+      "path": "stalthos-runtime/tests/native_save.cpp",
+      "sha256": "976c548e50e93811746105456c666de25db51ca2608bed34b882347c2401bd8d"
+    },
+    {
+      "path": "stalthos-runtime/docs/host-regional-save-design.md",
+      "sha256": "68c3be3a1fa7090ee478e1089aad8737a2148c3b247c55d61ab45c4fd25f2559"
+    }
+  ],
+  "native_proof_executable_sha256": "d3b3224ea60516ffbd5f25d77279c78bc11978611c0ef401def6e83afd4b5a0f"
+}

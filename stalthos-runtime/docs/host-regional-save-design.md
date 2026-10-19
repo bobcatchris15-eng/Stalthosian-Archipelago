@@ -1,10 +1,9 @@
 # Coherent native regional save integration
 
-Status: **Native integration remains proposed. Domain transaction foundation implemented; not adopted by the native host.** The original watershed ownership
-adapter can continue capturing its one retained population, complete shared
-ledger and explicit actor/session mappings in STL8. That does not persist an
-expanded regional registry. Do not enable additional retained regions in the
-host until a complete save transaction exists.
+Status: **Native STL9 adoption implemented for one original watershed; validation receipts establish the tested scope.**
+The populated native host writes one STL9 file containing host and full regional
+continuation. Legacy STL1-STL8 imports remain supported. Additional retained
+regions remain disabled pending exterior construction and admission migration.
 
 ## One transaction, one file
 
@@ -87,7 +86,9 @@ not claim disk integration, crash recovery, native multiregion gameplay, visual
 acceptance or measured frame rate.
 
 
-## Bounded foundation checkpoint - 2026-10-18
+## Historical foundation checkpoint - 2026-10-18
+
+The following records the library-only stage before native adoption below.
 
 `domain/host_save.hpp` implements the bounded STL9 container and single-file
 transaction as a library. The native executable still reads/writes STL1-STL8
@@ -122,15 +123,14 @@ API distinction is deliberate:
 - `exportLegacy` is explicit and refuses a multi-region DTO before touching disk.
   Its existing STL8 writer retains its prior Windows overwrite limitations.
 
-The admitted registry must originate from independent immutable world definitions
-and trusted admission provenance. Constructing it from the candidate's saved
-population before validation defeats species/identity checks: a coherently
-modified species in both payloads would then become its own reference. Independent
-review found this in the initial native wiring; that wiring was removed. Native
-migration must resolve how arbitrary legal legacy actor admissions become trusted
-external configuration without rejecting previously legal imports or treating the
-same save as independent proof. Restricting all legacy imports to the generated
-eight is not an approved resolution. This remains the next design seam.
+The foundation review found that constructing an admission registry from the
+candidate's population does not independently prove historical species/identity:
+a coherent change in both payloads becomes its own reference. Initial wiring
+that claimed such independent proof was removed. The native adoption policy
+below resolves compatibility explicitly: world definitions remain independent;
+individuals and imported resource quantities are validated save declarations,
+with no claim to historical authentication. Legal legacy admissions are not
+restricted to the generated eight.
 
 Windows domain tests cover exact container roundtrip, existing destination
 replacement, real sharing-lock replacement failure, injected write/close/readback/
@@ -140,3 +140,49 @@ multi-region export refusal. The four failure hooks test transaction stage abort
 they do not emulate every device/OS failure mode. No native restart, rendered
 habitat travel, power-loss recovery, visual quality or frame-rate proof follows
 from these library tests.
+
+
+## Native adoption policy - 2026-10-18
+
+The native populated host now captures STL9 in one boundary after simulation stops:
+legacy host state, complete population/ledger/session mappings and registry
+continuation derive from the same authority without an intervening advance or
+contact. Non-populated diagnostics retain their prior STL8 writer. Native STL9
+restoration supports exactly watershed1001 and configuration revision2, including
+the populated-mode identity. Additional retained regions remain disabled.
+
+Admission distinguishes independent world configuration from save declarations:
+
+- Runtime construction supplies habitat topology/signature, anchored resource
+  IDs/kinds and anchor positions, supported species catalog, reservations and caps.
+- Legal saved individual IDs/species, actor state, session ownership, imported
+  resource initial quantities, extra legal resources and complete depletion/history
+  are **validated save-declared continuation**, not authenticated historical truth.
+  This preserves the prior native legacy import behavior, including empty animals,
+  non-generated legal individual admissions and noncanonical legal quantities.
+- Exact payload binding, supported enums, uniqueness/exclusions, finite bounded
+  state, ledger invariants and anchored-resource compatibility establish internal
+  consistency. A coherently edited legal individual/resource declaration remains
+  acceptable by this policy. Neither checksum nor re-encoding proves authenticity.
+
+This explicitly supersedes the earlier unresolved requirement for an independently
+reconstructed historical individual/species baseline. Reconstructing from admitted
+save declarations is now a documented compatibility policy, not independent proof.
+No trust store, cryptographic signature or anti-rollback claim is introduced.
+Telemetry reports validated_save_declared versus generated/native_defaults,
+historical_identity_authenticated=false, and separate loaded/saved generations.
+
+Loading is startup-only. Host fields are decoded/validated to initialize rendered
+world construction; after external habitat/anchors exist, complete detached
+clock/world/registry ownership is reconstructed and assigned as one owner before
+any simulation/contact tick. Rejection exits startup; no live in-session reload
+API is added. Explicit successor selection is applied after that restoration so
+it cannot be overwritten by the saved terminal state. Lifecycle/needs/controller
+initialization uses the already validated host snapshot under the existing startup
+path. The sole ledger owner remains the registry after bootstrap release.
+
+The library's admission parameter still enforces whatever immutable individual
+provenance a caller supplies. The native caller deliberately supplies declared
+individual provenance plus independently constructed world configuration. Generic
+library tests demonstrating rejection against a separately known species baseline
+remain valid; they do not imply native historical species authentication.

@@ -1,0 +1,9 @@
+Test project E:/Stalthosian Archipelago/var/worktrees/native-save-adoption-20261018/var/build/stalthos-runtime
+    Start 37: domain-host_save
+1/2 Test #37: domain-host_save .................   Passed    0.08 sec
+    Start 38: domain-native_save
+2/2 Test #38: domain-native_save ...............   Passed    0.07 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.22 sec

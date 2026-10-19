@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "native-save-adoption-20261018",
+  "status": "complete",
+  "base_revision": "8140d41",
+  "current_step": "native adoption implemented; ready integration rebuild and historical fixture proof",
+  "completed_steps": [
+    "read prior review and next task",
+    "orchestrator approved explicit save-declared individuals and resource quantities",
+    "new isolated worktree",
+    "save-declared admission helper implemented",
+    "whole startup owner wiring and generation/provenance telemetry implemented",
+    "successor overwrite trap fixed",
+    "first native compile passed",
+    "Focused domain2/2 passed0.22s",
+    "Native quick2s+2s exact restart/depletion passed",
+    "Independent actual native5 invalid saves rejected preserving prior destination",
+    "Receipt written"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/host_save.hpp",
+    "stalthos-runtime/engine/native_save.hpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/native_save.cpp",
+    "stalthos-runtime/docs/host-regional-save-design.md"
+  ],
+  "updated": "2026-10-19T01:01:29.986022+00:00",
+  "resume_instructions": "Implementation done. See receipt: final reporting-only source edits require integrated rebuild. Native one watershed STL9 supported, saved individuals/resource quantities explicitly validated save declarations, not historical authentication. No exterior expansion.",
+  "validation": {
+    "passed": true,
+    "command": "ctest --test-dir var/build/stalthos-runtime -C Release -R domain-(native_save|host_save) --output-on-failure; Verify-PopulationContinuation.ps1 -FirstDuration2 -SecondDuration2",
+    "evidence_path": ".clanker/tasks/native-save-adoption-20261018/native-continuation.log"
+  },
+  "receipt_path": ".clanker/tasks/native-save-adoption-20261018/receipt.json",
+  "next_step": "Root independent integration rebuild/full domain/historical migration restart; reviewer successor actual process proof"
+}
