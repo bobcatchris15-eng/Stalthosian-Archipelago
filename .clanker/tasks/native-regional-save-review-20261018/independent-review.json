@@ -1,0 +1,41 @@
+{
+  "scope": {
+    "graph_digest": "not computed; direct bounded source review",
+    "base_digest": "16518a0; final integrated review f8230f630a95948fe07459761e298b05041761ff",
+    "artifacts": [
+      "stalthos-runtime/domain/host_save.hpp sha256 9cdc1c19109c13d25d68b169f4f9a575ed88503bb4db12737da82711c3068c58",
+      "stalthos-runtime/domain/persistence.hpp sha256 88226f0553a1378126fec9c449e5773eddb4c9365ac1a1c604142faf95352ceb",
+      ".clanker/tasks/native-regional-save-review-20261018/adversarial.cpp",
+      ".clanker/tasks/native-regional-save-review-20261018/adversarial.log",
+      ".clanker/tasks/native-regional-save-review-20261018/worker-test-independent-run.log"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
+  "findings": [
+    {
+      "severity": "observation",
+      "claim": "Bounded library foundation passes independent falsification. Native adoption was correctly withdrawn after saved-derived species admission baseline bypass was reproduced. No engine/main.cpp or native_population_registry.hpp delta remains.",
+      "evidence": "Initial own probe changed seeded species3 to0 and successfully reconstructed the proposed startup order. Final helper rejects against original external admitted registry; git diff of both native files is empty. Probe log external_species_mismatch_rejected=1.",
+      "reproducer": "Compile adversarial.cpp using MSVC /std:c++17 /EHsc /W4 /WX and worktree stalthos-runtime include path, then execute. Final exit0."
+    },
+    {
+      "severity": "observation",
+      "claim": "External immutable registry provenance remains a caller obligation. An admitted registry constructed from the candidate DTO cannot establish independent species or session provenance.",
+      "evidence": "Own log saved_derived_baseline_is_not_external_config=1 old=3 new=0; same candidate rejected by hs::restore with original admitted species. host_save.hpp documents this obligation and requires an admitted registry on write."
+    }
+  ],
+  "unproven_claims": [],
+  "validation_debt": [
+    "Native coherent STL9 adoption, legal legacy migration admission provenance, same-boundary runtime capture, whole live owner swap, native save/restart and rendered two-region departure/dormancy/return remain pending.",
+    "Power-loss durability and every possible Windows ReplaceFileW failure state are not established by these tests. Real locked and readonly destination failures plus four injected failures preserve prior save under tested conditions.",
+    "No target hardware FPS or visual acceptance is claimed."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 14,
+    "attempted": "Read AGENTS/current state/design/reviewer contract and exact source diffs. Compiled independent adversarial harness with MSVC /W4 /WX. Reproduced unsafe saved-derived baseline; confirmed external species rejection; checked legal empty legacy codec; unchanged full encoded state after reservation rejection; complete ledger and actor/session mismatches; six checksum-recomputed header seed/clock/region/length mutations; real Windows readonly replacement failure preserving full prior bytes and readable generation. Independently executed worker host_save binary after its focused rebuild, exercising fresh/existing destination, injected write/close/readback/replace failures, real locked destination, legacy import and multiregion export refusal. Caught transient payload-decoder deletion and recompiled after correction. Final independent harness exit0 and worker binary exit0. Re-reviewed final integrated f8230f6 header and complete new design documentation; final delta adds comments and Windows process-ID temporary suffix. Recompiled own harness with root integrated stalthos-runtime include directory, waited for compiler exit0, reran resulting binary exit0, and verified final source SHA256. Native main/adapter still exactly equal base16518a0."
+  }
+}

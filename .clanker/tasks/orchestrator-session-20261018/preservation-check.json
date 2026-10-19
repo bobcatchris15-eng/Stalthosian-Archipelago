@@ -1,0 +1,10 @@
+{
+  "checked": "2026-10-18T23:54:55.6473810Z",
+  "note": "Graph cache refresh authorized by orchestrator; other prior untracked paths should retain hashes.",
+  "differences": [
+    {
+      "path": ".clanker/graph/built-at-rev",
+      "state": "changed"
+    }
+  ]
+}

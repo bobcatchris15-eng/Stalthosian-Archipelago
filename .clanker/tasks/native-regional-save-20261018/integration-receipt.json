@@ -1,0 +1,15 @@
+{
+  "task_id": "native-regional-save-20261018",
+  "implementation_commit": "f8230f630a95948fe07459761e298b05041761ff",
+  "independent_review": ".clanker/tasks/native-regional-save-review-20261018/independent-review.json",
+  "root_release_domain_build": "passed",
+  "schema_version": 1,
+  "preservation": "Prior untracked hashes retained except authorized graph built-at marker refresh",
+  "root_ctest": "37/37 passed in4.87s",
+  "status": "library_foundation_integrated_native_adoption_pending",
+  "publication": "Local main checkpoint; no push this wake",
+  "native_adoption": false,
+  "next_task": ".clanker/tasks/native-regional-save-20261018/next-task.md",
+  "toolkit": "Not rerun; no toolkit changes. Earlier counts remain historical.",
+  "reminder": "ACTIVE hourly heartbeat transferred in place to current chat"
+}

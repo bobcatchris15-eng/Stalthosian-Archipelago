@@ -1,3 +1,25 @@
+## Session continuation — STL9 library foundation, 2026-10-18
+
+Construction reminder moved in place to hourly heartbeat in chat
+01a1516c-ac8c-7b33-b6bc-35202236a598. Orchestrator resumed from durable state.
+
+Integrated f8230f6 adds a bounded STL9 transaction library, legacy stream codecs,
+external admitted-registry validation, detached owner construction, Windows
+single-file replacement and lossy multiregion STL8 export refusal. Independent
+review of exact integrated files passed; worker Windows Release CTest37/37 passed.
+Root integration regression evidence is recorded in the integration receipt.
+
+This is a library foundation only: native main/adapter remain unchanged and saves
+still use the earlier STL8 path. Native adoption was withdrawn after independent
+review reproduced a saved-derived species admission baseline bypass. Arbitrary
+legal legacy saves must remain supported; resolve trusted admission provenance
+before wiring whole-owner native restoration. No native STL9 restart, expanded
+habitats, power-loss durability or performance acceptance follows.
+
+Receipt: .clanker/tasks/native-regional-save-20261018/receipt.json
+Review: .clanker/tasks/native-regional-save-review-20261018/independent-review.json
+Next: .clanker/tasks/native-regional-save-20261018/next-task.md
+
 # Current world construction checkpoint - 2026-10-18
 
 Priority: world, simulations, systems and populations. Wicked Engine selected.
