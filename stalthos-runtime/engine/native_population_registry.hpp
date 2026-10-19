@@ -45,11 +45,12 @@ public:
         for(const auto& b:state->bindings) result.emplace_back(b.actor,b.session);
         return result;
     }
-    void advance(const TimeStep& dt,bool active) {
-        registry_.setActive(region_,active,physical);registry_.advance(region_,dt);events_.clear();
+    void advance(const TimeStep& dt,bool active,const std::optional<fauna::BodyAwareness>& bodyAwareness=std::nullopt) {
+        registry_.setActive(region_,active,physical);registry_.advance(region_,dt,bodyAwareness);events_.clear();
         if(active && dt.physicalSeconds>0) {
             const auto state=*registry_.snapshot(region_);
             for(const auto& actor:state.population.actors) {
+                if(bodyAwareness && fauna::awareness(actor.position,*bodyAwareness).avoid) continue;
                 if(actor.stage==LifeStage::Dead || (actor.activity!=fauna::Activity::Browse && actor.activity!=fauna::Activity::Drink)) continue;
                 const auto kind=actor.activity==fauna::Activity::Browse?ResourceKind::Shrub:ResourceKind::Creek;
                 const auto binding=std::find_if(state.bindings.begin(),state.bindings.end(),[&](const auto& b){return b.actor==actor.id;});

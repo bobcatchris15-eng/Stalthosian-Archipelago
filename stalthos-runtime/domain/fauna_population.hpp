@@ -3,6 +3,7 @@
 #include "foundation.hpp"
 #include "lifecycle.hpp"
 #include "needs.hpp"
+#include "wildlife_awareness.hpp"
 
 #include <algorithm>
 #include <array>
@@ -210,9 +211,10 @@ public:
         }
         refreshViews();
     }
-    void advance(const TimeStep& dt, bool localResourceRelief = true) {
+    void advance(const TimeStep& dt, bool localResourceRelief = true, const std::optional<BodyAwareness>& bodyAwareness = std::nullopt) {
         if (!std::isfinite(dt.physicalSeconds)||dt.physicalSeconds<0||!std::isfinite(dt.calendarSeconds)||dt.calendarSeconds<0)
             throw std::invalid_argument("invalid fauna time step");
+        if(bodyAwareness) (void)awareness({},*bodyAwareness);
         if (dt.physicalSeconds==0 && dt.calendarSeconds==0) return;
         // Preflight all shared component arithmetic on copies. No actor is committed if any actor overflows.
         auto next=actors_;
@@ -221,15 +223,27 @@ public:
             life.advance(dt); needsState.advance(dt);
             if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
             a.life=life; a.needs=needsState;
+            const auto response=bodyAwareness?awareness(a.position,*bodyAwareness):AwarenessDecision{};
+            // Retained actors remain on their authored dry graph. In-flight actors
+            // finish their existing hop; only a site arrival may select another edge.
+            if(response.avoid && distance(a.position,sites_[a.site].position)<1e-6) {
+                std::size_t escape=a.site;double separation=response.distance*response.distance;
+                for(auto neighbor:sites_[a.site].neighbors) {
+                    const auto point=sites_[neighbor].position;
+                    const double dx=point.x-bodyAwareness->body.x,dz=point.z-bodyAwareness->body.z,score=dx*dx+dz*dz;
+                    if(score>separation+.01) {separation=score;escape=neighbor;}
+                }
+                if(escape!=a.site) {a.target=escape;a.activity=Activity::Travel;}
+            }
             if (a.activity==Activity::Rest) a.needs.setResting(true); else a.needs.setResting(false);
-            if (localResourceRelief && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
-            if (localResourceRelief && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
+            if (localResourceRelief && !response.avoid && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
+            if (localResourceRelief && !response.avoid && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
             if (a.activity!=Activity::Travel) chooseActivity(a);
             if (a.activity==Activity::Travel && a.target!=a.site && dt.physicalSeconds>0) {
                 const auto hop=nextHop(a.site,a.target);
                 if (hop!=a.site) {
                     const auto length=distance(a.position,sites_[hop].position);
-                    const double speed=0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
+                    const double speed=response.avoid?bodyAwareness->tuning.avoidanceSpeedMetersPerSecond:0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
                     const double step=std::min(length,speed*dt.physicalSeconds);
                     if (length>0) {
                         const double f=step/length; const Vec3 old=a.position, dest=sites_[hop].position;
@@ -243,6 +257,7 @@ public:
             if (a.activity==Activity::Travel && a.site==a.target) chooseActivity(a);
             else if (a.activity==Activity::Browse && !sites_[a.site].browse) chooseActivity(a);
             else if (a.activity==Activity::Drink && !sites_[a.site].freshwater) chooseActivity(a);
+            if(response.noticed && a.activity!=Activity::Travel) a.heading=response.headingToBody;
         }
         actors_.swap(next);
         refreshViews();

@@ -1,0 +1,44 @@
+{
+  "watched_actor": 7923221262207566983,
+  "samples": 95,
+  "noticed_samples": 42,
+  "avoid_samples": 1,
+  "first": {
+    "elapsed": 0.0005381,
+    "phase": "approach",
+    "distance": 13.998923839540025,
+    "noticed": false,
+    "avoid": false,
+    "x": 24.680075646466765,
+    "z": -9.21755226456785,
+    "heading": 0.0,
+    "travel": 0.0,
+    "body_x": 38.66149139404297,
+    "body_z": -8.5176362991333
+  },
+  "last": {
+    "elapsed": 21.9906094,
+    "phase": "idle",
+    "distance": 27.319641679119464,
+    "noticed": false,
+    "avoid": false,
+    "x": 19.160940047667456,
+    "z": -9.493842363765129,
+    "heading": -1.6208149651090695,
+    "travel": 5.611462991961327,
+    "body_x": 46.446414947509766,
+    "body_z": -8.12794303894043
+  },
+  "camera_samples": 21,
+  "camera_noticed": 0,
+  "camera_avoid": 0,
+  "camera_first_body": [
+    38.680076599121094,
+    15.031159400939941
+  ],
+  "camera_last_body": [
+    38.680076599121094,
+    15.031159400939941
+  ],
+  "native_exe_sha256": "A7DD4F407750C9ADA69269138F9CD85C301DDCA197A04A48BE36F55BEFB0FE91"
+}

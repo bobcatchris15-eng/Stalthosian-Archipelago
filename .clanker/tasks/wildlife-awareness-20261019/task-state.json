@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "wildlife-awareness-20261019",
+  "status": "complete",
+  "base_revision": "f3c49a6",
+  "current_step": "validated working draft ready for root integration",
+  "completed_steps": [
+    "read contracts/checkpoint/next-task",
+    "inspected route-bound population and sole registry ownership",
+    "root approved optional domain context preserving graph/state",
+    "native build and focused test passed",
+    "actual native approach/withdrawal and camera-only probes passed",
+    "independent no-context/adversarial review passed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/wildlife_awareness.hpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/wildlife_awareness.cpp",
+    "stalthos-runtime/CMakeLists.txt"
+  ],
+  "updated": "2026-10-19T00:00:31.743025-05:00",
+  "resume_instructions": "Bounded awareness only; graph-bound movement, no-context unchanged, no new save fields, camera never context. Native approach/withdrawal/camera proof required."
+}

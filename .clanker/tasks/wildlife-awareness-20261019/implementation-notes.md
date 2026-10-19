@@ -1,0 +1,7 @@
+# Wildlife awareness working draft
+
+Connected-world retained wildlife now receives an optional actual hero body context. A stationary animal notices and faces the body within 12 m; within 6 m it selects an existing graph neighbor farther from the body and moves along the existing graph at up to .7 m/s. Resource contact and standalone local relief are suppressed while inside the comfort radius, including trapped sites. The optional context defaults absent, preserving original modes and serialized contracts.
+
+`stalthos-runtime/scripts/Run.ps1 -ConnectedWorld -Interactive` enables normal play. Bounded diagnostics: `-WildlifeAwarenessProbe -Duration 22` uses startup hero placement and ordinary forward/hold/reverse input; `-WildlifeCameraProbe -Duration 6` uses a remote startup body and detached camera. No trial teleports or NPC pose edits. Tunings are in `domain/wildlife_awareness.hpp`.
+
+Working-draft limits: animals already between sites finish their existing hop before choosing another route; a dead end without a farther neighbor cannot escape but suspends resource contact. Graph-bound retreat can briefly leave the comfort radius then resume ordinary pace. Notice is horizontal distance only, with no occlusion, hearing, species tuning or alarm propagation. Withdrawal resumes the ordinary activity selector at the next arrival, without historical target restoration. Existing proxy assets/animation remain provisional. This is not full animal AI, anatomical, full-world or performance acceptance. No save-format changes.

@@ -1,0 +1,73 @@
+{
+  "task_id": "wildlife-awareness-20261019",
+  "outcome": "done",
+  "base_revision": "f3c49a6",
+  "acceptance": [
+    {
+      "how_checked": "native22s normal forward/hold/reverse, watched actor7923221262207566983 notices42 samples/comfort1 sampled, preserved actor moves5.611m; viewed three captures",
+      "met": true,
+      "condition": "actual hero body notices and avoids via retained graph"
+    },
+    {
+      "how_checked": "withdrawal clears notice and ordinary graph motion;6s detachedcamera bodyfixed28m, allactor notice/avoid0",
+      "met": true,
+      "condition": "withdrawal and camera-only separation"
+    },
+    {
+      "how_checked": "focused test graphrestore/session/ledger/trappedcontact checks; independent reviewer exact baseline checksum2816351399129714903 bytes1257 keys4 plus6adversarial cases",
+      "met": true,
+      "condition": "identity resource sessions and no-context behavior preserved"
+    }
+  ],
+  "tests": [
+    "native Release build exit0",
+    "CTest wildlife_awareness passed",
+    "independent reviewer /W4 /WX probes exit0",
+    "git diff --check clean"
+  ],
+  "evidence": [
+    "var/reports/runtime/20261019-030440-9595fa10",
+    "var/reports/runtime/20261019-030513-1294811b"
+  ],
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "AFBEBA0FC8CF4215D0EDCC7EBD796DC1C6D1764C83A97DF26BA47AE01B7BB37B"
+    },
+    {
+      "path": "stalthos-runtime/domain/fauna_population.hpp",
+      "sha256": "49950E7F9B0EBA210C795A419D28709AB0A4BF968E609DA95D0F60F9E2AAB45A"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "AE6921BDDD6245267989DA99A433CFD3C7EE694B32BE378EBBD407F06081BD11"
+    },
+    {
+      "path": "stalthos-runtime/domain/wildlife_awareness.hpp",
+      "sha256": "3F9C13D50F07F4E4F5F6AC9233BB05A890C2DFE6CDB92F408F4FD7445E6F8973"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "27A3002AC0828FFCAF60624E5EB2682F289267C37A3F1B760139E1533A04DED4"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "8626F6873D26CB2367977296E6BD16ED19CF15F3EBAA1568C09DE46759186C91"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "D2980D32456B9AD4BC796622A875E45C4BC21431EB3A8A5CF7CD9ADA5FABE7AD"
+    },
+    {
+      "path": "stalthos-runtime/tests/wildlife_awareness.cpp",
+      "sha256": "4D9EC057816A9489DDB6099CB382AD6A7DA0216DFA7C2B86F8D2CE1F30B0EE2E"
+    }
+  ],
+  "limitations": [
+    "mid-edge finish existinghop; deadend noescape butcontact suppressed",
+    "horizontal radius noocclusion; noalarm/generalAI",
+    "existing proxyvisuals provisional; noFPS/anatomyacceptance",
+    "synthetic hero startup/input diagnostic; no trialteleport/NPC edits",
+    "root integrated build/proof pending"
+  ]
+}

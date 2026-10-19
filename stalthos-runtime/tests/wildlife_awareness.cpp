@@ -1,0 +1,15 @@
+#include "engine/native_population_registry.hpp"
+#include "domain/regional_archive.hpp"
+#include <iostream>
+using namespace stalthos;using namespace stalthos::fauna;
+int main(){try {
+ std::vector<HabitatSite> sites{{{0,0,0},true,true,{1}},{{4,0,0},true,true,{0}}};Population original(42,1001,sites,1);auto start=original.snapshot();start.actors[0].site=0;start.actors[0].target=0;start.actors[0].position=sites[0].position;start.actors[0].activity=Activity::Rest;original.restore(start);
+ Population ordinary=original,explicitNone=original;ordinary.advance({.1,.1},false);explicitNone.advance({.1,.1},false,std::nullopt);if(ordinary.snapshot().actors[0].position.x!=explicitNone.snapshot().actors[0].position.x) throw std::runtime_error("default behavior changed");
+ ResourceLedgerDto ledger{{{100,ResourceKind::Creek,100,0}}, {}};std::uint64_t session=1;engine::NativePopulationRegistry registry(original,ledger,{},{{0,100,sites[0].position},{1,100,sites[1].position}},session);const auto owners=registry.sessions();const auto before=registry.snapshot().actors[0];
+ registry.advance({1,1},true,BodyAwareness{{-2,0,0},{}});auto after=registry.snapshot().actors[0];if(after.position.x<=0 || after.activity!=Activity::Travel || after.id!=before.id || registry.sessions()!=owners || registry.ledger().resources[0].consumedQuantity!=0) throw std::runtime_error("retained avoidance or ownership invalid");
+ const auto moving=registry.continuation();std::string bytes;if(!regional_archive::encode(moving,bytes)||!registry.registry().snapshot(1001)) throw std::runtime_error("awareness continuation invalid");
+ Population restored(42,1001,sites,1);restored.restore(registry.snapshot());
+ for(int i=0;i<30;++i) registry.advance({1,1},true,BodyAwareness{{30,0,0},{}});
+ if(registry.snapshot().actors[0].id!=before.id || registry.sessions()!=owners || awareness(registry.snapshot().actors[0].position,{{30,0,0},{}}).noticed) throw std::runtime_error("withdrawal failed");
+ std::vector<HabitatSite> trappedSites{{{0,0,0},true,true,{1}},{{-1,0,0},true,true,{0}}};Population trapped(42,1001,trappedSites,1);auto ts=trapped.snapshot();ts.actors[0].site=0;ts.actors[0].target=0;ts.actors[0].position={0,0,0};ts.actors[0].activity=Activity::Drink;ts.actors[0].thirst=.9;trapped.restore(ts);Population expected=trapped;expected.advance({1,1},false,BodyAwareness{{-2,0,0},{}});trapped.advance({1,1},true,BodyAwareness{{-2,0,0},{}});if(trapped.snapshot().actors[0].thirst!=expected.snapshot().actors[0].thirst) throw std::runtime_error("trapped local relief was not suppressed");std::uint64_t trappedSession=1;engine::NativePopulationRegistry trappedRegistry(trapped,ledger,{},{{0,100,trappedSites[0].position}},trappedSession);trappedRegistry.advance({1,1},true,BodyAwareness{{-2,0,0},{}});if(trappedRegistry.ledger().resources[0].consumedQuantity!=0) throw std::runtime_error("trapped native contact was not suppressed"); std::cout<<"WILDLIFE_AWARENESS_OK graphavoidance, no-context, identity/session/ledger, continuation, withdrawal\n";return 0;
+ }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

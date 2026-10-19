@@ -183,7 +183,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned autonomyProbe=0;
+    unsigned autonomyProbe=0,wildlifeProbe=0;
     bool connectedEmbodimentProbe=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -192,6 +192,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             std::wstring key = argv[i];
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
+            else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-probe") {autonomyProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-override-probe") {autonomyProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-camera-probe") {autonomyProbe=3;connectedWorld=true;populatedWorld=true;}
@@ -242,6 +244,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(wildlifeProbe && (interactive || autonomyProbe || connectedRouteWalk || weatherPreview || connectedEmbodimentProbe || !creature.empty())) throw std::runtime_error("wildlife probe uses bounded connected proxy input and no other diagnostic");
         if(autonomyProbe && (interactive || connectedRouteWalk || weatherPreview || diagnosticCamera)) throw std::runtime_error("hero autonomy probe requires timed connected world with no other diagnostic");
         if(weatherPreview && (interactive || connectedRouteWalk || duration<6)) throw std::runtime_error("weather preview requires timed connected world, duration at least6s and no route walk");
         if(connectedRouteWalk && interactive) throw std::runtime_error("connected route walk is a bounded forward-intent proof; use ConnectedWorld Interactive for ordinary controls");
@@ -702,6 +705,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         renderPath.setEyeAdaptionEnabled(false); renderPath.setMotionBlurEnabled(false); renderPath.setDepthOfFieldEnabled(false);
         renderPath.setShadowsEnabled(true); app.ActivatePath(&renderPath);
         wi::scene::GetCamera().CreatePerspective(width,height,.1f,1000,pi/3);
+        stalthos::fauna::AwarenessTuning wildlifeTuning;
+        json wildlifeSamples=json::array(),wildlifeCaptures=json::array();
+        std::array<bool,3> wildlifeCaptured{};
+        double nextWildlifeSample=0;
+        stalthos::Identity wildlifeWatched=0;stalthos::Vec3 wildlifeAnchor{};
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
         stalthos::domain::DrinkAction autonomyAction;
@@ -904,6 +912,26 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 // after complete persisted restoration; it must not be overwritten.
                 if(successorId) world.setHero(heroId,world.snapshot().deadHeroes.back().second);
             }
+            if(wildlifeProbe) {
+                bool selected=false;
+                const auto initial=faunaPopulation->snapshot();
+                for(const auto& actor:initial.actors) {
+                    if(selected || actor.stage==stalthos::LifeStage::Dead || actor.site!=actor.target || actor.activity==stalthos::fauna::Activity::Travel) continue;
+                    for(auto neighbor:faunaSites[actor.site].neighbors) {
+                        const auto p=faunaSites[neighbor].position;const double dx=p.x-actor.position.x,dz=p.z-actor.position.z,length=std::hypot(dx,dz);if(length<1) continue;
+                        const double sx=actor.position.x-dx/length*14,sz=actor.position.z-dz/length*14;
+                        bool dry=true;double old=Ground(float(sx),float(sz));
+                        for(int step=0;step<=28;++step) {const double f=double(step)/28,gx=sx+(actor.position.x-sx)*f,gz=sz+(actor.position.z-sz)*f;const double gy=Ground(float(gx),float(gz));if(!landscape.inBounds(gx,gz)||landscape.waterContains(gx,gz)||std::abs(gy-old)>.45) {dry=false;break;}old=gy;}
+                        if(!dry) continue;
+                        x=float(sx);z=float(sz);yaw=float(std::atan2(dx,dz));wildlifeWatched=actor.id;wildlifeAnchor=actor.position;selected=true;break;
+                    }
+                }
+                if(!selected) throw std::runtime_error("wildlife proof could not find dry approach to existing stationary actor");
+                if(wildlifeProbe==2) {
+                    bool remote=false; for(int angle=0;angle<24;++angle) {const double a=angle*6.283185307179586/24,gx=wildlifeAnchor.x+28*std::sin(a),gz=wildlifeAnchor.z+28*std::cos(a);if(!landscape.inBounds(gx,gz)||landscape.waterContains(gx,gz)) continue;bool clear=true;for(const auto& actor:initial.actors) if(std::hypot(gx-actor.position.x,gz-actor.position.z)<=wildlifeTuning.noticeMeters+6) clear=false;if(clear){x=float(gx);z=float(gz);remote=true;break;}} if(!remote) throw std::runtime_error("no remote camera startup fixture");
+                    for(const auto& actor:initial.actors) if(std::hypot(x-actor.position.x,z-actor.position.z)<=wildlifeTuning.noticeMeters+2) throw std::runtime_error("camera fixture body is too near wildlife");
+                }
+            }
             bootstrapLedger.reset(); // No mutable ledger remains outside registry authority.
             faunaLedgerInitial=ledgerJson(faunaPopulation->ledger());
             faunaSessionsInitial=faunaPopulation->sessions();
@@ -961,6 +989,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             return landscape.height(cx, cz);
         };
         stalthos::domain::ControllerOutput cameraOut;
+        if(wildlifeProbe==2) {
+            auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
+            state.detachedAnchor=wildlifeAnchor;viewController.setState(state);
+        }
         if(autonomyProbe==3) {
             auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
             const double creek=8*std::sin(z/43.0)+2*std::sin(z/17.0);state.detachedAnchor={creek,Ground(float(creek),z),z};viewController.setState(state);
@@ -1096,8 +1128,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
             syntheticDirect=autonomyProbe==2 && elapsed>=2 && elapsed<4;
-            bool userWalk = userSteering && down('W');
-            bool userReverse = (userSteering && down('S')) || syntheticDirect;
+            const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
+            bool userWalk = (userSteering && down('W')) || wildlifeForward;
+            bool userReverse = (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
@@ -1117,7 +1150,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 yaw += static_cast<float>(diff * std::min(1.0, 5.0 * dt));
             }
             bool userSteerDirect = userSteering && (down('S') || down('A') || down('D') || down('W'));
-            const bool directInput=walking || userSteerDirect || syntheticDirect || down('E');
+            const bool directInput=walking || userSteerDirect || syntheticDirect || wildlifeReverse || down('E');
             heroIntent.setDirect(directInput);
             autonomyAction={};
             if(heroAutonomyEnabled && heroAlive) {
@@ -1498,7 +1531,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     dormantPhysical+=timeStep.physicalSeconds;dormantCalendar+=timeStep.calendarSeconds;
                     faunaDormantPhysicalSeconds+=timeStep.physicalSeconds;faunaDormantCalendarSeconds+=timeStep.calendarSeconds;
                 } else {
-                faunaPopulation->advance(timeStep,true);
+                std::optional<stalthos::fauna::BodyAwareness> actualBodyAwareness;
+                if(connectedWorld && heroAlive) {const auto body=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();actualBodyAwareness=stalthos::fauna::BodyAwareness{{body.x,body.y,body.z},wildlifeTuning};}
+                faunaPopulation->advance(timeStep,true,actualBodyAwareness);
+                if(connectedWorld && elapsed>=nextWildlifeSample) {
+                    json responses=json::array();
+                    for(const auto& actor:faunaPopulation->actors()) {const auto response=actualBodyAwareness?stalthos::fauna::awareness(actor.position,*actualBodyAwareness):stalthos::fauna::AwarenessDecision{};responses.push_back({{"id",actor.id},{"x",actor.position.x},{"z",actor.position.z},{"heading",actor.headingRadians},{"distance_travelled",actor.distanceTravelledMeters},{"activity",unsigned(actor.activity)},{"noticed",response.noticed},{"avoid",response.avoid},{"body_distance",response.distance}});}
+                    wildlifeSamples.push_back({{"elapsed",elapsed},{"body_x",x},{"body_z",z},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"phase",wildlifeProbe==2?"camera_only":elapsed<6?"approach":elapsed<10?"hold":elapsed<18?"withdraw":"idle"},{"actors",responses}});nextWildlifeSample=elapsed+.2;
+                }
                 faunaResourceEvents+=faunaPopulation->events().size();
                 if(!faunaPopulation->events().empty()) {
                     for(const auto& res:resourceSnapshot()) cachedResourceDtos[res.id]=res;
@@ -1557,6 +1597,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(wildlifeProbe) for(std::size_t phase=0;phase<3;++phase) if(!wildlifeCaptured[phase] && elapsed>=(phase==0?2:phase==1?8:19)) {
+                const auto filename="wildlife-awareness-"+std::to_string(phase)+".png";wildlifeCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());wildlifeCaptures.push_back({{"filename",filename},{"saved",wildlifeCaptured[phase]},{"body_x",x},{"body_z",z}});
+            }
             if(weatherPreview) for(std::size_t phase=0;phase<3;++phase) if(!weatherCaptured[phase] && elapsed>=duration*(double(phase)/3+1.0/6)) {
                 const auto filename="weather-response-"+std::to_string(phase)+".png";
                 weatherCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());
@@ -1915,6 +1958,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
+        if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"synthetic_need",autonomyProbe!=0},{"synthetic_direct_interval",autonomyProbe==2},{"synthetic_camera_initialization",autonomyProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink only; no pathfinding or anatomical reach acceptance"}});
         if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",false}});
         if(populatedTerrain) {
