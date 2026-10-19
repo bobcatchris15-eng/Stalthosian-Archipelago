@@ -1,0 +1,47 @@
+{
+  "verdict": "accepted_working_draft",
+  "implementation_commit": "0863d5ddd306da26f62d14ff64c909aaf30dd903",
+  "scope": {
+    "graph_digest": "exterior helper -> retained population -> existing native registry/ledger; connected only",
+    "main_sha256": "214a23f24cfc5cb864a226b33d9e2ac3dacea95e1fb91b7e505127e4b1e8e9d6",
+    "helper_sha256": "c768060f30c353380995fae82b2aba1d1e5fb926fed14f5917035443fa67e1ba",
+    "base_digest": "2572a17"
+  },
+  "goal_alignment": {
+    "reason": "Four retained, ordinarily moving visible exterior residents populate the working meadow using existing graph and registry.",
+    "verdict": "advances_goal"
+  },
+  "findings": [
+    {
+      "severity": "observation",
+      "claim": "Independent helper probes passed original-eight complete actor-state preservation, graph preservation, unique/excluded IDs, 12-owner restore closure, dry/grade rejection and original input immutability.",
+      "evidence": "adversarial.cpp; adversarial.log"
+    },
+    {
+      "severity": "observation",
+      "claim": "Independent native-output verifier confirms exact old-eight initial snapshots versus previous native baseline, all 12 retained session owners, 89 graph-supported samples, all four new residents aging and moving.",
+      "evidence": "native-evidence-review.json; verify-native.ps1"
+    },
+    {
+      "severity": "limitation",
+      "claim": "Visible actors are proxies. Root/body ground support does not establish anatomical NPC foot contact. Coarse 192 m group activation, no new exterior resource anchors, connected saves unsupported; no multiregion claim.",
+      "evidence": "Actual screenshot and runtime telemetry"
+    },
+    {
+      "severity": "resolved",
+      "claim": "Initial finite creek mask query outside bounds failed; final callback uses creek mask inside its domain and rendered-height dry admission outside. Final native process succeeded.",
+      "evidence": "031044 failed run retained; 031208 final run"
+    }
+  ],
+  "effort": {
+    "probes_run": [
+      "Own compiled adversarial helper harness",
+      "Own native JSON verifier",
+      "Actual exterior capture visual inspection"
+    ],
+    "probes_attempted": [
+      "Focused bounded working-draft review only"
+    ]
+  },
+  "validation_debt": "Root integrated build/process proof is separate; no further source blockers found."
+}

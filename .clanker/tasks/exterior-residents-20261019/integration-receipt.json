@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "integrated_source": "1700c57",
+  "release_build_exit_code": 0,
+  "ctest": "43/43 passed2.49s",
+  "native_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261019-031551-2a94226c",
+  "camera_regression_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261019-031635-271c7111",
+  "camera_body_fixed_all12_no_reactions": true,
+  "original8_initial_states_exact": true,
+  "total_retained_actors": 12,
+  "original_session_owners_retained": true,
+  "new_residents": [
+    {
+      "id": 13385706790154129791,
+      "distance_m": 5.195674907123785,
+      "calendar_age_delta": 17.866832555446308
+    },
+    {
+      "id": 12326054023193623710,
+      "distance_m": 7.622518127715831,
+      "calendar_age_delta": 17.866832555446308
+    },
+    {
+      "id": 14296929078188075222,
+      "distance_m": 6.70114722547974,
+      "calendar_age_delta": 17.866832555446308
+    },
+    {
+      "id": 5869227390745579141,
+      "distance_m": 7.574431488366243,
+      "calendar_age_delta": 17.866832555446308
+    }
+  ],
+  "dry_route_grade_max": 0.32347404956817627,
+  "route_sample_count": 288,
+  "hero_rendered_support_fallbacks": 0,
+  "hero_root_ground_error_m": 4.7681169235147536e-07,
+  "npc_grounded_updates": 42672,
+  "npc_postengine_pose_checks": 42660,
+  "actual_exterior_capture_viewed": true,
+  "anatomical_npc_foot_contact_proven": false,
+  "next_subsystem": "ordinary hero foraging"
+}

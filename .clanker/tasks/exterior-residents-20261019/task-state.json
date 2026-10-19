@@ -3,7 +3,7 @@
   "task_id": "exterior-residents-20261019",
   "status": "complete",
   "base_revision": "2572a17",
-  "current_step": "working draft validated; root integration next",
+  "current_step": "root native working draft accepted; next ordinary hero foraging",
   "touched_artifacts": [
     "stalthos-runtime/domain/exterior_residents.hpp",
     "stalthos-runtime/engine/main.cpp",
@@ -11,5 +11,22 @@
     "stalthos-runtime/CMakeLists.txt",
     "stalthos-runtime/tests/exterior_residents.cpp"
   ],
-  "resume_instructions": "Bounded working draft; preserve original8 state and nonconnected habitat; no exterior resources/saveformat; native22s proof then commit"
+  "resume_instructions": "Bounded working draft; preserve original8 state and nonconnected habitat; no exterior resources/saveformat; native22s proof then commit",
+  "receipt_path": ".clanker/tasks/exterior-residents-20261019/integration-receipt.json",
+  "next_step": "ordinary hero foraging",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest43/43; ExteriorResidentsProbe22s; WildlifeCameraProbe6s; root assertions/view",
+    "evidence_path": ".clanker/tasks/exterior-residents-20261019/integration-receipt.json"
+  },
+  "completed_steps": [
+    "original8 full-state preserved",
+    "four deterministic exterior residents initialized on validated graph",
+    "native Release build and focused test passed",
+    "independent source/helper/native review accepted",
+    "root final Release CTest43/43 and22s exterior proof passed",
+    "root final camera-only regression passed",
+    "next foraging brief saved"
+  ],
+  "updated": "2026-10-19T08:18:12.108804+00:00"
 }

@@ -1,0 +1,1 @@
+Next subsystem: exterior-residents-20261019. Connected-only dry graph extension104-144m, original8 actor snapshots preserved, four new deterministic residents, existingregistry/support/ledger. No new exterior resource claims or save prereq. Native body observation/actual support/identity continuity required. Working awareness draft parked; no polish.

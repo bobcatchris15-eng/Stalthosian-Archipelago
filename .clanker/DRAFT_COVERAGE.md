@@ -11,15 +11,18 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Weather/body response | Working draft:calendar-driven overcast/wind and physical-time visible body wetting | Native rain emitter disabled after AV; no visible rain; shelter/comfort telemetry only |
 | Ordinary autonomous HERO drink | Working draft:body-local choice/normal approach, exact shared contact/relief, direct override and camera separation | Forage/rest/generalpathing, sensory detail and anatomy deferred |
 | Existing animal embodiment in connected world | Working draft:verified existing model/importer, changing animation, exterior support and embodied drink | Slow measured pace, juvenile/lifecycle mismatch, unresolved exterior sole, wet tint proxy-only; no full animal route proof |
-| Nearby wildlife awareness/avoidance | NEXT:visible bounded body-proximity reaction | Camera-only separation, retreat/resume native proof pending |
+| Nearby wildlife awareness/avoidance | Working draft:body notice/graph avoidance, withdrawal resume, camera-only separation | Horizontal radius/no occlusion; mid-edge finish, deadends noescape/contactpaused; proxyvisuals |
+| Exterior meadow residents | Working draft:dry connected graph, original8 plus4 live retained residents, native motion/support/view/identity proof | Coarse192m groupactivation, proxies, no localexteriorresources/multiregionsave |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
 its subsystem turn arrives or it blocks a working role. Do not spend repeated wakes
 polishing a passing subsystem while the full first draft still has missing domains.
 
-Latest handoff: tasks/connected-embodiment-20261018/next-task.md
+Latest handoff: tasks/exterior-residents-20261019/next-task.md
 Latest accepted receipts: connected-world-route-20261018/integration-receipt.json
 and weather-response-20261018/integration-receipt.json under tasks/.
 
 Latest additional accepted scopes: hero-autonomy-20261018 and connected-embodiment-20261018 receipts and independent review folders.
+
+Latest accepted receipts: wildlife-awareness-20261019 and exterior-residents-20261019, including independent review. NEXT: ordinary hero foraging, body-local eligible contact/visible shrub consequence and immediate direct override.

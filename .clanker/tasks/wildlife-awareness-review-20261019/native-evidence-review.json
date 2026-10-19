@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "approach_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\wildlife-awareness-20261019\\var\\reports\\runtime\\20261019-030440-9595fa10",
+  "camera_evidence": "E:\\Stalthosian Archipelago\\var\\worktrees\\wildlife-awareness-20261019\\var\\reports\\runtime\\20261019-030513-1294811b",
+  "approach_samples": 95,
+  "camera_samples": 21,
+  "watched_actor": "7923221262207566983",
+  "watched_notice_samples": 42,
+  "watched_avoid_samples": 1,
+  "watched_final_distance_travelled_m": 5.611462991961327,
+  "withdrawal_cleared_notice": true,
+  "all_actor_graph_error_m": 3.776586443654626E-14,
+  "exact_identity_and_session_owner_preservation": true,
+  "camera_body_fixed": true,
+  "camera_reaction_count": 0,
+  "max_camera_body_separation_m": 28.000000787700984,
+  "scope": "Independent actual domain/native graph/body/camera/ownership proof; proxy visuals reviewed separately, synthetic hero startup/input declared"
+}

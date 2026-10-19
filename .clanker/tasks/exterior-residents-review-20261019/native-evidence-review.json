@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "evidence": "E:/Stalthosian Archipelago/var/worktrees/exterior-residents-20261019/var/reports/runtime/20261019-031208-8de37e84",
+  "old_eight_native_initial_exact": true,
+  "retained_session_owners": true,
+  "samples": 89,
+  "all_actor_graph_error_m": 5.090099302843447E-13,
+  "new_residents": [
+    {
+      "id": "13385706790154129791",
+      "age_delta": 17.438569961028406,
+      "distance_m": 5.071136144667064
+    },
+    {
+      "id": "12326054023193623710",
+      "age_delta": 17.438569961028406,
+      "distance_m": 7.484653087212615
+    },
+    {
+      "id": "14296929078188075222",
+      "age_delta": 17.438569961028406,
+      "distance_m": 6.400885541832005
+    },
+    {
+      "id": "5869227390745579141",
+      "age_delta": 17.438569961028406,
+      "distance_m": 7.251603992918319
+    }
+  ],
+  "max_grade": 0.32347404956817627,
+  "terrain_fallbacks": 0,
+  "ground_error": 4.7667344915680587E-07,
+  "scope": "Independent inspection of worker native outputs, not independent process launch"
+}

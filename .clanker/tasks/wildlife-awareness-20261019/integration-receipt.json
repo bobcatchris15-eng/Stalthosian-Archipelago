@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "integrated_source": "2572a17",
+  "native_release_build_exit_code": 0,
+  "ctest": "42/42 passed3.66s",
+  "toolkit": "2073 passed2skipped511.07s; sourceunchanged",
+  "doctor": "ok true exit0",
+  "approach_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261019-030825-0167d7ad",
+  "camera_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261019-030904-7a916f70",
+  "notice_samples": 44,
+  "avoid_samples": 2,
+  "watched_distance_m": 5.661165900862923,
+  "withdrawal_cleared": true,
+  "camera_body_fixed_no_reactions": true,
+  "identities_and_session_owners_unchanged": true,
+  "scope": "workingdraft graphboundbodyawareness; no finalart/AI/FPS acceptance",
+  "next_subsystem": "exterior meadow retained residents"
+}

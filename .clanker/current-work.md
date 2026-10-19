@@ -28,7 +28,7 @@ Reviews: connected-world-route-review-20261018 and weather-response-review-20261
 ## Logged oddities; move on rather than polish these now
 
 Route sparse/proxy bodies, provisional rocks, foot offset on slopes, steep far
-flanks and no authored eastern end/island geography. No exterior retained fauna.
+flanks and no authored eastern end/island geography. Exterior residents added below; broader exterior ecology remains missing.
 Connected preview refuses save/load; existing original-watershed STL9 mode remains.
 Native rain emitter crashed on transition and is disabled in connected mode.
 Rainfall remains wetting input: NO visible rainfall claim. Overcast is lighting,
@@ -68,17 +68,52 @@ juvenile mesh/lifecycle mismatch, submerged water presentation, unresolved exter
 sole diagnostics and proxy-only wet material response remain rough draft limits.
 No full-art/anatomical-foot/full-draft/30FPS acceptance. Do not polish these now.
 
-## NEXT SUBSYSTEM: nearby wildlife awareness and avoidance
+## Working draft accepted: nearby wildlife awareness and avoidance
 
-Cold brief: .clanker/tasks/connected-embodiment-20261018/next-task.md
-Give nearby retained animals a visible bounded reaction to the actual hero body,
-using existing movement/support and preserving IDs/resource state. Camera-only
-movement must not trigger a body encounter. Reuse replaceable visuals, tune radii
-and response simply, prove approach/withdrawal in native view. No generalized AI,
-asset-polish or save-format prerequisite. Collect existing workers before dispatch.
+Integrated2572a17, final Release build passed; CTest42/42 passed3.66s. Final
+native22s actualbody approach/hold/reverse produced44notice/2comfort samples,
+watched actor moved5.6612m; withdrawal clearednotice. Camera-only6s fixedbody
+and allactors zero notice/avoid. Actual captures inspected: provisional NPCs.
+Existing graph movement/ID/sessionowners preserved. Independent no-context exact
+old/new checksum2816351399129714903 bytes1257 keys4; adversarial graphclosure,
+onsite orientation, trapped-contact suppression passed. Toolkit2073passed2skipped
+511.07s; actual doctorok exit0, no toolkit source changes.
+Receipt: .clanker/tasks/wildlife-awareness-20261019/integration-receipt.json
+Review: .clanker/tasks/wildlife-awareness-review-20261019/independent-review.json
+Logged: horizontal radius/no occlusion; in-flight finish hop; deadends cannot flee
+but feeding/drinking pause. No alarm/combat/generalAI/art/FPS acceptance. Move on.
 
-Preservation: prior untracked hashes retained except authorized graph cache marker;
-no source/planning/apps/history cleanup. Two local workers reused sequentially,
-peak2; four bounded implementation/review assignments total, no AGY/Jules. Explicit
-owned-path checkpoint, secret scan and reviewed origin main publication authorized;
-no force push/releases/deployment/paid APIs/credentials. Historical receipts remain.
+## Working draft accepted: exterior meadow residents
+
+Integrated1700c57. Connected-only sampled dry graph from watershed throughpass
+into104-144m meadow. Fournew creation-time residents, same registry/ledger/anchors;
+original8 initial snapshots EXACT unchanged,12unique retainedIDs and sessionowners.
+Independent helper/source/native review passed; no fakeexteriorfood/water anchors.
+Root finalRelease build passed; CTest43/43 passed2.49s. Final22swall nativeproof
+shows4residents moving5.196/7.623/6.701/7.574m and +17.8668simulationseconds each.
+288dryedge samples maxgrade.323474<.6. Hero renderedrooterror<4.8e-7m/fallback0;
+NPC42672groundedupdates/42660postengineposechecks and actual captures inspected.
+No numerical/anatomical NPCfeetacceptance. Final6s camera-only all12 no reactions.
+Receipt: .clanker/tasks/exterior-residents-20261019/integration-receipt.json
+Review: .clanker/tasks/exterior-residents-review-20261019/independent-review.json
+
+Logged: coarse192m bodygroupactivation, sparse proxy presentation, no local
+exterior resources/hydrology, long possible watershed resource trips, no separate
+regional activation or connected-preview save/load. Originalnonconnected habitat
+and saved mode remain. Initial out-ofbounds creek-mask construction failure is
+preserved; fixed only finite-mask guard. Working role met: move on, no polish.
+
+## NEXT SUBSYSTEM: ordinary hero foraging
+
+Cold brief: .clanker/tasks/exterior-residents-20261019/next-task.md
+Reuse NeedsCore suggestion, body-local food awareness, ordinary integration and
+eligible shrub interaction/sharedledger/visible resource consequence. Immediate
+direct override, camera-only no knowledge/food grant. No newAI/saveframework or
+asset/anatomy polish. Inspect actual current implementation before dispatch.
+
+Preserve unrelateddirty/untracked files, apps, readonlyplanning, immutableassets
+and historicalworktrees. Original135untracked hashes verified, only authorized
+cache/coordination changes. Earlierusage interruption preserved isolatedwork.
+This resumed wake03:03CDT Oct19: fourbounded implementation/review assignments,
+peak2local, noAGY/Jules. Explicitownedpaths/secret scan/graph refresh and reviewed
+main publication required. No force/releases/deploy/paidAPI/credentials.

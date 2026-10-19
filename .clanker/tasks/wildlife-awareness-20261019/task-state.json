@@ -3,7 +3,7 @@
   "task_id": "wildlife-awareness-20261019",
   "status": "complete",
   "base_revision": "f3c49a6",
-  "current_step": "validated working draft ready for root integration",
+  "current_step": "root integrated native role accepted, next exterior residents",
   "completed_steps": [
     "read contracts/checkpoint/next-task",
     "inspected route-bound population and sole registry ownership",
@@ -23,5 +23,12 @@
     "stalthos-runtime/CMakeLists.txt"
   ],
   "updated": "2026-10-19T00:00:31.743025-05:00",
-  "resume_instructions": "Bounded awareness only; graph-bound movement, no-context unchanged, no new save fields, camera never context. Native approach/withdrawal/camera proof required."
+  "resume_instructions": "Bounded awareness only; graph-bound movement, no-context unchanged, no new save fields, camera never context. Native approach/withdrawal/camera proof required.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest42/42; WildlifeAwarenessProbe22s; WildlifeCameraProbe6s",
+    "evidence_path": ".clanker/tasks/wildlife-awareness-20261019/integration-receipt.json"
+  },
+  "receipt_path": ".clanker/tasks/wildlife-awareness-20261019/integration-receipt.json",
+  "next_step": "exterior-residents-20261019"
 }
