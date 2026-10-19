@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "actor_count": 8,
+  "exact_initial_state_restored": true,
+  "full_snapshot_fields_verified": true,
+  "registry_owns_population": true,
+  "registry_owns_shared_ledger": true,
+  "exact_session_ownership_restored": true,
+  "exact_complete_ledger_restored": true,
+  "legacy_migration_verified": true,
+  "legacy_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-114441\\first.stl",
+  "first_run_traversal": false,
+  "resumed_motion": true,
+  "water_restore_abs_error": 0.0,
+  "water_consumption_abs_error": 2.4447249780124025E-11,
+  "ledger_cap_exhaustions": 0,
+  "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-200824-3d35c6ef",
+  "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-200830-1f0ea558",
+  "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-200824\\first.stl",
+  "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-200824\\second.stl"
+}

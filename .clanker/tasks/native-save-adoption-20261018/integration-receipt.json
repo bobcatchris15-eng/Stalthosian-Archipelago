@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "native_single_region_transaction_verified",
+  "implementation_commit": "6bdf5c14831e012ff5ecb02b2649c8a75453947b",
+  "root_reporting_fix": "one save_scope telemetry string corrected and final native rebuilt",
+  "executable_sha256": "13b4e3564301028b69f06a94837257204ad773a1f7b522b1c76378ee1c51fc00",
+  "native_release_build": "passed; final targeted Stalthos rebuild passed",
+  "ctest": "38/38 passed4.80s",
+  "toolkit": "2073 passed,2 skipped614.69s",
+  "doctor": "exit0; warnings/errors empty",
+  "legacy_migration_and_restart": {
+    "passed": true,
+    "actor_count": 8,
+    "exact_initial_state_restored": true,
+    "full_snapshot_fields_verified": true,
+    "registry_owns_population": true,
+    "registry_owns_shared_ledger": true,
+    "exact_session_ownership_restored": true,
+    "exact_complete_ledger_restored": true,
+    "legacy_migration_verified": true,
+    "legacy_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-114441\\first.stl",
+    "first_run_traversal": false,
+    "resumed_motion": true,
+    "water_restore_abs_error": 0.0,
+    "water_consumption_abs_error": 2.4447249780124025e-11,
+    "ledger_cap_exhaustions": 0,
+    "first_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-200824-3d35c6ef",
+    "second_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-200830-1f0ea558",
+    "first_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-200824\\first.stl",
+    "second_save": "E:\\Stalthosian Archipelago\\var\\reports\\population-continuation\\20261018-200824\\second.stl"
+  },
+  "native_rejected_loads": {
+    "passed": true,
+    "executable": "E:/Stalthosian Archipelago/var/build/stalthos-runtime/Release/Stalthos.exe",
+    "executable_sha256": "13B4E3564301028B69F06A94837257204AD773A1F7B522B1C76378EE1C51FC00",
+    "source_save": "E:/Stalthosian Archipelago/var/reports/population-continuation/20261018-200824/second.stl",
+    "source_sha256": "DB6E6C1D92793ADC1DF28F2FDC0E01C63238FFD9F1F2F7666F846E7F722E73EC",
+    "prior_destination_sha256": "DB6E6C1D92793ADC1DF28F2FDC0E01C63238FFD9F1F2F7666F846E7F722E73EC",
+    "cases": [
+      {
+        "case": "checksum",
+        "exit_code": 1,
+        "error": "STL9 checksum mismatch",
+        "destination_unchanged": true,
+        "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-20261018\\final-negative\\native-invalid-checksum-cdd2e61e"
+      },
+      {
+        "case": "configuration",
+        "exit_code": 1,
+        "error": "STL9 configuration or bounded payload lengths mismatch",
+        "destination_unchanged": true,
+        "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-20261018\\final-negative\\native-invalid-configuration-df3cd063"
+      },
+      {
+        "case": "payload-binding",
+        "exit_code": 1,
+        "error": "STL9 host/registry state mismatch",
+        "destination_unchanged": true,
+        "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-20261018\\final-negative\\native-invalid-payload-binding-a9fec3ef"
+      },
+      {
+        "case": "anchor",
+        "exit_code": 1,
+        "error": "regional continuation rejected by external immutable world",
+        "destination_unchanged": true,
+        "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-20261018\\final-negative\\native-invalid-anchor-3246652d"
+      },
+      {
+        "case": "habitat",
+        "exit_code": 1,
+        "error": "fauna snapshot habitat identity mismatch",
+        "destination_unchanged": true,
+        "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-20261018\\final-negative\\native-invalid-habitat-48098952"
+      }
+    ],
+    "scope": "Independent serialized actual native rejected-load processes; no positive continuation or visual acceptance claim"
+  },
+  "existing_destination": "disk-format-receipt.json generation1/2/3; actual same-file load/save replacement passed",
+  "independent_review": ".clanker/tasks/native-save-adoption-review-20261018/independent-review.json",
+  "successor": "Independent actual synthetic terminal native run passed; older executable hash pinned separately, final functional source unchanged",
+  "admission_policy": "Saved identities/species/quantities are validated declarations, not authenticated historical truth; external topology/anchors/kinds/catalog/capacities validate",
+  "limitations": [
+    "Only watershed1001, no exterior expansion or native two-region proof",
+    "Startup-only owner restoration, no hot reload",
+    "No power-loss durability, visuals/contact, natural-death gameplay, full draft or30FPS acceptance"
+  ],
+  "preservation": "Prior untracked hashes retained except graph built-at cache marker; no planning/apps/history cleanup",
+  "next_task": ".clanker\\tasks\\native-save-adoption-20261018\\next-task.md",
+  "dispatches": 2,
+  "followups": "one service-capacity retry; no new model override",
+  "max_concurrent_local_workers": 2,
+  "external_workers": 0,
+  "updated": "2026-10-19T01:09:46.853240+00:00"
+}

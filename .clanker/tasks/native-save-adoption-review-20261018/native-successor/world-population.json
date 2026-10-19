@@ -1,0 +1,1109 @@
+{
+  "activation_driver": "body",
+  "activation_radius_m": 192.0,
+  "activation_transitions": [],
+  "activity_frames_rest_travel_browse_drink": [
+    156,
+    168,
+    162,
+    162
+  ],
+  "actors_final": [
+    {
+      "activity": 1,
+      "age": 7313.4055169077765,
+      "alive": true,
+      "distance_m": 0.32270668202547803,
+      "fatigue": 0.2870275845388824,
+      "heading": -2.863292994584682,
+      "hunger": 0.22014055169077773,
+      "id": 14018087312298366251,
+      "species": "Thistletail",
+      "thirst": 0.25028110338155546,
+      "x": 8.961347301590479,
+      "y": 1.6109711630356538,
+      "z": 3.6897155555666754
+    },
+    {
+      "activity": 2,
+      "age": 5451.4055169077765,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.2870275845388824,
+      "heading": 0.0,
+      "hunger": 0.548032276329112,
+      "id": 7923221262207566983,
+      "species": "Brackenback",
+      "thirst": 0.25028110338155546,
+      "x": 24.680075646466765,
+      "y": 4.68920282082739,
+      "z": -9.21755226456785
+    },
+    {
+      "activity": 3,
+      "age": 8489.405516907776,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.2870275845388824,
+      "heading": 0.0,
+      "hunger": 0.22014055169077773,
+      "id": 3572998927451126612,
+      "species": "Smalltrotter",
+      "thirst": 0.5974700695660022,
+      "x": 5.05,
+      "y": 1.5242306143045423,
+      "z": -10.0
+    },
+    {
+      "activity": 1,
+      "age": 4752.4055169077765,
+      "alive": true,
+      "distance_m": 0.07139486937550828,
+      "fatigue": 0.6152241546931324,
+      "heading": -1.5707963267948966,
+      "hunger": 0.22014055169077773,
+      "id": 1618853389043787304,
+      "species": "Reedcrest",
+      "thirst": 0.25028110338155546,
+      "x": 12.978605829475931,
+      "y": 1.9096273245489899,
+      "z": -10.0
+    },
+    {
+      "activity": 1,
+      "age": 12962.405516907776,
+      "alive": true,
+      "distance_m": 0.3293126114920278,
+      "fatigue": 0.2870275845388824,
+      "heading": -2.8632929945846803,
+      "hunger": 0.22014055169077773,
+      "id": 17972536425935603851,
+      "species": "Reedcrest",
+      "thirst": 0.25028110338155546,
+      "x": 19.209535744084484,
+      "y": 2.0866181459055073,
+      "z": 10.683375104295614
+    },
+    {
+      "activity": 2,
+      "age": 12285.405516907776,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.2870275845388824,
+      "heading": 0.0,
+      "hunger": 0.548032276329112,
+      "id": 12970403487063342853,
+      "species": "Brackenback",
+      "thirst": 0.25028110338155546,
+      "x": 31.006753117486355,
+      "y": 7.350455473521552,
+      "z": -16.470171399727477
+    },
+    {
+      "activity": 3,
+      "age": 8156.4055169077765,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.2870275845388824,
+      "heading": 0.0,
+      "hunger": 0.22014055169077773,
+      "id": 16617070056963129605,
+      "species": "Smalltrotter",
+      "thirst": 0.5974700695660022,
+      "x": 7.3,
+      "y": 1.5172619700431822,
+      "z": -3.0
+    },
+    {
+      "activity": 1,
+      "age": 12397.405516907776,
+      "alive": true,
+      "distance_m": 0.09063239181530662,
+      "fatigue": 0.6152241546931324,
+      "heading": -0.7173158020923749,
+      "hunger": 0.22014055169077773,
+      "id": 7013657815600656815,
+      "species": "Reedcrest",
+      "thirst": 0.25028110338155546,
+      "x": 30.949329485982037,
+      "y": 7.326300805867287,
+      "z": -16.40434352552869
+    }
+  ],
+  "actors_initial": [
+    {
+      "activity": 1,
+      "age": 7312.70178940412,
+      "alive": true,
+      "distance_m": 0.16113084718596657,
+      "fatigue": 0.28350894702060053,
+      "heading": -2.863292994584682,
+      "hunger": 0.2200701789404121,
+      "id": 14018087312298366251,
+      "species": "Thistletail",
+      "thirst": 0.25014035788082417,
+      "x": 9.005734773415936,
+      "y": 1.61195552810632,
+      "z": 3.8450717069557894
+    },
+    {
+      "activity": 2,
+      "age": 5450.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.28350894702060053,
+      "heading": 0.0,
+      "hunger": 0.5490174948342317,
+      "id": 7923221262207566983,
+      "species": "Brackenback",
+      "thirst": 0.25014035788082417,
+      "x": 24.680075646466765,
+      "y": 4.68920282082739,
+      "z": -9.21755226456785
+    },
+    {
+      "activity": 3,
+      "age": 8488.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.28350894702060053,
+      "heading": 0.0,
+      "hunger": 0.2200701789404121,
+      "id": 3572998927451126612,
+      "species": "Smalltrotter",
+      "thirst": 0.5987367790725839,
+      "x": 5.05,
+      "y": 1.5242306143045423,
+      "z": -10.0
+    },
+    {
+      "activity": 0,
+      "age": 4751.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.6449105297939967,
+      "heading": 0.0,
+      "hunger": 0.2200701789404121,
+      "id": 1618853389043787304,
+      "species": "Reedcrest",
+      "thirst": 0.25014035788082417,
+      "x": 13.05,
+      "y": 1.9093114316463469,
+      "z": -10.0
+    },
+    {
+      "activity": 1,
+      "age": 12961.70178940412,
+      "alive": true,
+      "distance_m": 0.16442925738533085,
+      "fatigue": 0.28350894702060053,
+      "heading": -2.8632929945846817,
+      "hunger": 0.2200701789404121,
+      "id": 17972536425935603851,
+      "species": "Reedcrest",
+      "thirst": 0.25014035788082417,
+      "x": 19.254830243662056,
+      "y": 2.0883300286940067,
+      "z": 10.841905852817177
+    },
+    {
+      "activity": 2,
+      "age": 12284.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.28350894702060053,
+      "heading": 0.0,
+      "hunger": 0.5490174948342317,
+      "id": 12970403487063342853,
+      "species": "Brackenback",
+      "thirst": 0.25014035788082417,
+      "x": 31.006753117486355,
+      "y": 7.350455473521552,
+      "z": -16.470171399727477
+    },
+    {
+      "activity": 3,
+      "age": 8155.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.28350894702060053,
+      "heading": 0.0,
+      "hunger": 0.2200701789404121,
+      "id": 16617070056963129605,
+      "species": "Smalltrotter",
+      "thirst": 0.5987367790725839,
+      "x": 7.3,
+      "y": 1.5172619700431822,
+      "z": -3.0
+    },
+    {
+      "activity": 0,
+      "age": 12396.70178940412,
+      "alive": true,
+      "distance_m": 0.0,
+      "fatigue": 0.6449105297939967,
+      "heading": 0.0,
+      "hunger": 0.2200701789404121,
+      "id": 7013657815600656815,
+      "species": "Reedcrest",
+      "thirst": 0.25014035788082417,
+      "x": 31.006753117486355,
+      "y": 7.350455473521552,
+      "z": -16.470171399727477
+    }
+  ],
+  "camera_drives_simulation": false,
+  "dormant_calendar_seconds": 0.0,
+  "dormant_frames": 0,
+  "dormant_intervals": [],
+  "dormant_model": "retained route and pose; elapsed age/needs only; no resource contact",
+  "dormant_physical_seconds": 0.0,
+  "food_consumed": 0.021111825109692305,
+  "frame_time_measured": false,
+  "grounded_actor_updates": 656,
+  "habitat_sites": [
+    {
+      "browse": false,
+      "freshwater": true,
+      "neighbors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "x": 5.05,
+      "y": 1.5242306143045423,
+      "z": -10.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "x": 9.05,
+      "y": 1.9270099580287932,
+      "z": -10.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        8
+      ],
+      "x": 13.05,
+      "y": 1.9093114316463469,
+      "z": -10.0
+    },
+    {
+      "browse": false,
+      "freshwater": true,
+      "neighbors": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10
+      ],
+      "x": 7.3,
+      "y": 1.5172619700431822,
+      "z": -3.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        8
+      ],
+      "x": 11.3,
+      "y": 1.9265413105487825,
+      "z": -3.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        8
+      ],
+      "x": 15.3,
+      "y": 1.9388592123985289,
+      "z": -3.0
+    },
+    {
+      "browse": false,
+      "freshwater": true,
+      "neighbors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        9,
+        10,
+        11,
+        12
+      ],
+      "x": 9.05,
+      "y": 1.6129371821880345,
+      "z": 4.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        10,
+        11,
+        12
+      ],
+      "x": 13.05,
+      "y": 1.9772620379924772,
+      "z": 4.0
+    },
+    {
+      "browse": true,
+      "freshwater": false,
+      "neighbors": [
+        1,
+        2,
+        4,
+        5,
+        9,
+        13
+      ],
+      "x": 24.680075646466765,
+      "y": 4.68920282082739,
+      "z": -9.21755226456785
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        10,
+        11,
+        12,
+        14,
+        8
+      ],
+      "x": 17.05,
+      "y": 1.9858391374349593,
+      "z": 4.0
+    },
+    {
+      "browse": false,
+      "freshwater": true,
+      "neighbors": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        11,
+        12
+      ],
+      "x": 11.3,
+      "y": 1.670428910851479,
+      "z": 11.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        12,
+        15
+      ],
+      "x": 15.3,
+      "y": 2.1190403580665587,
+      "z": 11.0
+    },
+    {
+      "browse": false,
+      "freshwater": false,
+      "neighbors": [
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        15,
+        14
+      ],
+      "x": 19.3,
+      "y": 2.0900371968746185,
+      "z": 11.0
+    },
+    {
+      "browse": true,
+      "freshwater": false,
+      "neighbors": [
+        8
+      ],
+      "x": 31.006753117486355,
+      "y": 7.350455473521552,
+      "z": -16.470171399727477
+    },
+    {
+      "browse": true,
+      "freshwater": false,
+      "neighbors": [
+        9,
+        12
+      ],
+      "x": 31.768035595176237,
+      "y": 4.9723943589120045,
+      "z": 8.269819801310737
+    },
+    {
+      "browse": true,
+      "freshwater": false,
+      "neighbors": [
+        11,
+        12
+      ],
+      "x": 22.77001125296695,
+      "y": 2.1575734937808053,
+      "z": 22.755840838177125
+    }
+  ],
+  "hidden_object_checks": 0,
+  "meshes_best_effort": true,
+  "needs_relief_requires_accepted_contact": true,
+  "physical_active_final": true,
+  "physical_active_initial": true,
+  "population_persisted": true,
+  "population_persistence_supported": true,
+  "population_restored": true,
+  "pose_matrix_checks": 648,
+  "region": 1001,
+  "regional_save_supported": false,
+  "registry_capacity": {
+    "history_reserved": 256,
+    "individuals": 8,
+    "regions": 1,
+    "resources_reserved": 4096
+  },
+  "registry_owns_population": true,
+  "registry_owns_shared_ledger": true,
+  "resource_contact_events": 324,
+  "resource_history_available": 252,
+  "resource_history_limit": 256,
+  "resource_history_rejections": 0,
+  "resource_history_used": 4,
+  "resource_ledger_final": {
+    "resources": [
+      {
+        "consumed_quantity": 0.028110338155529484,
+        "id": 100,
+        "initial_quantity": 1000000.0,
+        "kind": 1
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 200,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 201,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0210827536166471,
+        "id": 202,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 203,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 204,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0210827536166471,
+        "id": 205,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 206,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 207,
+        "initial_quantity": 2.0,
+        "kind": 0
+      }
+    ],
+    "sessions": [
+      {
+        "amount": 0.0210827536166471,
+        "resource_id": 202,
+        "session_id": 2
+      },
+      {
+        "amount": 0.014055169077764737,
+        "resource_id": 100,
+        "session_id": 3
+      },
+      {
+        "amount": 0.0210827536166471,
+        "resource_id": 205,
+        "session_id": 6
+      },
+      {
+        "amount": 0.014055169077764737,
+        "resource_id": 100,
+        "session_id": 7
+      }
+    ]
+  },
+  "resource_ledger_initial": {
+    "resources": [
+      {
+        "consumed_quantity": 0.014035788082401267,
+        "id": 100,
+        "initial_quantity": 1000000.0,
+        "kind": 1
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 200,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 201,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.010526841061800948,
+        "id": 202,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 203,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 204,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.010526841061800948,
+        "id": 205,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 206,
+        "initial_quantity": 2.0,
+        "kind": 0
+      },
+      {
+        "consumed_quantity": 0.0,
+        "id": 207,
+        "initial_quantity": 2.0,
+        "kind": 0
+      }
+    ],
+    "sessions": [
+      {
+        "amount": 0.010526841061800948,
+        "resource_id": 202,
+        "session_id": 2
+      },
+      {
+        "amount": 0.007017894041200635,
+        "resource_id": 100,
+        "session_id": 3
+      },
+      {
+        "amount": 0.010526841061800948,
+        "resource_id": 205,
+        "session_id": 6
+      },
+      {
+        "amount": 0.007017894041200635,
+        "resource_id": 100,
+        "session_id": 7
+      }
+    ]
+  },
+  "resource_sessions_final": [
+    [
+      1618853389043787304,
+      4
+    ],
+    [
+      3572998927451126612,
+      3
+    ],
+    [
+      7013657815600656815,
+      8
+    ],
+    [
+      7923221262207566983,
+      2
+    ],
+    [
+      12970403487063342853,
+      6
+    ],
+    [
+      14018087312298366251,
+      1
+    ],
+    [
+      16617070056963129605,
+      7
+    ],
+    [
+      17972536425935603851,
+      5
+    ]
+  ],
+  "resource_sessions_initial": [
+    [
+      1618853389043787304,
+      4
+    ],
+    [
+      3572998927451126612,
+      3
+    ],
+    [
+      7013657815600656815,
+      8
+    ],
+    [
+      7923221262207566983,
+      2
+    ],
+    [
+      12970403487063342853,
+      6
+    ],
+    [
+      14018087312298366251,
+      1
+    ],
+    [
+      16617070056963129605,
+      7
+    ],
+    [
+      17972536425935603851,
+      5
+    ]
+  ],
+  "resources_use_shared_persisted_ledger": true,
+  "schema_version": 2,
+  "simulation_frames": 81,
+  "skin_matrix_checks": 0,
+  "snapshot_final": {
+    "actors": [
+      {
+        "activity": 1,
+        "age": 7313.4055169077765,
+        "distance_m": 0.32270668202547803,
+        "fatigue": 0.2870275845388824,
+        "heading": -2.863292994584682,
+        "hunger": 0.22014055169077773,
+        "id": 14018087312298366251,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 6,
+        "species": 3,
+        "stage": 2,
+        "target": 0,
+        "thirst": 0.25028110338155546,
+        "x": 8.961347301590479,
+        "y": 1.6109711630356538,
+        "z": 3.6897155555666754
+      },
+      {
+        "activity": 2,
+        "age": 5451.4055169077765,
+        "distance_m": 0.0,
+        "fatigue": 0.2870275845388824,
+        "heading": 0.0,
+        "hunger": 0.548032276329112,
+        "id": 7923221262207566983,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 8,
+        "species": 1,
+        "stage": 2,
+        "target": 8,
+        "thirst": 0.25028110338155546,
+        "x": 24.680075646466765,
+        "y": 4.68920282082739,
+        "z": -9.21755226456785
+      },
+      {
+        "activity": 3,
+        "age": 8489.405516907776,
+        "distance_m": 0.0,
+        "fatigue": 0.2870275845388824,
+        "heading": 0.0,
+        "hunger": 0.22014055169077773,
+        "id": 3572998927451126612,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 0,
+        "species": 0,
+        "stage": 2,
+        "target": 0,
+        "thirst": 0.5974700695660022,
+        "x": 5.05,
+        "y": 1.5242306143045423,
+        "z": -10.0
+      },
+      {
+        "activity": 1,
+        "age": 4752.4055169077765,
+        "distance_m": 0.07139486937550828,
+        "fatigue": 0.6152241546931324,
+        "heading": -1.5707963267948966,
+        "hunger": 0.22014055169077773,
+        "id": 1618853389043787304,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 2,
+        "species": 2,
+        "stage": 2,
+        "target": 1,
+        "thirst": 0.25028110338155546,
+        "x": 12.978605829475931,
+        "y": 1.9096273245489899,
+        "z": -10.0
+      },
+      {
+        "activity": 1,
+        "age": 12962.405516907776,
+        "distance_m": 0.3293126114920278,
+        "fatigue": 0.2870275845388824,
+        "heading": -2.8632929945846803,
+        "hunger": 0.22014055169077773,
+        "id": 17972536425935603851,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 12,
+        "species": 2,
+        "stage": 2,
+        "target": 5,
+        "thirst": 0.25028110338155546,
+        "x": 19.209535744084484,
+        "y": 2.0866181459055073,
+        "z": 10.683375104295614
+      },
+      {
+        "activity": 2,
+        "age": 12285.405516907776,
+        "distance_m": 0.0,
+        "fatigue": 0.2870275845388824,
+        "heading": 0.0,
+        "hunger": 0.548032276329112,
+        "id": 12970403487063342853,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 13,
+        "species": 1,
+        "stage": 2,
+        "target": 13,
+        "thirst": 0.25028110338155546,
+        "x": 31.006753117486355,
+        "y": 7.350455473521552,
+        "z": -16.470171399727477
+      },
+      {
+        "activity": 3,
+        "age": 8156.4055169077765,
+        "distance_m": 0.0,
+        "fatigue": 0.2870275845388824,
+        "heading": 0.0,
+        "hunger": 0.22014055169077773,
+        "id": 16617070056963129605,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 3,
+        "species": 0,
+        "stage": 2,
+        "target": 3,
+        "thirst": 0.5974700695660022,
+        "x": 7.3,
+        "y": 1.5172619700431822,
+        "z": -3.0
+      },
+      {
+        "activity": 1,
+        "age": 12397.405516907776,
+        "distance_m": 0.09063239181530662,
+        "fatigue": 0.6152241546931324,
+        "heading": -0.7173158020923749,
+        "hunger": 0.22014055169077773,
+        "id": 7013657815600656815,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 13,
+        "species": 2,
+        "stage": 2,
+        "target": 8,
+        "thirst": 0.25028110338155546,
+        "x": 30.949329485982037,
+        "y": 7.326300805867287,
+        "z": -16.40434352552869
+      }
+    ],
+    "habitat_signature": 6489859816375510053,
+    "region": 1001,
+    "seed": 42
+  },
+  "snapshot_initial": {
+    "actors": [
+      {
+        "activity": 1,
+        "age": 7312.70178940412,
+        "distance_m": 0.16113084718596657,
+        "fatigue": 0.28350894702060053,
+        "heading": -2.863292994584682,
+        "hunger": 0.2200701789404121,
+        "id": 14018087312298366251,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 6,
+        "species": 3,
+        "stage": 2,
+        "target": 0,
+        "thirst": 0.25014035788082417,
+        "x": 9.005734773415936,
+        "y": 1.61195552810632,
+        "z": 3.8450717069557894
+      },
+      {
+        "activity": 2,
+        "age": 5450.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.28350894702060053,
+        "heading": 0.0,
+        "hunger": 0.5490174948342317,
+        "id": 7923221262207566983,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 8,
+        "species": 1,
+        "stage": 2,
+        "target": 8,
+        "thirst": 0.25014035788082417,
+        "x": 24.680075646466765,
+        "y": 4.68920282082739,
+        "z": -9.21755226456785
+      },
+      {
+        "activity": 3,
+        "age": 8488.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.28350894702060053,
+        "heading": 0.0,
+        "hunger": 0.2200701789404121,
+        "id": 3572998927451126612,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 0,
+        "species": 0,
+        "stage": 2,
+        "target": 0,
+        "thirst": 0.5987367790725839,
+        "x": 5.05,
+        "y": 1.5242306143045423,
+        "z": -10.0
+      },
+      {
+        "activity": 0,
+        "age": 4751.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.6449105297939967,
+        "heading": 0.0,
+        "hunger": 0.2200701789404121,
+        "id": 1618853389043787304,
+        "injury": 0.0,
+        "is_resting": true,
+        "site": 2,
+        "species": 2,
+        "stage": 2,
+        "target": 2,
+        "thirst": 0.25014035788082417,
+        "x": 13.05,
+        "y": 1.9093114316463469,
+        "z": -10.0
+      },
+      {
+        "activity": 1,
+        "age": 12961.70178940412,
+        "distance_m": 0.16442925738533085,
+        "fatigue": 0.28350894702060053,
+        "heading": -2.8632929945846817,
+        "hunger": 0.2200701789404121,
+        "id": 17972536425935603851,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 12,
+        "species": 2,
+        "stage": 2,
+        "target": 5,
+        "thirst": 0.25014035788082417,
+        "x": 19.254830243662056,
+        "y": 2.0883300286940067,
+        "z": 10.841905852817177
+      },
+      {
+        "activity": 2,
+        "age": 12284.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.28350894702060053,
+        "heading": 0.0,
+        "hunger": 0.5490174948342317,
+        "id": 12970403487063342853,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 13,
+        "species": 1,
+        "stage": 2,
+        "target": 13,
+        "thirst": 0.25014035788082417,
+        "x": 31.006753117486355,
+        "y": 7.350455473521552,
+        "z": -16.470171399727477
+      },
+      {
+        "activity": 3,
+        "age": 8155.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.28350894702060053,
+        "heading": 0.0,
+        "hunger": 0.2200701789404121,
+        "id": 16617070056963129605,
+        "injury": 0.0,
+        "is_resting": false,
+        "site": 3,
+        "species": 0,
+        "stage": 2,
+        "target": 3,
+        "thirst": 0.5987367790725839,
+        "x": 7.3,
+        "y": 1.5172619700431822,
+        "z": -3.0
+      },
+      {
+        "activity": 0,
+        "age": 12396.70178940412,
+        "distance_m": 0.0,
+        "fatigue": 0.6449105297939967,
+        "heading": 0.0,
+        "hunger": 0.2200701789404121,
+        "id": 7013657815600656815,
+        "injury": 0.0,
+        "is_resting": true,
+        "site": 13,
+        "species": 2,
+        "stage": 2,
+        "target": 13,
+        "thirst": 0.25014035788082417,
+        "x": 31.006753117486355,
+        "y": 7.350455473521552,
+        "z": -16.470171399727477
+      }
+    ],
+    "habitat_signature": 6489859816375510053,
+    "region": 1001,
+    "seed": 42
+  },
+  "visible_object_checks": 4536,
+  "water_consumed": 0.014074550073128203,
+  "world_seed": 42
+}

@@ -1,0 +1,44 @@
+{
+  "scope": {
+    "graph_digest": "not computed; bounded direct persistence and native integration review",
+    "base_digest": "8140d41; reviewed worker commit1820d73b828f3de1c890359f916abd03e2b6f994",
+    "artifacts": [
+      "engine/native_save.hpp sha25667807c8be76d16d431eeb7a628562c89dd9c20e9877d09f69cc3e9bdda9c5d8a",
+      "engine/native_population_registry.hpp sha25604d0711bb75088e9914529caff80e5f7d47c25590090b9e5658e5b5a960b270b",
+      "engine/main.cpp sha256ec328ca0f663251cb4e42d2db5101d44f653af79056e0ee28640965ad93be3a4",
+      "domain/host_save.hpp sha25619e27d37c8f71bc5d36f7ea5bca80a17733c6c03b51f12f971ecb2fb2e8f8b4a",
+      ".clanker/tasks/native-save-adoption-review-20261018/adversarial.cpp",
+      ".clanker/tasks/native-save-adoption-review-20261018/adversarial.log",
+      ".clanker/tasks/native-save-adoption-review-20261018/native-negative-receipt.json",
+      ".clanker/tasks/native-save-adoption-review-20261018/native-successor-receipt.json"
+    ]
+  },
+  "goal_alignment": {"verdict":"advances_partially","drift":[]},
+  "findings": [
+    {
+      "severity":"observation",
+      "claim":"Approved save-declared admission policy preserves legal historical individuals/resources without claiming authentication. External topology/anchors/catalog/kind/capacity checks remain independent.",
+      "evidence":"design-review.md records proposal approved by root. Own adversarial harness accepts custom Longstride IDs, noncanonical quantities, extra ledger resources/history and empty populations; altered anchor/habitat/reservation/nonpopulated restoration rejects with complete previous owner bytes unchanged. Final design doc rewrites obsolete independent historical species proof as historical finding."
+    },
+    {
+      "severity":"observation",
+      "claim":"Initially drafted whole-owner restore overwrote explicit successor selection; reviewed correction reapplies validated explicit successor after complete owner assignment. Actual native process and independently decoded resulting STL9 confirm correction.",
+      "evidence":"native-successor-receipt.json: native exit0, successor2, dead hero1 retained, generation1 to2; mutate.exe --verify-successor independently decoded saved successor.stl and verified hero2/dead1/eight animals. Fixture is valid synthetic terminal state derived from actual native save, not evidence of natural death gameplay."
+    },
+    {
+      "severity":"minor",
+      "claim":"Tested native runtime telemetry save_scope still contains legacy optional STL6 wording despite STL9 adoption; coordinator/worker notified for final reporting correction.",
+      "evidence":"native-successor/runtime-receipt.json save_scope property. Functional native_save_format is STL9 and actual file decodes as STL9."
+    }
+  ],
+  "unproven_claims":[],
+  "validation_debt":[
+    "Root owns final integrated build/regression and historical STL8 migration positive proof. Reviewer directly ran isolated candidate executable sha256d3b3224ea60516ffbd5f25d77279c78bc11978611c0ef401def6e83afd4b5a0f; final source adds reporting-only edits after that build.",
+    "Native adoption remains one region with startup-only restoration; no live hot reload, exterior habitat gameplay, two-region departure/dormancy/return, authentication/antirollback, power-loss durability, visual/contact acceptance or target hardware FPS established."
+  ],
+  "asks":[],
+  "effort":{
+    "probes_run":14,
+    "attempted":"Reviewed prior foundation/state and admission design before code; discussed impossibility of independent arbitrary historical individual proof and approved explicit declarations policy. Read exact native/helper/codec diffs. Compiled own admission harness MSVC C++17 /W4 /WX, exit0 on seven independent acceptance/rejection cases. Built own invalid/terminal fixture generator. After explicit worker GPU release, serialized five actual native rejected-load processes: checksum, config, mismatched host/registry payload, external anchor and habitat signature. Every process exited1 with expected typed failure and no success receipt; existing destination and source save byte hashes unchanged. Native-negative-receipt pins exact executable/source hashes and failure paths. Ran actual native terminal-STL9 plus explicit successor process exit0, checked runtime death truth and independently decoded saved STL9 hero2/dead1/eight animals. GPU released after each batch. Reviewed final docs and source hashes."
+  }
+}

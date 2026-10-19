@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "native_exit_code": 0,
+  "fixture": "Valid synthetic terminal STL9 derived from actual native first save; this is explicit successor transition evidence, not natural-death gameplay",
+  "source_executable_sha256": "D3B3224EA60516FFBD5F25D77279C78BC11978611C0EF401DEF6E83AFD4B5A0F",
+  "successor_id": 2,
+  "prior_dead_hero_id": 1,
+  "prior_death_preserved": true,
+  "saved_prior_death_preserved": true,
+  "loaded_generation": 1,
+  "saved_generation": 2,
+  "actual_saved_container_decoded": "hero2/dead1/eight animals verified by mutate.exe --verify-successor",
+  "saved_sha256": "C56F8AD56718F3EE2F36A6C45B3EF2A8CF2D2C734E831F40D7AF88DCF042DA24",
+  "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-successor"
+}

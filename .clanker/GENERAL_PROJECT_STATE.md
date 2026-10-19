@@ -1,84 +1,55 @@
-## Session continuation — STL9 library foundation, 2026-10-18
-
-Construction reminder moved in place to hourly heartbeat in chat
-01a1516c-ac8c-7b33-b6bc-35202236a598. Orchestrator resumed from durable state.
-
-Integrated f8230f6 adds a bounded STL9 transaction library, legacy stream codecs,
-external admitted-registry validation, detached owner construction, Windows
-single-file replacement and lossy multiregion STL8 export refusal. Independent
-review of exact integrated files passed; worker Windows Release CTest37/37 passed.
-Root integration regression evidence is recorded in the integration receipt.
-
-This is a library foundation only: native main/adapter remain unchanged and saves
-still use the earlier STL8 path. Native adoption was withdrawn after independent
-review reproduced a saved-derived species admission baseline bypass. Arbitrary
-legal legacy saves must remain supported; resolve trusted admission provenance
-before wiring whole-owner native restoration. No native STL9 restart, expanded
-habitats, power-loss durability or performance acceptance follows.
-
-Receipt: .clanker/tasks/native-regional-save-20261018/receipt.json
-Review: .clanker/tasks/native-regional-save-review-20261018/independent-review.json
-Next: .clanker/tasks/native-regional-save-20261018/next-task.md
-
 # Current world construction checkpoint - 2026-10-18
 
 Priority: world, simulations, systems and populations. Wicked Engine selected.
 Meshes/assets remain replaceable; individual creature polish stays off path.
+Hourly heartbeat targets this chat; no HALT or blocking human asks observed.
 
-## Validated native original-watershed registry ownership
+## Verified native single-file original-watershed saves
 
-The Wicked host transfers the original eight animals, complete shared ledger and
-explicit saved actor/session mappings into RegionalPopulationRegistry authority.
-The bootstrap ledger is destroyed. NPC contacts, hero bookkeeping, telemetry and
-STL8 capture use the same owner. Shared creek100 has multiple rendered-ground
-bank anchors with one depletion/history authority. Hero sessions cannot alias
-NPC owners and grant no NPC relief. Registry and STLR anchor validation remain
-bounded by reserved slots and unique site/resource kind.
+Native populated saves now use one STL9 host+regional transaction. Original eight,
+complete shared ledger/history and explicit actor/session ownership remain under
+registry authority. Nonpopulated modes retain STL8 writes; STL1-STL8 reads remain.
+Startup validates detached clock/world/registry ownership against external habitat,
+anchors, required resource kinds, supported catalog and limits before the first
+simulation/contact tick. Native load explicitly permits only watershed1001.
+Saved individual identities/species/quantities are validated declarations, not
+historically authenticated truth; arbitrary legal legacy imports remain supported.
+Checksum/generation do not provide authentication or anti-rollback guarantees.
 
-Final pinned Wicked Release build passed; final CTest36/36 passed3.54s. Toolkit
-2073 passed,2 skipped in606.84s; doctor exit0 with no warnings/errors. Independent
-adversarial review passed after finding and fixing legal empty legacy population
-rejection. Empty legacy stays empty; ordinary empty exterior admission is denied.
-Dead actor owners, empty-history owners, unbound hero keys, full256-key exhaustion,
-invalid quantities, dormancy, reload and shared-anchor archive closure are tested.
+Final native Release build passed. Integrated CTest38/38 passed4.80s; toolkit
+2073 passed,2 skipped614.69s; doctor exit0 with no warnings/errors. Final actual
+historical STL8 migration and STL9 restart preserve all8 full snapshots, full
+ledger/history and actor/session ownership, then resume movement and water use.
+Disk headers verify STL9 generations1/2/3; native load/save over the same existing
+Windows destination passed. Five actual malformed native loads reject at checksum,
+config, payload binding, anchors and habitat boundaries with prior destination
+bytes unchanged and no success receipt. Independent synthetic terminal native run
+preserves selected hero2, dead hero1 and all8 animals; not natural-death gameplay.
 
-Native old STL8 migration preserved all8 full snapshots/signature and sessions;
-independent actual disk decode matched all9 resources,4 history keys and8 mappings
-against initial migrated telemetry. Final native restart matched full population,
-complete ledger/history and ownership exactly, resumed movement/water consumption,
-zero cap exhaustion. Shared-contact diagnostic consumed hero0.5 plus NPC0.1290168041
-water, combined0.6290168041 with1.33e-15 ledger error; complete state matched restart.
-This exercised normal eligibility/consumption paths with synthetic diagnostic
-input, not manual interaction or physical mouth-to-water acceptance.
+Receipt: .clanker/tasks/native-save-adoption-20261018/integration-receipt.json
+Review: .clanker/tasks/native-save-adoption-review-20261018/independent-review.json
+Next: .clanker/tasks/native-save-adoption-20261018/next-task.md
+Design: stalthos-runtime/docs/host-regional-save-design.md
 
-Receipt: .clanker/tasks/native-registry-host-20261018/integration-receipt.json
-Review: .clanker/tasks/native-registry-host-20261018/independent-review.json
-Next: .clanker/tasks/native-registry-host-20261018/next-task.md
-Design: stalthos-runtime/docs/host-regional-save-design.md (PROPOSED, not implemented)
+## Next construction and limits
 
-## Next concrete construction and limits
+The legacy adapter reserves all4096 resources/256 history keys. Implement explicit
+bounded reservation migration preserving every resource/key/owner and imported
+floor; full history must fail expansion honestly. Then add real exterior rendered
+habitats/resources, bounds/border ownership and physical links. Extend the native
+single-region admission only with coherent full registry continuation and native
+two-region departure/dormancy/away-save/return/depletion proof. Camera prewarm must
+not activate physical populations or grant HeroSim knowledge. Terrain streaming/
+stitching remains unfinished; coarse capacities are not retained individuals.
+No hot reload, power-loss durability, anatomical water contact, final visuals,
+full-draft completion or target-hardware30FPS acceptance. Prior native frame shows
+proxy cubes, sparse foliage and enclosing terrain; asset polish stays off path.
 
-Native saves still use STL8 for one watershed. STLR is a bounded companion library,
-not a paired or coherent native regional save. Implement one transactional host
-container with preserved STL1-STL8 import, exact payload binding, detached restore,
-Windows existing-save replacement/failure tests and no lossy multiregion export.
-The adapter currently reserves all4096 resources/256 history keys. Exterior
-admission requires explicit reservation migration preserving every key and owner;
-full histories must fail expansion honestly. Then add actual exterior rendered
-habitats/resources, region bounds/border ownership and physical links with native
-two-region departure/dormancy/return/depletion/save proof. Coarse capacities are
-not retained animals. Terrain streaming/stitching remains unfinished.
+## Preservation and handoff
 
-Viewed native frame shows proxy cubes partly in creek water, sparse foliage and
-steep enclosing terrain. No final visuals, anatomical contact, full-draft or
-30FPS acceptance. Keep world construction ahead of asset polish.
-
-## Preservation
-
-No HALT. All87 preexisting manifest files retain hashes; three own runtime lock files were released. No planning/source/app or
-historical-worktree cleanup. Chat interruption stopped initial processes and left
-some partially written NUL files; reconstructed owned changes, then parser/NUL
-checks, builds and runtime proofs passed. Three agent dispatches plus two recovery/
-fix followups, peak2 local workers, zeroAGY/Jules and no old patch retrieval.
-No outstanding workers. Explicit staging, credential pattern scan and reviewed
-origin main publication; no force push, releases, deployment or credentials.
+Prior untracked hashes retained except authorized graph cache revision marker.
+No planning/source assets, open applications or historical-worktree cleanup.
+Two local bounded workers, peak2, zeroAGY/Jules; both finished. Durable task and
+review evidence retained. Explicit staging and credential pattern scan required
+for checkpoint; reviewed origin main publication authorized, no force push,
+release, deployment, paid APIs or credential mutation.

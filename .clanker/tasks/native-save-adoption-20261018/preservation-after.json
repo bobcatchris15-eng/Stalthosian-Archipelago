@@ -1,0 +1,10 @@
+{
+  "differences": [
+    {
+      "path": ".clanker/graph/built-at-rev",
+      "state": "changed"
+    }
+  ],
+  "checked": "2026-10-19T01:07:07.6211574Z",
+  "allowed_change": ".clanker/graph/built-at-rev"
+}

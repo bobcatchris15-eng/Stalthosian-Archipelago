@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "executable": "E:/Stalthosian Archipelago/var/worktrees/native-save-adoption-20261018/var/build/stalthos-runtime/Release/Stalthos.exe",
+  "executable_sha256": "D3B3224EA60516FFBD5F25D77279C78BC11978611C0EF401DEF6E83AFD4B5A0F",
+  "source_save": "E:/Stalthosian Archipelago/var/worktrees/native-save-adoption-20261018/var/reports/population-continuation/20261018-195855/first.stl",
+  "source_sha256": "BB28FCF293BD70679B44DCE1A6091373687489F326D211EF2A6AAA463C2A664F",
+  "prior_destination_sha256": "BB28FCF293BD70679B44DCE1A6091373687489F326D211EF2A6AAA463C2A664F",
+  "cases": [
+    {
+      "case": "checksum",
+      "exit_code": 1,
+      "error": "STL9 checksum mismatch",
+      "destination_unchanged": true,
+      "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-invalid-checksum-b5b6a957"
+    },
+    {
+      "case": "configuration",
+      "exit_code": 1,
+      "error": "STL9 configuration or bounded payload lengths mismatch",
+      "destination_unchanged": true,
+      "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-invalid-configuration-767a7ef7"
+    },
+    {
+      "case": "payload-binding",
+      "exit_code": 1,
+      "error": "STL9 host/registry state mismatch",
+      "destination_unchanged": true,
+      "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-invalid-payload-binding-7d5a17bd"
+    },
+    {
+      "case": "anchor",
+      "exit_code": 1,
+      "error": "regional continuation rejected by external immutable world",
+      "destination_unchanged": true,
+      "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-invalid-anchor-71c3dfef"
+    },
+    {
+      "case": "habitat",
+      "exit_code": 1,
+      "error": "fauna snapshot habitat identity mismatch",
+      "destination_unchanged": true,
+      "evidence": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-save-adoption-review-20261018\\native-invalid-habitat-881c1afc"
+    }
+  ],
+  "scope": "Independent serialized actual native rejected-load processes; no positive continuation or visual acceptance claim"
+}

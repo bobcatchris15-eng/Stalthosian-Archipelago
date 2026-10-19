@@ -1,0 +1,401 @@
+{
+  "files": [
+    {
+      "sha256": "FCDABDBE74B4E1F367ECE0353A116FC691B17457E367EC8F7A76CC0ED66FBBF4",
+      "path": ".clanker/graph/baseline.digest"
+    },
+    {
+      "sha256": "3C18836FE44BB30C05DE5826F5FB69586BB1F2C87FCC5CBE77BC254417DE3600",
+      "path": ".clanker/graph/baseline.json"
+    },
+    {
+      "sha256": "10D79A2483A0655777660BDE4D7DF63973306471D8C9ADBEF80FDA20C6EFD3DB",
+      "path": ".clanker/graph/built-at-rev"
+    },
+    {
+      "sha256": "01BA4719C80B6FE911B091A7C05124B64EEECE964E09C058EF8F9805DACA546B",
+      "path": ".clanker/locks/slot-1/owner_pid"
+    },
+    {
+      "sha256": "2D150EB974FF4BD4C968CD8DD0D702D2EE551805E2979E2CBC5E97BAC37CDDFA",
+      "path": ".clanker/locks/slot-1/started"
+    },
+    {
+      "sha256": "D8CB5427014AB35B1D91427857C397AA0464B7D65EBCAEA08EDDAE22AD3150D5",
+      "path": ".clanker/locks/slot-1/task"
+    },
+    {
+      "sha256": "01BA4719C80B6FE911B091A7C05124B64EEECE964E09C058EF8F9805DACA546B",
+      "path": ".clanker/locks/slot-2/owner_pid"
+    },
+    {
+      "sha256": "2D150EB974FF4BD4C968CD8DD0D702D2EE551805E2979E2CBC5E97BAC37CDDFA",
+      "path": ".clanker/locks/slot-2/started"
+    },
+    {
+      "sha256": "DC7342038291201F79E9DB3E9FDC0AF67E009AFDC40C0787E86DBBC9B2FFCC9A",
+      "path": ".clanker/locks/slot-2/task"
+    },
+    {
+      "sha256": "AB2B17851E46E2C3E7865154577DA8B918101B9DA412AB6CB32DE07B8A04B83F",
+      "path": ".clanker/tasks/agy-bristle-coherence-validation/process-result.json"
+    },
+    {
+      "sha256": "6259BAF53223A767951002269793BCAA77B3CB830DBA022FED75D1BCC44213A4",
+      "path": ".clanker/tasks/agy-bristle-validation-resume/process-result.json"
+    },
+    {
+      "sha256": "4B2E6BB447C9B1E891D75BBDE59F8F49EA0CFA2AB2B85B22E757DEA857BA5DFB",
+      "path": ".clanker/tasks/agy-contact-shading/process-result.json"
+    },
+    {
+      "sha256": "6B8FEC577C822EE56F04CFCA00257A4816396F7269581EB5B3AA9CE664609FC3",
+      "path": ".clanker/tasks/agy-creature-surfacing/process-result.json"
+    },
+    {
+      "sha256": "5FF02DCD742AA2719D69C190E95D7CEC1FD0AAE54BBDF2E65085F8B2DE5E5861",
+      "path": ".clanker/tasks/agy-crossfade-evidence-review/brief.md"
+    },
+    {
+      "sha256": "A709BC6B5CB047343EC32917285D882A67D0D80B5FD288AFF8CB9AF761679244",
+      "path": ".clanker/tasks/agy-crossfade-evidence-review/launch.json"
+    },
+    {
+      "sha256": "1A26DAB646F33BF7D6CEE790A4370F94254FCE1E2A9C22B4AFA0A2B5E136BEC6",
+      "path": ".clanker/tasks/agy-crossfade-evidence-review/process-result.json"
+    },
+    {
+      "sha256": "4C0CC29C4FA3EF199DF860FBD5A5A264D6BC6B63B76AC84D72FD883777F34D58",
+      "path": ".clanker/tasks/agy-environment-palette/process-result.json"
+    },
+    {
+      "sha256": "D0CC3307EF61D15B4E8E9D52EA0D5D76F1D81FAA23F2A9DF904D15A35E623643",
+      "path": ".clanker/tasks/agy-habitat-dressing/process-result.json"
+    },
+    {
+      "sha256": "B8FB9DC81ED852162602BF1EBF969300C04D63DF71A109C20B632B2AC4923C5F",
+      "path": ".clanker/tasks/agy-native-animation-crossfade/process-result.json"
+    },
+    {
+      "sha256": "6969D5895240ACFFAC8400D69572DD9FA2181440F6AD19452625D1CFF0AA61F0",
+      "path": ".clanker/tasks/agy-needle-spray-evidence-review/brief.md"
+    },
+    {
+      "sha256": "5ED08DD0580ABD27A3FBDAD6E1E8376BD609E6F48154F0810FB692676768EED7",
+      "path": ".clanker/tasks/agy-needle-spray-evidence-review/launch.json"
+    },
+    {
+      "sha256": "6BD97206B77E63C3DA3F1E0AB39E369F2BD2BD916FC3F9E6EDDB0012AD46846C",
+      "path": ".clanker/tasks/agy-needle-spray-evidence-review/process-result.json"
+    },
+    {
+      "sha256": "6C515C547B3B6B384A5B0776BA5B40C6D04753AF4F4DC28C45343CA5DEC0A000",
+      "path": ".clanker/tasks/agy-plant-stage-correction/brief.md"
+    },
+    {
+      "sha256": "3C5AFBB5B9F92F83E43AD7A01D90AA708A61C8BF2E7231C28561E54F9104E3F2",
+      "path": ".clanker/tasks/agy-plant-stage-correction/launch.json"
+    },
+    {
+      "sha256": "55ECF2F67A78F1CB16D7CB21A70E93D27B942B63E12CCB961B48E537AC8F8600",
+      "path": ".clanker/tasks/agy-plant-stage-correction/process-result.json"
+    },
+    {
+      "sha256": "C15E0CE925607196DDA4E7AA879BBB1903BF46A65B706C8C2DE7ACC24AC4C46A",
+      "path": ".clanker/tasks/agy-rendered-ground-parity/process-result.json"
+    },
+    {
+      "sha256": "9CA30B85230578FA074B979C023F5A1C464911317F99C30ED11F7B71F91F4D67",
+      "path": ".clanker/tasks/agy-rendered-ground-support/process-result.json"
+    },
+    {
+      "sha256": "9DA7693936616488F9F3BFC091D3C17353BFD9A6AF7A3C2141BC65C0356104F9",
+      "path": ".clanker/tasks/agy-smalltrotter-exact-seam-repair/brief.md"
+    },
+    {
+      "sha256": "00BDBD59B9545BB79B23EDC8C60E4FFEB81B5C464D1299098BF034C5BAE7344E",
+      "path": ".clanker/tasks/agy-smalltrotter-exact-seam-repair/launch.json"
+    },
+    {
+      "sha256": "557ACB5E8950DBAF8C5EA7E98D26BB3B7F07E4D0FF17EAD17662D82F99364597",
+      "path": ".clanker/tasks/agy-smalltrotter-exact-seam-repair/process-result.json"
+    },
+    {
+      "sha256": "4C591FAF5B1F2745EEDDA02B000CB25290180DF49CDE82E28808D1805D52D1B2",
+      "path": ".clanker/tasks/agy-smalltrotter-seam-diagnosis/process-result.json"
+    },
+    {
+      "sha256": "0A6522647FB16379BD3C4077CCC0188FD76D0545D13B47DB876C83355871BE1C",
+      "path": ".clanker/tasks/agy-splitcrown-bake-readiness/brief.md"
+    },
+    {
+      "sha256": "0DED58D19B1FF4F5C96FB0859B41011D68747262B40802034136A4E1F220A17B",
+      "path": ".clanker/tasks/agy-splitcrown-bake-readiness/launch.json"
+    },
+    {
+      "sha256": "9485F77884E1B8D7904ACC86657D0DA0BCFFEE4A9D006375B2A33EF2BC1F5908",
+      "path": ".clanker/tasks/agy-splitcrown-bake-readiness/process-result.json"
+    },
+    {
+      "sha256": "127FE41C874413BF0515FAD0257BD67586E5ED15E1A9B59D77F8C4B8CF6DBE04",
+      "path": ".clanker/tasks/agy-splitcrown-needle-sprays/process-result.json"
+    },
+    {
+      "sha256": "DB823A7BBEFC71B7444775D60578D29591C2EE5CCE0C05BFCE38BDD6E7178570",
+      "path": ".clanker/tasks/agy-splitcrown-reference/process-result.json"
+    },
+    {
+      "sha256": "E07C6DC6071E2B2BECFD87224EEC1FE99CD7218949CCB18B2C4E640A8B86F955",
+      "path": ".clanker/tasks/agy-splitcrown-sapling-baked-stage/pid.txt"
+    },
+    {
+      "sha256": "015D891C6F43E7847E88E50E268C6F11CCBB7D53F9FC098F9779098963E5A408",
+      "path": ".clanker/tasks/agy-splitcrown-young_adult-baked-stage/pid.txt"
+    },
+    {
+      "sha256": "8FA33241506C5D1C45A2646B2BDB5EF1260836A4EAA5D4C3A1CFD1A64C82BF28",
+      "path": ".clanker/tasks/agy-woodland-host/process-result.json"
+    },
+    {
+      "sha256": "85681873C8F7924A7CC6DDC18E12A28AEBAB90C12E076CAEB3B30B9A25CC40DD",
+      "path": ".clanker/tasks/agy-woodland-stand-review/process-result.json"
+    },
+    {
+      "sha256": "8BF92FB0160A36AD80C910AA9FB2FA8A21C91E006E1E6F8D3102C6A5A17B78EE",
+      "path": ".clanker/tasks/agy-woodland-transform-review/brief.md"
+    },
+    {
+      "sha256": "2B6BF2AD981A37C83C968C7D6947460B018AD133ED675078757D2E4F0A3286F4",
+      "path": ".clanker/tasks/agy-woodland-transform-review/launch.json"
+    },
+    {
+      "sha256": "E62FAFD29857608A29957682615B4E033E9B78708E0493CACB8FD791A7F8F375",
+      "path": ".clanker/tasks/agy-woodland-transform-review/process-result.json"
+    },
+    {
+      "sha256": "0AA2418CDACD49D5532A600EE2C8482515A2819C86136C3949175B2F54A97AC7",
+      "path": ".clanker/tasks/creature-pose-revision/task-state.json"
+    },
+    {
+      "sha256": "9EC5CF3BE4A876DDAB9BD546DF7CC3C401B203A7DE64C1E5C391DD95577FBAF3",
+      "path": ".clanker/tasks/fauna-continuation-20261017/root-state-before-integration.json"
+    },
+    {
+      "sha256": "700EEDA47DBB4E18C4502E049D2C08EE3693584B333BB33800DFD6608418A98F",
+      "path": ".clanker/tasks/luna-lod-fix/focused-tests.log"
+    },
+    {
+      "sha256": "0B4F931DB13E2C5C9EA79788A106F710E326E65DCD123E717DCAB9EBF7C27131",
+      "path": ".clanker/tasks/native-regional-save-review-20261018/adversarial.exe"
+    },
+    {
+      "sha256": "4DFF3E4D31EB536AC52F8338C55DC9BCD360BCC96EE95DDC908B973F00560817",
+      "path": ".clanker/tasks/native-regional-save-review-20261018/adversarial.obj"
+    },
+    {
+      "sha256": "26FA02C09F8D2D3D29EC88389C0D7F4999546426B2C5743E2A7408437971C7FC",
+      "path": ".clanker/tasks/native-regional-save-review-20261018/readonly-save.stl"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-1-events.jsonl"
+    },
+    {
+      "sha256": "98073A064AE4086A3B14C752AE616010CCB2B70ADD4F6393454BD1003EDD78D1",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-1-launch.json"
+    },
+    {
+      "sha256": "21C12CFB1303830CFB914FBEDFBD8B508D9663B4E5A8FA5D86498682B9F55E25",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-1-process-result.json"
+    },
+    {
+      "sha256": "AFC12520D4429B071DEB5FE44FE74D56BA69D2A5BDCBC6ACAEEBB6AFB9552094",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-1-stderr.log"
+    },
+    {
+      "sha256": "2EC3113FBE9ECD2DC5C84B2F728ECFE39F42662AE89530195543C7410DDA95CD",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-2-events.jsonl"
+    },
+    {
+      "sha256": "D8996C17F181ED086622AA8AD25A7C4C85696F76D1B63C9435302C1FACF25938",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-2-launch.json"
+    },
+    {
+      "sha256": "98435B5EF978FA4CF8B8E5A5E1B440DDE9AEA351429882DF547537FB89656CA2",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-2-process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-2-stderr.log"
+    },
+    {
+      "sha256": "4F6AF1D2CA50BB654BEADF3A44F0376D648516B28BF616340DB76FEE6A7B7544",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-3-events.jsonl"
+    },
+    {
+      "sha256": "5A483F0DB0E16ADA7406663A776A1D8A5B1DE2B4C7900B84CF40F58F0D137C3A",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-3-launch.json"
+    },
+    {
+      "sha256": "00E9EDAF2E83968C9CEB4B45667011223784F3E815589B01DAFDA9F6655F766D",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-3-process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-3-stderr.log"
+    },
+    {
+      "sha256": "23D750DFB0F7665803B5E82D5581C2170DE0BC3AC41246EAD68A85AC9A29F357",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-4-events.jsonl"
+    },
+    {
+      "sha256": "58966E90C066D65910B383E25AF6BEC19D158729F1B2115C0B886AD0C3FA42F4",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-4-launch.json"
+    },
+    {
+      "sha256": "83AFB4C50FE6E5C8922DF00387248BEE7E28499252C9DA4DA3C2FD9B315C1F93",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-4-process-result.json"
+    },
+    {
+      "sha256": "F0760EC9CA2C715830652127129C659F1A672895139EA4EA9614625BE6FC478D",
+      "path": ".clanker/tasks/opencode-engine-review/attempt-4-stderr.log"
+    },
+    {
+      "sha256": "A6795582CAAFA7C3A6C0E6DB165BD7E77A18E328EDB46F5C0C5B58C7E892B66C",
+      "path": ".clanker/tasks/opencode-engine-review/events.jsonl"
+    },
+    {
+      "sha256": "A468E5AB871436EFD8F95516FFC02927EFE67D7435DA55AA5218A2189CD42321",
+      "path": ".clanker/tasks/opencode-engine-review/launch.json"
+    },
+    {
+      "sha256": "A211EF4A2FC6EA802B79FD0D1BF134AB658CE3650F63CE797A832ACA92D6BA1B",
+      "path": ".clanker/tasks/opencode-engine-review/process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-engine-review/stderr.log"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-1-events.jsonl"
+    },
+    {
+      "sha256": "615736E15DA0B08BB79A1FE59703AD19570755DC39B98B44F860E525572C1F37",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-1-launch.json"
+    },
+    {
+      "sha256": "205BFCE8A4DB21CA730178BB71D84C2B95628C11CC661005BB5F78FCCA6F5259",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-1-process-result.json"
+    },
+    {
+      "sha256": "AFC12520D4429B071DEB5FE44FE74D56BA69D2A5BDCBC6ACAEEBB6AFB9552094",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-1-stderr.log"
+    },
+    {
+      "sha256": "37CAE8489605D942F61DBCC91C816B998CC6A42FC1EB5498E5210A6A0C6CB3C5",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-2-events.jsonl"
+    },
+    {
+      "sha256": "798A3B14072BEB98B177DD1C40033359254D85D308D2DB5AA0DEC73FCF405FE5",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-2-launch.json"
+    },
+    {
+      "sha256": "41A829FE21DDF80DD0A49BDB0FF926DC1D158E3E5AD5932151406E5260788C93",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-2-process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-2-stderr.log"
+    },
+    {
+      "sha256": "CDD3C55D839BB7A33524F24A15AF66B5A5EEE52680071486D331E8E0E6E3DE9B",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-3-events.jsonl"
+    },
+    {
+      "sha256": "AEB2035C1B200C79F0C1AED82E368166E99D588D1A85634402F3BEAB65B541C3",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-3-launch.json"
+    },
+    {
+      "sha256": "C6066607DD39CDF5C927E6DDD6D9B4B35433F97CEBFD55EB3DA506C779F2B740",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-3-process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-3-stderr.log"
+    },
+    {
+      "sha256": "F614B7F75E0937FEA4F73B4380BC705FA63FA8A2178852E047679715D7116F52",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-4-events.jsonl"
+    },
+    {
+      "sha256": "38B31F119CC7BC7D9492342E994FBC4EBCC0B1C51DD3468AD71C80779ABDACDC",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-4-launch.json"
+    },
+    {
+      "sha256": "37C35E97D26345BACDE197CF02F1A567C05E1C93FAD55385219DD48DD5A1EFAF",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-4-process-result.json"
+    },
+    {
+      "sha256": "5B9676A5AAC7357D0DC42231609F4E7EAB9D1EE3166F9B5FA79A1494D1FE2CFE",
+      "path": ".clanker/tasks/opencode-lod-review/attempt-4-stderr.log"
+    },
+    {
+      "sha256": "E458D53981DF9D78789B7C95A4FFCD4F23BCA14D0A8D10898E053ABD5CEE9927",
+      "path": ".clanker/tasks/opencode-lod-review/events.jsonl"
+    },
+    {
+      "sha256": "6C39B7C14F2CB019C401D07420D218F85AA39C32A1D12BB254F6CFFDB620E3D9",
+      "path": ".clanker/tasks/opencode-lod-review/launch.json"
+    },
+    {
+      "sha256": "7224EF52177E3A3B00917537BBAAC8ADBEC823DDC960AF8B40789D07C70ECD26",
+      "path": ".clanker/tasks/opencode-lod-review/process-result.json"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/opencode-lod-review/stderr.log"
+    },
+    {
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "path": ".clanker/tasks/orchestrator-session-20261018/domain-build.log"
+    },
+    {
+      "sha256": "CF70C4709E6AEE67FA3ABC4779F76DDAB85D8D134889569D358A58C74FF0B396",
+      "path": ".clanker/tasks/population-activation-20261018/preservation-before.json"
+    },
+    {
+      "sha256": "A0D19F42E3537A134BD53ED2D5967E2635AD20D3F619EA7E0F1F2973C02BF17C",
+      "path": ".clanker/tasks/regional-contact-20261018/preservation-before.json"
+    },
+    {
+      "sha256": "4F51BE136BB489124AFE521E99510C3D6E7A0FF2CD9455A618D1CC52AA458334",
+      "path": ".clanker/tasks/regional-legacy-import-20261018/preservation-before.json"
+    },
+    {
+      "sha256": "01AA7C97DFA413E301A85D1BC1E2A6B45585683A5D425DE620CA04F03636688F",
+      "path": ".clanker/tasks/shared-resource-anchors-20261018/preservation-before.json"
+    },
+    {
+      "sha256": "7B491080B789CE9819FB5B3866601928DB67174C98C984CF9F4C2FFBE28284D6",
+      "path": ".clanker/tasks/shared-resource-anchors-20261018/task-state.json"
+    },
+    {
+      "sha256": "DD59D82B8A16580500D641C447EC9989BADD34FB48336B8EEFC626E46D09E63A",
+      "path": "header_probe.obj"
+    },
+    {
+      "sha256": "9EB3F5629296C58D1B2D5848E7A3DE048EACAEC7ACBE3C06D8EAF0C0397DB677",
+      "path": "lifecycle.obj"
+    },
+    {
+      "sha256": "B248C28E3CD083E144A1AD5A34DD91071BCAFBC6929AA14ABF18E4F8E220E0EF",
+      "path": "smalltrotter-build-status.json"
+    },
+    {
+      "sha256": "814E07AA95C0C0369BCB0A33D7101EE8CF2C4F4D3B5209A1F14AE868EC7DEE9F",
+      "path": "test_lifecycle_compat.sav"
+    }
+  ],
+  "head": "8140d41d1e60823314cd444d33d77fef5148ddf3"
+}

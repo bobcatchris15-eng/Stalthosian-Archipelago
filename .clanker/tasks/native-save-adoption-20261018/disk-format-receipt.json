@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "file": "var\\reports\\population-continuation\\20261018-200824\\first.stl",
+      "magic": "STL9",
+      "generation": 1,
+      "sha256": "98bf5a89aca52882fdf5162bae7050ed7607f4c518adcf1065051f3a32be93a3"
+    },
+    {
+      "file": "var\\reports\\population-continuation\\20261018-200824\\second.stl",
+      "magic": "STL9",
+      "generation": 2,
+      "sha256": "db6e6c1d92793adc1df28f2fdc0e01c63238ffd9f1f2f7666f846e7f722e73ec"
+    },
+    {
+      "file": "var\\reports\\population-continuation\\20261018-200824\\same-file.stl",
+      "magic": "STL9",
+      "generation": 3,
+      "sha256": "2030d4d5e808e0794076414ce26af75ba5b3d9f85b024e143934803cde091090"
+    }
+  ],
+  "existing_destination_native_overwrite": true,
+  "evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261018-200846-16b06c0a",
+  "format_telemetry_correct": true
+}
