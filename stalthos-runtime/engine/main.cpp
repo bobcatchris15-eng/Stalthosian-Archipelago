@@ -184,7 +184,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned autonomyProbe=0,wildlifeProbe=0;
+    unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -196,6 +196,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-foraging-probe") {foragingProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-foraging-override-probe") {foragingProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-foraging-camera-probe") {foragingProbe=3;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-probe") {autonomyProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-override-probe") {autonomyProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-autonomy-camera-probe") {autonomyProbe=3;connectedWorld=true;populatedWorld=true;}
@@ -246,6 +249,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(foragingProbe && (plant.empty() || interactive || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)) throw std::runtime_error("foraging probe requires imported Plant and no other diagnostic");
         if(wildlifeProbe && (interactive || autonomyProbe || connectedRouteWalk || weatherPreview || connectedEmbodimentProbe || !creature.empty())) throw std::runtime_error("wildlife probe uses bounded connected proxy input and no other diagnostic");
         if(autonomyProbe && (interactive || connectedRouteWalk || weatherPreview || diagnosticCamera)) throw std::runtime_error("hero autonomy probe requires timed connected world with no other diagnostic");
         if(weatherPreview && (interactive || connectedRouteWalk || duration<6)) throw std::runtime_error("weather preview requires timed connected world, duration at least6s and no route walk");
@@ -341,6 +345,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         needs.emplace(heroSpecies);
         if (loadedNeeds && loadedNeeds->species == heroSpecies)
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
+        if(foragingProbe) needs->restoreState(.8,0,0,0,false);
         if(autonomyProbe) needs->restoreState(0,.8,0,0,false); // Explicit synthetic need setup only.
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
         stalthos::InteractionsCore interactions(256);
@@ -581,6 +586,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 applyShrubVisual(inst, it->second);
             }
         }
+        stalthos::Vec3 foragingAnchor{};
+        if(foragingProbe) {
+            if(!importedInstances || cachedShrubs.empty()) throw std::runtime_error("foraging probe imported shrub missing");
+            bool placed=false;for(const auto& shrub:cachedShrubs) {if(placed)break;for(int k=0;k<72;++k){const double a=k*6.283185307179586/72,r=foragingProbe==3?28:8,gx=shrub.x+r*std::sin(a),gz=shrub.z+r*std::cos(a);if(!landscape.inBounds(gx,gz)||landscape.waterContains(gx,gz))continue;bool valid=true;if(foragingProbe==3){for(const auto& other:cachedShrubs)if(std::hypot(gx-other.x,gz-other.z)<26)valid=false;}else {double previous=Ground(float(gx),float(gz));for(int step=1;step<=32;++step){double f=double(step)/32,sx=gx+(shrub.x-gx)*f,sz=gz+(shrub.z-gz)*f,y=Ground(float(sx),float(sz));if(landscape.waterContains(sx,sz)||std::abs(y-previous)>.15)valid=false;previous=y;}}if(valid){x=float(gx);z=float(gz);yaw=float(std::atan2(shrub.x-gx,shrub.z-gz));foragingAnchor={shrub.x,shrub.y,shrub.z};placed=true;break;}}}if(!placed)throw std::runtime_error("no dry foraging startup fixture");
+        }
         bool creatureLoaded=false;
         size_t creatureMeshes=0, creatureSkins=0, creatureAnimations=0, creatureChannels=0;
         size_t removedActorRootTranslationChannels=0;
@@ -715,6 +725,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
         stalthos::domain::DrinkAction autonomyAction;
+        bool autonomyBrowsing=false;uint64_t autonomyResource=100;
         json autonomySamples=json::array(),autonomyContacts=json::array(),autonomyCaptures=json::array();
         std::array<bool,3> autonomyCaptured{};
         unsigned previousInteractionOwner=0;
@@ -1000,6 +1011,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
             state.detachedAnchor=wildlifeAnchor;viewController.setState(state);
         }
+        if(foragingProbe==3) {auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor=foragingAnchor;viewController.setState(state);}
         if(autonomyProbe==3) {
             auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
             const double creek=8*std::sin(z/43.0)+2*std::sin(z/17.0);state.detachedAnchor={creek,Ground(float(creek),z),z};viewController.setState(state);
@@ -1134,7 +1146,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     activeTransitionPhaseIndex = targetPhaseIndex;
                 }
             }
-            syntheticDirect=autonomyProbe==2 && elapsed>=2 && elapsed<4;
+            syntheticDirect=(autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4;
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
             bool userWalk = (userSteering && down('W')) || wildlifeForward;
             bool userReverse = (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
@@ -1163,7 +1175,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(heroAutonomyEnabled && heroAlive) {
                 std::optional<stalthos::Vec3> water;
                 if(landscape.inBounds(x,z)) {const double creek=8*std::sin(z/43.0)+2*std::sin(z/17.0);water=stalthos::Vec3{creek,Ground(float(creek),z),z};}
-                autonomyAction=heroAutonomy.update(heroIntent,*needs,{x,Ground(x,z),z},yaw,timeStep.physicalSeconds,directInput,water,getResourceRemaining(100)>0,eligibilityWater);
+                                autonomyBrowsing=needs->suggestActivity()==stalthos::needs::SuggestedActivity::Eat;autonomyResource=100;
+                if(autonomyBrowsing) {
+                    std::optional<stalthos::Vec3> food;double nearest=24*24;bool eligible=false;
+                    for(std::size_t i=0;i<cachedShrubs.size() && i<shrubVisualInstances.size();++i){const auto& p=cachedShrubs[i];const double dx=p.x-x,dy=p.y-Ground(x,z),dz=p.z-z,d=dx*dx+dy*dy+dz*dz;if(getResourceRemaining(200+i)>0 && d<nearest){nearest=d;food=stalthos::Vec3{p.x,p.y,p.z};autonomyResource=200+i;eligible=std::abs(dy)<=1.5 && dx*dx+dz*dz<4;}}
+                    autonomyAction=heroAutonomy.update(heroIntent,*needs,{x,Ground(x,z),z},yaw,timeStep.physicalSeconds,directInput,food,food.has_value(),eligible,stalthos::needs::SuggestedActivity::Eat,autonomyResource);
+                } else autonomyAction=heroAutonomy.update(heroIntent,*needs,{x,Ground(x,z),z},yaw,timeStep.physicalSeconds,directInput,water,getResourceRemaining(100)>0,eligibilityWater);
                 yaw+=float(autonomyAction.turn);
             }
             float speed = 0.f;
@@ -1172,7 +1189,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             const bool forwardIntent = diagnosticWalk || (diagnosticNeeds && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) || (diagnosticTransition && activeTransitionPhaseIndex == 1) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2) || autonomyAction.forward;
             const bool reverseIntent = diagnosticReverseWalk || (diagnosticTransition && activeTransitionPhaseIndex == 3) || (!forwardIntent && userReverse);
             if(heroAutonomyEnabled && elapsed>=nextAutonomySample) {
-                autonomySamples.push_back({{"elapsed",elapsed},{"dt",dt},{"body_x",x},{"body_z",z},{"thirst",needs->thirst()},{"direct",directInput},{"synthetic_direct",syntheticDirect},{"auto_forward",autonomyAction.forward},{"auto_contact",autonomyAction.contact},{"auto_active",autonomyAction.active},{"body_attention",heroIntent.perception.attention().has_value()},{"authority",unsigned(heroIntent.authority())},{"target_x",heroIntent.goal()?heroIntent.goal()->target.x:0},{"target_z",heroIntent.goal()?heroIntent.goal()->target.z:0},{"camera_target_x",cameraOut.cameraState.target.x},{"camera_target_z",cameraOut.cameraState.target.z}});
+                autonomySamples.push_back({{"elapsed",elapsed},{"dt",dt},{"body_x",x},{"body_z",z},{"thirst",needs->thirst()},{"hunger",needs->hunger()},{"browse",autonomyBrowsing},{"resource",autonomyResource},{"direct",directInput},{"synthetic_direct",syntheticDirect},{"auto_forward",autonomyAction.forward},{"auto_contact",autonomyAction.contact},{"auto_active",autonomyAction.active},{"body_attention",heroIntent.perception.attention().has_value()},{"authority",unsigned(heroIntent.authority())},{"target_x",heroIntent.goal()?heroIntent.goal()->target.x:0},{"target_z",heroIntent.goal()?heroIntent.goal()->target.z:0},{"camera_target_x",cameraOut.cameraState.target.x},{"camera_target_z",cameraOut.cameraState.target.z}});
                 nextAutonomySample=elapsed+.1;
             }
             if (heroAlive && creatureLoaded) {
@@ -1821,7 +1838,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             eligibilityShrub = false;
             int nearbyShrubIndex = -1;
             for (size_t i = 0; !plant.empty() && importedInstances > 0 && i < cachedShrubs.size(); i++) {
-                if (heroAlive && bodyInLandscape && std::abs(cachedShrubs[i].y - bodyPos.y) <= 1.5 && distanceToPlant(cachedShrubs[i], bodyPos.x, bodyPos.z) < 4.0) { // 2m horizontal reach and bounded vertical reach
+                if (heroAlive && bodyInLandscape && (!autonomyAction.contact || !autonomyBrowsing || autonomyResource==200+i) && std::abs(cachedShrubs[i].y - bodyPos.y) <= 1.5 && distanceToPlant(cachedShrubs[i], bodyPos.x, bodyPos.z) < 4.0) { // 2m horizontal reach and bounded vertical reach
                     eligibilityShrub = true;
                     nearbyShrubIndex = static_cast<int>(i);
                     break;
@@ -1851,7 +1868,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
 
-            const bool autoInteract=heroAutonomyEnabled && autonomyAction.contact && !directInput && eligibilityWater;
+            const bool autoInteract=heroAutonomyEnabled && autonomyAction.contact && !directInput && (autonomyBrowsing?eligibilityShrub:eligibilityWater);
             bool interactDown = down('E') || tryInteract || autoInteract;
             const unsigned interactionOwner=down('E')?1:autoInteract?2:tryInteract?3:0;
             if (heroAlive && interactDown) {
@@ -1862,7 +1879,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     interactions.beginSession(physicalInteractionSession);
                 }
 
-                if (eligibilityWater) {
+                if (eligibilityWater && (!autoInteract || !autonomyBrowsing)) {
                     double drinkAmount = 0.5;
                     double available = getResourceRemaining(100);
                     double actualDrink = std::min(drinkAmount, available);
@@ -1886,7 +1903,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     }
                 }
 
-                if (eligibilityShrub && nearbyShrubIndex >= 0) {
+                if (eligibilityShrub && nearbyShrubIndex >= 0 && (!autoInteract || (autonomyBrowsing && autonomyResource==200+uint64_t(nearbyShrubIndex)))) {
                     double feedAmount = 0.5;
                     uint64_t shrubId = 200 + nearbyShrubIndex;
                     double available = getResourceRemaining(shrubId);
@@ -1900,7 +1917,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                 }
                                 double dummyResource = available;
                                 if (interactions.applyContact(physicalInteractionSession, shrubId, eligibilityShrub, actualFeed, dummyResource)) {
-                                    needs->feed(actualFeed);
+                                    const double beforeHunger=needs->hunger();needs->feed(actualFeed);
+                                    if(autoInteract){autonomyContacts.push_back({{"elapsed",elapsed},{"body_x",bodyPos.x},{"body_z",bodyPos.z},{"session",physicalInteractionSession},{"resource",shrubId},{"amount",actualFeed},{"hunger_before",beforeHunger},{"hunger_after",needs->hunger()},{"eligible",eligibilityShrub},{"foliage_fraction",shrubVisualInstances[nearbyShrubIndex].appliedFraction}});heroAutonomy.completedContact(heroIntent);}
                                     ++appliedBrowseContacts; shrubContactApplied = true;
                                 }
                             }
@@ -1912,7 +1930,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             previousInteractDown = interactDown;previousInteractionOwner=interactionOwner;
 
-            if(autonomyProbe) for(std::size_t phase=0;phase<3;++phase) if(!autonomyCaptured[phase] && (phase==0?elapsed>=1:phase==1?elapsed>=5:!autonomyContacts.empty())) {
+            if(autonomyProbe || foragingProbe) for(std::size_t phase=0;phase<3;++phase) if(!autonomyCaptured[phase] && (phase==0?elapsed>=1:phase==1?elapsed>=5:!autonomyContacts.empty())) {
                 const auto filename="hero-autonomy-"+std::to_string(phase)+".png";autonomyCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());autonomyCaptures.push_back({{"filename",filename},{"saved",autonomyCaptured[phase]},{"body_x",x},{"body_z",z}});
             }
             if(!earlyScreenshot && elapsed>=std::min(1.,duration*.25)) earlyScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-early.png").u8string());
@@ -1966,7 +1984,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
-        if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"synthetic_need",autonomyProbe!=0},{"synthetic_direct_interval",autonomyProbe==2},{"synthetic_camera_initialization",autonomyProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink only; no pathfinding or anatomical reach acceptance"}});
+        if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
         if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",false}});
         if(populatedTerrain) {
             auto streaming=populatedTerrain->receipt();

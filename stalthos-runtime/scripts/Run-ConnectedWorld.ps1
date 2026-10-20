@@ -25,4 +25,8 @@ if(-not $Proxy) {
         Write-Warning 'Reviewed local Smalltrotter/metadata unavailable; using explicit announced proxy fallback. Pass -AssetRoot for the repository holding reviewed var artifacts.'
     }
 } else {Write-Output 'Connected embodiment: explicit proxy mode'}
+$plantPin=Get-Content -LiteralPath (Join-Path $root 'stalthos-runtime/config/connected-plant.json') -Raw|ConvertFrom-Json
+$plantAssets=if($AssetRoot){[IO.Path]::GetFullPath($AssetRoot)}else{$root}
+$browsePlant=Join-Path $plantAssets $plantPin.path
+if(Test-Path -LiteralPath $browsePlant -PathType Leaf){if((Get-FileHash -LiteralPath $browsePlant -Algorithm SHA256).Hash.ToLowerInvariant() -ne $plantPin.sha256){throw 'Reviewed browse plant changed; verify provenance'};$options.Plant=$browsePlant;Write-Output 'Connected foraging: pinned provisional Basketfern browse plant'}else{Write-Warning 'Reviewed browse plant unavailable; no autonomous foraging affordance. Pass -AssetRoot for reviewed var artifacts.'}
 & (Join-Path $PSScriptRoot 'Run.ps1') @options

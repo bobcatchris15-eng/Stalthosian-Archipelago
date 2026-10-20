@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-foraging-20261019",
+  "status": "running",
+  "base_revision": "0fcc24e",
+  "current_step": "approved bounded food controller/contact/launcher wired; native build running",
+  "completed_steps": [
+    "read coldbrief/current source",
+    "root approved generic optional Eat/resource extension",
+    "pinned existing reviewed Basketfern for normal launcher",
+    "native food/contact/override/camera fixtures wired"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/hero_autonomy.hpp",
+    "stalthos-runtime/tests/hero_autonomy.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/config/connected-plant.json"
+  ],
+  "updated": "2026-10-19T09:10:12.2793971Z",
+  "resume_instructions": "Finish focusedtests/native3probes actualfood .5ledger/relief/visual, immediateoverride,cameraonlynegative; sourcefreeze04:24; no polish"
+}

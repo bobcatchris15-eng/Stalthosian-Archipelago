@@ -4,9 +4,10 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe)
 $ErrorActionPreference = 'Stop'
 if($WildlifeAwarenessProbe -or $WildlifeCameraProbe) {$ConnectedWorld=$true}
+if($HeroForagingProbe -or $HeroForagingOverrideProbe -or $HeroForagingCameraProbe) {$ConnectedWorld=$true}
 if($ExteriorResidentsProbe) {$ConnectedWorld=$true}
 if($ConnectedEmbodimentProbe) {$ConnectedWorld=$true}
 if($HeroAutonomyProbe -or $HeroAutonomyOverrideProbe -or $HeroAutonomyCameraProbe) {$ConnectedWorld=$true}
@@ -91,6 +92,9 @@ if ($HeroAutonomyCameraProbe) { $start.ArgumentList.Add('--hero-autonomy-camera-
 if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment-probe') }
 if ($ExteriorResidentsProbe) { $start.ArgumentList.Add('--exterior-residents-probe') }
 if ($WildlifeAwarenessProbe) { $start.ArgumentList.Add('--wildlife-awareness-probe') }
+if ($HeroForagingProbe) {$start.ArgumentList.Add('--hero-foraging-probe')}
+if ($HeroForagingOverrideProbe) {$start.ArgumentList.Add('--hero-foraging-override-probe')}
+if ($HeroForagingCameraProbe) {$start.ArgumentList.Add('--hero-foraging-camera-probe')}
 if ($WildlifeCameraProbe) { $start.ArgumentList.Add('--wildlife-camera-probe') }
 if ($PopulatedResourceProbe) { $start.ArgumentList.Add('--populated-resource-probe') }
 if ($PopulatedTraversal) { $start.ArgumentList.Add('--populated-traversal') }
