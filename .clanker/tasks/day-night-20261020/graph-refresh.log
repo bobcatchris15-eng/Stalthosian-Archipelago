@@ -1,0 +1,2 @@
+  warning: 526 source file(s) produced zero nodes and are absent from the graph: execution-policy.json, launch.json, process-result.json, receipt.json, launch.json (+521 more). A re-run will retry them (empties are no longer cached); if it persists, please report the file(s) (#1666).
+[graphify watch] community set changed since labeling (654 saved labels, 657 communities now; renamed 92 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.

@@ -217,3 +217,27 @@ One tunable coherent daylight/darkness presentation from the existing calendar,
 readable night controls and aligned light/sky, without changing clocks/needs/ages
 or accepted weather response. No astronomy/new art/save framework or polish.
 Working draft -> log oddities -> next. Wake07:17CDT root-only, zero dispatches.
+
+## Accepted working draft: calendar day/night — 2026-10-20 08:40CDT
+
+Connected lighting now follows existing Conditions.dayFraction with aligned sun/
+sky, warm morning/evening, brighter noon and readable night fill. Normal calendar
+zero remains midnight; no hidden clock reset. Existing saved-mode lighting, clocks,
+scale/ages, needs/rest, motion/weather/resource contracts unchanged. Synthetic
+four-phase preview and night-control fixture are labelled on screen and in JSON.
+Native existing animal/fern phase views inspected; normal mode fraction equals
+actual calendar phase. Sky/light direction error below1e-5; night proxy moved
+4.00145m, direct input cancelled rest and release resumed physical recovery.
+Original8/all12 initial actors and original11 resources/sessions exactly match
+prior normal evidence. Zero support failures/fallbacks in final probes.
+Release/49CTest/toolkit2073passed2skipped/doctor passed. Root-only implementation
+and review: both preserved reviewers usage-limited; zero dispatches. Receipt:
+.clanker/tasks/day-night-20261020/integration-receipt.json
+Parked: simple black night sky/twilight, unshadowed visibility fill; no astronomy,
+elapsed24h native/human-input/final-art/full-draft/30FPS claim. Existing animal
+pace/sole/wet material/rain/creekbank limits remain. Untracked134 original paths
+preserved except authorized graph revision marker refresh (see receipt count).
+
+NEXT SUBSYSTEM: recognizable traversable exterior woodland patch using existing
+reviewed replaceable trees, bounded tunable layout and ordinary body entry.
+.clanker/tasks/day-night-20261020/next-task.md. No accepted-draft polish.

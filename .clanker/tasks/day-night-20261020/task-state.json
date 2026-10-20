@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "day-night-20261020",
+  "status": "complete",
+  "base_revision": "bd43978d11872d514035831cbd5651a44ad59577",
+  "current_step": "working day/night draft accepted; next exterior woodland habitat",
+  "completed_steps": [
+    "HALT absent; current checkpoint and time contracts read",
+    "collected both usage-limited preserved reviewers; root-only review",
+    "calendar lighting and renderer-only preview implemented",
+    "initial Release and49CTest passed; initial native phase alignment and night controls observed",
+    "night readability raised from first dim capture",
+    "final Release49CTest passed",
+    "toolkit2073passed2skipped and doctor passed",
+    "native labelled four phases and readable night control/rest proof",
+    "normal real calendar phase and original saved-mode launch verified",
+    "exact prior population/resource/session baseline and original untracked hashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/day_night.hpp",
+    "stalthos-runtime/engine/day_night_scene.hpp",
+    "stalthos-runtime/tests/day_night.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/day-night.md"
+  ],
+  "updated": "2026-10-20T13:40:49.789178+00:00",
+  "resume_instructions": "Read next-task; day/night role accepted, park logged oddities. No fresh independent review available.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest49; toolkit2073/2 doctor; verify.py native phase/night control/normal/original-mode/baseline/preservation",
+    "evidence_path": ".clanker\\tasks\\day-night-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\day-night-20261020\\integration-receipt.json",
+  "next_step": "recognizable traversable exterior woodland patch"
+}

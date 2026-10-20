@@ -1,0 +1,97 @@
+{
+  "task": "day-night-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T13:40:49.789178+00:00",
+  "base_revision": "bd43978d11872d514035831cbd5651a44ad59577",
+  "owned_paths": [
+    "stalthos-runtime/domain/day_night.hpp",
+    "stalthos-runtime/engine/day_night_scene.hpp",
+    "stalthos-runtime/tests/day_night.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/day-night.md"
+  ],
+  "native_evidence": [
+    "var/reports/runtime/20261020-083639-5a16f689",
+    "var/reports/runtime/20261020-083726-63cb457b",
+    "var/reports/runtime/20261020-083805-d367069b",
+    "var/reports/runtime/20261020-083837-c9302bdd"
+  ],
+  "verification": {
+    "20261020-083639-5a16f689": {
+      "samples": 124,
+      "physical_seconds": 12.741784015030134,
+      "max_direction_error": 1.2459709356825932e-07,
+      "max_sky_light_error": 1.2459709353151993e-07,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "20261020-083726-63cb457b": {
+      "samples": 127,
+      "physical_seconds": 13.171472211950459,
+      "max_direction_error": 1.2459709356825932e-07,
+      "max_sky_light_error": 1.2459709353151993e-07,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "20261020-083805-d367069b": {
+      "samples": 66,
+      "physical_seconds": 6.741319608816411,
+      "max_direction_error": 7.732952785779488e-06,
+      "max_sky_light_error": 7.732952763352849e-06,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "night_controls": {
+      "body_displacement_m": 4.001453399658203,
+      "rest_recovery_rate_over_observed_rest_interval": -0.050001406424717405,
+      "instantaneous_sample_rate_range": [
+        -0.09759122796577528,
+        -0.019897493723238548
+      ],
+      "sample_timing_note": "frame-order quantization affects adjacent samples; aggregate interval used",
+      "synthetic_body_input": true,
+      "human_physical_input_tested": false
+    },
+    "preserved_original_untracked_files": 133,
+    "baseline": "original8/all12 actors and original11 resource registry/session initial state exactly preserved",
+    "review": "root implementation and source/native review only; both preserved independent reviewers usage-limited",
+    "visual_review": "four composed native phases inspected; final night readable; simple black sky and unshadowed blue fill remain; no final art/FPS/elapsed24h claim"
+  },
+  "checks": {
+    "release": true,
+    "ctest": {
+      "passed": 49,
+      "failed": 0
+    },
+    "toolkit": {
+      "passed": 2073,
+      "skipped": 2,
+      "seconds": 533.96
+    },
+    "doctor_exit": 0
+  },
+  "review": "root-only source plus actual native review; regional_save/save_review remain usage-limited; zero dispatches",
+  "graph": "refreshed and delta retained;523 zero-node files missing, not complete architecture proof",
+  "limitations": [
+    "synthetic render-phase preview is not elapsed24h calendar acceptance",
+    "night visibility fill is unshadowed and not astronomy; simple sky/twilight",
+    "night body input injected through existing ordinary reverse path, not physical human test",
+    "initial night too dim; bounded fill correction accepted in final native views",
+    "instantaneous rest sample rates fluctuate with frame-order quantization; aggregate interval confirms physical recovery, no needs changes",
+    "all prior animal/terrain/wetness/rain/creekbank/connected-save limitations retained"
+  ],
+  "next_task": ".clanker\\tasks\\day-night-20261020\\next-task.md",
+  "hashes": {
+    "stalthos-runtime/domain/day_night.hpp": "9d673ccd5a76c6b324a1fed89fcb8f3e8bf837865bab46d5c722e176e7928751",
+    "stalthos-runtime/engine/day_night_scene.hpp": "5eaa4354e4a989fbcba0bc0bc44e4ecb66162255fb878f1f6b4247f422eaf7fb",
+    "stalthos-runtime/tests/day_night.cpp": "875f8f6ebcdb7da5adcf76e482751beca401fb45f344d33c381c6f6cbb6cc18a",
+    "stalthos-runtime/engine/main.cpp": "ba5dd7e80ca4ffc56e8fd3ff18d1f1fca3719b6d100f80d2eee00b79acd2fbaa",
+    "stalthos-runtime/scripts/Run.ps1": "229ab0b28934624236681eb91da00fac38986cbd4b45cb358dc7321e9ad184ba",
+    "stalthos-runtime/CMakeLists.txt": "0f2d870b5efefec683f75e5c0128038f695356c70e43888c3de7bf1db4ff747d",
+    "stalthos-runtime/docs/day-night.md": "b143f50751ee6cf20467b8338b923c614a2b72366baf0812412725f814272a12"
+  },
+  "secret_scan": "full staged diff pattern scan passed before publication; no credentials detected",
+  "publication": "reviewed normal origin/main publication authorized; resulting revision in Git task history and final remote verification"
+}

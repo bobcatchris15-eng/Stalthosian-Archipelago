@@ -1,0 +1,41 @@
+{
+  "20261020-083639-5a16f689": {
+    "samples": 124,
+    "physical_seconds": 12.741784015030134,
+    "max_direction_error": 1.2459709356825932e-07,
+    "max_sky_light_error": 1.2459709353151993e-07,
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "20261020-083726-63cb457b": {
+    "samples": 127,
+    "physical_seconds": 13.171472211950459,
+    "max_direction_error": 1.2459709356825932e-07,
+    "max_sky_light_error": 1.2459709353151993e-07,
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "20261020-083805-d367069b": {
+    "samples": 66,
+    "physical_seconds": 6.741319608816411,
+    "max_direction_error": 7.732952785779488e-06,
+    "max_sky_light_error": 7.732952763352849e-06,
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "night_controls": {
+    "body_displacement_m": 4.001453399658203,
+    "rest_recovery_rate_over_observed_rest_interval": -0.050001406424717405,
+    "instantaneous_sample_rate_range": [
+      -0.09759122796577528,
+      -0.019897493723238548
+    ],
+    "sample_timing_note": "frame-order quantization affects adjacent samples; aggregate interval used",
+    "synthetic_body_input": true,
+    "human_physical_input_tested": false
+  },
+  "preserved_original_untracked_files": 133,
+  "baseline": "original8/all12 actors and original11 resource registry/session initial state exactly preserved",
+  "review": "root implementation and source/native review only; both preserved independent reviewers usage-limited",
+  "visual_review": "four composed native phases inspected; final night readable; simple black sky and unshadowed blue fill remain; no final art/FPS/elapsed24h claim"
+}

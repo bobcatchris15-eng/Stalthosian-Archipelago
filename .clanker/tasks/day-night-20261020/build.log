@@ -1,0 +1,55 @@
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+
+  StalthosLandscape.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosLandscape.exe
+  StalthosLifecycle.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosLifecycle.exe
+  StalthosScenarios.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosScenarios.exe
+  StalthosPersistence.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosPersistence.exe
+  main.cpp
+  Stalthos_activation_plan.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_activation_plan.exe
+  Stalthos_animation_blend.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_animation_blend.exe
+  Stalthos_archipelago_world.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_archipelago_world.exe
+  Stalthos_animation_transition.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_animation_transition.exe
+  Stalthos_body_terrain_support.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_body_terrain_support.exe
+  Stalthos_camera_framing.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_camera_framing.exe
+  Stalthos_connected_route.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_connected_route.exe
+  Stalthos_day_night.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_day_night.exe
+  Stalthos_environment_palette.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_environment_palette.exe
+  Stalthos_environmental_exposure.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_environmental_exposure.exe
+  Stalthos_exterior_browse.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_browse.exe
+  Stalthos_exterior_residents.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_residents.exe
+  Stalthos_exterior_water.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_water.exe
+  Stalthos_fauna_population.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_fauna_population.exe
+  Stalthos_fauna_resources.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_fauna_resources.exe
+  Stalthos_foot_support_plane.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_foot_support_plane.exe
+  Stalthos_foot_terrain_diagnostic.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_foot_terrain_diagnostic.exe
+  Stalthos_habitat_dressing.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_habitat_dressing.exe
+  Stalthos_hero_autonomy.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_autonomy.exe
+  Stalthos_hero_destination.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_destination.exe
+  Stalthos_hero_rest.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_rest.exe
+  Stalthos_hero_view_controller.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_view_controller.exe
+  Stalthos_host_save.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_host_save.exe
+  Stalthos_locomotion_clip.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_locomotion_clip.exe
+  Stalthos_locomotion_pace.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_locomotion_pace.exe
+  Stalthos_native_population_registry.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_native_population_registry.exe
+  Stalthos_native_save.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_native_save.exe
+  Stalthos_regional_archive.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_archive.exe
+  Stalthos_needs.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_needs.exe
+  Stalthos_regional_contacts.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_contacts.exe
+  Stalthos_regional_habitat.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_habitat.exe
+  Stalthos_regional_legacy_import.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_legacy_import.exe
+  Stalthos_regional_population.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_population.exe
+  Stalthos_relationships.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_relationships.exe
+  Stalthos_rendered_ground_surface.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_rendered_ground_surface.exe
+  Stalthos_resource_ledger.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_resource_ledger.exe
+  Stalthos_resource_presentation.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_resource_presentation.exe
+  Stalthos_shore_mesh.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_shore_mesh.exe
+  Stalthos_terrain_texture.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_terrain_texture.exe
+  Stalthos_terrain_tiles.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_terrain_tiles.exe
+  Stalthos_watershed_terrain.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_watershed_terrain.exe
+  Stalthos_weather_response.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_weather_response.exe
+  Stalthos_wildlife_awareness.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_wildlife_awareness.exe
+  Stalthos_woodland_stands.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_woodland_stands.exe
+  Stalthos_world_environment.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_world_environment.exe
+  ModelImporter_GLTF.cpp
+  Generating Code...
+  Stalthos.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos.exe
