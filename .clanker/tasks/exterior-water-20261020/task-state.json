@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-water-20261020",
+  "status": "complete",
+  "base_revision": "ffb03d0",
+  "current_step": "working exterior water access accepted; next observable day/night cadence",
+  "completed_steps": [
+    "collected two usage-limited reviewers; root-only implementation/review",
+    "read actual water/ground/resource contracts",
+    "implemented static rock-lined seep209 and dry bank with shared hero/NPC ledger",
+    "48 domain tests passed; corrected explicit body vector conversion",
+    "native boot exposed hardcoded100-only water admission; added209 only behind connectedPreview, original default unchanged",
+    "final Release48CTest/toolkit2073/2/doctor passed",
+    "native visible source normal approach209 exact shared contact/relief",
+    "camera-only no hero awareness/drink; direct reverse overrides then resumes",
+    "normal existing assets and original creek100 contact preserved",
+    "original8/all12ids/original10resources and browse208 native baseline verified",
+    "untracked files and immutable pins preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/exterior_water.hpp",
+    "stalthos-runtime/engine/exterior_water_scene.hpp",
+    "stalthos-runtime/tests/exterior_water.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-water.md",
+    "stalthos-runtime/engine/native_save.hpp"
+  ],
+  "updated": "2026-10-20T12:38:36.065262+00:00",
+  "resume_instructions": "Water draft accepted; no water/terrain/asset polish. Read next-task. Preserve logged rim/vegetation/static water/original creek bank/animal contact limits. Root-only review explicit.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest48; native exterior water approach/camera/override/normal and creek regression; toolkit2073/2 doctor",
+    "evidence_path": ".clanker\\tasks\\exterior-water-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\exterior-water-20261020\\integration-receipt.json",
+  "next_step": "observable world day/night cadence"
+}

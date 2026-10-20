@@ -1,0 +1,120 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "base_revision": "ffb03d0",
+  "review": "root implementation/review; both preserved reviewers usage-limited; no fresh independent review",
+  "owned_paths": [
+    "stalthos-runtime/domain/exterior_water.hpp",
+    "stalthos-runtime/engine/exterior_water_scene.hpp",
+    "stalthos-runtime/tests/exterior_water.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-water.md",
+    "stalthos-runtime/engine/native_save.hpp"
+  ],
+  "release_build_exit_code": 0,
+  "ctest": "48/48 passed3.15s",
+  "toolkit": "2073passed2skipped513.26s",
+  "doctor": "actual CLI ok true exit0",
+  "native_evidence": {
+    "approach": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-073128-6f6225d1",
+    "camera": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-073154-ac3ec60f",
+    "override": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-073212-cfc300e0",
+    "normal": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-073231-f0c1fb9b",
+    "creek": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-073241-8acdf3fa"
+  },
+  "same_executable_sha256": "958832e99f7a0c53ecc8ffb686ea3c56dddd477a22dae171fe4b482b138193a7",
+  "native_surface_height_m": 10.768593788396743,
+  "ordinary_proxy_approach_distance_m": 14.90228271484375,
+  "hero_shared_water_contact": {
+    "amount": 0.5,
+    "body_x": 133.09596252441406,
+    "body_z": 30.0,
+    "elapsed": 9.4497776,
+    "eligible": true,
+    "resource": 209,
+    "session": 13,
+    "thirst_after": 0.30149116618153715,
+    "thirst_before": 0.8014911661815372
+  },
+  "npc_shared_water_consumed": 0.04999698106432333,
+  "final_water_resource": {
+    "consumed_quantity": 0.5499969810643234,
+    "id": 209,
+    "initial_quantity": 2.0,
+    "kind": 1
+  },
+  "shared_water_history": [
+    {
+      "amount": 0.04999698106432333,
+      "resource_id": 209,
+      "session_id": 11
+    },
+    {
+      "amount": 0.5,
+      "resource_id": 209,
+      "session_id": 13
+    }
+  ],
+  "camera_body_fixed_no_hero_awareness_or_contact": true,
+  "camera_npcs_drink": true,
+  "override_direct_samples": 20,
+  "override_reverse_distance_m": 3.83819580078125,
+  "override_drinks_after_release": true,
+  "original_creek_contact_preserved": {
+    "amount": 0.5,
+    "body_x": 9.203731536865234,
+    "body_z": 23.990224838256836,
+    "elapsed": 11.7421227,
+    "eligible": true,
+    "resource": 100,
+    "session": 13,
+    "thirst_after": 0.3018607294611172,
+    "thirst_before": 0.8018607294611172
+  },
+  "original_creek_support_failures_logged_not_accepted": 336,
+  "exterior_four_native_support_failures_and_fallbacks": 0,
+  "native_source_captures_inspected": [
+    "approach/exterior-water-2.png",
+    "camera/exterior-water-0.png"
+  ],
+  "native_original8_initial_actor_json_exact": true,
+  "native_all12_ids_preserved": true,
+  "native_original10_initial_resource_dtos_exact": true,
+  "browse208_native_consumption_preserved": true,
+  "native_baseline": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-062526-c179f13f",
+  "preserved_original_untracked_files": 134,
+  "authorized_graph_marker_refresh": true,
+  "unrelated_changes": [],
+  "immutable_creature_and_plant_pins_preserved": true,
+  "concrete_admission_blocker": "native_save.hpp declared100-only water;209 admitted only with connectedPreview=true; original default still rejects209 as water. No format/configuration/migration change. Focused test covers both.",
+  "failed_boot_preserved": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-072817-6f30bac7",
+  "limits": [
+    "static perched rock-lined shallow seep; no fluid solver/refill/gradual level changes",
+    "coarse rim facets/shading and existing vegetation protrusion; logged for later content refinement",
+    "proxy drink pose/dry bank reach; no physical mouth contact/wading/collision or animal full-route/sole acceptance",
+    "original creek still reports bank-support fallbacks; not reopened as terrain/drink polish",
+    "connected preview refuses saves; original saved mode admission default unchanged",
+    "no full-draft/final visual/30FPS acceptance"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/exterior_water.hpp": "aab6b854e7cf1e3caa29613ebd46cccc68f6bd1d8582cd4481095b4bd16ff0bd",
+    "stalthos-runtime/engine/exterior_water_scene.hpp": "487a2ab993e59738c753fdd469ef8ff0ea9f606fc6649de0c510ea11e73783a2",
+    "stalthos-runtime/tests/exterior_water.cpp": "d76572dcc2184df14d34801d08e1132146b3b790a6e64873ed4a23f6d9ca683d",
+    "stalthos-runtime/engine/main.cpp": "ced52a8f21640215b5b2e6a0bb2c78181028357b73ca67d0a008d73853e01bee",
+    "stalthos-runtime/scripts/Run.ps1": "e8bf1fc2c876b43b3af2a0471b7e4a6ea5996648b3a775e44a0e39ecf738ce64",
+    "stalthos-runtime/CMakeLists.txt": "7671d5a90e27e9b9c1757fcac37305aafc67f068a70da7060d1a48f94c4452e4",
+    "stalthos-runtime/docs/exterior-water.md": "d4754a04f7eb140a27efae78485c15a325ec8b71d96c55f88a52e6658a7f273b",
+    "stalthos-runtime/engine/native_save.hpp": "abb570a3f88a2b29177f4a57adea9c6211be8114ba8379bb8fb5aacb31d904a0"
+  },
+  "next_task": ".clanker\\tasks\\exterior-water-20261020\\next-task.md",
+  "checkpoint_checks": {
+    "task_schema": "complete valid",
+    "graph_refresh_exit_code": 0,
+    "graph_limit": "519 sources absent; not complete structural graph or fresh independent review",
+    "explicit_owned_paths": true,
+    "heartbeat": "ACTIVE in this chat; next observable day/night cadence",
+    "staged_secret_scan": "passed entire staged diff",
+    "staged_diff_check": "source/docs passed; raw historical compiler logs retain one original whitespace-only line"
+  }
+}

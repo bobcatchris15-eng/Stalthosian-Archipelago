@@ -16,12 +16,12 @@ inline constexpr std::uint64_t nativeSaveConfiguration(bool populated) {
 // Independent world configuration owns required IDs/kinds and anchors. Initial
 // quantities and additional legal ledger entries are validated save declarations,
 // preserving the existing legacy host import contract rather than inventing history.
-inline void validateNativeResources(const ResourceLedgerDto& ledger,const std::vector<fauna::RegionalResourceAnchor>& anchors) {
+inline void validateNativeResources(const ResourceLedgerDto& ledger,const std::vector<fauna::RegionalResourceAnchor>& anchors,bool connectedPreview=false) {
     ResourceLedger validator(4096,256);
     if(!validator.restore(ledger)) throw std::runtime_error("invalid native declared resource admission");
     for(const auto& anchor:anchors) {
         const auto found=std::find_if(ledger.resources.begin(),ledger.resources.end(),[&](const auto& r){return r.id==anchor.resource;});
-        const auto expected=anchor.resource==100?ResourceKind::Creek:ResourceKind::Shrub;
+        const auto expected=(anchor.resource==100 || (connectedPreview && anchor.resource==209))?ResourceKind::Creek:ResourceKind::Shrub;
         if(found==ledger.resources.end() || found->kind!=expected) throw std::runtime_error("native anchored resource kind mismatch");
     }
 }

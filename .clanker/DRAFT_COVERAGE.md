@@ -18,6 +18,7 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Environmental exposure | Working draft: capped comfort fatigue, warning/partial-lee cue, normal2m approach reduces cost21percent; benign actual-animal rest unchanged | Coarse wind lee; no thermal physiology/rain interception; proxy adverse diagnostic/HUD1920x1080 |
 | Player contextual destination | Working draft: native right-click/raycast, body-local12m supported dry route, single goal, arrival/override and detached remote-click rejection | Straight-line/coarse clearance, marker unoccluded, injected input1920x1080 only; later drink-bank support oddity logged |
 | Exterior meadow browse patch | Working draft: visible existing fern/resource208, normal hero approach, exact shared hero/NPC consumption and foliage response; camera-only separation | One finite patch/no regrowth, proxy feeding/crowding; exterior water and connected saves remain missing |
+| Exterior meadow water access | Working draft: visible static seep209, supported dry-bank shared hero/NPC drinking/relief, override and camera separation; creek100 retained | Static/rim/vegetation/wading/contact roughness; original creek-bank fallback persists; no hydrology/refill/connected saves |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -41,3 +42,5 @@ Latest accepted: hero-exposure-20261020. NEXT player-issued contextual destinati
 Latest accepted: hero-destination-20261020. NEXT exterior meadow shared-ledger browse patch; no destination polish.
 
 Latest accepted: exterior-browse-20261020. NEXT exterior meadow water access; no food/plant/controller polish.
+
+Latest accepted: exterior-water-20261020. NEXT observable world day/night cadence; no water/terrain/asset polish.

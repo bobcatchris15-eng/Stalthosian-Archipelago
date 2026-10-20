@@ -169,10 +169,51 @@ No animal full-route/exterior sole/wet-material/finalvisual/30FPS acceptance.
 Original saves/assets/apps/untracked work preserved; connected preview still
 refuses saves. No migration/activation/general ecology infrastructure added.
 
-## NEXT SUBSYSTEM: exterior meadow water access
+## Previous next-task (completed below): exterior meadow water access
 
 Cold brief: .clanker/tasks/exterior-browse-20261020/next-task.md
 One visible tunable water source, body-supported hero/NPC eligible shared-ledger
 contact/relief and camera-only separation. Static/shallow approximation allowed;
 no hydrology solver, lethal drinking, new persistence or accepted-draft polish.
 Working draft -> log oddities -> next. Wake06:18CDT root-only, zero dispatch.
+
+## Working draft accepted: exterior meadow water access — 2026-10-20
+
+Connected world now has static rock-lined shallow seep209 (quantity2), center
+132,33.5/radius2.6, existing dry bank node132,30. Water plane10.76859m with low
+irregular stone rim uses existing Wicked water material. ExteriorWaterSource
+holds reach/placement/quantity tuning. Hero and resident contacts share one finite
+ledger/history. New resident index10 starts thirsty there; browse208 stays live.
+Original8 native initial actors, all12 identities and original10 initial resource
+DTOs exactly match preserved browse baseline20261020-062526-c179f13f.
+
+Native24s proxy approaches14.9023m normally;209/session13 consumes0.5, exact0.5
+thirst relief. NPC/session11 consumes0.049996981; remaining1.450003019. Camera16s
+body160,30 stays28m away with no awareness/drink; NPCs drink. Direct override18s
+has20direct samples/reverse movement, then209 drink after release. All four
+exterior/normal runs support0failures/0fallbacks. Normal existing animal2clips/
+9plants loads. Original creek100 still grants exact0.5 relief; that20s regression
+reports336known bank-support fallbacks (logged, not accepted or reopened).
+Release/CTest48passed3.15s; toolkit2073passed2skipped513.26s; doctorok exit0.
+Both preserved reviewers remain usage-limited: root implementation/review only.
+
+Concrete blocker handled minimally: native_save.hpp assumed water100 only;
+209 admitted only behind connectedPreview=true. Original default still rejects
+209-as-water; focused check covers both. No save format/configuration/migration.
+Failed native boot evidence retained. Receipt:
+.clanker/tasks/exterior-water-20261020/integration-receipt.json
+Parked: static perched seep/no fluid solver/refill/gradual level; coarse rim
+facets/shading and existing vegetation protrusion; proxy pose/reach, no physical
+mouth contact/wading/collision or animal sole/full-route acceptance. Original
+creek bank roughness remains. Connected preview refuses saves; original saved
+mode unchanged. No final-art/full-draft/30FPS claim. Saves/assets/apps/untracked
+work/read-only planning and historical evidence/worktrees preserved.
+
+## NEXT SUBSYSTEM: observable world day/night cadence
+
+Cold brief: .clanker/tasks/exterior-water-20261020/next-task.md
+Native sun currently fixed/cloud-only intensity; Conditions.dayFraction exists.
+One tunable coherent daylight/darkness presentation from the existing calendar,
+readable night controls and aligned light/sky, without changing clocks/needs/ages
+or accepted weather response. No astronomy/new art/save framework or polish.
+Working draft -> log oddities -> next. Wake07:17CDT root-only, zero dispatches.
