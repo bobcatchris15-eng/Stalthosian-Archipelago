@@ -1,0 +1,69 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "base_revision": "b70d1c9",
+  "review": "root implementation/review; both preserved reviewers usage-limited; no fresh independent review",
+  "owned_paths": [
+    "stalthos-runtime/domain/environmental_exposure.hpp",
+    "stalthos-runtime/domain/needs.hpp",
+    "stalthos-runtime/tests/environmental_exposure.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/environmental-exposure.md"
+  ],
+  "release_build_exit_code": 0,
+  "ctest": "45/45 passed2.90s",
+  "toolkit": "2073passed2skipped542.54s",
+  "doctor": "actual CLI exit0",
+  "native_final": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-043117-0f29f92b",
+  "native_benign_actual_animal": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-043151-92f395cf",
+  "same_executable": true,
+  "executable_sha256": "047bc209d889e693b266b949ed827cc8211abe71eeafbb2243def991b6f0381e",
+  "synthetic_adverse_weather_and_startup_fixture": true,
+  "ordinary_proxy_movement_m": 1.9956899643587462,
+  "rate_before": 0.003513599714355518,
+  "rate_partial_lee": 0.002766418887303965,
+  "reduction_fraction": 0.21265394119847947,
+  "native_visible_composed_frames_inspected": [
+    "exposure-0.png",
+    "exposure-2.png"
+  ],
+  "cue_changes_to_partial_lee": true,
+  "support_failures_and_fallbacks": 0,
+  "benign_extra_fatigue": 0,
+  "benign_rest_recovery_error": 4.215378046623641e-16,
+  "preserved_original_untracked_files": 132,
+  "authorized_graph_marker_refresh": true,
+  "unrelated_changes": [],
+  "creature_asset_pins_preserved": true,
+  "save_contract": "unchanged; connected preview refuses save/load",
+  "earlier_trials_preserved": {
+    "20261020-042600-a4e2bacb": "movement before wet exposure; insufficient proof",
+    "20261020-042808-de3d5807": "strong lee cost0 but body obscured; superseded by visible shorter approach"
+  },
+  "limitations": [
+    "coarse comfort/wind lee; no temperature physiology or roof/ray interception",
+    "native rain disabled; proxy wet tint only",
+    "proxy adverse diagnostic, not animal crossing or exterior sole acceptance",
+    "HUD1920x1080 only; no full-draft/finalvisual/30FPS claim"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/environmental_exposure.hpp": "7522420a98ec0f7165eaee1373114a218f3d77a67e22596afd9b0278093868a1",
+    "stalthos-runtime/domain/needs.hpp": "fb3587413e46af7697b37f5f490a7de50582ad36ed6c893573a681f8533d806c",
+    "stalthos-runtime/tests/environmental_exposure.cpp": "dea4d6543f4b511cbaf15ed5927c1e60f170ed14c75ba79bf47b816665223d42",
+    "stalthos-runtime/engine/main.cpp": "6e15800288c1f093af2dbfe43512dc9b86e85e68250c40826ceca74c4e61ea24",
+    "stalthos-runtime/scripts/Run.ps1": "75f5e604f2b02c0c2caf2b8cffee1b74f20b28fb9a2d006b7a3582585bc80441",
+    "stalthos-runtime/CMakeLists.txt": "e8787034a43f3a7ca397b2913a0048caa1ce767dc5a760325bb9c42f5426e4fd",
+    "stalthos-runtime/docs/environmental-exposure.md": "b694365ee5ebe9554acb17bca5dbfe3ad38943fa90507a30aee5d126d0e22a2e"
+  },
+  "next_task": ".clanker\\tasks\\hero-exposure-20261020\\next-task.md",
+  "checkpoint_checks": {
+    "explicit_owned_paths": true,
+    "staged_secret_scan": "passed",
+    "staged_diff_check": "passed",
+    "final_graph_refresh_exit_code": 0,
+    "graph_limit": "503 sources produced no nodes; not graph completeness or independent review",
+    "task_schema": "complete valid",
+    "heartbeat": "ACTIVE in this chat; next contextual destination"
+  }
+}

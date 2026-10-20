@@ -69,7 +69,7 @@ HUD only native1920x1080 checked; no dedicated detached-camera rest trial. Rest
 controller has no camera input, existing camera tests remain. No new save fields,
 assets, anatomy or FPS/full-draft acceptance. Working role met; no rest/UI polish.
 
-## NEXT SUBSYSTEM: observable environmental exposure
+## Previous next-task (completed below): observable environmental exposure
 
 Cold brief: .clanker/tasks/hero-rest-20261020/next-task.md
 Use existing weather/wetness/approximate lee shelter for one bounded observable
@@ -82,3 +82,29 @@ Preserve unrelated dirty/untracked files, open apps, immutable assets, readonly
 planning and historical evidence/worktrees. Explicit paths, graph refresh, secret
 scan and reviewed origin main publication authorized. No force/releases/deploy,
 paid APIs or credential mutation. Wake<=35active minutes and<=6dispatches.
+
+## Working draft accepted: environmental exposure — 2026-10-20
+
+Existing local weather comfort adds capped physical-time fatigue below0.5, with
+exposure/partial-lee cues. No injury/lifecycle/new save fields. Ordinary controls
+remain authoritative. Final native proxy moves1.99569m toward existing outcrop:
+additional fatigue .0035136 -> .00276642 per physical second (21.27percent lower),
+cue changes to exposure eased; body visible, rendered support0failures/0fallbacks.
+Synthetic adverse weather/start fixture explicit; no trial teleport. Existing-animal
+benign run adds0exposure fatigue and preserves rest (error<4.3e-16).
+Release/CTest45passed; toolkit2073passed2skipped542.54s; actual doctor exit0.
+Root-only implementation/review: both preserved reviewers usage-limited.
+Receipt: .clanker/tasks/hero-exposure-20261020/integration-receipt.json
+Roughness parked: coarse comfort/lee; no thermal physiology or roof/ray occlusion;
+native rain disabled; partial lee still tiring; proxy adverse diagnostic/HUD1920x1080.
+Imported wet material/exterior sole/full-route animal crossing remain unaccepted.
+Original saves/assets/apps/untracked work preserved; connected preview refuses saves.
+No final visuals/full-draft/30FPS claim.
+
+## NEXT SUBSYSTEM: player-issued contextual destination
+
+Cold brief: .clanker/tasks/hero-exposure-20261020/next-task.md
+Existing single HeroSim goal/authority and ordinary supported motion for bounded
+player go-there input, immediate direct override, arrival return to autonomy and
+body-local/camera boundary. No generalized navigation/save framework.
+Working draft -> log oddities -> next. Wake04:19CDT root-only, zero dispatch.

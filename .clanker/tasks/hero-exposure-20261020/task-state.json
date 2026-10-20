@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-exposure-20261020",
+  "status": "complete",
+  "base_revision": "b70d1c9",
+  "current_step": "working exposure draft accepted; next contextual destination",
+  "completed_steps": [
+    "collected both usage-limited reviewers",
+    "read weather/needs and visible outcrop contracts",
+    "focused domain45/45 passed before host integration",
+    "final Release45CTest and toolkit2073/2 passed",
+    "native visible2m approach reduces cost21percent and changes cue",
+    "benign actual-animal rest regression passed",
+    "original untracked and creature pins preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/environmental_exposure.hpp",
+    "stalthos-runtime/domain/needs.hpp",
+    "stalthos-runtime/tests/environmental_exposure.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt"
+  ],
+  "updated": "2026-10-20T09:33:57.740459+00:00",
+  "resume_instructions": "Working exposure draft accepted; do not polish. Read next-task. Root-only review explicit.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest45; native24sexposure/16sbenignrest; toolkit2073/2 doctor",
+    "evidence_path": ".clanker\\tasks\\hero-exposure-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\hero-exposure-20261020\\integration-receipt.json",
+  "next_step": "player-issued contextual destination"
+}

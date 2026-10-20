@@ -116,6 +116,11 @@ public:
         thirst_ = clampNormalized(newThirst);
     }
 
+    void addFatigue(double amount) {
+        if (!std::isfinite(amount) || amount < 0) throw std::invalid_argument("Invalid fatigue amount");
+        fatigue_ = clampNormalized(fatigue_ + amount);
+    }
+
     void setResting(bool resting) {
         isResting_ = resting;
     }
