@@ -1,10 +1,12 @@
 #pragma once
 #include "domain/regional_population.hpp"
 #include <limits>
+#include "domain/npc_peer_association.hpp"
 namespace stalthos::engine {
 class NativePopulationRegistry {
     fauna::RegionalPopulationRegistry registry_;
     RegionId region_;
+    fauna::NpcPeerAssociation npcPeers_;
     std::vector<fauna::ActorView> actors_;
     std::vector<fauna::RegionalContactEvent> events_;
     double food_=0,water_=0;
@@ -33,6 +35,7 @@ public:
     }
     explicit NativePopulationRegistry(fauna::RegionalPopulationRegistry restored)
         :registry_(std::move(restored)),region_(registry_.legacyRegion()) {refreshViews();}
+    const fauna::NpcPeerAssociation& npcPeers()const{return npcPeers_;}
     const fauna::RegionalPopulationRegistry& registry() const {return registry_;}
     fauna::RegionalContinuationDto continuation() const {return registry_.continuationSnapshot();}
     fauna::PopulationSnapshot snapshot() const {return registry_.snapshot(region_)->population;}
@@ -45,8 +48,10 @@ public:
         for(const auto& b:state->bindings) result.emplace_back(b.actor,b.session);
         return result;
     }
-    void advance(const TimeStep& dt,bool active,const std::optional<fauna::BodyAwareness>& bodyAwareness=std::nullopt) {
-        registry_.setActive(region_,active,physical);registry_.advance(region_,dt,bodyAwareness);events_.clear();
+    void advance(const TimeStep& dt,bool active,const std::optional<fauna::BodyAwareness>& bodyAwareness=std::nullopt,bool allowNpcPeers=false) {
+        if(allowNpcPeers && active && dt.physicalSeconds>0)npcPeers_.update(actors_,dt.physicalSeconds);
+        const auto npcMotion=allowNpcPeers && active?npcPeers_.motion(actors_,bodyAwareness?bodyAwareness->peer:0):std::nullopt;
+        registry_.setActive(region_,active,physical);registry_.advance(region_,dt,bodyAwareness,npcMotion);events_.clear();
         if(active && dt.physicalSeconds>0) {
             const auto state=*registry_.snapshot(region_);
             for(const auto& actor:state.population.actors) {

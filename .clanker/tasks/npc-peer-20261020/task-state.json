@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "npc-peer-20261020",
+  "status": "complete",
+  "base_revision": "0cec7826df4f30edad051fa31da1cd0e00a0a100",
+  "current_step": "final audit resolved; bounded NPC pair draft accepted, next shore approach",
+  "completed_steps": [
+    "HALT/narrow contracts and preserved usage-limited workers collected",
+    "one existing-ID relationship, graph approach and3m pause, needs/hero priority, connected-only gate",
+    "initial overlap/framing and paused snapshot invariant blockers fixed; superseded evidence retained",
+    "Release57CTest; toolkit2073pass2skip doctor0",
+    "five native same-executable runs; actual animated pair approach/idle wait; moving-camera/body equality and exact water relief",
+    "normal12/original8 actor initial baselines, bound sessions/history/assets157untracked preserved; root-only review",
+    "working role accepted with domain-only wide separation/reunion limitation; next shore place",
+    "final noon metadata/near-hero idle priority audit fixed; rebuilt44b1514 and five fresh same-executable native checks/57CTest passed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/npc_peer_association.hpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/domain/wildlife_awareness.hpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/fauna_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/npc_peer_association.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/npc-peer-association.md"
+  ],
+  "updated": "2026-10-20T21:56:34.595690+00:00",
+  "resume_instructions": "Read next-task. NPC pair role accepted; park wide native route/social/asset refinement and implement one shore approach.",
+  "validation": {
+    "passed": true,
+    "command": "Release57CTest; toolkit2073/2 doctor; verify.py five actual native runs and preservation",
+    "evidence_path": ".clanker\\tasks\\npc-peer-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\npc-peer-20261020\\integration-receipt.json",
+  "next_step": "one recognizable traversable exterior shore approach"
+}

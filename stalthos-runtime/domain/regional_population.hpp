@@ -209,7 +209,7 @@ public:
         found->second.active = active;
         return true;
     }
-    bool advance(RegionId region, const TimeStep& dt, const std::optional<BodyAwareness>& bodyAwareness = std::nullopt) {
+    bool advance(RegionId region, const TimeStep& dt, const std::optional<BodyAwareness>& bodyAwareness = std::nullopt, const std::optional<NpcPeerMotion>& npcPair = std::nullopt) {
         const auto found = regions_.find(region);
         if (found == regions_.end()) return false;
         if (!std::isfinite(dt.physicalSeconds) || dt.physicalSeconds<0 ||
@@ -218,7 +218,7 @@ public:
         auto& entry = found->second;
         if (entry.active) {
             refreshAvailability(entry);
-            entry.population.advance(dt, false, bodyAwareness);
+            entry.population.advance(dt, false, bodyAwareness, npcPair);
         }
         else entry.population.advanceDormant(dt);
         return true;

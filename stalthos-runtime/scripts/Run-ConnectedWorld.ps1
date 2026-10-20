@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param([double]$Duration=30,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
-      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe)
+      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe)
 $ErrorActionPreference='Stop'
 if(($BodyAudioProbe -or $BodyAudioCameraProbe) -and ($Interactive -or $SaplingProbe -or $SaplingCameraProbe -or $ExplorationProbe -or $ExplorationOverrideProbe -or $ExplorationCameraProbe -or $DeathNextLifeProbe -or $LifeStageProbe -or $WoodlandProbe -or $AutonomyProbe -or $ExteriorProbe -or ($BodyAudioProbe -and $BodyAudioCameraProbe))){throw 'Audio probe requires standalone timed mode'}
 if($SaplingProbe -or $SaplingCameraProbe){if($Interactive -or $LifeStageProbe -or $DeathNextLifeProbe -or $AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $ExplorationProbe -or $ExplorationOverrideProbe -or $ExplorationCameraProbe -or ($SaplingProbe -and $SaplingCameraProbe)){throw 'Sapling probe requires standalone timed mode'}}
@@ -11,6 +11,9 @@ if($WoodlandProbe -and ($AutonomyProbe -or $ExteriorProbe -or $Interactive)){thr
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at a time'}
 $options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance}
+if($NpcPeerProbe){$options.NpcPeerProbe=$true}
+if($NpcPeerCameraProbe){$options.NpcPeerCameraProbe=$true}
+if($NpcPeerNeedProbe){$options.NpcPeerNeedProbe=$true}
 if($LifeStageProbe){$options.LifeStageProbe=$true}
 if($DeathNextLifeProbe){$options.DeathNextLifeProbe=$true}
 if($BodyAudioProbe){$options.BodyAudioProbe=$true}

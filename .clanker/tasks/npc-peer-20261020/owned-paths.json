@@ -1,0 +1,14 @@
+[
+  "stalthos-runtime/domain/npc_peer_association.hpp",
+  "stalthos-runtime/domain/fauna_population.hpp",
+  "stalthos-runtime/domain/regional_population.hpp",
+  "stalthos-runtime/domain/wildlife_awareness.hpp",
+  "stalthos-runtime/engine/native_population_registry.hpp",
+  "stalthos-runtime/engine/fauna_scene.hpp",
+  "stalthos-runtime/engine/main.cpp",
+  "stalthos-runtime/tests/npc_peer_association.cpp",
+  "stalthos-runtime/CMakeLists.txt",
+  "stalthos-runtime/scripts/Run.ps1",
+  "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+  "stalthos-runtime/docs/npc-peer-association.md"
+]

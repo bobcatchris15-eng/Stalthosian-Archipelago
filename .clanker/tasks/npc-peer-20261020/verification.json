@@ -1,0 +1,73 @@
+{
+  "pair": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-165404-f7bb4f4b",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 5,
+    "leader": 3572998927451126612,
+    "follower": 12326054023193623710,
+    "final_gap_m": 3.000000000000001,
+    "follower_travel_m": 1.000031911517186,
+    "formation_physical_seconds": 1.5005530013295356,
+    "waiting_follower": 12326054023193623710
+  },
+  "camera": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-165430-3d827815",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 5,
+    "leader": 3572998927451126612,
+    "follower": 12326054023193623710,
+    "final_gap_m": 2.9999999999999907,
+    "follower_travel_m": 1.000031911515468,
+    "formation_physical_seconds": 1.503846004314255,
+    "waiting_follower": 12326054023193623710
+  },
+  "need": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-165456-c02cf3e3",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6,
+    "leader": 3572998927451126612,
+    "follower": 12326054023193623710,
+    "final_gap_m": 2.999999999999994,
+    "follower_travel_m": 1.0000319115154304,
+    "formation_physical_seconds": 1.5014284038334154,
+    "waiting_follower": 12326054023193623710,
+    "accepted_shared_water_amount": 0.011740328012965621,
+    "exact_relief": 0.0023480656025931246,
+    "native_drink_samples": 4,
+    "final_thirst": 0.4799980471380874
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-165522-fc854fa9",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-165533-1fa003ea",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_count": 8,
+    "retained_sessions": 8,
+    "history_keys": 4
+  },
+  "camera_comparison": {
+    "identical_initial_actor_body_ledger_sessions": true,
+    "max_interpolated_position_error_m": 0.0015614426239104673,
+    "camera_span_m": 20.880353118815677,
+    "hero_peer_always_zero": true
+  },
+  "preserved_original_untracked": 157,
+  "review": "root-only; both preserved independent workers usage-limited; zero dispatches",
+  "limits": "native short approach/wait and eligible needs/contact; wider departure/reunion validated in domain only, not a native full route; graph edge completion, horizontal sensing, idle poses and original creature/ground limits remain"
+}

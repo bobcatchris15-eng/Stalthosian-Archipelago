@@ -437,3 +437,29 @@ eligible nearby conspecific retained identities, with ordinary needs priority.
 .clanker/tasks/body-audio-20261020/next-task.md
 
 Final publication audit resolved: audio event detail capped256 plus request/drop counters. Fresh bounded executable 97d67cc69959a8139e8ff46708451fd15f57dbec1a705391776a8cc07d389aaa passed isolated output/camera/death/normal/original probes and56CTest. Task complete; queued NPC peer association is next. Final native sound capture: E:\Stalthosian Archipelago\var\reports\runtime\20261020-155339-13ed6d88/native-output.wav
+
+
+## 2026-10-20 NPC-to-NPC peer association working draft accepted
+One session-only existing conspecific pair, real relationship, stable lower-ID
+leader, graph approach and3m separate idle wait; needs/hero priority and finite
+shared contact/history retained. Paused route stays Travel in authoritative
+snapshot; no saved format/restore changes. Native pinned animated pair moves
+1.00003m then waits3m apart. Identical actor/body start under moving20.88m camera
+has max interpolated difference.000247m and no hero peer grant. Near-thirst leader
+accepts water209 amount.01173419 through its existing session3, exact relief
+.002346838;12 IDs/sessions and ledger conserved. Native normal12/original8 initial
+baselines match; five same-executable runs have zero support failures/fallbacks.
+Release57CTest/toolkit2073pass2skip/doctor0;157 originaluntracked/assets preserved.
+Root-only ownership/diff review: both preserved workers usage-limited,zero new
+ dispatches. Initial overlapping endpoint/boulder fixture and paused-Rest snapshot
+failure retained as superseded evidence, blockers fixed. No general social AI,
+kinship/breeding/search/reselection after death or connected save. Wide separation/
+reunion is domain proof only, not native route; coarse idle/horizontal sensing,
+graph edge completion and inherited pace/sole-contact/full-art/game/FPS limits
+parked. Working role good; do not polish social/creature assets.
+Receipt: .clanker/tasks/npc-peer-20261020/integration-receipt.json
+NEXT SUBSYSTEM: recognizable supported exterior shore approach connected to the
+current meadow/woodland using existing tunable terrain/water/replaceable props.
+Read .clanker/tasks/npc-peer-20261020/next-task.md first.
+
+Final audit resolved: executable44b1514b8b29a3fbe33b0ce1526f6861f3b7dfb66a3067f3db247a804ce18ba7 marks synthetic noon correctly and yields waiting presentation to actual hero avoidance. Fresh57CTest/five native runs pass; max matched-time actor error.001562m under20.88m camera motion, exact water209 relief.002348066. Original scene/session/history/asset/untracked gates pass. NPC pair task complete; shore approach next.

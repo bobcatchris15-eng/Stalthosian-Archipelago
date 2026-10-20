@@ -191,7 +191,7 @@ public:
     uint64_t boneChecks() const {return boneChecks_;}
     uint64_t hiddenObjectChecks() const {return hiddenObjectChecks_;}
     uint64_t visibleObjectChecks() const {return visibleObjectChecks_;}
-    void update(wi::scene::Scene& scene,const std::vector<fauna::ActorView>& actors,double clipDuration,double stride) {
+    void update(wi::scene::Scene& scene,const std::vector<fauna::ActorView>& actors,double clipDuration,double stride,Identity waitingNpc=0) {
         if(actors.size()!=replicas_.size()) throw std::runtime_error("fauna projection/renderer count mismatch");
         for(std::size_t i=0;i<actors.size();++i) {
             const auto& a=actors[i]; const auto& r=replicas_[i];
@@ -204,7 +204,7 @@ public:
             transform->rotation_local=DirectX::XMFLOAT4{};
             DirectX::XMStoreFloat4(&transform->rotation_local,DirectX::XMQuaternionRotationRollPitchYaw(0,float(a.headingRadians-(importedMeshes_?1.5707963267948966:0.0)),0));
             transform->SetDirty(); transform->UpdateTransform(); ++groundedUpdates_;
-            const bool travel=a.alive && a.activity==fauna::Activity::Travel;
+            const bool travel=a.alive && a.activity==fauna::Activity::Travel && a.id!=waitingNpc;
             auto* walk=scene.animations.GetComponent(r.walk);
             auto* idle=scene.animations.GetComponent(r.idle);
             if(walk) {

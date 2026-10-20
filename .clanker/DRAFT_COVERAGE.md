@@ -68,3 +68,6 @@ Latest accepted: sapling-disturbance-20261020. NEXT one native body-motion sound
 
 
 Latest accepted: body-audio-20261020. NEXT bounded NPC-to-NPC peer association; no audio/creature-art polish.
+
+
+Latest accepted: npc-peer-20261020. One session-only NPC peer link/graph approach/3m idle wait/needs/contact/camera boundary. Wide native departure/reunion unproven (domain only); no general social/family/save claim. NEXT recognizable traversable exterior shore approach; no social/asset polish.
