@@ -1,0 +1,61 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "source_base": "6128eae plus bounded tile(1,0) residency fix",
+  "release_build_exit_code": 0,
+  "ctest": "43/43 passed2.41s",
+  "toolkit": "2073 passed2 skipped511.91s during interrupted pass; toolkit source unchanged",
+  "review": "Preserved independent review harness rebuilt against current headers /W4 /WX; root completed source and native review after worker usage errors. No fresh independent native-review turn claimed.",
+  "native_evidence": {
+    "forage": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-022835-55faa1ab",
+    "override": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-022949-941dd02d",
+    "camera": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-022811-122be891",
+    "normal": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-023058-427f3440",
+    "drink": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-023128-2e7baba2"
+  },
+  "eligible_food_contact": {
+    "amount": 0.5,
+    "body_x": 22.77001190185547,
+    "body_z": 24.75400161743164,
+    "elapsed": 4.3897347,
+    "eligible": true,
+    "foliage_fraction": 0.75,
+    "hunger_after": 0.30030055926025656,
+    "hunger_before": 0.8003005592602566,
+    "resource": 200,
+    "session": 13
+  },
+  "hero_ledger_key": [
+    {
+      "amount": 0.5,
+      "resource_id": 200,
+      "session_id": 13
+    }
+  ],
+  "all_shrub_hero_plus_npc_closure_error": 2.886579864025407e-15,
+  "foliage_scale_factor": 0.75,
+  "woody_structure_visible": true,
+  "override_samples": 15,
+  "camera_fixed_body_x": -3.541382074356079,
+  "camera_samples": 36,
+  "camera_contacts": 0,
+  "normal_launch_actual_animal_and8plants": true,
+  "drink_regression": {
+    "amount": 0.5,
+    "body_x": 9.205316543579102,
+    "body_z": 23.990068435668945,
+    "elapsed": 11.6975777,
+    "eligible": true,
+    "session": 13,
+    "thirst_after": 0.3018603605208008,
+    "thirst_before": 0.8018603605208008
+  },
+  "failed_camera_evidence_preserved": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-022452-183f4111",
+  "bounded_integration_fix": "Connected terrain retains existing cohort support tile(1,0) for western hero positions; no geometry/activation rewrite",
+  "next_subsystem": "ordinary hero rest and recovery",
+  "limitations": [
+    "radial straight approach/no obstacle planning",
+    "provisional tree-fern browse stand-in and proxy proof body",
+    "no anatomical feeding/pose or 30FPS acceptance",
+    "connected saves unsupported; original saved mode preserved"
+  ]
+}

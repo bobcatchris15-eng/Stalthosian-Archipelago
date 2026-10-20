@@ -97,6 +97,9 @@ public:
         std::set<Key> wanted;
         for(const auto k:source_.neighborhood({x,0,z})) wanted.emplace(k.x,k.z);
         for(int iz=-1;iz<=0;++iz) for(int ix=-1;ix<=0;++ix) wanted.emplace(ix,iz);
+        // Current connected cohort reaches x144/z32 while its coarse group stays active.
+        // Keep its bounded support tile resident even when the hero is west of x0.
+        if(connected_) wanted.emplace(1,0);
         for(auto it=resident_.begin();it!=resident_.end();) if(!wanted.count(it->first)) {
             for(const auto& p:it->second) scene.Entity_Remove(p.entity);
             it=resident_.erase(it); ++evicted_;

@@ -1,0 +1,8 @@
+{
+  "stalthos-runtime/domain/hero_autonomy.hpp": "577525e3e19f6d0a13a2cea8f9645b70061aaed2f30738256d5a7fb4cfef0eda",
+  "stalthos-runtime/engine/main.cpp": "1fae2664f689e0fcc736e007962a1d8167ab1fd723daab4df5c9f08c45733088",
+  "stalthos-runtime/engine/populated_terrain.hpp": "2d0b3cb2956a3514e4313fe15773cc7abb10953a4f89183a04a4c48a77e480d2",
+  "stalthos-runtime/scripts/Run.ps1": "c432029640b5d2dd025d9345a99722fde843aaccb308dd48d5d12103d1689c2a",
+  "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "acf1827495160dc917358bf20817c85b0f3b6fc4564850fa8634a3f511d3eac5",
+  "stalthos-runtime/config/connected-plant.json": "178180688f6976ba5ab326d314d4d83e000a1cc3e492cd5eccd1c33eb0421883"
+}

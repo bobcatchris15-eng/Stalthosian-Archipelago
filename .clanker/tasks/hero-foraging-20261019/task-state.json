@@ -1,14 +1,19 @@
 {
   "schema_version": 1,
   "task_id": "hero-foraging-20261019",
-  "status": "running",
+  "status": "complete",
   "base_revision": "0fcc24e",
-  "current_step": "approved bounded food controller/contact/launcher wired; native build running",
+  "current_step": "Native working forage draft accepted; next ordinary rest/recovery",
   "completed_steps": [
     "read coldbrief/current source",
     "root approved generic optional Eat/resource extension",
     "pinned existing reviewed Basketfern for normal launcher",
-    "native food/contact/override/camera fixtures wired"
+    "native food/contact/override/camera fixtures wired",
+    "root resumed preserved changes and review harness",
+    "Release build and CTest43/43 passed",
+    "native forage/override/camera/normal-launch/drink regression passed",
+    "bounded support tile fix verified at negative-X camera startup",
+    "actual foliage response and exact shared-ledger closure verified"
   ],
   "touched_artifacts": [
     "stalthos-runtime/domain/hero_autonomy.hpp",
@@ -18,6 +23,13 @@
     "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
     "stalthos-runtime/config/connected-plant.json"
   ],
-  "updated": "2026-10-19T09:10:12.2793971Z",
-  "resume_instructions": "Finish focusedtests/native3probes actualfood .5ledger/relief/visual, immediateoverride,cameraonlynegative; sourcefreeze04:24; no polish"
+  "updated": "2026-10-20T07:33:27.731538+00:00",
+  "resume_instructions": "Finish focusedtests/native3probes actualfood .5ledger/relief/visual, immediateoverride,cameraonlynegative; sourcefreeze04:24; no polish",
+  "receipt_path": ".clanker\\tasks\\hero-foraging-20261019\\integration-receipt.json",
+  "next_step": "ordinary hero rest and recovery",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest43/43; five native launches; preserved reviewer harness /W4 /WX",
+    "evidence_path": ".clanker\\tasks\\hero-foraging-20261019\\integration-receipt.json"
+  }
 }

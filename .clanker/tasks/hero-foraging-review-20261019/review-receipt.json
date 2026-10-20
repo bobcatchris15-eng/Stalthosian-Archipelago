@@ -1,0 +1,27 @@
+{
+  "accepted_as": "working draft",
+  "review_provenance": "Preserved independent review harness rebuilt against current headers /W4 /WX; root completed source and native review after worker usage errors. No fresh independent native-review turn claimed.",
+  "root_reviewed_source_paths": [
+    "domain/hero_autonomy.hpp",
+    "engine/main.cpp",
+    "engine/populated_terrain.hpp",
+    "scripts/Run.ps1",
+    "scripts/Run-ConnectedWorld.ps1",
+    "config/connected-plant.json"
+  ],
+  "focused_harness_log": "adversarial-root.log",
+  "native_receipt": "../hero-foraging-20261019/integration-receipt.json",
+  "findings": [
+    "selected food resource gates contact; no remote relief",
+    "direct override cancels motion/contact immediately",
+    "exact one-session .5 transfer and hunger relief; foliage .75 and wood retained",
+    "camera body fixed negativeX, no attention/contact; retained support tile prevents prior failure",
+    "original native drink and normal pinned launcher passed"
+  ],
+  "deferred": [
+    "radial straight approach/no obstacle planning",
+    "provisional tree-fern browse stand-in and proxy proof body",
+    "no anatomical feeding/pose or 30FPS acceptance",
+    "connected saves unsupported; original saved mode preserved"
+  ]
+}

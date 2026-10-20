@@ -1,0 +1,16 @@
+adversarial.cpp
+PASS hungry body chooses local browse without remote contact
+PASS direct cancels forage same frame even eligible
+PASS forage resumes after direct release
+PASS remote body cannot forge eligible contact after active goal
+PASS depleted resource rejects forged eligibility
+PASS resource change binds actual new identity
+PASS selection and motion grant no hunger relief
+PASS shared ledger initialized
+PASS eligible browse selected
+PASS accepted shared-ledger contact relieves hunger
+PASS same session replay cannot relieve twice
+PASS browse transfer leaves creek unchanged
+PASS satisfied need stops forage
+PASS original drink API approach preserved
+PASS original drink API contact preserved
