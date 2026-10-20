@@ -1,0 +1,111 @@
+{
+  "task": "sapling-disturbance-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T19:47:12.243940+00:00",
+  "base_revision": "0c8f74c44f1c74e8b2bd3d91fca37d6b16d060c0",
+  "owned_paths": [
+    "stalthos-runtime/domain/sapling_disturbance.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/sapling_disturbance.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/sapling-disturbance.md"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/sapling_disturbance.hpp": "c14861c52ac24650a5280404d622c114ba4f643a3038e7935f128287585800f2",
+    "stalthos-runtime/engine/main.cpp": "4a3b33922048bd65ac1a4d985c55136fd52d0ac89108caf70d53776caa1f9a3e",
+    "stalthos-runtime/tests/sapling_disturbance.cpp": "2bfd3d414dd0bd7a9a7a7579da953a233272c1a8117adea2b0136aa8c449790a",
+    "stalthos-runtime/CMakeLists.txt": "2c2bd8e0fd577490192ecfe7ef8733f5cb5af77bb9da0b1c93a59bf1a547ae56",
+    "stalthos-runtime/scripts/Run.ps1": "2e044f3283b1c1dc136dc26db3c51fdce6b09491c14c0a4fb90f2af2b7b66ac0",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "410c3407bd40c2b5f3d21ef2c9e70a95580e3227584488372f0cdbf37c3b79f0",
+    "stalthos-runtime/docs/sapling-disturbance.md": "554ca7fea49f3794aa46e4c0329cb824aed0f9f392cd1494f19165dca83dd0b0"
+  },
+  "build": {
+    "schema_version": 1,
+    "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+    "configuration": "Release",
+    "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+    "executable_sha256": "32f30086e6959750f206cfdd69d51cccdedd10f0f6b4bec59a03dffee7cc3936",
+    "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+    "source_revision": "0c8f74c44f1c74e8b2bd3d91fca37d6b16d060c0",
+    "dirty_working_tree": true,
+    "note": "Application built locally against engine inputs: Verified local copy of existing compiled inputs; not a fresh engine rebuild"
+  },
+  "checks": {
+    "release": true,
+    "ctest_passed": 55,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 525.47,
+    "doctor_exit": 0,
+    "secret_scan": "passed final staged diff before commit"
+  },
+  "verification": {
+    "proxy": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-143940-7fd78bdc",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "exception_revision": 1,
+      "changed_at": 3.00031550732092,
+      "repeated_action_idempotent": true,
+      "departure_m": 5.771820068359375,
+      "return_error_m": 0.005401611328125,
+      "neighbor_instances_unchanged": 9,
+      "shared_mesh_ids_preserved": true,
+      "captures": 4
+    },
+    "animal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144023-0a711f25",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "exception_revision": 1,
+      "changed_at": 3.000577302649617,
+      "repeated_action_idempotent": true,
+      "departure_m": 2.2393798828125,
+      "return_error_m": 0.000640869140625,
+      "neighbor_instances_unchanged": 9,
+      "shared_mesh_ids_preserved": true,
+      "captures": 4
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144149-f3296ef7",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "camera_only_rejected": true
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144247-fde0aafa",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "death": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144405-542cfc0e",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144517-9854045f",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "preserved_original_untracked": 143,
+    "review": "root-only; two preserved independent reviewers usage-limited",
+    "scope": "one deliberate proximity action and session-world StandingDamaged exception; root lean/per-object tint, no impact/contact animation, tree mechanics or connected save acceptance"
+  },
+  "visual_review": "native proxy before/after sapling0/1 and actual animated return sapling3 inspected; clear isolated root lean and red/brown tint, neighboring trees unchanged",
+  "review": "root-only source/domain/native/composed visual review; both preserved independent workers usage-limited; zero dispatches",
+  "authority": "existing woodland identity9006, actual StalthosState recordTree(region1001, StandingDamaged, actual calendar timestamp); repeated presses preserve revision1/time",
+  "limits": [
+    "one deliberately selected sapling only; instant .32rad root lean and per-object tint stand-in",
+    "coarse1.8m/.9m proximity plus supported/alive guard; no impact animation, anatomical force or trunk/body collision acceptance",
+    "session-world departure/return only; no healing, forest ecology/mechanics or connected save support",
+    "new-life world exception survival checked in actual domain owner transition; native death/new-life regression preserved separately",
+    "camera proof uses detached initial anchor near tree with stationary actual hero position21.5m away, no moving-camera or human-keyboard acceptance claim",
+    "existing slow animal pace, sole/gait/wet-material/route and other accepted limits remain parked",
+    "569 graph zero-node artifact warnings; broad baseline graph delta is not architecture acceptance"
+  ],
+  "evidence_check_correction": "proxy telemetry samples every.25s can miss the6m turnaround by.5m; departure gate corrected from5.9 to5.5m based on actual sampled5.7718m and repeated eligibility loss, without runtime/source change or repeated native run",
+  "next_task": ".clanker\\tasks\\sapling-disturbance-20261020\\next-task.md"
+}

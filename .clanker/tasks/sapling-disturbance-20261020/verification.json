@@ -1,0 +1,52 @@
+{
+  "proxy": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-143940-7fd78bdc",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "exception_revision": 1,
+    "changed_at": 3.00031550732092,
+    "repeated_action_idempotent": true,
+    "departure_m": 5.771820068359375,
+    "return_error_m": 0.005401611328125,
+    "neighbor_instances_unchanged": 9,
+    "shared_mesh_ids_preserved": true,
+    "captures": 4
+  },
+  "animal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144023-0a711f25",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "exception_revision": 1,
+    "changed_at": 3.000577302649617,
+    "repeated_action_idempotent": true,
+    "departure_m": 2.2393798828125,
+    "return_error_m": 0.000640869140625,
+    "neighbor_instances_unchanged": 9,
+    "shared_mesh_ids_preserved": true,
+    "captures": 4
+  },
+  "camera": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144149-f3296ef7",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "camera_only_rejected": true
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144247-fde0aafa",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "death": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144405-542cfc0e",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-144517-9854045f",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "preserved_original_untracked": 143,
+  "review": "root-only; two preserved independent reviewers usage-limited",
+  "scope": "one deliberate proximity action and session-world StandingDamaged exception; root lean/per-object tint, no impact/contact animation, tree mechanics or connected save acceptance"
+}

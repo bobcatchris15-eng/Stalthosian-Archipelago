@@ -379,3 +379,29 @@ acceptance. Working role accepted; do not polish exploration or accepted drafts.
 NEXT SUBSYSTEM: one deliberate body-local visible sapling disturbance using
 existing WorldSim tree exception and per-instance replaceable visual ownership.
 .clanker/tasks/hero-exploration-20261020/next-task.md
+
+
+## 2026-10-20 sapling disturbance: working draft accepted
+Living supported body-focus F near existing sapling9006 at148,40 records one
+actual WorldSim StandingDamaged exception in region1001. Calendar timestamp and
+revision1 persist; repeat action on return does not rewrite either. This truth
+drives only that root's.32rad lean and per-object tint; shared geometry/materials,
+asset files and all9 other tree instances remain unchanged. Actual native
+before/after and animated return images inspected. Proxy sampled departure5.7718m
+and returnerror.0054m; animated body2.2394m/.000641m. Both lose eligibility while
+away and regain it on return with the same changed tree. Camera fixture near tree
+with body21.5m away refuses both actions and stays revision0. All connected probes
+zero support failures/fallbacks; normal exploration/original mode/death-new-life
+regressions pass, original12 actor/11resource/session initial baseline exact.
+Release55CTest/toolkit2073pass2skip doctor. Assets and143originaluntracked preserved.
+Root-only review; two workers usage-limited,zero dispatches. Receipt:
+.clanker/tasks/sapling-disturbance-20261020/integration-receipt.json
+Parked: instant lean/tint stand-in, coarse proximity and no impact pose/trunk-body
+collision, healing/forest mechanics/connected save support. Existing asset/pace/
+sole/gait limits remain. Camera proof is initial detached proximity, no human or
+moving-camera acceptance. Proxy telemetry.25s misses apex; corrected evidence
+threshold to sampled5.5m bound, measured5.7718m; no runtime change/rerun needed.
+Working role accepted; no tree/asset/terrain polish. No full-art/game/FPS claim.
+NEXT SUBSYSTEM: one bounded native body-motion ground-rustle sound cue. Inspect
+actual Wicked audio/output ownership and preserve all user audio settings/apps.
+.clanker/tasks/sapling-disturbance-20261020/next-task.md

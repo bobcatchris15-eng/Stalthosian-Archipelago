@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "sapling-disturbance-20261020",
+  "status": "complete",
+  "base_revision": "0c8f74c44f1c74e8b2bd3d91fca37d6b16d060c0",
+  "current_step": "one visible body-local tree exception accepted; next native body-motion sound",
+  "completed_steps": [
+    "HALT/current handoff and actual stable tree instance/WorldSim exception ownership inspected; usage-limited workers collected",
+    "living supported body-focus F records StandingDamaged once for sapling9006; no camera/remote action",
+    "world exception drives per-object tint/root lean; shared geometry/materials/assets and other9trees unchanged",
+    "Release55CTest; toolkit2073pass2skip doctor",
+    "native proxy and actual animated body before/change/leave/return captures; repeated action revision1/time unchanged",
+    "native proxy sampled departure5.7718m and returnerror.0054m; animal2.2394m/.000641m; support failures/fallbacks0",
+    "camera-only near-tree view/body21.5m away refuses both actions and remains revision0/unchanged",
+    "normal exploration/world baseline, original mode and native death/new-life regression preserved",
+    "original12 actors/11resources/session initial baseline and retained NPC identities preserved; assets143originaluntracked preserved",
+    "source/visual/native root-only review; no fresh independent review claimed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/sapling_disturbance.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/sapling_disturbance.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/sapling-disturbance.md"
+  ],
+  "updated": "2026-10-20T19:47:12.243940+00:00",
+  "resume_instructions": "Read next-task. Sapling role accepted; park instant lean/tint, no impact/collision/healing/save limits. Move to one native body-motion sound cue.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest55; toolkit2073/2 doctor; verify.py native exception/isolated visual/departure-return/repeat/camera/baselines/preservation",
+    "evidence_path": ".clanker\\tasks\\sapling-disturbance-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\sapling-disturbance-20261020\\integration-receipt.json",
+  "next_step": "one bounded native body-motion ground-rustle cue; inspect audio output ownership first"
+}

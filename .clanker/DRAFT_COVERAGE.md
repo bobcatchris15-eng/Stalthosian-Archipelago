@@ -62,3 +62,6 @@ Latest accepted: death-next-life-20261020. NEXT ordinary short supported explora
 
 
 Latest accepted: hero-exploration-20261020. NEXT one body-local visible vegetation/tree exception; no exploration/controller/asset polish.
+
+
+Latest accepted: sapling-disturbance-20261020. NEXT one native body-motion sound cue; no tree/asset/terrain polish.
