@@ -1,0 +1,106 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "base_revision": "cc1d1b5",
+  "implementation_and_review": "root only; both preserved reviewers usage-limited, no fresh independent review",
+  "owned_paths": [
+    "stalthos-runtime/domain/exterior_browse.hpp",
+    "stalthos-runtime/tests/exterior_browse.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-browse.md"
+  ],
+  "release_build_exit_code": 0,
+  "ctest": "47/47 passed3.11s",
+  "native_evidence": {
+    "approach": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-062442-90012d23",
+    "camera": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-062508-ece8097d",
+    "normal": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-062526-c179f13f"
+  },
+  "same_executable_sha256": "c7d8123b7ee7f5d229af8d983222e06582ee98071b3affc90c8a8879afe0e54e",
+  "resource": 208,
+  "initial_quantity": 1,
+  "hero_contact": {
+    "amount": 0.5,
+    "body_x": 145.9934539794922,
+    "body_z": 20.0,
+    "elapsed": 9.2397409,
+    "eligible": true,
+    "foliage_fraction": 0.42503261896636113,
+    "hunger_after": 0.3007007318300595,
+    "hunger_before": 0.8007007318300595,
+    "resource": 208,
+    "session": 13
+  },
+  "npc_food_consumed_same_resource": 0.07496738103363888,
+  "final_resource": {
+    "consumed_quantity": 0.5749673810336389,
+    "id": 208,
+    "initial_quantity": 1.0,
+    "kind": 0
+  },
+  "final_foliage_fraction": 0.42503261896636113,
+  "ordinary_approach_distance_m": 14.00469970703125,
+  "synthetic_startup_pose_and_hunger": true,
+  "post_start_teleport": false,
+  "camera_body_fixed_no_hero_awareness_or_consumption": true,
+  "camera_npcs_continue_feeding": true,
+  "camera_final_npc_consumption": 0.20060160903143712,
+  "captures_inspected": [
+    "approach/exterior-browse-0.png",
+    "approach/exterior-browse-2.png",
+    "camera/exterior-browse-0.png",
+    "camera/exterior-browse-2.png"
+  ],
+  "fixed_camera_native_foliage_reduction_visible": true,
+  "normal_existing_animal_and_nine_plants_loaded": true,
+  "native_original_eight_initial_actor_json_exact_match": true,
+  "native_original_nine_initial_resources_exact_match": true,
+  "native_baseline_used": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053041-a93cd676",
+  "support_failures_and_fallbacks": 0,
+  "preserved_original_untracked_files": 134,
+  "authorized_graph_marker_refresh": true,
+  "unrelated_changes": [],
+  "immutable_creature_and_plant_pins_preserved": true,
+  "limits": [
+    "one finite patch; no regrowth/exterior water/hydrology/connected save support",
+    "existing NPC browse dwell/avoidance/crowding and proxy feeding pose retained",
+    "hero approach proxy2m/s, not animal full-route/sole acceptance",
+    "plant/source shape provisional and replaceable; no new asset polish",
+    "no full-draft/final visual/30FPS acceptance",
+    "Empty resource remains a browse node; existing NPC browse dwell uses current controller, no depletion/regrowth scheduling added"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/exterior_browse.hpp": "077abeb097b94a1ba627ab291ed2631677a3ddf0a5a21d4a73761e946a65ec70",
+    "stalthos-runtime/tests/exterior_browse.cpp": "785799fe703213a38a514c8620029a28ea8a77ec0609d870fe8aadb559cf7baf",
+    "stalthos-runtime/engine/main.cpp": "b2dfe970b9e40e363a48d53d50e0b47aa3bcdcd7ce99624e218f7f0e11664899",
+    "stalthos-runtime/scripts/Run.ps1": "3f0448758e2151cc1c428a198a36918e0c041c395652907aaf0d005748b4b129",
+    "stalthos-runtime/CMakeLists.txt": "06c22a009c8778c301e2ff089643a2a15f30174fd2bf86fc1ecc849b1675aec4",
+    "stalthos-runtime/docs/exterior-browse.md": "e3f34390cb69fa847b79d79b858dea2a485f1f6477ec957b79a33e6e88d4fe9c"
+  },
+  "next_task": ".clanker\\tasks\\exterior-browse-20261020\\next-task.md",
+  "toolkit": "2073passed2skipped516.31s",
+  "doctor": "actual CLI ok true exit0",
+  "shared_patch_history": [
+    {
+      "amount": 0.07496738103363888,
+      "resource_id": 208,
+      "session_id": 12
+    },
+    {
+      "amount": 0.5,
+      "resource_id": 208,
+      "session_id": 13
+    }
+  ],
+  "all_twelve_native_identities_match_preserved_baseline": true,
+  "checkpoint_checks": {
+    "task_schema": "complete valid",
+    "graph_refresh_exit_code": 0,
+    "graph_limit": "512 sources absent; not complete structural graph or fresh independent review",
+    "explicit_owned_paths": true,
+    "heartbeat": "ACTIVE in this chat; next exterior water access",
+    "staged_secret_scan": "passed",
+    "staged_diff_check": "passed"
+  }
+}

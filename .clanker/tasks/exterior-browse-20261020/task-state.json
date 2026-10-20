@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-browse-20261020",
+  "status": "complete",
+  "base_revision": "cc1d1b5",
+  "current_step": "working exterior browse draft accepted; next exterior water access",
+  "completed_steps": [
+    "collected usage-limited reviewers; root-only implementation/review",
+    "read existing plant/resource/activation contracts",
+    "implemented one existing-site browse patch and original8 preservation",
+    "47 domain tests passed including shared NPC/hero/replay/foliage contract",
+    "native shared208 hero.5/NPC.074967 exact, visible foliage response",
+    "camera-only no hero awareness/contact, NPC feeding continues",
+    "normal existing animal/9plants and actual old8/old9resource baseline exact",
+    "all native support0, preservation and immutable pins passed",
+    "final47CTest/toolkit2073/2/doctor passed; role accepted and next brief written"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/exterior_browse.hpp",
+    "stalthos-runtime/tests/exterior_browse.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-browse.md"
+  ],
+  "updated": "2026-10-20T11:30:04.705166+00:00",
+  "resume_instructions": "Browse patch working draft done; no plant/feeding/controller polish. Read next-task for one bounded visible exterior water source. Root-only review explicit; preserve all logged limits/saves/assets/apps.",
+  "validation": {
+    "passed": true,
+    "command": "Release Build.ps1; CTest47; native shared patch approach/camera/normal import; toolkit2073/2 doctor",
+    "evidence_path": ".clanker\\tasks\\exterior-browse-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\exterior-browse-20261020\\integration-receipt.json",
+  "next_step": "exterior meadow water access"
+}

@@ -1,3 +1,4 @@
+#include "domain/exterior_browse.hpp"
 #include "domain/hero_destination.hpp"
 #include "domain/environmental_exposure.hpp"
 #include "domain/hero_rest.hpp"
@@ -189,7 +190,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned destinationProbe=0;bool exposureProbe=false;
+    unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
     unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
@@ -202,6 +203,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--exterior-browse-probe"){exteriorBrowseProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--exterior-browse-camera-probe"){exteriorBrowseProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--destination-probe"){destinationProbe=1;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--destination-override-probe"){destinationProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--destination-boundary-probe"){destinationProbe=3;connectedWorld=true;populatedWorld=true;}
@@ -261,6 +264,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        const bool exteriorBrowseEnabled=connectedWorld && !plant.empty();const stalthos::fauna::ExteriorBrowsePatch exteriorBrowse;
+        if(exteriorBrowseProbe && (!exteriorBrowseEnabled || interactive || !creature.empty() || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("exterior browse probe requires imported Plant and timed proxy only");
         if(destinationProbe && (interactive || !creature.empty() || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview || connectedEmbodimentProbe))throw std::runtime_error("destination probe uses timed connected proxy with no other diagnostic");
         if(exposureProbe && (interactive || !creature.empty() || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)) throw std::runtime_error("exposure probe uses timed proxy controls with no other diagnostic");
         if(restProbe && (interactive || autonomyProbe || foragingProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)) throw std::runtime_error("rest probe requires timed connected world without another diagnostic");
@@ -362,6 +367,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (loadedNeeds && loadedNeeds->species == heroSpecies)
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
         if(restProbe) needs->restoreState(0,0,.8,0,false); // Explicit synthetic fatigue only.
+        if(exteriorBrowseProbe) needs->restoreState(.8,0,0,0,false);
         if(foragingProbe) needs->restoreState(.8,0,0,0,false);
         if(autonomyProbe) needs->restoreState(0,.8,0,0,false); // Explicit synthetic need setup only.
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
@@ -387,6 +393,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                  {206, stalthos::ResourceKind::Shrub, 2.0, 0.0},
                                  {207, stalthos::ResourceKind::Shrub, 2.0, 0.0}});
         }
+
+        if(exteriorBrowseEnabled){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({stalthos::fauna::ExteriorBrowsePatch::resource,stalthos::ResourceKind::Shrub,exteriorBrowse.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("exterior browse ledger initialization rejected");}
 
         uint64_t maxPersistedSessionId = 0;
         if (loadedSaveData && loadedSaveData->resourceLedger.has_value()) {
@@ -459,6 +467,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             populatedTerrain->update(scene,0,0);
             productionGround=[&](double gx,double gz){return populatedTerrain->height(gx,gz);};
         }
+        if(exteriorBrowseEnabled){if(cachedShrubs.size()!=stalthos::fauna::ExteriorBrowsePatch::shrubIndex)throw std::runtime_error("exterior browse resource mapping requires original eight shrubs");cachedShrubs.push_back({stalthos::domain::PlacementKind::Shrub,exteriorBrowse.x,populatedTerrain->height(exteriorBrowse.x,exteriorBrowse.z),exteriorBrowse.z,exteriorBrowse.scale,0});}
+        if(exteriorBrowseProbe){x=float(exteriorBrowse.x+(exteriorBrowseProbe==2?28:16));z=float(exteriorBrowse.z);yaw=-1.57079632679f;populatedTerrain->update(scene,x,z);} // Labelled startup fixture only.
         if(populatedResourceProbe) {x=0;z=0;} // Real creek location; eligibility still gates the contact.
         const auto organicRockCounts=stalthos::engine::populateOrganicRocks(scene,landscape,42);
         const auto meadowCounts=stalthos::engine::populateMeadowScene(scene,landscape,42);
@@ -933,10 +943,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto& d:world.snapshot().deadHeroes) excluded.insert(d.first);
             stalthos::fauna::Population legacyPopulation(world.worldSeed(),1001,faunaSites,8,excluded);
             if(connectedWorld) {
-                const auto habitat=stalthos::fauna::exteriorHabitat(faunaSites,[&](double gx,double gz){return populatedTerrain->height(gx,gz);},[&](double gx,double gz){return landscape.inBounds(gx,gz)?landscape.waterContains(gx,gz):populatedTerrain->height(gx,gz)<=0;});
-                legacyPopulation=stalthos::fauna::withExteriorResidents(legacyPopulation,habitat,excluded);faunaSites=habitat.sites;
+                auto habitat=stalthos::fauna::exteriorHabitat(faunaSites,[&](double gx,double gz){return populatedTerrain->height(gx,gz);},[&](double gx,double gz){return landscape.inBounds(gx,gz)?landscape.waterContains(gx,gz):populatedTerrain->height(gx,gz)<=0;});
+                legacyPopulation=exteriorBrowseEnabled?stalthos::fauna::withExteriorBrowse(legacyPopulation,habitat,excluded,exteriorBrowse):stalthos::fauna::withExteriorResidents(legacyPopulation,habitat,excluded);faunaSites=habitat.sites;
                 json nodes=json::array();for(const auto& site:faunaSites)nodes.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},{"neighbors",site.neighbors},{"browse",site.browse},{"freshwater",site.freshwater}});
-                WriteJson(output/"exterior-residents-habitat.json",{{"sites",nodes},{"resident_sites",habitat.residents},{"max_measured_grade",habitat.maxMeasuredGrade},{"sample_count",habitat.samples},{"sample_m",.5},{"max_grade",.6},{"original_eight_state_preserved",true},{"new_residents",4},{"activation","same coarse body-radius192m watershed group; no separate region"},{"exterior_resource_anchors",0}});
+                WriteJson(output/"exterior-residents-habitat.json",{{"sites",nodes},{"resident_sites",habitat.residents},{"max_measured_grade",habitat.maxMeasuredGrade},{"sample_count",habitat.samples},{"sample_m",.5},{"max_grade",.6},{"original_eight_state_preserved",true},{"new_residents",4},{"activation","same coarse body-radius192m watershed group; no separate region"},{"exterior_resource_anchors",exteriorBrowseEnabled?1:0},{"exterior_food_resource",exteriorBrowseEnabled?208:0}});
             }            if(loadedSaveData && loadedSaveData->faunaPopulation) {
                 legacyPopulation.restore(*loadedSaveData->faunaPopulation,excluded);
                 faunaPopulationRestored=true;
@@ -1048,6 +1058,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;
             state.detachedAnchor=wildlifeAnchor;viewController.setState(state);
         }
+        if(exteriorBrowseProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={exteriorBrowse.x,Ground(float(exteriorBrowse.x),float(exteriorBrowse.z)),exteriorBrowse.z};viewController.setState(state);}
         if(destinationProbe==3){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={x+40,Ground(x+40,z),z};viewController.setState(state);}
         if(foragingProbe==3) {auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor=foragingAnchor;viewController.setState(state);}
         if(autonomyProbe==3) {
@@ -1099,6 +1110,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         double latestCreatureRootRenderedGroundY = 0.0;
         double latestCreatureRootGroundDeltaM = 0.0;
 
+        json exteriorBrowseSamples=json::array(),exteriorBrowseCaptures=json::array(),exteriorBrowseNpcContacts=json::array();double nextExteriorBrowseSample=0;std::array<bool,3> exteriorBrowseCaptured{};
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
         while (true) {
@@ -1616,6 +1628,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     for(const auto& actor:faunaPopulation->actors()) {const auto response=actualBodyAwareness?stalthos::fauna::awareness(actor.position,*actualBodyAwareness):stalthos::fauna::AwarenessDecision{};responses.push_back({{"id",actor.id},{"x",actor.position.x},{"z",actor.position.z},{"heading",actor.headingRadians},{"distance_travelled",actor.distanceTravelledMeters},{"activity",unsigned(actor.activity)},{"noticed",response.noticed},{"avoid",response.avoid},{"body_distance",response.distance}});}
                     wildlifeSamples.push_back({{"elapsed",elapsed},{"body_x",x},{"body_z",z},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"phase",wildlifeProbe==2?"camera_only":elapsed<6?"approach":elapsed<10?"hold":elapsed<18?"withdraw":"idle"},{"actors",responses}});nextWildlifeSample=elapsed+.2;
                 }
+                if(exteriorBrowseEnabled)for(const auto& event:faunaPopulation->events())if(event.resource==208)exteriorBrowseNpcContacts.push_back({{"actor",event.actor},{"amount",event.amount},{"physical_seconds",clock.physicalSeconds()}});
                 faunaResourceEvents+=faunaPopulation->events().size();
                 if(!faunaPopulation->events().empty()) {
                     for(const auto& res:resourceSnapshot()) cachedResourceDtos[res.id]=res;
@@ -1674,6 +1687,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(exteriorBrowseProbe)for(std::size_t i=0;i<3;++i)if(!exteriorBrowseCaptured[i] && (i==0?elapsed>=1:i==1?elapsed>=5:!autonomyContacts.empty() || elapsed>=12)){const auto filename="exterior-browse-"+std::to_string(i)+".png";exteriorBrowseCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());exteriorBrowseCaptures.push_back({{"filename",filename},{"saved",exteriorBrowseCaptured[i]}});}
             if(destinationProbe && !destinationInjected && clock.physicalSeconds()>=1){
                 if(destinationProbe==3){DirectX::XMFLOAT3 screen;DirectX::XMStoreFloat3(&screen,DirectX::XMVector3Project(DirectX::XMVectorSet(x+40,Ground(x+40,z),z,1),0,0,app.canvas.GetLogicalWidth(),app.canvas.GetLogicalHeight(),0,1,wi::scene::GetCamera().GetProjection(),wi::scene::GetCamera().GetView(),DirectX::XMMatrixIdentity()));RECT client{};GetClientRect(window,&client);const int px=int(screen.x*client.right/app.canvas.GetLogicalWidth()),py=int(screen.y*client.bottom/app.canvas.GetLogicalHeight());PostMessageW(window,WM_RBUTTONDOWN,MK_RBUTTON,MAKELPARAM(px,py));PostMessageW(window,WM_RBUTTONUP,0,MAKELPARAM(px,py));destinationInjected=true;}
                 else for(int k=0;k<48 && !destinationInjected;++k){const double angle=k*6.283185307179586/48;const float gx=x+float(4*std::sin(angle)),gz=z+float(4*std::cos(angle));const stalthos::Vec3 target{gx,Ground(gx,gz),gz};if(!supportedDestination({x,Ground(x,z),z},target))continue;DirectX::XMFLOAT3 screen;DirectX::XMStoreFloat3(&screen,DirectX::XMVector3Project(DirectX::XMVectorSet(gx,float(target.y),gz,1),0,0,app.canvas.GetLogicalWidth(),app.canvas.GetLogicalHeight(),0,1,wi::scene::GetCamera().GetProjection(),wi::scene::GetCamera().GetView(),DirectX::XMMatrixIdentity()));if(screen.x<10||screen.y<10||screen.x>=app.canvas.GetLogicalWidth()-10||screen.y>=app.canvas.GetLogicalHeight()-10)continue;const auto hit=scene.Intersects(wi::renderer::GetPickRay(long(screen.x),long(screen.y),app.canvas));if(hit.entity==wi::ecs::INVALID_ENTITY || std::hypot(double(hit.position.x)-gx,double(hit.position.z)-gz)>.2)continue;RECT client{};GetClientRect(window,&client);const int px=int(screen.x*client.right/app.canvas.GetLogicalWidth()),py=int(screen.y*client.bottom/app.canvas.GetLogicalHeight());PostMessageW(window,WM_RBUTTONDOWN,MK_RBUTTON,MAKELPARAM(px,py));PostMessageW(window,WM_RBUTTONUP,0,MAKELPARAM(px,py));destinationInjected=true;}
@@ -1902,7 +1916,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             eligibilityShrub = false;
             int nearbyShrubIndex = -1;
             for (size_t i = 0; !plant.empty() && importedInstances > 0 && i < cachedShrubs.size(); i++) {
-                if (heroAlive && bodyInLandscape && (!autonomyAction.contact || !autonomyBrowsing || autonomyResource==200+i) && std::abs(cachedShrubs[i].y - bodyPos.y) <= 1.5 && distanceToPlant(cachedShrubs[i], bodyPos.x, bodyPos.z) < 4.0) { // 2m horizontal reach and bounded vertical reach
+                if (heroAlive && (bodyInLandscape || (connectedWorld && rootUsesRendered)) && (!autonomyAction.contact || !autonomyBrowsing || autonomyResource==200+i) && std::abs(cachedShrubs[i].y - bodyPos.y) <= 1.5 && distanceToPlant(cachedShrubs[i], bodyPos.x, bodyPos.z) < 4.0) { // 2m horizontal reach and bounded vertical reach
                     eligibilityShrub = true;
                     nearbyShrubIndex = static_cast<int>(i);
                     break;
@@ -1992,6 +2006,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     }
                 }
             }
+            if(exteriorBrowseEnabled && elapsed>=nextExteriorBrowseSample){exteriorBrowseSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",x},{"body_z",z},{"hunger",needs->hunger()},{"body_food_awareness",heroIntent.perception.attention().has_value()},{"selected_resource",autonomyResource},{"remaining",getResourceRemaining(208)},{"foliage_fraction",shrubVisualInstances.at(8).appliedFraction},{"hero_contacts",appliedBrowseContacts},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z}});nextExteriorBrowseSample=elapsed+.1;}
             previousInteractDown = interactDown;previousInteractionOwner=interactionOwner;
 
             if(autonomyProbe || foragingProbe) for(std::size_t phase=0;phase<3;++phase) if(!autonomyCaptured[phase] && (phase==0?elapsed>=1:phase==1?elapsed>=5:!autonomyContacts.empty())) {
@@ -2050,6 +2065,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
+        if(exteriorBrowseEnabled)WriteJson(output/"exterior-browse.json",{{"resource",208},{"initial_quantity",exteriorBrowse.quantity},{"patch_x",exteriorBrowse.x},{"patch_z",exteriorBrowse.z},{"probe_mode",exteriorBrowseProbe},{"synthetic_initial_hunger_and_pose",exteriorBrowseProbe!=0},{"samples",exteriorBrowseSamples},{"npc_contacts",exteriorBrowseNpcContacts},{"hero_contacts",autonomyContacts},{"captures",exteriorBrowseCaptures},{"scope","one existing-asset shared finite exterior food patch; no connected saves or exterior hydrology"}});
         if(connectedWorld) WriteJson(output/"hero-destination.json",{{"probe_mode",destinationProbe},{"synthetic_native_mouse_event",destinationProbe!=0},{"physical_human_mouse_tested",false},{"events",destinationEvents},{"samples",destinationSamples},{"captures",destinationCaptures},{"scope","nearby12m dry supported straight-line destination; no general pathfinding"}});
         if(connectedWorld) WriteJson(output/"environmental-exposure.json",{{"synthetic_adverse_weather",exposureProbe},{"startup_fixture_only",exposureProbe},{"body_motion","shared forward intent and ordinary integrator"},{"fatigue_ceiling",.65},{"samples",exposureSamples},{"captures",exposureCaptures},{"scope","comfort proxy; coarse rock lee; no thermodynamics or waterproof roof"}});
         if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",true},{"lifecycle_coupled",false}});

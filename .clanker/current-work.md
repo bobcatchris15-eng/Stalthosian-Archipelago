@@ -135,10 +135,44 @@ approach; preserved, not a destination failure or terrain/drink polish task.
 Original saves/assets/apps/untracked work preserved; connected preview refuses
 saves. No full-draft/final visuals/30FPS claim.
 
-## NEXT SUBSYSTEM: exterior meadow browse patch
+## Previous next-task (completed below): exterior meadow browse patch
 
 Cold brief: .clanker/tasks/hero-destination-20261020/next-task.md
 One visible tunable finite food patch for existing exterior residents and hero,
 shared resource identity/contact/history and visible depletion. No ecology/save/
 activation framework, new plant art, water simulation or accepted-draft polish.
 Working draft -> log oddities -> next. Wake05:20CDT root-only, zero dispatches.
+
+## Working draft accepted: exterior meadow browse patch — 2026-10-20
+
+Connected world with existing imported Plant now has one fern at144,20 on the
+existing last resident node. Shared finite resource208, quantity1, shrub index8,
+scale0.7 in ExteriorBrowsePatch; node becomes browse-eligible. New last resident
+starts hungry there through the existing registry/contacts. Original8 native
+initial actor JSON and original9 initial resource DTOs exactly match preserved
+normal baseline20261020-053041-a93cd676. Four exterior identities/coarse192m group
+and support tile(1,0) retained. No Plant -> no exterior food/resource claim.
+
+Native24s hungry proxy approaches14.0047m ordinarily, consumes0.5 on session13
+with exact0.5 hunger relief. Resident consumes0.074967381 on the same208 ledger;
+remaining/foliage0.425032619. Fixed-camera16s run: body172,20 stays28m away from
+patch/camera144,20, no hero food awareness/contact; NPCs continue feeding and
+same-view native captures show shrinking foliage. All three native runs support
+0failures/0fallbacks; normal actual-animal run imports9fern instances/2animations.
+Release passed, CTest47/47passed3.11s, toolkit2073passed2skipped516.31s; doctorok.
+Both preserved reviewers usage-limited; root implementation/review only.
+
+Receipt: .clanker/tasks/exterior-browse-20261020/integration-receipt.json
+Roughness parked: one finite patch/no regrowth or exterior water; existing NPC
+browse dwell/avoidance/crowding and proxy feeding pose; plant shape replaceable.
+No animal full-route/exterior sole/wet-material/finalvisual/30FPS acceptance.
+Original saves/assets/apps/untracked work preserved; connected preview still
+refuses saves. No migration/activation/general ecology infrastructure added.
+
+## NEXT SUBSYSTEM: exterior meadow water access
+
+Cold brief: .clanker/tasks/exterior-browse-20261020/next-task.md
+One visible tunable water source, body-supported hero/NPC eligible shared-ledger
+contact/relief and camera-only separation. Static/shallow approximation allowed;
+no hydrology solver, lethal drinking, new persistence or accepted-draft polish.
+Working draft -> log oddities -> next. Wake06:18CDT root-only, zero dispatch.
