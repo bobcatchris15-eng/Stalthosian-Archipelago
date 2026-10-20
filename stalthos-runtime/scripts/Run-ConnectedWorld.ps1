@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param([double]$Duration=30,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
-      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe)
+      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe)
 $ErrorActionPreference='Stop'
+if($ExplorationProbe -or $ExplorationOverrideProbe -or $ExplorationCameraProbe){if($Interactive -or $LifeStageProbe -or $DeathNextLifeProbe -or $AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe){throw 'Exploration probe requires standalone timed mode'};if(@($ExplorationProbe,$ExplorationOverrideProbe,$ExplorationCameraProbe).Where({$_}).Count -ne 1){throw 'Choose one exploration probe'}}
 if($DeathNextLifeProbe -and ($LifeStageProbe -or $AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $Interactive)){throw 'Death/next-life probe requires standalone timed mode'}
 if($LifeStageProbe -and ($AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $Interactive)){throw 'Life stage probe requires timed standalone mode'}
 if($WoodlandProbe -and ($AutonomyProbe -or $ExteriorProbe -or $Interactive)){throw 'Woodland probe requires timed standalone mode'}
@@ -10,6 +11,9 @@ if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at
 $options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance}
 if($LifeStageProbe){$options.LifeStageProbe=$true}
 if($DeathNextLifeProbe){$options.DeathNextLifeProbe=$true}
+if($ExplorationProbe){$options.ExplorationProbe=$true}
+if($ExplorationOverrideProbe){$options.ExplorationOverrideProbe=$true}
+if($ExplorationCameraProbe){$options.ExplorationCameraProbe=$true}
 if($WoodlandProbe){$options.ExteriorWoodlandProbe=$true}
 if($Interactive) {$options.Interactive=$true}
 if($AutonomyProbe) {$options.HeroAutonomyProbe=$true}

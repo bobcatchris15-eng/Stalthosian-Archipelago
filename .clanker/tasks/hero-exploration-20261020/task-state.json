@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-exploration-20261020",
+  "status": "complete",
+  "base_revision": "eadd9ebdcf22bd2f4619580187d71f0acbe92934",
+  "current_step": "ordinary supported exploration move/pause and overrides accepted; next one visible body-local vegetation disturbance",
+  "completed_steps": [
+    "HALT/current checkpoint and existing goal/rest/destination contracts inspected; collected usage-limited reviewers",
+    "bounded tunable noncontextual exploration using one HeroSim goal, actual body pose and existing supported dry-route checks",
+    "physical wait/pause/leg bound, direct/destination/needs/rest priority and fresh next-life controller",
+    "Release54CTest; toolkit2073pass2skip doctor",
+    "proxy and animated body native move/pause verified, readable cue inspected",
+    "native immediate direct override, thirsty handoff and exact.5 shared water relief, contextual destination override",
+    "detached20m initial camera gives exact same first body-local target and arrival within.0004m; scope labelled",
+    "ordinary actual start/calendar/night/needs preserved, original populated launch and death/new-life regression passed",
+    "all six connected native runs zero support failures/fallbacks; original12 actor/11resource/session initial baseline exact",
+    "immutable asset hashes and141 original untracked paths preserved; root-only review explicit"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/hero_exploration.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/hero_exploration.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/hero-exploration.md"
+  ],
+  "updated": "2026-10-20T18:47:41.403699+00:00",
+  "resume_instructions": "Read next-task. Working exploration accepted; park repeated paths/cue-only pause/simple turns/obstacle and gait limits.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest54; toolkit2073/2 doctor; verify.py native movement/pause/priorities/camera/normal/death/original/baseline/preservation",
+    "evidence_path": ".clanker\\tasks\\hero-exploration-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\hero-exploration-20261020\\integration-receipt.json",
+  "next_step": "one deliberate body-local existing sapling disturbance with authoritative tree exception and visible instance consequence"
+}

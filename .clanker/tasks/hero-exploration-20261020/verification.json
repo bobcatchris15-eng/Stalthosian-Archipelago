@@ -1,0 +1,73 @@
+{
+  "proxy": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134326-7fda22a3",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "first_target": [
+      133.5,
+      29.999999934432914
+    ],
+    "first_arrival": [
+      133.2569122314453,
+      30.0
+    ],
+    "pause_seconds_observed": 2.620591402752325,
+    "captures": 3
+  },
+  "animal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134122-989b1d7c",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "first_target": [
+      133.5,
+      29.999999934432914
+    ],
+    "first_arrival": [
+      133.25047302246094,
+      30.0
+    ],
+    "pause_seconds_observed": 2.680041701765731,
+    "captures": 2
+  },
+  "override": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134155-54751677",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "direct_override": true,
+    "higher_need_drink_relief": 0.5,
+    "contextual_override": true
+  },
+  "camera": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134241-431877a5",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "first_target": [
+      133.5,
+      29.999999934432914
+    ],
+    "first_arrival": [
+      133.2501220703125,
+      30.0
+    ],
+    "pause_seconds_observed": 2.599585498450324,
+    "captures": 3
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134410-e07b4698",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "death": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134523-8a3015f8",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134608-ce9d07d8",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "preserved_original_untracked": 141,
+  "review": "root-only; both preserved independent reviewers usage-limited",
+  "camera_scope": "native detached initial anchor20m away; identical first target and arrival, no camera knowledge; no moving-camera or human input acceptance claim"
+}

@@ -1,0 +1,135 @@
+{
+  "task": "hero-exploration-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T18:47:41.403699+00:00",
+  "base_revision": "eadd9ebdcf22bd2f4619580187d71f0acbe92934",
+  "owned_paths": [
+    "stalthos-runtime/domain/hero_exploration.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/hero_exploration.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/hero-exploration.md"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/hero_exploration.hpp": "9fe7405945f58a0d80395b14bedd2356ac42623952f45e6ecadf9b51ece4d781",
+    "stalthos-runtime/engine/main.cpp": "a087e138829e9b5f6a345711609ae547cbdf3a5d36bec5edbd545679692eee0d",
+    "stalthos-runtime/tests/hero_exploration.cpp": "87066fb397af93dbd58b7b4cbe3c17efac08f4bb262d12b0ce87967c1a28c081",
+    "stalthos-runtime/CMakeLists.txt": "1b9e98ff31182bf5588dab62bc74d5c025f2896fa6b34a564e2757f52cfd1ccb",
+    "stalthos-runtime/scripts/Run.ps1": "3016c829d48ed10eb7e6810b5679ae9a11020fab72056acd58fad743b4d61703",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "b0949f812c021ead169e6ca53e631d7503d83528c4fb7b89195af4298ed99cdf",
+    "stalthos-runtime/docs/hero-exploration.md": "ac4ff321400765801743857d6c685200d2839fe93aecb26c7720362494d07319"
+  },
+  "build": {
+    "schema_version": 1,
+    "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+    "configuration": "Release",
+    "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+    "executable_sha256": "83c085e2576725ce64b1f7a08828890f4baabfe375cc272d84f39f6aada48274",
+    "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+    "source_revision": "eadd9ebdcf22bd2f4619580187d71f0acbe92934",
+    "dirty_working_tree": true,
+    "note": "Application built locally against engine inputs: Verified local copy of existing compiled inputs; not a fresh engine rebuild"
+  },
+  "checks": {
+    "release": true,
+    "ctest_passed": 54,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 548.06,
+    "doctor_exit": 0,
+    "secret_scan": "passed final staged diff before commit"
+  },
+  "verification": {
+    "proxy": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134326-7fda22a3",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "first_target": [
+        133.5,
+        29.999999934432914
+      ],
+      "first_arrival": [
+        133.2569122314453,
+        30.0
+      ],
+      "pause_seconds_observed": 2.620591402752325,
+      "captures": 3
+    },
+    "animal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134122-989b1d7c",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "first_target": [
+        133.5,
+        29.999999934432914
+      ],
+      "first_arrival": [
+        133.25047302246094,
+        30.0
+      ],
+      "pause_seconds_observed": 2.680041701765731,
+      "captures": 2
+    },
+    "override": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134155-54751677",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "direct_override": true,
+      "higher_need_drink_relief": 0.5,
+      "contextual_override": true
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134241-431877a5",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "first_target": [
+        133.5,
+        29.999999934432914
+      ],
+      "first_arrival": [
+        133.2501220703125,
+        30.0
+      ],
+      "pause_seconds_observed": 2.599585498450324,
+      "captures": 3
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134410-e07b4698",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "death": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134523-8a3015f8",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-134608-ce9d07d8",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "preserved_original_untracked": 141,
+    "review": "root-only; both preserved independent reviewers usage-limited",
+    "camera_scope": "native detached initial anchor20m away; identical first target and arrival, no camera knowledge; no moving-camera or human input acceptance claim"
+  },
+  "visual_review": "actual animated exploration-1.png inspected: stationary pause cue and existing idle body, readable alongside stage/destination; no bespoke look pose claim",
+  "review": "root-only source/domain/native/composed visual review; two preserved reviewers usage-limited, zero dispatches",
+  "limits": [
+    "short repeated four-heading steps, simple turns and cue-only pauses; not long-range wandering/pathfinding or anatomical look behavior",
+    "existing short-ray/small-obstacle collision limits remain; bounded supported dry routes and seep exclusion only",
+    "ordinary shared animal pace/contact/gait and other accepted limitations unchanged",
+    "body steering WASD overrides; detached free-camera steering remains camera input",
+    "native camera proof is detached initial20m anchor, same target/arrival within.0004m; no moving-camera or human input acceptance claim",
+    "19wall-second initial proxy/animal probes finish before physical17 due capped dt; two captures suffice for move/pause; extended proxy/camera/override runs have third capture",
+    "other established diagnostics explicitly suppress ordinary exploration; original saved mode remains off; no connected save support",
+    "graph refresh562 zero-node artifact warnings; broad baseline delta is not architecture acceptance"
+  ],
+  "superseded_capture": {
+    "path": "var/reports/runtime/20261020-134037-1016a6a1",
+    "reason": "initial19wall-second proxy ends physical16.977 before third capture; extended24-second proxy retained as final evidence; initial run also zero support failures"
+  },
+  "next_task": ".clanker\\tasks\\hero-exploration-20261020\\next-task.md"
+}

@@ -59,3 +59,6 @@ Latest accepted: life-stage-20261020. NEXT readable death/explicit next life in 
 
 
 Latest accepted: death-next-life-20261020. NEXT ordinary short supported exploration with needs/direct/destination priority; no corpse/newborn/continuation polish.
+
+
+Latest accepted: hero-exploration-20261020. NEXT one body-local visible vegetation/tree exception; no exploration/controller/asset polish.

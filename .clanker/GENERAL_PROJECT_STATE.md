@@ -353,3 +353,29 @@ input, final-art/full-draft/30FPS acceptance. Do not polish these working drafts
 NEXT SUBSYSTEM: ordinary short supported body-local exploration when needs are
 satisfied, with visible pause and direct/destination/need overrides.
 .clanker/tasks/death-next-life-20261020/next-task.md
+
+
+## 2026-10-20 ordinary hero exploration: working draft accepted
+Satisfied connected heroes now take short supported dry steps and pause, using
+one noncontextual HeroSim goal and ordinary body motion. Tunable1.5m step/.25m
+arrival/3physical-second wait and pause/30second leg bound. Direct body input,
+contextual destination, need/rest and death override; new life resets controller.
+Other accepted diagnostic fixtures suppress exploration; original saved mode off.
+Native proxy and animated body move about1.25m then pause; actual animated pause
+cue inspected. Override fixture proves immediate input, thirsty shared209 contact
+with exact.5 relief and contextual goal takeover. Detached initial20m camera uses
+identical body target and arrival within.0004m; no moving-camera/human-input claim.
+Ordinary default start/night/calendar and once-only needs preserved; original mode
+and actual death/new-life regression pass. All connected runs zero support
+failures/fallbacks. Original12 actors/11resources/sessions exact initial baseline;
+assets and141 original untracked paths preserved. Release54CTest/toolkit2073pass
+2skip doctor. Root-only review, two workers usage-limited, zero dispatches.
+Receipt: .clanker/tasks/hero-exploration-20261020/integration-receipt.json
+Parked: short repeated paths/simple turns, cue-only idle look pause, existing small
+obstacle/slow animal/gait/contact limits. Initial19wall-second captures stop before
+physical17; extended proxy/camera/override24seconds include final capture. No
+broad pathfinding, head animation, long-range exploration, save/full-art/game/FPS
+acceptance. Working role accepted; do not polish exploration or accepted drafts.
+NEXT SUBSYSTEM: one deliberate body-local visible sapling disturbance using
+existing WorldSim tree exception and per-instance replaceable visual ownership.
+.clanker/tasks/hero-exploration-20261020/next-task.md
