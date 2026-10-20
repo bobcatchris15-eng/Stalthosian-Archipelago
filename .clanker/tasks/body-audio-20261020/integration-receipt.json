@@ -1,0 +1,181 @@
+{
+  "task": "body-audio-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T20:55:22.461650+00:00",
+  "base_revision": "e072c92acc30bfe52b60471388e18acb388c8ebc",
+  "owned_paths": [
+    "stalthos-runtime/domain/body_motion_audio.hpp",
+    "stalthos-runtime/engine/body_rustle.hpp",
+    "stalthos-runtime/engine/native_audio_capture.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/body_motion_audio.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/body-audio.md"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/body_motion_audio.hpp": "e506e49b23674ed51e73d65af5028732a07fd4b90eb5ae9d484424b71fe54b4a",
+    "stalthos-runtime/engine/body_rustle.hpp": "8fd7f51f35fc9f0bc2e7527c8e0a91bd52c6138789b2b4be40761c8f2593cbac",
+    "stalthos-runtime/engine/native_audio_capture.hpp": "6208a91f487db29f428e0cf74408f46a8c13124cb8840cc7c206745c0df5b872",
+    "stalthos-runtime/engine/main.cpp": "bf6a4c2678c6ec53ddd12656fcf8f9d796dd15ab0ad6ac936a53aad182c71b95",
+    "stalthos-runtime/tests/body_motion_audio.cpp": "d2c9098c142f7e887ac85c165bf7919c73409677376f3165893e70b98f87099a",
+    "stalthos-runtime/CMakeLists.txt": "5b49866d76a2773632197fb5b1efd28dfcef42a2a554453fcf91317305251c75",
+    "stalthos-runtime/scripts/Run.ps1": "bd85ab79411f2e5c366749cc93b0d457665269252ef369cfd37a097fdea44d7e",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "536b187253638145479a5ac56091d03f377bfdd7e05544771e297dd02ffd6ea5",
+    "stalthos-runtime/docs/body-audio.md": "1035a3d18f60b3002c4252692a010b01af2cb2be023a0edefc04a28ec40c6df0"
+  },
+  "build": {
+    "schema_version": 1,
+    "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+    "configuration": "Release",
+    "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+    "executable_sha256": "97d67cc69959a8139e8ff46708451fd15f57dbec1a705391776a8cc07d389aaa",
+    "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+    "source_revision": "e072c92acc30bfe52b60471388e18acb388c8ebc",
+    "dirty_working_tree": true,
+    "note": "Application built locally against engine inputs: Verified local copy of existing compiled inputs; not a fresh engine rebuild"
+  },
+  "checks": {
+    "release": true,
+    "ctest_passed": 56,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 517.16,
+    "doctor_exit": 0,
+    "secret_scan": "passed final staged diff before commit"
+  },
+  "verification": {
+    "motion": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155339-13ed6d88",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "native_output_sha256": "778281dde1757b53b766a6fb6ede01e0c3e4c27d55d90c4d17c5ba7c55456b0a",
+      "rate": 44100,
+      "channels": 2,
+      "captured_seconds": 12.5,
+      "rms": 0.0021023288912254035,
+      "peak": 0.024688720703125,
+      "events": 12,
+      "voice_samples_played": 2867,
+      "capture_mode": "captured_own_process_tree",
+      "bursts": [
+        [
+          2.27,
+          2.4
+        ],
+        [
+          2.72,
+          2.85
+        ],
+        [
+          3.18,
+          3.31
+        ],
+        [
+          3.63,
+          3.7600000000000002
+        ],
+        [
+          4.07,
+          4.2
+        ],
+        [
+          4.53,
+          4.66
+        ],
+        [
+          4.98,
+          5.11
+        ],
+        [
+          5.43,
+          5.5600000000000005
+        ],
+        [
+          8.2,
+          8.33
+        ],
+        [
+          8.65,
+          8.78
+        ],
+        [
+          9.11,
+          9.24
+        ],
+        [
+          9.56,
+          9.69
+        ]
+      ],
+      "median_burst_interval": 0.4500000000000006,
+      "stationary_dither_only": true
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155355-d716215d",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "native_output_sha256": "118f7f4b0e35b10ec79309a3110998521723a0ea7e7d963b73fd0f4decb26b00",
+      "rate": 44100,
+      "channels": 2,
+      "captured_seconds": 10.5,
+      "rms": 1.4619009934049887e-05,
+      "peak": 3.0517578125e-05,
+      "events": 0,
+      "voice_samples_played": 0,
+      "capture_mode": "captured_own_process_tree"
+    },
+    "death": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155408-cb32f0f2",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "dead_and_spawn_silence_new_life_motion": true
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155430-362d1db1",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155440-55a39585",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "source_wave_sha256": "04a1845f95877e714a94e9031bc1f0a15923cdac75be62481ff3a5e4a8e7fc78",
+    "preserved_original_untracked": 145,
+    "review": "root-only; preserved independent reviewers usage-limited",
+    "scope": "actual own-process native digital mix captured, not physical speaker/human or acoustic/foot-contact acceptance; capture startup/frame stalls prevent sample-exact latency/continuous-wall-clock claims"
+  },
+  "review": "root-only actual SDK/source/domain/native digital output review; both preserved workers usage-limited; zero dispatches",
+  "native_output_acceptance": "actual Windows own-process-tree digital mix,44100Hz stereo16-bit;12 bursts/median.45s and stationary/moving-camera dither-only output; no claim about physical speaker/human listening",
+  "privacy_and_settings": "process-isolated capture includes only current native PID tree; fallback refuses/discards if another audio session active. No microphone or global/submix/user-volume/routing changes. Other active audio left untouched. Normal gameplay does not record output.",
+  "platform_evidence": {
+    "host": "Windows10Pro build19045, actual CIM read",
+    "process_loopback_activation_hresult": 0,
+    "reference": "https://learn.microsoft.com/en-us/windows/win32/api/audioclientactivationparams/ns-audioclientactivationparams-audioclient_process_loopback_params",
+    "note": "documented baseline does not replace actual host capability probing; no inference about why API works here"
+  },
+  "superseded_evidence": [
+    {
+      "path": "var/reports/runtime/20261020-153753-90daffdc",
+      "result": "whole-endpoint loopback correctly refused other active audio, no output recording; native voice advanced2867samples. Replaced for acceptance by successful own-process capture."
+    },
+    {
+      "path": ".clanker\\tasks\\body-audio-20261020\\build-isolation-header-failure.log",
+      "result": "missing WRL umbrella include for RuntimeClass; fixed wrl.h, final build and56CTest pass"
+    }
+  ],
+  "limits": [
+    "one deterministic noise stand-in, mono cue/simple camera-distance gain; no voices/surface variety/panning/occlusion/reverb or sound-art acceptance",
+    "ground rustle rather than measured anatomical foot contact; inherited movement pace/sole/gait limits unchanged",
+    "capture startup/frame stalls omit some wall-clock samples; no sample-exact latency or continuous-wall-clock output claim",
+    "PCM camera/stationary signal is tiny dither floor, not mathematically zero",
+    "source wave or submission counter alone was not accepted as output proof",
+    "581 graph zero-node artifact warnings, broad baseline graph delta is not architecture acceptance"
+  ],
+  "evidence_check_correction": "camera pan is view-relative and moves z about32.75m under this orbit; verifier corrected to2D camera movement instead of assuming x axis. Runtime unchanged.",
+  "next_task": ".clanker\\tasks\\body-audio-20261020\\next-task.md",
+  "event_state": "Final native executable caps detailed audio events at256 and keeps bounded aggregate request/drop counters; fresh native captures and baselines rerun after this resource-preservation correction."
+}

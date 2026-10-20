@@ -65,3 +65,6 @@ Latest accepted: hero-exploration-20261020. NEXT one body-local visible vegetati
 
 
 Latest accepted: sapling-disturbance-20261020. NEXT one native body-motion sound cue; no tree/asset/terrain polish.
+
+
+Latest accepted: body-audio-20261020. NEXT bounded NPC-to-NPC peer association; no audio/creature-art polish.

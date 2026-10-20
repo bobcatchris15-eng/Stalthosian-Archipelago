@@ -1,0 +1,4 @@
+#include "domain/body_motion_audio.hpp"
+#include <iostream>
+using namespace stalthos;using namespace stalthos::domain;
+int main(){try{BodyMotionAudio sound;unsigned pulses=0;sound.advance({0,0,0},.1,true,true);for(int i=1;i<=20;++i)pulses+=sound.advance({i*.02,0,0},.1,true,true);if(pulses<3||pulses>4)throw std::runtime_error("bounded motion cadence");for(int i=0;i<20;++i)if(sound.advance({.4,0,0},.1,true,true))throw std::runtime_error("stationary or camera-only emission");if(sound.advance({.5,0,0},.1,false,true)||sound.advance({.6,0,0},.1,true,false)||sound.advance({9,0,0},.1,true,true))throw std::runtime_error("dead unsupported teleport emission");BodyMotionAudio next;if(next.advance({9,0,0},.1,true,true))throw std::runtime_error("new life emits at spawn");std::cout<<"body motion sound cadence/refusal checks passed\n";return 0;}catch(const std::exception& e){std::cerr<<e.what();return 1;}}

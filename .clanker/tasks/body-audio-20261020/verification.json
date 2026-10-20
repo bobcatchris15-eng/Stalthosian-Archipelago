@@ -1,0 +1,102 @@
+{
+  "motion": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155339-13ed6d88",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "native_output_sha256": "778281dde1757b53b766a6fb6ede01e0c3e4c27d55d90c4d17c5ba7c55456b0a",
+    "rate": 44100,
+    "channels": 2,
+    "captured_seconds": 12.5,
+    "rms": 0.0021023288912254035,
+    "peak": 0.024688720703125,
+    "events": 12,
+    "voice_samples_played": 2867,
+    "capture_mode": "captured_own_process_tree",
+    "bursts": [
+      [
+        2.27,
+        2.4
+      ],
+      [
+        2.72,
+        2.85
+      ],
+      [
+        3.18,
+        3.31
+      ],
+      [
+        3.63,
+        3.7600000000000002
+      ],
+      [
+        4.07,
+        4.2
+      ],
+      [
+        4.53,
+        4.66
+      ],
+      [
+        4.98,
+        5.11
+      ],
+      [
+        5.43,
+        5.5600000000000005
+      ],
+      [
+        8.2,
+        8.33
+      ],
+      [
+        8.65,
+        8.78
+      ],
+      [
+        9.11,
+        9.24
+      ],
+      [
+        9.56,
+        9.69
+      ]
+    ],
+    "median_burst_interval": 0.4500000000000006,
+    "stationary_dither_only": true
+  },
+  "camera": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155355-d716215d",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "native_output_sha256": "118f7f4b0e35b10ec79309a3110998521723a0ea7e7d963b73fd0f4decb26b00",
+    "rate": 44100,
+    "channels": 2,
+    "captured_seconds": 10.5,
+    "rms": 1.4619009934049887e-05,
+    "peak": 3.0517578125e-05,
+    "events": 0,
+    "voice_samples_played": 0,
+    "capture_mode": "captured_own_process_tree"
+  },
+  "death": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155408-cb32f0f2",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "dead_and_spawn_silence_new_life_motion": true
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155430-362d1db1",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-155440-55a39585",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "source_wave_sha256": "04a1845f95877e714a94e9031bc1f0a15923cdac75be62481ff3a5e4a8e7fc78",
+  "preserved_original_untracked": 145,
+  "review": "root-only; preserved independent reviewers usage-limited",
+  "scope": "actual own-process native digital mix captured, not physical speaker/human or acoustic/foot-contact acceptance; capture startup/frame stalls prevent sample-exact latency/continuous-wall-clock claims"
+}

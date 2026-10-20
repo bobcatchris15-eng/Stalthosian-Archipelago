@@ -39,6 +39,9 @@
 #include "organic_rocks.hpp"
 #include "meadow_scene.hpp"
 #include "woodland_scene.hpp"
+#include "domain/body_motion_audio.hpp"
+#include "body_rustle.hpp"
+#include "native_audio_capture.hpp"
 #include "fauna_scene.hpp"
 #include "populated_terrain.hpp"
 #include "native_population_registry.hpp"
@@ -198,7 +201,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned saplingProbe=0;unsigned explorationProbe=0;bool deathNextLifeProbe=false;bool lifeStageProbe=false;unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
+    unsigned audioProbe=0;unsigned saplingProbe=0;unsigned explorationProbe=0;bool deathNextLifeProbe=false;bool lifeStageProbe=false;unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
     unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
@@ -211,6 +214,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--body-audio-probe"){audioProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--body-audio-camera-probe"){audioProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--sapling-probe"){saplingProbe=1;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--sapling-camera-probe"){saplingProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--exploration-probe"){explorationProbe=1;connectedWorld=true;populatedWorld=true;}
@@ -287,6 +292,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(audioProbe && (diagCount || interactive || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("audio probe requires standalone timed connected mode");
         if(saplingProbe && (diagCount || interactive || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview || woodlandSaplingTree.empty()))throw std::runtime_error("sapling probe requires standalone timed connected mode and sapling asset");
         if(explorationProbe && (diagCount || interactive || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("exploration probe requires standalone timed connected mode");
         if(deathNextLifeProbe && (diagCount || interactive || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("death/next-life probe requires standalone timed connected mode");
@@ -810,10 +816,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
         stalthos::domain::HeroExploration heroExploration;
-        const bool explorationEnabled=connectedWorld && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
+        const bool explorationEnabled=connectedWorld && !audioProbe && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
         wi::SpriteFont explorationCue("Exploring nearby ground - WASD takes control");explorationCue.params.size=22;explorationCue.params.h_align=wi::font::WIFALIGN_CENTER;explorationCue.params.color=wi::Color(220,240,210,255);explorationCue.params.shadowColor=wi::Color(0,0,0,255);explorationCue.SetHidden(true);renderPath.AddFont(&explorationCue);
         json explorationSamples=json::array(),explorationCaptures=json::array(),explorationEvents=json::array();double nextExplorationSample=0;std::array<bool,3> explorationCaptured{};bool explorationNeedInjected=false,explorationDestinationInjected=false;
-        wi::SpriteFont phasePreviewCue(saplingProbe?"Sapling test - synthetic body/camera start, input and noon":explorationProbe?"Exploration test - bank start/input/need/destination/noon fixtures":deathNextLifeProbe?"Death test - near-terminal age, thirst, input and noon fixtures":lifeStageProbe?"Growth test - near-adult age, fatigue/input/noon fixtures":peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe && !peerProbe && !lifeStageProbe && !deathNextLifeProbe && !explorationProbe && !saplingProbe);renderPath.AddFont(&phasePreviewCue);
+        wi::SpriteFont phasePreviewCue(audioProbe?"Body audio test - synthetic body or camera input":saplingProbe?"Sapling test - synthetic body/camera start, input and noon":explorationProbe?"Exploration test - bank start/input/need/destination/noon fixtures":deathNextLifeProbe?"Death test - near-terminal age, thirst, input and noon fixtures":lifeStageProbe?"Growth test - near-adult age, fatigue/input/noon fixtures":peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe && !peerProbe && !lifeStageProbe && !deathNextLifeProbe && !explorationProbe && !saplingProbe && !audioProbe);renderPath.AddFont(&phasePreviewCue);
         wi::SpriteFont destinationCue("Right-click nearby ground to go there"),destinationPin("+");
         for(auto* font:{&destinationCue,&destinationPin}){font->params.size=22;font->params.h_align=wi::font::WIFALIGN_CENTER;font->params.color=wi::Color(255,240,180,255);font->params.shadowColor=wi::Color(0,0,0,255);font->SetHidden(!connectedWorld);renderPath.AddFont(font);}
         destinationPin.SetHidden(true);std::string destinationStatus="ready";json destinationEvents=json::array(),destinationSamples=json::array(),destinationCaptures=json::array();std::array<bool,3> destinationCaptured{};double nextDestinationSample=0;bool destinationInjected=false;
@@ -1118,6 +1124,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             return landscape.height(cx, cz);
         };
         stalthos::domain::ControllerOutput cameraOut;
+        if(audioProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={x,Ground(x,z),z};viewController.setState(state);}
         if(saplingProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={sapling.position.x-1.5,sapling.position.y,sapling.position.z};viewController.setState(state);}
         if(explorationProbe==3){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={x+20,Ground(x+20,z),z};viewController.setState(state);}
         if(peerProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor=peerAnchor;viewController.setState(state);}
@@ -1186,6 +1193,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         json dayNightSamples=json::array(),dayNightCaptures=json::array();double nextDayNightSample=0;std::array<bool,4> dayNightCaptured{};stalthos::environment::DayNightLight dayNightLight{};double renderedDayFraction=0;
         json exteriorWaterSamples=json::array(),exteriorWaterCaptures=json::array(),exteriorWaterNpcContacts=json::array();double nextExteriorWaterSample=0;std::array<bool,3> exteriorWaterCaptured{};
         json exteriorBrowseSamples=json::array(),exteriorBrowseCaptures=json::array(),exteriorBrowseNpcContacts=json::array();double nextExteriorBrowseSample=0;std::array<bool,3> exteriorBrowseCaptured{};
+        stalthos::domain::BodyMotionAudio bodyMotionAudio;wi::audio::Sound rustleSound;wi::audio::SoundInstance rustleInstance;bool rustleReady=false;uint64_t rustleMaxCursor=0,rustleRequests=0,rustleEventsDropped=0;json rustleEvents=json::array();
+        if(connectedWorld){const auto bytes=stalthos::engine::bodyRustleWave();std::ofstream source(output/"body-rustle-source.wav",std::ios::binary);source.write((const char*)bytes.data(),bytes.size());rustleReady=wi::audio::CreateSound(bytes.data(),bytes.size(),&rustleSound)&&wi::audio::CreateSoundInstance(&rustleSound,&rustleInstance);if(rustleReady)wi::audio::SetVolume(.12f,&rustleInstance);}
+        stalthos::engine::NativeAudioCapture audioCapture;if(audioProbe)audioCapture.start();
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
         while (true) {
@@ -1225,6 +1235,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
 
+            if(audioProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<6)viewController.applyDetachedPan(1,0,dt,{x,Ground(x,z),z});
             bool userSteering = viewController.getState().focus == stalthos::domain::InputFocus::BodySteering;
             if (userSteering) {
                 if(heroAlive && down('A')) yaw-=dt; if(heroAlive && down('D')) yaw+=dt;
@@ -1247,6 +1258,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 std::vector<stalthos::Identity> npcIds;for(const auto& a:faunaPopulation->actors())npcIds.push_back(a.id);
                 const auto selected=stalthos::domain::beginNextLife(world,priorDeadHero,npcIds,nextInteractionSession);heroId=selected.hero;
                 lifecycle.emplace(heroSpecies);needs.emplace(heroSpecies);
+                bodyMotionAudio=stalthos::domain::BodyMotionAudio{};if(rustleReady)wi::audio::Pause(&rustleInstance);
                 heroExploration=stalthos::domain::HeroExploration{};explorationCue.SetHidden(true);
                 heroIntent=stalthos::HeroSim{};heroAutonomy=stalthos::domain::HeroDrinkAutonomy{};heroRest=stalthos::domain::HeroRestAutonomy{};
                 peerCompanion=stalthos::fauna::PeerCompanionship{};previousPeer=0;previousPeerPresent=false;peerCue.SetHidden(true);
@@ -1296,9 +1308,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     activeTransitionPhaseIndex = targetPhaseIndex;
                 }
             }
-            syntheticDirect=(saplingProbe==1 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<(creatureLoaded?18:7)) || ((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (explorationProbe==2 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<5) || (lifeStageProbe && clock.physicalSeconds()>=9 && clock.physicalSeconds()<11) || (deathNextLifeProbe && ((clock.physicalSeconds()>=7 && clock.physicalSeconds()<9) || (clock.physicalSeconds()>=12 && clock.physicalSeconds()<14)));
+            syntheticDirect=(audioProbe==1 && clock.physicalSeconds()>=8 && clock.physicalSeconds()<10) || (saplingProbe==1 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<(creatureLoaded?18:7)) || ((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (explorationProbe==2 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<5) || (lifeStageProbe && clock.physicalSeconds()>=9 && clock.physicalSeconds()<11) || (deathNextLifeProbe && ((clock.physicalSeconds()>=7 && clock.physicalSeconds()<9) || (clock.physicalSeconds()>=12 && clock.physicalSeconds()<14)));
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
-            bool userWalk = (saplingProbe==1 && clock.physicalSeconds()>=(creatureLoaded?18:7) && clock.physicalSeconds()<(creatureLoaded?32:10)) || (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
+            bool userWalk = (audioProbe==1 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<6) || (saplingProbe==1 && clock.physicalSeconds()>=(creatureLoaded?18:7) && clock.physicalSeconds()<(creatureLoaded?32:10)) || (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
             bool userReverse = (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
@@ -1802,6 +1814,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().TransformCamera(XMMatrixInverse(nullptr, view));
             wi::scene::GetCamera().UpdateCamera();
 
+            if(connectedWorld){const bool pulse=bodyMotionAudio.advance({x,y,z},timeStep.physicalSeconds,heroAlive,latestSupportMode=="terrain_supported");if(rustleReady){rustleMaxCursor=std::max(rustleMaxCursor,wi::audio::GetTotalSamplesPlayed(&rustleInstance));const double range=24,distance=std::sqrt(std::pow(cameraOut.cameraState.eye.x-x,2)+std::pow(cameraOut.cameraState.eye.y-y,2)+std::pow(cameraOut.cameraState.eye.z-z,2));const float gain=float(.12*std::clamp(1-distance/range,0.0,1.0));wi::audio::SetVolume(gain,&rustleInstance);if(!bodyMotionAudio.moving())wi::audio::Pause(&rustleInstance);if(pulse){wi::audio::Stop(&rustleInstance);wi::audio::Play(&rustleInstance);++rustleRequests;if(rustleEvents.size()<256)rustleEvents.push_back({{"elapsed",elapsed},{"physical_seconds",clock.physicalSeconds()},{"capture_seconds",audioCapture.seconds()},{"hero_id",heroId},{"body_x",x},{"body_z",z},{"gain",gain}});else ++rustleEventsDropped;}}}
+            audioCapture.poll();
             app.Run(); ++runCalls;
             if(saplingRoot!=wi::ecs::INVALID_ENTITY){
                 const stalthos::Vec3 body{x,y,z};const bool supported=latestSupportMode=="terrain_supported";const bool eligible=sapling.eligible(body,heroAlive,supported);
@@ -2206,6 +2220,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
+        if(rustleReady){rustleMaxCursor=std::max(rustleMaxCursor,wi::audio::GetTotalSamplesPlayed(&rustleInstance));wi::audio::Pause(&rustleInstance);}const bool nativeAudioCaptured=audioProbe?audioCapture.finish(output/"native-output.wav"):false;
+        if(connectedWorld)WriteJson(output/"body-audio.json",{{"ready",rustleReady},{"probe_mode",audioProbe},{"synthetic_body_or_camera_input",audioProbe!=0},{"events",rustleEvents},{"requests_total",rustleRequests},{"events_dropped",rustleEventsDropped},{"event_capacity",256},{"max_voice_samples_played",rustleMaxCursor},{"capture_state",audioCapture.state},{"capture_hresult",int64_t(audioCapture.result)},{"process_capture_activation_hresult",int64_t(audioCapture.processActivationResult)},{"output_endpoint",audioCapture.endpointId},{"native_output_captured",nativeAudioCaptured},{"global_audio_settings_modified",false},{"scope","generated mono ground rustle, bounded actual supported living body motion, simple camera-distance gain only; no anatomical foot contact, directional sound or acoustic acceptance"}});
         if(connectedWorld)WriteJson(output/"sapling-disturbance.json",{{"probe_mode",saplingProbe},{"tree_id",sapling.tree},{"region",sapling.region},{"available",saplingBase.has_value()},{"synthetic_start_input_noon",saplingProbe!=0},{"events",saplingEvents},{"samples",saplingSamples},{"captures",saplingCaptures},{"scope","one existing sapling, authoritative StandingDamaged exception; per-object tint/root lean only; no shared geometry/material changes, anatomy/destruction or connected save claim"}});
         if(connectedWorld)WriteJson(output/"hero-exploration.json",{{"enabled",explorationEnabled},{"probe_mode",explorationProbe},{"synthetic_start_input_need_destination_noon",explorationProbe!=0},{"samples",explorationSamples},{"events",explorationEvents},{"captures",explorationCaptures},{"scope","bounded supported dry local steps and cue-only pauses, no head animation, pathfinding, remote knowledge or connected saves"}});
         if(connectedWorld)WriteJson(output/"death-next-life.json",{{"synthetic_age_thirst_input_noon",deathNextLifeProbe},{"events",nextLifeEvents},{"samples",nextLifeSamples},{"captures",nextLifeCaptures},{"scope","explicit new individual in retained running world; reused presentation at existing supported position, no corpse, kinship or connected save support"}});

@@ -405,3 +405,37 @@ Working role accepted; no tree/asset/terrain polish. No full-art/game/FPS claim.
 NEXT SUBSYSTEM: one bounded native body-motion ground-rustle sound cue. Inspect
 actual Wicked audio/output ownership and preserve all user audio settings/apps.
 .clanker/tasks/sapling-disturbance-20261020/next-task.md
+
+
+## 2026-10-20 body-motion sound: working draft accepted
+Connected supported living motion now emits one quiet deterministic ground-rustle
+stand-in through one Wicked Sound/Instance. Proposed.06m/.45physical-second
+cadence, max1m frame step, instance gain.12/range24m. Body displacement owns
+emission, camera only adjusts listening gain. Stationary/dead/unsupported/teleport
+refuse; new life resets cadence/pauses old sound. No global/submix/user audio
+volume, routing, microphone or other-app mutation. Normal gameplay does not capture.
+Native own-process-tree output44100Hz stereo16-bit has12 bursts at median.45s:
+RMS.002103/peak.024689 versus moving-camera dither-only RMS.00001462/no events or
+voice progress. Actual camera pans about32.75m with stationary body; no emission.
+Stationary windows dither-only; native death/spawn no sound, fresh hero2 motion
+12..14 emits. Normal exploration/original mode and existing12actor/11resource/
+session initial baselines preserved; all connected probes zero support failures/
+fallbacks. Actual capture:
+var/reports/runtime/20261020-154303-2937d688/native-output.wav
+Receipt: .clanker/tasks/body-audio-20261020/integration-receipt.json
+Initial endpoint capture correctly refused another active audio session; actual
+process-filter API then succeeded on this19045host without touching it. Missing
+WRL include compile failure fixed/retained. Release56CTest/toolkit2073pass2skip
+doctor; assets/originaluntracked preserved; root-only review, two workers still
+usage-limited,zero dispatches. Park mono/no surface variety/panning/occlusion,
+quiet synthetic sound-art/foot-contact limits and capture startup/stall gaps.
+No physical-speaker/human listening, sample-exact latency, full-art/game/FPS/save
+acceptance. Camera evidence gate corrected to view-relative2D motion, no rerun.
+Working role accepted; do not polish sound or creature assets.
+NEXT SUBSYSTEM: one bounded observable NPC-to-NPC peer association between existing
+eligible nearby conspecific retained identities, with ordinary needs priority.
+.clanker/tasks/body-audio-20261020/next-task.md
+
+Publication audit: final audio telemetry cap256/counters added; task-state running while bounded executable/native checks finish. Resume body-audio receipt before dispatching queued NPC peer task.
+
+Final publication audit resolved: audio event detail capped256 plus request/drop counters. Fresh bounded executable 97d67cc69959a8139e8ff46708451fd15f57dbec1a705391776a8cc07d389aaa passed isolated output/camera/death/normal/original probes and56CTest. Task complete; queued NPC peer association is next. Final native sound capture: E:\Stalthosian Archipelago\var\reports\runtime\20261020-155339-13ed6d88/native-output.wav

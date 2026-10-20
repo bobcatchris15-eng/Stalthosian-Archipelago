@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "body-audio-20261020",
+  "status": "complete",
+  "base_revision": "e072c92acc30bfe52b60471388e18acb388c8ebc",
+  "current_step": "bounded native body-motion sound/output draft accepted; next NPC-to-NPC peer association",
+  "completed_steps": [
+    "HALT/narrow handoff and actual Wicked audio/output contracts inspected; usage-limited workers collected",
+    "deterministic original PCM stand-in, one sound/instance, actual supported living body displacement/cadence and camera-distance gain",
+    "stationary/camera/dead/unsupported/teleport refusal; new-life cadence and prior-instance pause",
+    "Release56CTest; toolkit2073pass2skip doctor",
+    "initial whole-endpoint capture refused other active audio without recording/changing it",
+    "actual own-process activation and44100Hz stereo output succeeds on current19045host; other apps excluded",
+    "native12 bursts at median.45s; movement RMS.002103/peak.024689 vs camera-only RMS.00001462, no voice/event progress",
+    "stationary record windows dither-only; moving camera32.75m while bodyfixed does not emit",
+    "native death/spawn silent; only fresh hero2 motion12..14 emits, world/NPC/ledger handoff unchanged",
+    "ordinary exploration sound, original no-added-sound mode and exact12actor/11resource/session initial baselines preserved",
+    "asset hashes/original untracked preserved; actual output hashes and scope retained; root-only review explicit",
+    "final event telemetry bounded256 plus request/drop counters; rebuilt and fresh isolated-output/camera/death/normal/original and56CTest passed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/body_motion_audio.hpp",
+    "stalthos-runtime/engine/body_rustle.hpp",
+    "stalthos-runtime/engine/native_audio_capture.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/body_motion_audio.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/body-audio.md"
+  ],
+  "updated": "2026-10-20T20:55:22.461650+00:00",
+  "resume_instructions": "Read next-task. Sound role accepted; park sound-art/spatial/foot-contact/capture-timing limits. Move to bounded NPC peer association.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest56; toolkit2073/2 doctor; verify.py actual isolated native WAV bursts/camera/stationary/death/new-life/normal/original/preservation",
+    "evidence_path": ".clanker\\tasks\\body-audio-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\body-audio-20261020\\integration-receipt.json",
+  "next_step": "one existing eligible nearby conspecific NPC pair association using actual retained bodies/relationship and movement ownership"
+}
