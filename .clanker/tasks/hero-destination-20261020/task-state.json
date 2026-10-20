@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-destination-20261020",
+  "status": "complete",
+  "base_revision": "dadc647",
+  "current_step": "contextual destination working draft accepted; next exterior browse patch",
+  "completed_steps": [
+    "collected usage-limited reviewers; root-only implementation/review",
+    "implemented body-local single contextual goal and input path",
+    "46 domain tests passed; corrected Windows far macro name collision",
+    "final Release46CTest and toolkit2073/2 doctor passed",
+    "native mouse message/raycast arrival and thirst priority passed",
+    "native direct cancellation and detached remote-click rejection passed",
+    "bounded arrival support0; longer later drink-bank fallback logged",
+    "normal existing animal/plant import passed",
+    "unrelated hashes and immutable pins preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/hero_destination.hpp",
+    "stalthos-runtime/domain/hero_autonomy.hpp",
+    "stalthos-runtime/tests/hero_destination.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/hero-destination.md"
+  ],
+  "updated": "2026-10-20T10:34:15.628887+00:00",
+  "resume_instructions": "Working destination draft accepted; do not polish. Read next-task; preserve logged input/clearance/marker/late drink-bank limitations. Root-only review explicit.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest46; native arrival/override/camera boundary/normal asset; toolkit2073/2 doctor",
+    "evidence_path": ".clanker\\tasks\\hero-destination-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\hero-destination-20261020\\integration-receipt.json",
+  "next_step": "exterior meadow browse patch"
+}

@@ -1,0 +1,97 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "base_revision": "dadc647",
+  "implementation_and_review": "root only; both preserved reviewers usage-limited; no fresh independent review claimed",
+  "owned_paths": [
+    "stalthos-runtime/domain/hero_destination.hpp",
+    "stalthos-runtime/domain/hero_autonomy.hpp",
+    "stalthos-runtime/tests/hero_destination.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/hero-destination.md"
+  ],
+  "release_build_exit_code": 0,
+  "ctest": "46/46 passed3.05s",
+  "toolkit": "2073passed2skipped547.46s",
+  "doctor": "actual CLI ok true exit0",
+  "native_evidence": {
+    "arrival-bounded": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053238-6f04d3e0",
+    "arrival-final": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053006-d20e2e12",
+    "override-final": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053019-d6191821",
+    "camera-boundary-final": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053031-c63b62b8",
+    "normal-animal": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-053041-a93cd676"
+  },
+  "same_executable_sha256": "27db429fee92ff3181d57904119ff5d5fc62556ff5f2e67f9a8ac280db0d8e12",
+  "native_input_path": "labelled PostMessage WM_RBUTTONDOWN -> WindowProc -> engine raycast -> body-local validation -> single contextual goal",
+  "human_physical_mouse_tested": false,
+  "accepted_click_target": {
+    "event": "moving",
+    "physical_seconds": 1.1008955047582276,
+    "pixel_x": 503,
+    "pixel_y": 626,
+    "source": "native WM_RBUTTONDOWN -> scene raycast",
+    "target_x": 24.017288208007812,
+    "target_z": 28.01658058166504
+  },
+  "arrival_physical_seconds": 3.6794887101859786,
+  "arrival_active_samples": 23,
+  "thirst_preserved_during_active_destination": true,
+  "arrival_returns_to_ordinary_drink_motion": true,
+  "destination_granted_no_resource_contact": true,
+  "direct_cancel_physical_seconds": 2.503095004503848,
+  "direct_samples": 9,
+  "remote_click_target": {
+    "event": "rejected",
+    "physical_seconds": 1.1000240992871113,
+    "pixel_x": 960,
+    "pixel_y": 224,
+    "source": "native WM_RBUTTONDOWN -> scene raycast",
+    "target_x": 64.0670166015625,
+    "target_z": 24.0
+  },
+  "actual_detached_camera_target_x": 54.00000008856273,
+  "camera_body_fixed": true,
+  "normal_existing_creature_and_plant_import": true,
+  "bounded_arrival_override_camera_support_failures": 0,
+  "rendered_ground_fallbacks": 0,
+  "longer_trial_oddity": "12s arrival passes; subsequent ordinary drink bank approach records one final-frame support failure, retained and not reopened",
+  "captures_inspected": [
+    "arrival-final/destination-0.png",
+    "arrival-final/destination-2.png",
+    "override-final/destination-1.png",
+    "camera-boundary-final/destination-0.png"
+  ],
+  "preserved_original_untracked_files": 134,
+  "authorized_graph_marker_refresh": true,
+  "unrelated_changes": [],
+  "immutable_creature_and_plant_pins_preserved": true,
+  "limitations": [
+    "nearby12m dry straight supported ground only; no general pathfinding",
+    "coarse body-height clearance ray skips first1.3m; not general collision",
+    "target marker has no depth occlusion; native1920x1080 only",
+    "injected native input, not human-operated mouse or DPI acceptance",
+    "existing slow animal pace, sole/wet/rain/connected-save limitations unchanged",
+    "not full-draft/final-art/30FPS acceptance",
+    "Moving cue WASD means body-steering focus; free-camera WASD remains camera-only"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/hero_destination.hpp": "39f9926fd3d4360e36f1db3f54c7b57a9f909061b700eb232a44d8c6f82a3634",
+    "stalthos-runtime/domain/hero_autonomy.hpp": "0353228daa0dfd486138fb946cb27b6a1a06478a47a8afdec681ca282e3bbc8c",
+    "stalthos-runtime/tests/hero_destination.cpp": "18d0b3588244b1706d650b4f3dfae3ba4610eb41974a322b213b4ff0e59f49b0",
+    "stalthos-runtime/engine/main.cpp": "bb1ca08536c409f5c958e2b972aa6cfd2473eda88b155bc43c146c5101fa6830",
+    "stalthos-runtime/scripts/Run.ps1": "71dc0657280bc6853af87c1b60cce23fd76395e4dafca16c49c6f9bb27559023",
+    "stalthos-runtime/CMakeLists.txt": "d42553f833b73c8cc244cc3396933fbc71cc5986c3f2a2b154694f7ac4dd2558",
+    "stalthos-runtime/docs/hero-destination.md": "801cb5b5f046fdff8b58aa9e579b8c8acaacaa057cd8c2c43120c42544b82625"
+  },
+  "next_task": ".clanker\\tasks\\hero-destination-20261020\\next-task.md",
+  "checkpoint_checks": {
+    "task_schema": "complete valid",
+    "explicit_owned_paths": true,
+    "staged_secret_scan": "passed",
+    "graph_refresh_exit_code": 0,
+    "graph_limit": "508 sources absent; no complete graph or independent-review claim",
+    "heartbeat": "ACTIVE in this chat, next exterior browse patch",
+    "diff_check": "passed"
+  }
+}

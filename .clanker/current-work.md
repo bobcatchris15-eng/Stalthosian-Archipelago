@@ -101,10 +101,44 @@ Imported wet material/exterior sole/full-route animal crossing remain unaccepted
 Original saves/assets/apps/untracked work preserved; connected preview refuses saves.
 No final visuals/full-draft/30FPS claim.
 
-## NEXT SUBSYSTEM: player-issued contextual destination
+## Previous next-task (completed below): player-issued contextual destination
 
 Cold brief: .clanker/tasks/hero-exposure-20261020/next-task.md
 Existing single HeroSim goal/authority and ordinary supported motion for bounded
 player go-there input, immediate direct override, arrival return to autonomy and
 body-local/camera boundary. No generalized navigation/save framework.
 Working draft -> log oddities -> next. Wake04:19CDT root-only, zero dispatch.
+
+## Working draft accepted: player-issued contextual destination — 2026-10-20
+
+Connected right-click visible nearby clear dry ground -> native scene raycast,
+body-local12m validation, resident terrain/grade/water/obstruction checks, existing
+single HeroSim contextual goal, ordinary turn/forward motion and0.5m arrival.
+Target marker and readable move/arrive/cancel/reject cues. Needs/rest yield while
+active; direct controls cancel immediately; ordinary activity returns on arrival.
+No save fields or asset changes. Native injected Windows mouse messages (explicitly
+synthetic, not human physical mouse acceptance) prove actual handler/raycast.
+
+Arrival at physical3.67949s with thirst0.8 pending throughout; returns to ordinary
+drink motion after arrival, no destination resource contact. Bounded8s run support
+0failures/0fallbacks. Direct cancels at physical2.50310s. Detached camera targetx54,
+remote clicked groundx64.067 rejected; body stays24,24. Normal actual existing
+animal2animations plus pinned fern loads. Final Release/CTest46passed3.05s;
+toolkit2073passed2skipped547.46s; doctorok exit0. Both preserved reviewers remain
+usage-limited; root implementation/review only, no fresh independent review claim.
+
+Receipt: .clanker/tasks/hero-destination-20261020/integration-receipt.json
+Parked oddities: straight-line route only; coarse clearance skips first1.3m;
+marker no depth occlusion; only1920x1080/injected input checked. Longer12s arrival
+trial records one final-frame support failure on subsequent ordinary drink-bank
+approach; preserved, not a destination failure or terrain/drink polish task.
+Original saves/assets/apps/untracked work preserved; connected preview refuses
+saves. No full-draft/final visuals/30FPS claim.
+
+## NEXT SUBSYSTEM: exterior meadow browse patch
+
+Cold brief: .clanker/tasks/hero-destination-20261020/next-task.md
+One visible tunable finite food patch for existing exterior residents and hero,
+shared resource identity/contact/history and visible depletion. No ecology/save/
+activation framework, new plant art, water simulation or accepted-draft polish.
+Working draft -> log oddities -> next. Wake05:20CDT root-only, zero dispatches.

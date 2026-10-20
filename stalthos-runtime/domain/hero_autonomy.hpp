@@ -14,11 +14,13 @@ class HeroDrinkAutonomy {
         active_=false;
     }
 public:
+    void yieldToDestination(){active_=false;cooldown_=0;}
     static constexpr double senseRadius=24;
     DrinkAction update(HeroSim& hero,const needs::NeedsCore& needs,Vec3 body,double heading,double physicalDt,bool direct,
         std::optional<Vec3> localWater,bool available,bool eligible,needs::SuggestedActivity activity=needs::SuggestedActivity::Drink,Identity resourceId=100) {
         if(!finite(body)||!std::isfinite(heading)||!std::isfinite(physicalDt)||physicalDt<0) throw std::invalid_argument("invalid hero autonomy input");
         hero.setDirect(direct);
+        if(hero.goal() && hero.goal()->contextual && hero.goal()->status==GoalStatus::Active){active_=false;return {};}
         if(localWater && finite(*localWater)) {
             const double dx=localWater->x-body.x,dy=localWater->y-body.y,dz=localWater->z-body.z;
             if(dx*dx+dy*dy+dz*dz<=senseRadius*senseRadius && available) hero.perception.observe({resourceId,*localWater,activity==needs::SuggestedActivity::Eat?needs.hunger():needs.thirst()});else hero.perception.clear();

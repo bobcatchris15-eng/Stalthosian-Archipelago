@@ -4,8 +4,9 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe, [switch]$DestinationProbe, [switch]$DestinationOverrideProbe, [switch]$DestinationBoundaryProbe)
 $ErrorActionPreference = 'Stop'
+if($DestinationProbe -or $DestinationOverrideProbe -or $DestinationBoundaryProbe){$ConnectedWorld=$true}
 if($ExposureProbe){$ConnectedWorld=$true}
 if($HeroRestProbe -or $HeroRestOverrideProbe) {$ConnectedWorld=$true}
 if($WildlifeAwarenessProbe -or $WildlifeCameraProbe) {$ConnectedWorld=$true}
@@ -94,6 +95,9 @@ if ($HeroAutonomyCameraProbe) { $start.ArgumentList.Add('--hero-autonomy-camera-
 if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment-probe') }
 if ($ExteriorResidentsProbe) { $start.ArgumentList.Add('--exterior-residents-probe') }
 if ($WildlifeAwarenessProbe) { $start.ArgumentList.Add('--wildlife-awareness-probe') }
+if($DestinationProbe){$start.ArgumentList.Add('--destination-probe')}
+if($DestinationOverrideProbe){$start.ArgumentList.Add('--destination-override-probe')}
+if($DestinationBoundaryProbe){$start.ArgumentList.Add('--destination-boundary-probe')}
 if($ExposureProbe){$start.ArgumentList.Add('--exposure-probe')}
 if($HeroRestProbe){$start.ArgumentList.Add('--hero-rest-probe')}
 if($HeroRestOverrideProbe){$start.ArgumentList.Add('--hero-rest-override-probe')}

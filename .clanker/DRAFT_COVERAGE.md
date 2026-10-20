@@ -16,6 +16,7 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Ordinary hero foraging | Working draft:body-local approach, selected shared-ledger contact, exact hunger relief/foliage response, override/camera separation | Straight radial approach, coarse reach/plant stand-in/feeding pose; no new save support |
 | Ordinary hero rest/recovery | Working draft:idle rest/cue, physical recovery, direct override, hysteresis and native higher-need drink handoff | Standing idle pose; no sleep/spot/shelter choice; only1920x1080 HUD checked |
 | Environmental exposure | Working draft: capped comfort fatigue, warning/partial-lee cue, normal2m approach reduces cost21percent; benign actual-animal rest unchanged | Coarse wind lee; no thermal physiology/rain interception; proxy adverse diagnostic/HUD1920x1080 |
+| Player contextual destination | Working draft: native right-click/raycast, body-local12m supported dry route, single goal, arrival/override and detached remote-click rejection | Straight-line/coarse clearance, marker unoccluded, injected input1920x1080 only; later drink-bank support oddity logged |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -35,3 +36,5 @@ Accepted hero-foraging-20261019 with bounded terrain support tile fix; NEXT ordi
 Latest accepted: hero-rest-20261020. NEXT observable environmental exposure consequence; no polish of accepted rest/food/weather/terrain drafts.
 
 Latest accepted: hero-exposure-20261020. NEXT player-issued contextual destination through existing single goal and ordinary controls.
+
+Latest accepted: hero-destination-20261020. NEXT exterior meadow shared-ledger browse patch; no destination polish.
