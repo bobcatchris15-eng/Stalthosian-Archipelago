@@ -46,16 +46,39 @@ slow animal pace, unresolved exterior sole and proxy-only wet tint remain. No lo
 exterior resources/hydrology, separate regions, connected saves or full island proof.
 Original saved mode/assets/planning preserved. Do not polish these accepted drafts.
 
-## NEXT SUBSYSTEM: ordinary hero rest and recovery
+## Working draft accepted: ordinary hero rest and recovery
 
-Cold brief: .clanker/tasks/hero-foraging-20261019/next-task.md
-Connect existing Rest suggestion/physical fatigue recovery to ordinary observable
-rest, immediate direct-control override, clean exit to other need activities. No
-new animation/assets/save format or generalized AI. Verify actual current source.
+Root implementation on d4f6e24; workers collected, still usage-limited. No fresh
+independent review claimed. New rest controller uses existing NeedsCore physical
+recovery once, threshold hysteresis to0.3, direct-input cancellation and priority
+handoff. Existing idle animation plus a native event-driven Resting cue, anchored
+to logical canvas. Original nonconnected saved-mode rest flags remain untouched.
 
-Resumed wake02:20CDT Oct20: no new dispatch; collected two errored workers, preserved
-partial worktrees and reviewer harness. Root finished integration directly. Preserve
-unrelated dirty/untracked work, open apps, immutable assets, readonly planning and
-historical evidence/worktrees. Reviewed main publication authorized; explicit owned
-paths, secret scan, graph refresh, receipts required. No force/releases/deployment,
-paid APIs or credential mutation. Wake <=35 active minutes and <=6 dispatches.
+Final Release passed; CTest44/44 passed3.19s. Current toolkit2073passed/2skipped
+528.24s and actual doctorok exit0. Native20s existing-animal rest: body fixed24,24,
+minimum fatigue.299958, rest exits/cue clears; actual composed UI frames viewed.
+Native16s override:10directsamples, recovery off/cue hidden, ordinary reverse
+movement, then rest resumes. Calendar500 native25s higher-thirst trial leaves
+rest, moves normally and drinks twice afterward. Both rest-phase recovery-rate
+errors<3.4e-16 against .05/physicalsecond. Rest itself grants no resource contact.
+
+Receipt: .clanker/tasks/hero-rest-20261020/integration-receipt.json
+Docs: stalthos-runtime/docs/hero-rest.md
+Logged: standing idle rest, no authored sleeping/crouch pose or shelter selection;
+HUD only native1920x1080 checked; no dedicated detached-camera rest trial. Rest
+controller has no camera input, existing camera tests remain. No new save fields,
+assets, anatomy or FPS/full-draft acceptance. Working role met; no rest/UI polish.
+
+## NEXT SUBSYSTEM: observable environmental exposure
+
+Cold brief: .clanker/tasks/hero-rest-20261020/next-task.md
+Use existing weather/wetness/approximate lee shelter for one bounded observable
+need consequence and warning cue, reduced by ordinary movement into claimed
+shelter. Inspect actual contracts; no thermodynamics, new rain art, lethal
+ordinary drinking, generalized hazard or save framework. Keep tuning simple.
+
+This wake03:23CDT Oct20: root implementation/review directly, zero new dispatch.
+Preserve unrelated dirty/untracked files, open apps, immutable assets, readonly
+planning and historical evidence/worktrees. Explicit paths, graph refresh, secret
+scan and reviewed origin main publication authorized. No force/releases/deploy,
+paid APIs or credential mutation. Wake<=35active minutes and<=6dispatches.

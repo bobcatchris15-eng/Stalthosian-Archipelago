@@ -1,3 +1,4 @@
+#include "domain/hero_rest.hpp"
 #include "domain/exterior_residents.hpp"
 #include "native_save.hpp"
 #include "domain/weather_response.hpp"
@@ -184,7 +185,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0;
+    unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
     auto argv = CommandLineToArgvW(GetCommandLineW(), &argumentCount);
@@ -196,6 +197,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-rest-probe") {restProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if (key == L"--hero-rest-override-probe") {restProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-foraging-probe") {foragingProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-foraging-override-probe") {foragingProbe=2;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--hero-foraging-camera-probe") {foragingProbe=3;connectedWorld=true;populatedWorld=true;}
@@ -249,6 +252,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(restProbe && (interactive || autonomyProbe || foragingProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)) throw std::runtime_error("rest probe requires timed connected world without another diagnostic");
         if(foragingProbe && (plant.empty() || interactive || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)) throw std::runtime_error("foraging probe requires imported Plant and no other diagnostic");
         if(wildlifeProbe && (interactive || autonomyProbe || connectedRouteWalk || weatherPreview || connectedEmbodimentProbe || !creature.empty())) throw std::runtime_error("wildlife probe uses bounded connected proxy input and no other diagnostic");
         if(autonomyProbe && (interactive || connectedRouteWalk || weatherPreview || diagnosticCamera)) throw std::runtime_error("hero autonomy probe requires timed connected world with no other diagnostic");
@@ -345,6 +349,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         needs.emplace(heroSpecies);
         if (loadedNeeds && loadedNeeds->species == heroSpecies)
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
+        if(restProbe) needs->restoreState(0,0,.8,0,false); // Explicit synthetic fatigue only.
         if(foragingProbe) needs->restoreState(.8,0,0,0,false);
         if(autonomyProbe) needs->restoreState(0,.8,0,0,false); // Explicit synthetic need setup only.
         if (diagnosticNeeds && !loadedNeeds) needs->restoreState(.75, .75, 0, 0, false);
@@ -724,6 +729,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::Identity wildlifeWatched=0;stalthos::Vec3 wildlifeAnchor{};
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
+        stalthos::domain::HeroRestAutonomy heroRest;
+        bool resting=false,previousRestCue=false;unsigned restCueChanges=0;
+        wi::SpriteFont restCue("Resting - recovering energy");restCue.params.size=24;restCue.params.h_align=wi::font::WIFALIGN_CENTER;restCue.params.color=wi::Color(255,255,255,255);restCue.params.shadowColor=wi::Color(0,0,0,255);restCue.SetHidden(true);renderPath.AddFont(&restCue);
+        float cueCanvasWidth=-1,cueCanvasHeight=-1;
+        json restSamples=json::array(),restCaptures=json::array();std::array<bool,3> restCaptured{};double nextRestSample=0;
         stalthos::domain::DrinkAction autonomyAction;
         bool autonomyBrowsing=false;uint64_t autonomyResource=100;
         json autonomySamples=json::array(),autonomyContacts=json::array(),autonomyCaptures=json::array();
@@ -1146,7 +1156,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     activeTransitionPhaseIndex = targetPhaseIndex;
                 }
             }
-            syntheticDirect=(autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4;
+            syntheticDirect=((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6);
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
             bool userWalk = (userSteering && down('W')) || wildlifeForward;
             bool userReverse = (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
@@ -1171,6 +1181,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             bool userSteerDirect = userSteering && (down('S') || down('A') || down('D') || down('W'));
             const bool directInput=walking || userSteerDirect || syntheticDirect || wildlifeReverse || down('E');
             heroIntent.setDirect(directInput);
+            resting=heroAutonomyEnabled?heroRest.update(*needs,heroAlive,directInput):false; // Original saved-mode resting state is untouched.
+            if(resting!=previousRestCue){restCue.SetHidden(!resting);previousRestCue=resting;++restCueChanges;}
+            if(cueCanvasWidth!=app.canvas.GetLogicalWidth() || cueCanvasHeight!=app.canvas.GetLogicalHeight()){cueCanvasWidth=app.canvas.GetLogicalWidth();cueCanvasHeight=app.canvas.GetLogicalHeight();restCue.params.posX=cueCanvasWidth*.5f;restCue.params.posY=cueCanvasHeight*.9f;}
             autonomyAction={};
             if(heroAutonomyEnabled && heroAlive) {
                 std::optional<stalthos::Vec3> water;
@@ -1621,6 +1634,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(restProbe) for(std::size_t phase=0;phase<3;++phase) if(!restCaptured[phase] && elapsed>=(phase==0?2:phase==1?5:12)){const auto filename="hero-rest-"+std::to_string(phase)+".png";restCaptured[phase]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());restCaptures.push_back({{"filename",filename},{"saved",restCaptured[phase]},{"resting",resting},{"fatigue",needs->fatigue()}});}
             if(wildlifeProbe || exteriorResidentsProbe) for(std::size_t phase=0;phase<3;++phase) if(!wildlifeCaptured[phase] && elapsed>=(phase==0?2:phase==1?8:19)) {
                 const auto filename="wildlife-awareness-"+std::to_string(phase)+".png";wildlifeCaptured[phase]=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/filename).u8string());wildlifeCaptures.push_back({{"filename",filename},{"saved",wildlifeCaptured[phase]},{"body_x",x},{"body_z",z}});
             }
@@ -1814,6 +1828,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             // Needs stop advancing after the terminal hero transition.
             if (heroAlive) needs->advance(timeStep);
+            if(heroAutonomyEnabled && elapsed>=nextRestSample){restSamples.push_back({{"elapsed",elapsed},{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"body_x",x},{"body_z",z},{"fatigue",needs->fatigue()},{"resting",resting},{"direct",directInput},{"cue_visible",!restCue.IsHidden()},{"speed",speed},{"camera_target_x",cameraOut.cameraState.target.x},{"camera_target_z",cameraOut.cameraState.target.z}});nextRestSample=elapsed+.1;}
 
             // Retrieve body-relative physical position for eligibility, independent of camera
             XMFLOAT3 bodyPos;
@@ -1984,6 +1999,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
+        if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
         if(connectedWorld) WriteJson(output/"weather-response.json",{{"native_rain_emitter_disabled",true},{"visible_rainfall_claimed",false},{"normal_conditions_driver","existing calendar clock"},{"wetness_driver","physical time"},{"diagnostic_synthetic_weather",weatherPreview},{"shelter_model","approximate lee of visible outcrop; wind only, not waterproof roof"},{"samples",weatherResponseSamples},{"captures",weatherResponseCaptures},{"needs_or_lifecycle_coupled",false}});
         if(populatedTerrain) {

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task_id": "hero-rest-20261020",
+  "status": "complete",
+  "base_revision": "d4f6e24",
+  "current_step": "working rest draft accepted; next observable environmental exposure",
+  "completed_steps": [
+    "collected errored workers and read narrow cold brief",
+    "implemented root rest controller and event-driven native cue",
+    "focused tests physical recovery/hysteresis/direct/higherneed/terminal passed",
+    "guarded original saved-mode rest flag",
+    "final native actual-animal idle rest, direct override and accelerated need handoff passed",
+    "native cue captures inspected",
+    "toolkit/doctor/Release/44CTest passed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/hero_rest.hpp",
+    "stalthos-runtime/tests/hero_rest.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/hero-rest.md"
+  ],
+  "updated": "2026-10-20T08:38:56.203998+00:00",
+  "resume_instructions": "Working draft done; no idle pose/HUD polish. Read next-task for bounded exposure consequence. Preserve original saves/assets/apps. No fresh independent reviewer available.",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1; CTest44/44; native Rest20s/Override16s/Calendar500handoff25s; current toolkit2073/2 anddoctor",
+    "evidence_path": ".clanker\\tasks\\hero-rest-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\hero-rest-20261020\\integration-receipt.json",
+  "next_step": "observable environmental exposure"
+}

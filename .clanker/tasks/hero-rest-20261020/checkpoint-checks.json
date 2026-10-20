@@ -1,0 +1,11 @@
+{
+  "secret_pattern_scan": "passed",
+  "explicit_owned_paths": true,
+  "task_schema": "complete/pass",
+  "original_untracked_files_verified": 132,
+  "unrelated_changes": 0,
+  "source_asset_hashes": "creature/metadata/plant pins unchanged",
+  "review": "root-authored and root-reviewed; collected independent workers unavailable, no fresh independent review claimed",
+  "graph_refresh": "passed with expected evidence JSON zero-node warnings",
+  "next_subsystem": "observable environmental exposure"
+}

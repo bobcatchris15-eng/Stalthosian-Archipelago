@@ -1,0 +1,8 @@
+{
+  "stalthos-runtime/domain/hero_rest.hpp": "3883c785578615aee3d4dcf9f4f4c9dc57e878d418e5b9859a2b46b2e5f4c999",
+  "stalthos-runtime/tests/hero_rest.cpp": "9c1aa5e2f60974ac9abca0a10f44ad2cfb04e652a05e119773d606eed2c26d2d",
+  "stalthos-runtime/engine/main.cpp": "5d9e01be0e048cc89ade536560a1d3f32f88c847699d4ebdaa80a85611bfed0a",
+  "stalthos-runtime/scripts/Run.ps1": "a3080d8a4bbd4b9ac8cc4004086d902828b58f0c1f996929c68aa88bec82b232",
+  "stalthos-runtime/CMakeLists.txt": "4511d075182fb121bd3c4c62447257336f3fd0ad8a29217caa38350f6e1b9a54",
+  "stalthos-runtime/docs/hero-rest.md": "20b9a1721363851e72d8daaf653126b687c1d2571ab8b99c7ee9ae55384c1a85"
+}

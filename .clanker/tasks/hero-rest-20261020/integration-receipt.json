@@ -1,0 +1,75 @@
+{
+  "status": "working_draft_accepted_move_next",
+  "base_revision": "d4f6e24",
+  "release_build_exit_code": 0,
+  "ctest": "44/44 passed3.19s",
+  "toolkit": "2073passed2skipped528.24s",
+  "doctor": "ok true exit0",
+  "native_evidence": {
+    "rest": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-033450-dc58ffb3",
+    "override": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-033546-350d3def",
+    "handoff": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-033640-bc0eca02"
+  },
+  "same_executable_sha256": "be3518ec535694e15aa25f0d5014295c71f8b7941ed9772ba541adc5dd0b1907",
+  "actual_existing_animal_used": true,
+  "stationary_rest_body": true,
+  "initial_fatigue": 0.7999748300004286,
+  "minimum_fatigue": 0.29995801092474683,
+  "final_fatigue": 0.3363645739504123,
+  "rest_exited_after_recovery": true,
+  "visible_native_composed_frame_cue": true,
+  "rest_cue_changes": 2,
+  "physical_recovery_rate_error": 3.3306690738754696e-16,
+  "override_samples": 10,
+  "override_reverse_distance_m": 1.853424072265625,
+  "override_fatigue_delta": 0.004633609997109045,
+  "rest_resumed_after_release": true,
+  "calendar500_recovery_rate_error": 3.3306690738754696e-16,
+  "higher_need_handoff_first_exit": {
+    "body_x": 24.0,
+    "body_z": 24.0,
+    "calendar_seconds": 2707.5901998759946,
+    "camera_target_x": 24.0,
+    "camera_target_z": 24.0,
+    "cue_visible": false,
+    "direct": false,
+    "elapsed": 7.7824482,
+    "fatigue": 0.5336428060560165,
+    "physical_seconds": 5.415180399751989,
+    "resting": false,
+    "speed": 0.0
+  },
+  "handoff_contacts": [
+    {
+      "amount": 0.5,
+      "body_x": 9.19887924194336,
+      "body_z": 23.990205764770508,
+      "elapsed": 17.4237672,
+      "eligible": true,
+      "session": 13,
+      "thirst_after": 0.5,
+      "thirst_before": 1.0
+    },
+    {
+      "amount": 0.5,
+      "body_x": 9.19887924194336,
+      "body_z": 23.990205764770508,
+      "elapsed": 22.0758721,
+      "eligible": true,
+      "session": 14,
+      "thirst_after": 0.4652104901149866,
+      "thirst_before": 0.9652104901149866
+    }
+  ],
+  "rest_itself_granted_resource_contacts": false,
+  "dedicated_detached_camera_rest_trial": false,
+  "review": "Root implementation, focused tests and source/native audit; collected workers still usage-limited, no fresh independent review claimed",
+  "original_saved_mode_guard": "new rest updater executes only in connected routine play; nonconnected Needs.resting flag untouched",
+  "next_subsystem": "observable environmental exposure",
+  "limitations": [
+    "standing idle rest pose, no authored sleeping animation",
+    "HUD verified1920x1080 only",
+    "no resting-place/shelter selection or species-specific sleep",
+    "no new persistence/full-draft/FPS acceptance"
+  ]
+}
