@@ -1,0 +1,68 @@
+{
+  "proxy": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124211-0dcaac4e",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "death_seconds": 6.003300801967271,
+    "next_life_seconds": 10.00470950116869,
+    "old_hero": 1,
+    "new_hero": 2,
+    "dead_input_refused": true,
+    "world_npcs_continued": true,
+    "history_preserved": true,
+    "old_contacts": [
+      {
+        "amount": 0.5,
+        "resource_id": 209,
+        "session_id": 13
+      }
+    ],
+    "new_contacts": [
+      {
+        "amount": 0.5,
+        "resource_id": 209,
+        "session_id": 15
+      }
+    ],
+    "new_direct_distance_m": 3.997734449291177
+  },
+  "animal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124244-c89ff089",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "death_seconds": 6.001741100859363,
+    "next_life_seconds": 10.00172811030643,
+    "old_hero": 1,
+    "new_hero": 2,
+    "dead_input_refused": true,
+    "world_npcs_continued": true,
+    "history_preserved": true,
+    "old_contacts": [
+      {
+        "amount": 0.5,
+        "resource_id": 209,
+        "session_id": 13
+      }
+    ],
+    "new_contacts": [
+      {
+        "amount": 0.5,
+        "resource_id": 209,
+        "session_id": 15
+      }
+    ],
+    "new_direct_distance_m": 0.32225938451389047
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124320-cfab27c1",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124332-15ded437",
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "preserved_original_untracked": 137,
+  "review": "root-only; both preserved independent reviewers usage-limited"
+}

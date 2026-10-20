@@ -1,0 +1,135 @@
+{
+  "task": "death-next-life-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T17:45:51.580479+00:00",
+  "base_revision": "1a1ff4e1d0e323e793478f53cb090bc45b554e6e",
+  "owned_paths": [
+    "stalthos-runtime/domain/next_life.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/next_life.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/death-next-life.md"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/next_life.hpp": "809040d4bb52fe1eefb1b2552c33a3a5ae7a070a686005eb652374a924e5cbce",
+    "stalthos-runtime/engine/main.cpp": "3414bc60e7028c3a745314371edce6ffdca4d6f418879d9c987a5484123d232a",
+    "stalthos-runtime/tests/next_life.cpp": "cc352b966f7e0f1bbd9b92796456a0e10d91fa81e27b2fb49bd71c92fac0c1b3",
+    "stalthos-runtime/scripts/Run.ps1": "f4b0d0f60767c725d270c0adf617ae926712068266c2262c58202dedecf95213",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "bd10df3f9def8e0cdb15a3387f2c44608432e0652de0ccd9ab5f22cc3ae9f576",
+    "stalthos-runtime/CMakeLists.txt": "be7cef5d74559218a9f8bf3097dc601229f2be1ac3771cbb887fa023d8c85625",
+    "stalthos-runtime/docs/death-next-life.md": "31b2b154e19a30afa31b5b9c38c71cc1691a6c8aec8e178f062f0274454df430"
+  },
+  "build": {
+    "schema_version": 1,
+    "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+    "configuration": "Release",
+    "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+    "executable_sha256": "5ea0c714f249840b9aba056a33979c90dfbc2c8b89ec754e1ba62d6d45c14000",
+    "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+    "source_revision": "1a1ff4e1d0e323e793478f53cb090bc45b554e6e",
+    "dirty_working_tree": true,
+    "note": "Application built locally against engine inputs: Verified local copy of existing compiled inputs; not a fresh engine rebuild"
+  },
+  "checks": {
+    "release": true,
+    "ctest_passed": 53,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 520.57,
+    "doctor_exit": 0,
+    "secret_scan": "passed final staged diff before commit"
+  },
+  "verification": {
+    "proxy": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124211-0dcaac4e",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "death_seconds": 6.003300801967271,
+      "next_life_seconds": 10.00470950116869,
+      "old_hero": 1,
+      "new_hero": 2,
+      "dead_input_refused": true,
+      "world_npcs_continued": true,
+      "history_preserved": true,
+      "old_contacts": [
+        {
+          "amount": 0.5,
+          "resource_id": 209,
+          "session_id": 13
+        }
+      ],
+      "new_contacts": [
+        {
+          "amount": 0.5,
+          "resource_id": 209,
+          "session_id": 15
+        }
+      ],
+      "new_direct_distance_m": 3.997734449291177
+    },
+    "animal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124244-c89ff089",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "death_seconds": 6.001741100859363,
+      "next_life_seconds": 10.00172811030643,
+      "old_hero": 1,
+      "new_hero": 2,
+      "dead_input_refused": true,
+      "world_npcs_continued": true,
+      "history_preserved": true,
+      "old_contacts": [
+        {
+          "amount": 0.5,
+          "resource_id": 209,
+          "session_id": 13
+        }
+      ],
+      "new_contacts": [
+        {
+          "amount": 0.5,
+          "resource_id": 209,
+          "session_id": 15
+        }
+      ],
+      "new_direct_distance_m": 0.32225938451389047
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124320-cfab27c1",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-124332-15ded437",
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "preserved_original_untracked": 137,
+    "review": "root-only; both preserved independent reviewers usage-limited"
+  },
+  "visual_review": "actual animated body death screen at physical8 and fresh hatchling screen after new control inspected; readable death/N cue, no corpse/anatomical acceptance",
+  "review": "root-only source, domain tests, native verification and visual review; both preserved reviewers usage-limited; zero dispatches",
+  "superseded_evidence": [
+    {
+      "path": "var/reports/runtime/20261020-123858-2ff07fb2",
+      "result": "death screen captured then continuation access violation; erroneous retained-animal assumption removed; helper/test now uses authoritative deadHeroes record"
+    },
+    {
+      "path": ".clanker\\tasks\\death-next-life-20261020\\build-cxx-standard-failure.log",
+      "result": "new test target initially declared before C++17 setting; moved after standard declaration; repaired53CTest passed"
+    }
+  ],
+  "limits": [
+    "standing death pose; presentation reused at supported old location; no corpse",
+    "age-zero same-species fresh hero uses existing shared juvenile anatomy",
+    "session-local continuation; no kinship/offspring choice or connected save support",
+    "handoff reserves fresh session14; ordinary first contact allocates15; unused reservation harmless",
+    "diagnostic startup age15994/thirst per life/noon/action/input labelled; no human keyboard or elapsed lifespan claim",
+    "prior accepted gait/sole/wet-material/slow-pace/full-route/activation limitations unchanged",
+    "graph refresh has555 zero-node artifact warnings; broad baseline delta is not architecture acceptance"
+  ],
+  "next_task": ".clanker\\tasks\\death-next-life-20261020\\next-task.md"
+}

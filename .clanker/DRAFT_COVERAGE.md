@@ -56,3 +56,6 @@ Latest accepted: exterior-woodland-20261020. NEXT observable bounded peer compan
 Latest accepted: peer-companionship-20261020. NEXT observable hero life-stage progression; no social/woodland/terrain polish.
 
 Latest accepted: life-stage-20261020. NEXT readable death/explicit next life in retained world; no growth/social/asset polish.
+
+
+Latest accepted: death-next-life-20261020. NEXT ordinary short supported exploration with needs/direct/destination priority; no corpse/newborn/continuation polish.

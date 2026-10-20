@@ -4,8 +4,9 @@ param([double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [doub
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
-      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe, [switch]$DestinationProbe, [switch]$DestinationOverrideProbe, [switch]$DestinationBoundaryProbe, [switch]$ExteriorBrowseProbe, [switch]$ExteriorBrowseCameraProbe, [switch]$ExteriorWaterProbe, [switch]$ExteriorWaterCameraProbe, [switch]$ExteriorWaterOverrideProbe, [switch]$DayNightPreview, [switch]$NightControlsProbe, [switch]$ExteriorWoodlandProbe, [switch]$PeerProbe, [switch]$PeerCameraProbe, [switch]$LifeStageProbe)
+      [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe, [switch]$DestinationProbe, [switch]$DestinationOverrideProbe, [switch]$DestinationBoundaryProbe, [switch]$ExteriorBrowseProbe, [switch]$ExteriorBrowseCameraProbe, [switch]$ExteriorWaterProbe, [switch]$ExteriorWaterCameraProbe, [switch]$ExteriorWaterOverrideProbe, [switch]$DayNightPreview, [switch]$NightControlsProbe, [switch]$ExteriorWoodlandProbe, [switch]$PeerProbe, [switch]$PeerCameraProbe, [switch]$LifeStageProbe,[switch]$DeathNextLifeProbe)
 $ErrorActionPreference = 'Stop'
+if($DeathNextLifeProbe){$ConnectedWorld=$true}
 if($LifeStageProbe){$ConnectedWorld=$true}
 if($PeerProbe -or $PeerCameraProbe){$ConnectedWorld=$true}
 if($ExteriorWoodlandProbe){$ConnectedWorld=$true}
@@ -102,6 +103,7 @@ if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment
 if ($ExteriorResidentsProbe) { $start.ArgumentList.Add('--exterior-residents-probe') }
 if ($WildlifeAwarenessProbe) { $start.ArgumentList.Add('--wildlife-awareness-probe') }
 if($LifeStageProbe){$start.ArgumentList.Add('--life-stage-probe')}
+if($DeathNextLifeProbe){$start.ArgumentList.Add('--death-next-life-probe')}
 if($PeerProbe){$start.ArgumentList.Add('--peer-probe')}
 if($PeerCameraProbe){$start.ArgumentList.Add('--peer-camera-probe')}
 if($ExteriorWoodlandProbe){$start.ArgumentList.Add('--exterior-woodland-probe')}

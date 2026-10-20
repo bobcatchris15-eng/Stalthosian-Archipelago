@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "death-next-life-20261020",
+  "status": "complete",
+  "base_revision": "1a1ff4e1d0e323e793478f53cb090bc45b554e6e",
+  "current_step": "readable death/explicit new-life connected draft accepted; next ordinary exploration",
+  "completed_steps": [
+    "HALT and narrow durable contracts inspected; usage-limited workers collected",
+    "recorded death drives readable N-key new life action, no automatic resurrection",
+    "new helper uses recorded death region and excludes NPC/active/retained/dead identities",
+    "only new individual local lifecycle/needs/intent/perception/peer/contact/weather reset",
+    "Release53CTest; toolkit2073pass2skip doctor",
+    "proxy and actual animated body actual calendar death, refused input, continuous world/NPCs, fresh identity/session, new drinking and controls",
+    "native handoff leaves ledger and NPC snapshot exactly unchanged; monotone cumulative history and finite consumption preserved",
+    "ordinary connected original12 actors/11resources/sessions exact baseline and original mode native launch preserved",
+    "native composed death/new life images inspected; immutable assets and original untracked files preserved",
+    "superseded access violation and test C++17 build failure retained with fixes; no fresh independent review claimed"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/next_life.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/next_life.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/death-next-life.md"
+  ],
+  "updated": "2026-10-20T17:45:51.580479+00:00",
+  "resume_instructions": "Read next-task. Death/new-life role accepted; park corpse/body/newborn/kinship/save limits; move to exploration.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest53; toolkit2073/2 doctor; verify.py death/control/history/identity/session/native normal baseline and preservation",
+    "evidence_path": ".clanker\\tasks\\death-next-life-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\death-next-life-20261020\\integration-receipt.json",
+  "next_step": "ordinary body-local supported dry exploration when needs satisfied; direct/destination/needs override"
+}

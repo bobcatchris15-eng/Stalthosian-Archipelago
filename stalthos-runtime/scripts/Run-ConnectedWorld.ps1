@@ -1,13 +1,15 @@
 [CmdletBinding()]
 param([double]$Duration=30,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
-      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe)
+      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe)
 $ErrorActionPreference='Stop'
+if($DeathNextLifeProbe -and ($LifeStageProbe -or $AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $Interactive)){throw 'Death/next-life probe requires standalone timed mode'}
 if($LifeStageProbe -and ($AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $Interactive)){throw 'Life stage probe requires timed standalone mode'}
 if($WoodlandProbe -and ($AutonomyProbe -or $ExteriorProbe -or $Interactive)){throw 'Woodland probe requires timed standalone mode'}
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at a time'}
 $options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance}
 if($LifeStageProbe){$options.LifeStageProbe=$true}
+if($DeathNextLifeProbe){$options.DeathNextLifeProbe=$true}
 if($WoodlandProbe){$options.ExteriorWoodlandProbe=$true}
 if($Interactive) {$options.Interactive=$true}
 if($AutonomyProbe) {$options.HeroAutonomyProbe=$true}

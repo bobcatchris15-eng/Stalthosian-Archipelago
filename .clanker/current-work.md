@@ -330,3 +330,26 @@ NEXT SUBSYSTEM: readable death and explicit next-life continuation in the same
 retained connected world using existing Lifecycle/WorldSim death and identity/
 contact-session contracts. Keep world/NPC/resource/history, no new ordinary hazard
 or save framework. .clanker/tasks/life-stage-20261020/next-task.md
+
+
+## 2026-10-20 death and explicit next life: working draft accepted
+Actual calendar death now gives a readable world-continues/N-key cue. Dead-body
+movement/contact refused, old ID1 remains dead/excluded. Explicit next life creates
+ID2, age0 and fresh session ownership in the same running world. Only new hero
+local state resets; all12 NPC identities/states and ledger are exactly unchanged
+at handoff, and NPC motion/calendar/cumulative resource history continue.
+Native proxy/animated probes die at physical6, wait with refused input, continue
+at10, then drink from209 with exact.5 relief under new session15 (old13) and move
+3.998m/.32226m. Zero support failures/fallbacks; normal original12 actors/11-resource/
+session baseline and original mode launch preserved. Release53CTest/toolkit2073
+passed2skipped doctor. Original untracked/immutable assets preserved. Root-only
+review; two preserved reviewers usage-limited, zero dispatches. Receipt:
+.clanker/tasks/death-next-life-20261020/integration-receipt.json
+Parked: standing death pose, reused body/location and shared juvenile newborn
+appearance, session-only/no kinship/offspring/connected saves; harmless unused
+handoff session reservation. Initial crash (wrong retained-animal assumption) and
+test-standard build failure retained as superseded evidence and fixed. No human
+input, final-art/full-draft/30FPS acceptance. Do not polish these working drafts.
+NEXT SUBSYSTEM: ordinary short supported body-local exploration when needs are
+satisfied, with visible pause and direct/destination/need overrides.
+.clanker/tasks/death-next-life-20261020/next-task.md
