@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-woodland-20261020",
+  "status": "complete",
+  "base_revision": "97eb530cc4901f1b773c7aed4931facf0105954e",
+  "current_step": "recognizable traversable exterior woodland draft accepted; next peer companionship",
+  "completed_steps": [
+    "HALT absent and handoff read",
+    "collected both usage-limited reviewers; root-only implementation/review",
+    "preserved original untracked hashes and immutable parent tree exports",
+    "implemented ten tunable instances through existing importer and resident rendered ground",
+    "connected wrapper pins existing adult and sapling; diagnostic labelled start/input/noon only",
+    "initial missing foundation include fixed; first compile log retained",
+    "native needle foliage read poorly; untouched exports retained and existing corrected-crown pointers selected",
+    "final native proxy38.0058m lane and animated animal4.67145m entry; ten grounded trees no skips/fallbacks",
+    "ordinary connected launch real calendar and exact previous population/resource/session state",
+    "original saved-mode launch succeeds; no save contract changes",
+    "Release50CTest; toolkit2073passed2skipped; doctor; all initial untracked hashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/exterior_woodland.hpp",
+    "stalthos-runtime/engine/woodland_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/config/connected-woodland.json",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/tests/exterior_woodland.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-woodland.md"
+  ],
+  "updated": "2026-10-20T14:42:49.729893+00:00",
+  "resume_instructions": "Read next-task. Woodland accepted; park sparse crowns/broad-leaf stand-in/ground/contact oddities. No fresh independent review.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest50; toolkit2073/2 doctor; verify.py actual native proxy/animal/normal/original-mode/preservation",
+    "evidence_path": ".clanker\\tasks\\exterior-woodland-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\exterior-woodland-20261020\\integration-receipt.json",
+  "next_step": "observable bounded peer companionship"
+}

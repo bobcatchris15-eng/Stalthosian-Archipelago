@@ -1,0 +1,39 @@
+{
+  "20261020-093656-cc82e1f1": {
+    "body_start_x": 146.00094604492188,
+    "body_end_x": 184.00674438476562,
+    "displacement_m": 38.00579833984375,
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "placed": 10,
+    "shared_unique_objects": 4,
+    "unique_triangles": 7616,
+    "drawn_triangles": 36840
+  },
+  "20261020-093751-88e2ca44": {
+    "body_start_x": 146.00009155273438,
+    "body_end_x": 150.67153930664062,
+    "displacement_m": 4.67144775390625,
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "placed": 10,
+    "shared_unique_objects": 4,
+    "unique_triangles": 7616,
+    "drawn_triangles": 36840
+  },
+  "20261020-093841-18911a09": {
+    "body_start_x": 24.0,
+    "body_end_x": 24.0,
+    "displacement_m": 0.0,
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "placed": 10,
+    "shared_unique_objects": 4,
+    "unique_triangles": 7616,
+    "drawn_triangles": 36840
+  },
+  "preserved_original_untracked_files": 134,
+  "baseline": "original8/all12 actors and original11 resource/session initial states exactly preserved",
+  "visual_review": "root inspected proxy and actual animal native images; broad-foliage stand-in recognizable; sparse crowns and coarse ground remain; needle-spray assets retained untouched",
+  "scope": "labelled diagnostic start/input/noon; existing ordinary supported motion, not human physical input, full animal crossing, forest ecology, physical canopy shelter or FPS"
+}

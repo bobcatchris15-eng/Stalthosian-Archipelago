@@ -1,0 +1,98 @@
+{
+  "task": "exterior-woodland-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T14:42:49.729893+00:00",
+  "base_revision": "97eb530cc4901f1b773c7aed4931facf0105954e",
+  "owned_paths": [
+    "stalthos-runtime/domain/exterior_woodland.hpp",
+    "stalthos-runtime/engine/woodland_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/config/connected-woodland.json",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/tests/exterior_woodland.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/exterior-woodland.md"
+  ],
+  "review": "root-only source and native review; both preserved independent reviewers usage-limited; zero dispatches",
+  "checks": {
+    "release": true,
+    "ctest_passed": 50,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 555.45,
+    "doctor_exit": 0
+  },
+  "verification": {
+    "20261020-093656-cc82e1f1": {
+      "body_start_x": 146.00094604492188,
+      "body_end_x": 184.00674438476562,
+      "displacement_m": 38.00579833984375,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "placed": 10,
+      "shared_unique_objects": 4,
+      "unique_triangles": 7616,
+      "drawn_triangles": 36840
+    },
+    "20261020-093751-88e2ca44": {
+      "body_start_x": 146.00009155273438,
+      "body_end_x": 150.67153930664062,
+      "displacement_m": 4.67144775390625,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "placed": 10,
+      "shared_unique_objects": 4,
+      "unique_triangles": 7616,
+      "drawn_triangles": 36840
+    },
+    "20261020-093841-18911a09": {
+      "body_start_x": 24.0,
+      "body_end_x": 24.0,
+      "displacement_m": 0.0,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "placed": 10,
+      "shared_unique_objects": 4,
+      "unique_triangles": 7616,
+      "drawn_triangles": 36840
+    },
+    "preserved_original_untracked_files": 134,
+    "baseline": "original8/all12 actors and original11 resource/session initial states exactly preserved",
+    "visual_review": "root inspected proxy and actual animal native images; broad-foliage stand-in recognizable; sparse crowns and coarse ground remain; needle-spray assets retained untouched",
+    "scope": "labelled diagnostic start/input/noon; existing ordinary supported motion, not human physical input, full animal crossing, forest ecology, physical canopy shelter or FPS"
+  },
+  "native_evidence": {
+    "final_proxy": "var/reports/runtime/20261020-093656-cc82e1f1",
+    "final_animal": "var/reports/runtime/20261020-093751-88e2ca44",
+    "normal": "var/reports/runtime/20261020-093841-18911a09",
+    "original_mode": "var/reports/runtime/20261020-093939-23a2bee1",
+    "initial_needle_proxy": "var/reports/runtime/20261020-093456-fac9c10d",
+    "initial_needle_animal": "var/reports/runtime/20261020-093541-f84710f0"
+  },
+  "content_choice": "existing corrected-crown parent exports, hash-pinned broad-foliage stand-in; earlier needle exports unchanged and reviewed as insufficiently visible in this view",
+  "limitations": [
+    "sparse crowns/open canopy/straight rows, broad foliage not needle-art acceptance",
+    "rough ground/groundcover, existing sole/contact and slow animal pace; no full animal lane crossing",
+    "diagnostic starts near woodland and injects ordinary forward intent; noon render phase synthetic, clocks unchanged",
+    "no added tree body collision, physical canopy weather shelter, forest ecology or activation/save framework",
+    "no final art/full-draft/human-input/FPS claim",
+    "initial compilation missed foundation include, corrected; camera22 rejected by existing2..18 guard, final18 used"
+  ],
+  "graph": "refreshed;537 zero-node files omitted, not complete architectural proof",
+  "next_task": ".clanker\\tasks\\exterior-woodland-20261020\\next-task.md",
+  "hashes": {
+    "stalthos-runtime/domain/exterior_woodland.hpp": "b915842c1bcf9c028d514c9054f09816ca61c51a88317d2579a5c7c2e5e89432",
+    "stalthos-runtime/engine/woodland_scene.hpp": "51ef6a3db519fb5f5870701fc614cc85a15abca0fb38c9473b0bd35f0d2a8430",
+    "stalthos-runtime/engine/main.cpp": "6ae9ba5a0aff00f27afd4077bcbec42564b1048f9d8c5f5d0767f964783f9ac0",
+    "stalthos-runtime/config/connected-woodland.json": "eddebf2d4d4e65ec450005a0ce7d1d06816ac6663750d67ceab0c6661d92b02d",
+    "stalthos-runtime/scripts/Run.ps1": "37de2f4c016e8097bc8f09cb7c078939864254e98af8474665ec06b969b5496c",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "e3eace3defc217e04819710c7604d273f09f4e3f43015835934302fa8dbf18bb",
+    "stalthos-runtime/tests/exterior_woodland.cpp": "4537b51240364b6518ea481d405ee73469af2da5a43d20a651ed455bf0af24b9",
+    "stalthos-runtime/CMakeLists.txt": "0dbf362f6feb63cf859fbbacc145fbc645835c442617f452d9138c8a959dff01",
+    "stalthos-runtime/docs/exterior-woodland.md": "51ee233dd43dc16a7b7f690af777d96762731bc627c30dd4685690cbfb747bbd"
+  },
+  "secret_scan": "full staged diff pattern scan passed before publication; no credential detected",
+  "publication": "authorized normal origin/main; final revision in Git history and remote verification"
+}

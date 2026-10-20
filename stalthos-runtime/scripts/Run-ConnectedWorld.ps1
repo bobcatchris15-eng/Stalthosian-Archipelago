@@ -1,10 +1,12 @@
 [CmdletBinding()]
 param([double]$Duration=30,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
-      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe)
+      [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe)
 $ErrorActionPreference='Stop'
+if($WoodlandProbe -and ($AutonomyProbe -or $ExteriorProbe -or $Interactive)){throw 'Woodland probe requires timed standalone mode'}
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at a time'}
 $options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance}
+if($WoodlandProbe){$options.ExteriorWoodlandProbe=$true}
 if($Interactive) {$options.Interactive=$true}
 if($AutonomyProbe) {$options.HeroAutonomyProbe=$true}
 if($ExteriorProbe) {$options.ConnectedEmbodimentProbe=$true}
@@ -29,4 +31,12 @@ $plantPin=Get-Content -LiteralPath (Join-Path $root 'stalthos-runtime/config/con
 $plantAssets=if($AssetRoot){[IO.Path]::GetFullPath($AssetRoot)}else{$root}
 $browsePlant=Join-Path $plantAssets $plantPin.path
 if(Test-Path -LiteralPath $browsePlant -PathType Leaf){if((Get-FileHash -LiteralPath $browsePlant -Algorithm SHA256).Hash.ToLowerInvariant() -ne $plantPin.sha256){throw 'Reviewed browse plant changed; verify provenance'};$options.Plant=$browsePlant;Write-Output 'Connected foraging: pinned provisional Basketfern browse plant'}else{Write-Warning 'Reviewed browse plant unavailable; no autonomous foraging affordance. Pass -AssetRoot for reviewed var artifacts.'}
+$treePin=Get-Content -LiteralPath (Join-Path $root 'stalthos-runtime/config/connected-woodland.json') -Raw|ConvertFrom-Json
+foreach($stage in @('adult','sapling')){
+ $tree=Join-Path $plantAssets $treePin.$stage.path
+ if(Test-Path -LiteralPath $tree -PathType Leaf){
+  if((Get-FileHash -LiteralPath $tree -Algorithm SHA256).Hash.ToLowerInvariant() -ne $treePin.$stage.sha256){throw "Pinned $stage woodland artifact changed"}
+  $key=if($stage -eq 'adult'){'WoodlandAdultTree'}else{'WoodlandSaplingTree'};$options[$key]=$tree
+ }else{Write-Warning "Existing $stage woodland asset missing; that stage will be absent"}
+}
 & (Join-Path $PSScriptRoot 'Run.ps1') @options

@@ -13,6 +13,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <functional>
 
 void ImportModel_GLTF(const std::string&, wi::scene::Scene&);
 
@@ -304,7 +305,9 @@ inline WoodlandSceneReport populateWoodlandScene(
     const std::filesystem::path& adultTreePath,
     const std::filesystem::path& saplingTreePath,
     std::uint64_t worldSeed = 42,
-    std::size_t maxTrees = 20
+    std::size_t maxTrees = 20,
+    const std::vector<domain::TreePlacement>* exterior = nullptr,
+    const std::function<double(double,double)>& exteriorGround = {}
 ) {
     using namespace DirectX;
     WoodlandSceneReport report;
@@ -358,7 +361,8 @@ inline WoodlandSceneReport populateWoodlandScene(
     report.candidateAttempts = stands.candidateAttempts();
     report.clusterAttempts = stands.clusterAttempts();
     report.candidateBudgetExhausted = stands.isCandidateBudgetExhausted();
-    report.proposalsTotal = stands.placements().size();
+    report.proposalsTotal = exterior ? exterior->size() : stands.placements().size();
+    if(exterior){if(!exteriorGround || exterior->size()>report.hardCap)throw std::invalid_argument("invalid exterior woodland inputs");report.groundCacheAvailable=true;report.groundSampleSource="resident_streamed_rendered_triangles";report.candidateAttempts=0;report.clusterAttempts=0;report.candidateBudgetExhausted=false;}
 
     // 3. Load prototypes (if paths supplied)
     detail::PrototypeModel adultModel;
@@ -419,7 +423,7 @@ inline WoodlandSceneReport populateWoodlandScene(
     }
 
     // 4. Instantiate proposals using shared mesh/material resources
-    for (const auto& tp : stands.placements()) {
+    for (const auto& tp : (exterior ? *exterior : stands.placements())) {
         std::string stageName = tp.isSapling ? "sapling" : "adult";
 
         // Check if corresponding stage asset prototype is loaded
@@ -457,7 +461,7 @@ inline WoodlandSceneReport populateWoodlandScene(
         }
 
         // Sample actual rendered ground triangles at proposal XZ
-        if (!groundSurface.inBounds(tp.x, tp.z)) {
+        if (!exterior && !groundSurface.inBounds(tp.x, tp.z)) {
             WoodlandTreeSkippedRecord skip;
             skip.id = tp.id;
             skip.stage = stageName;
@@ -471,7 +475,8 @@ inline WoodlandSceneReport populateWoodlandScene(
             continue;
         }
 
-        double sampledGroundY = groundSurface.sampleHeight(tp.x, tp.z);
+        double sampledGroundY = exterior ? exteriorGround(tp.x,tp.z) : groundSurface.sampleHeight(tp.x, tp.z);
+        if(!std::isfinite(sampledGroundY))throw std::runtime_error("nonfinite woodland ground");
         double deltaM = sampledGroundY - tp.y;
 
         // Create root transform entity for the tree instance

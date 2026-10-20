@@ -1,0 +1,70 @@
+{
+  "command": "doctor",
+  "ok": true,
+  "exit_code": 0,
+  "seed": null,
+  "asset_id": null,
+  "started_at": 1792507004.841,
+  "duration_s": 0.0,
+  "partial": false,
+  "artifacts": [],
+  "metrics": {
+    "tools": {
+      "gltfpack": {
+        "available": true,
+        "path": "C:\\tools\\meshoptimizer\\gltfpack.EXE",
+        "version": "unknown"
+      },
+      "meshoptimizer": {
+        "available": false,
+        "path": null,
+        "error": "not found on PATH"
+      },
+      "compressonator": {
+        "available": true,
+        "path": "C:\\Compressonator_4.5.52\\bin\\CLI\\compressonatorcli.EXE",
+        "version": "4.5.52"
+      },
+      "gltf_validator": {
+        "available": true,
+        "path": "C:\\tools\\gltf-validator\\gltf_validator.EXE",
+        "version": "2.0"
+      },
+      "gltf_transform": {
+        "available": true,
+        "path": "C:\\Users\\Chris\\AppData\\Roaming\\npm\\gltf-transform.CMD",
+        "version": "4.5.1"
+      },
+      "ktx": {
+        "available": false,
+        "path": null,
+        "error": "not found on PATH"
+      },
+      "magick": {
+        "available": true,
+        "path": "C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.EXE",
+        "version": "7.1.2-25"
+      },
+      "ffmpeg": {
+        "available": true,
+        "path": "C:\\ProgramData\\chocolatey\\bin\\ffmpeg.EXE",
+        "version": "9.0.2-essentials"
+      },
+      "git": {
+        "available": true,
+        "path": "C:\\Program Files\\Git\\cmd\\git.EXE"
+      },
+      "blender": {
+        "available": true,
+        "path": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "version": "5.2.0"
+      }
+    },
+    "workspace": "E:\\Stalthosian Archipelago\\stalthos-toolkit\\var",
+    "python": "3.14.5"
+  },
+  "provenance": {},
+  "warnings": [],
+  "errors": [],
+  "logs": []
+}

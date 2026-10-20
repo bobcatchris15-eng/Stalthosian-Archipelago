@@ -1,0 +1,11 @@
+{
+  "quality": "provisional existing parent exports; replaceable",
+  "adult": {
+    "path": "var/splitcrown-spray-parent-young_adult-20261017/exports/plant.splitcrown.ar1.young_adult.baked.glb",
+    "sha256": "2ef814cc3d41c815757cdf586bd0faeff630b4683c3364deb1737bcda2e80c93"
+  },
+  "sapling": {
+    "path": "var/splitcrown-spray-parent-sapling-20261017/exports/plant.splitcrown.ar1.sapling.baked.glb",
+    "sha256": "6b5e8bb523c84e827c01333c9ef375fbd5f96d3cdc6301c70466bbeca2fd21bb"
+  }
+}

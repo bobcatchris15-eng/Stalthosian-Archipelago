@@ -1,3 +1,4 @@
+#include "domain/exterior_woodland.hpp"
 #include "day_night_scene.hpp"
 #include "exterior_water_scene.hpp"
 #include "domain/exterior_browse.hpp"
@@ -192,7 +193,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
+    bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
     unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
@@ -205,6 +206,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--exterior-woodland-probe"){woodlandProbe=true;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--day-night-preview"){dayNightProbe=1;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--night-controls-probe"){dayNightProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--exterior-water-probe"){exteriorWaterProbe=1;connectedWorld=true;populatedWorld=true;}
@@ -271,6 +273,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(woodlandProbe && (interactive || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview || woodlandAdultTree.empty() || woodlandSaplingTree.empty()))throw std::runtime_error("woodland probe requires timed connected world and both tree assets only");
         if(dayNightProbe && (interactive || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("day/night probe uses timed connected world without another diagnostic");
         const stalthos::fauna::ExteriorWaterSource exteriorWater;
         if(exteriorWaterProbe && (interactive || !creature.empty() || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("exterior water probe uses timed connected proxy without other diagnostic");
@@ -491,8 +494,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         const auto shoreCounts=stalthos::engine::populateShoreScene(scene,landscape,2.0,1);
         const auto sceneryCounts = stalthos::engine::populateEnvironmentScene(scene, landscape, 1);
         scene.Update(0.0f);
+        const auto exteriorTrees=connectedWorld?stalthos::domain::exteriorWoodland([&](double gx,double gz){return populatedTerrain->height(gx,gz);}):std::vector<stalthos::domain::TreePlacement>{};
+        if(woodlandProbe){x=146;z=47;yaw=pi*.5f;populatedTerrain->update(scene,x,z);}
         const auto woodlandReport = stalthos::engine::populateWoodlandScene(
-            scene, landscape, woodlandAdultTree, woodlandSaplingTree, world.worldSeed(), 20);
+            scene, landscape, woodlandAdultTree, woodlandSaplingTree, world.worldSeed(), 20,connectedWorld?&exteriorTrees:nullptr,connectedWorld?std::function<double(double,double)>([&](double gx,double gz){return populatedTerrain->height(gx,gz);}):std::function<double(double,double)>{});
         struct ShrubFoliageRef {
             wi::ecs::Entity entity = wi::ecs::INVALID_ENTITY;
             XMFLOAT3 originalScale{1.0f, 1.0f, 1.0f};
@@ -768,7 +773,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::Identity wildlifeWatched=0;stalthos::Vec3 wildlifeAnchor{};
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
-        wi::SpriteFont phasePreviewCue(dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe);renderPath.AddFont(&phasePreviewCue);
+        wi::SpriteFont phasePreviewCue(woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe);renderPath.AddFont(&phasePreviewCue);
         wi::SpriteFont destinationCue("Right-click nearby ground to go there"),destinationPin("+");
         for(auto* font:{&destinationCue,&destinationPin}){font->params.size=22;font->params.h_align=wi::font::WIFALIGN_CENTER;font->params.color=wi::Color(255,240,180,255);font->params.shadowColor=wi::Color(0,0,0,255);font->SetHidden(!connectedWorld);renderPath.AddFont(font);}
         destinationPin.SetHidden(true);std::string destinationStatus="ready";json destinationEvents=json::array(),destinationSamples=json::array(),destinationCaptures=json::array();std::array<bool,3> destinationCaptured{};double nextDestinationSample=0;bool destinationInjected=false;
@@ -1220,7 +1225,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             syntheticDirect=((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4);
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
-            bool userWalk = (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
+            bool userWalk = (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
             bool userReverse = (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
@@ -1607,7 +1612,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 localWeather=bodyWeather.advance(conditions,timeStep.physicalSeconds,shelter);
                 stalthos::engine::applyWeatherToScene(scene,conditions,{.8f,0,.6f});
                 scene.weather.rain_amount=0; // Pinned native emitter AV on rain transition; use lighting/wetting draft.
-                const std::array<double,4> previewPhases{{.28,.5,.72,0}};renderedDayFraction=dayNightProbe==1?previewPhases[std::min(std::size_t(3),std::size_t(elapsed/(duration/4)))]:dayNightProbe==2?0:conditions.dayFraction;
+                const std::array<double,4> previewPhases{{.28,.5,.72,0}};renderedDayFraction=woodlandProbe?.5:dayNightProbe==1?previewPhases[std::min(std::size_t(3),std::size_t(elapsed/(duration/4)))]:dayNightProbe==2?0:conditions.dayFraction;
                 dayNightLight=stalthos::environment::dayNight(renderedDayFraction,conditions.cloud);stalthos::engine::dayNightScene(scene,sun,nightFill,clearSunIntensity,dayNightLight);
                 scene.weather.fogStart=30;scene.weather.fogDensity=float(.0025*conditions.rainfall);
 
@@ -1712,7 +1717,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             app.Run(); ++runCalls;
             if(connectedWorld && elapsed>=nextDayNightSample){const auto* lamp=scene.lights.GetComponent(sun);const auto sky=scene.weather.sunDirection;const double error=std::sqrt(std::pow(lamp->direction.x-dayNightLight.sunDirection.x,2)+std::pow(lamp->direction.y-dayNightLight.sunDirection.y,2)+std::pow(lamp->direction.z-dayNightLight.sunDirection.z,2));dayNightSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"calendar_fraction",std::fmod(clock.calendarSeconds(),86400)/86400},{"rendered_fraction",renderedDayFraction},{"sun_intensity",lamp->intensity},{"fill_intensity",scene.lights.GetComponent(nightFill)->intensity},{"direction_error",error},{"sky_light_direction_error",std::hypot(std::hypot(double(sky.x-lamp->direction.x),double(sky.y-lamp->direction.y)),double(sky.z-lamp->direction.z))},{"body_x",x},{"body_z",z},{"resting",resting},{"direct",directInput},{"fatigue",needs->fatigue()},{"thirst",needs->thirst()}});nextDayNightSample=elapsed+.1;}
-            if(dayNightProbe)for(std::size_t i=0;i<4;++i)if(!dayNightCaptured[i] && elapsed>=duration*(double(i)+.5)/4){const auto filename="day-night-"+std::to_string(i)+".png";dayNightCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());dayNightCaptures.push_back({{"filename",filename},{"saved",dayNightCaptured[i]},{"rendered_fraction",renderedDayFraction},{"body_x",x},{"body_z",z}});}
+            if(dayNightProbe || woodlandProbe)for(std::size_t i=0;i<4;++i)if(!dayNightCaptured[i] && elapsed>=duration*(double(i)+.5)/4){const auto filename="day-night-"+std::to_string(i)+".png";dayNightCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());dayNightCaptures.push_back({{"filename",filename},{"saved",dayNightCaptured[i]},{"rendered_fraction",renderedDayFraction},{"body_x",x},{"body_z",z}});}
 
             if(connectedWorld)scene.objects.GetComponent(exteriorWaterEntity)->SetRenderable(getResourceRemaining(209)>0);
             if(exteriorWaterProbe)for(std::size_t i=0;i<3;++i)if(!exteriorWaterCaptured[i] && elapsed>=(i==0?1:i==1?6:13)){const auto filename="exterior-water-"+std::to_string(i)+".png";exteriorWaterCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());exteriorWaterCaptures.push_back({{"filename",filename},{"saved",exteriorWaterCaptured[i]}});}
@@ -2097,7 +2102,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
-        if(connectedWorld)WriteJson(output/"day-night.json",{{"probe_mode",dayNightProbe},{"synthetic_renderer_phase",dayNightProbe!=0},{"renderer_modifies_clock_or_needs",false},{"synthetic_initial_fatigue_and_body_input",dayNightProbe==2},{"samples",dayNightSamples},{"captures",dayNightCaptures},{"scope","proposed calendar lighting plus readable night fill, not astronomy or elapsed24h proof"}});
+        if(connectedWorld)WriteJson(output/"day-night.json",{{"probe_mode",dayNightProbe},{"synthetic_renderer_phase",dayNightProbe!=0 || woodlandProbe},{"woodland_entry_probe",woodlandProbe},{"renderer_modifies_clock_or_needs",false},{"synthetic_initial_fatigue_and_body_input",dayNightProbe==2},{"samples",dayNightSamples},{"captures",dayNightCaptures},{"scope","proposed calendar lighting plus readable night fill, not astronomy or elapsed24h proof"}});
         if(connectedWorld)WriteJson(output/"exterior-water.json",{{"resource",209},{"quantity",exteriorWater.quantity},{"water_height",exteriorWaterHeight},{"bank_x",exteriorWater.bankX},{"bank_z",exteriorWater.bankZ},{"probe_mode",exteriorWaterProbe},{"synthetic_initial_thirst_and_pose",exteriorWaterProbe!=0},{"samples",exteriorWaterSamples},{"npc_contacts",exteriorWaterNpcContacts},{"hero_contacts",autonomyContacts},{"captures",exteriorWaterCaptures},{"scope","static rock-lined seep, dry supported bank; no fluid solver or connected saves"}});
         if(exteriorBrowseEnabled)WriteJson(output/"exterior-browse.json",{{"resource",208},{"initial_quantity",exteriorBrowse.quantity},{"patch_x",exteriorBrowse.x},{"patch_z",exteriorBrowse.z},{"probe_mode",exteriorBrowseProbe},{"synthetic_initial_hunger_and_pose",exteriorBrowseProbe!=0},{"samples",exteriorBrowseSamples},{"npc_contacts",exteriorBrowseNpcContacts},{"hero_contacts",autonomyContacts},{"captures",exteriorBrowseCaptures},{"scope","one existing-asset shared finite exterior food patch; no connected saves or exterior hydrology"}});
         if(connectedWorld) WriteJson(output/"hero-destination.json",{{"probe_mode",destinationProbe},{"synthetic_native_mouse_event",destinationProbe!=0},{"physical_human_mouse_tested",false},{"events",destinationEvents},{"samples",destinationSamples},{"captures",destinationCaptures},{"scope","nearby12m dry supported straight-line destination; no general pathfinding"}});

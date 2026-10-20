@@ -241,3 +241,30 @@ preserved except authorized graph revision marker refresh (see receipt count).
 NEXT SUBSYSTEM: recognizable traversable exterior woodland patch using existing
 reviewed replaceable trees, bounded tunable layout and ordinary body entry.
 .clanker/tasks/day-night-20261020/next-task.md. No accepted-draft polish.
+
+## Accepted working draft: exterior woodland — 2026-10-20 09:42CDT
+
+Ten existing shared-prototype trees/saplings adjoining exterior meadow; tunable
+layout x148..184,z38..56 and clear central lane146..184,z47. Connected wrapper
+loads hash-pinned existing corrected-crown exports; missing assets warn/omitstage,
+changed hashes stop. Broad foliage is a replaceable stand-in: initial native
+needle-spray exports read as sparse specks; both asset sets unchanged. No art work.
+Existing importer now accepts explicit bounded placements/resident streamed
+rendered-ground sampler; original nonconnected path remains intact. Support tile
+(1,0) already retained. No terrain/activation/save/social/physiology changes.
+Native proxy crossed38.0058m; existing animated animal entered4.67145m. Ten placed,
+none skipped; no support/ground fallbacks. Four shared objects,7616 unique and
+36840 drawn triangles, not FPS. Ordinary launch keeps actual calendar/no relocation;
+original saved-mode launch works. Original8/all12 actor and11-resource/session
+initial state exactly preserved. Original134 untracked files hashes preserved
+(excluding authorized graph marker). Release50CTest/toolkit2073passed2skipped/
+doctor passed. Both reviewers remain usage-limited; root-only review,zero dispatches.
+Receipt: .clanker/tasks/exterior-woodland-20261020/integration-receipt.json
+Parked: sparse open crowns/broad blades/straight rows, coarse ground, animal
+pace/sole/full-route limits; no new trunk body collision/physical canopy shelter,
+forest ecology/connected saves or final-art/full-draft/30FPS claim. Diagnostic
+start/input/noon lighting labelled; ordinary supported movement, not human input.
+
+NEXT SUBSYSTEM: observable bounded peer companionship with one existing eligible
+nearby conspecific, actual-body awareness and existing relationship/motion contracts.
+.clanker/tasks/exterior-woodland-20261020/next-task.md. No woodland polish.

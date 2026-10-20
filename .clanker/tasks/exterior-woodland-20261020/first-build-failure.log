@@ -1,0 +1,184 @@
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+
+  StalthosLifecycle.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosLifecycle.exe
+  main.cpp
+  StalthosPersistence.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosPersistence.exe
+  StalthosScenarios.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosScenarios.exe
+  StalthosLandscape.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\StalthosLandscape.exe
+  Stalthos_activation_plan.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_activation_plan.exe
+  Stalthos_animation_blend.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_animation_blend.exe
+  Stalthos_animation_transition.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_animation_transition.exe
+  Stalthos_archipelago_world.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_archipelago_world.exe
+  Stalthos_body_terrain_support.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_body_terrain_support.exe
+  Stalthos_camera_framing.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_camera_framing.exe
+  Stalthos_connected_route.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_connected_route.exe
+  Stalthos_day_night.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_day_night.exe
+  Stalthos_environment_palette.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_environment_palette.exe
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,13): error C2065: 'Vec3': undeclared identifier [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,7): error C2923: 'std::array': 'Vec3' is not a valid template type argument for parameter '_Ty' [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,13):
+      see declaration of 'Vec3'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,22): error C3000: 'std::array': use of class template requires template argument list. Argument deduction is not allowed in non-static data member [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(402,7):
+      see declaration of 'std::array'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140): error C2440: 'default argument': cannot convert from 'initializer list' to 'const stalthos::domain::ExteriorWoodlandLayout &' [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140):
+      Reason: cannot convert from 'initializer list' to 'const stalthos::domain::ExteriorWoodlandLayout'
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140):
+      Invalid aggregate initialization
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,27):
+          'initializing': cannot convert from 'initializer list' to 'std::array'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,27):
+              The target type has no constructors
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68): error C2678: binary '[': no operator found which takes a left-hand operand of type 'const std::array' (or there is no acceptable conversion) [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(531,42):
+      could be 'const _Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept const'
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+          'const _Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept const': cannot convert 'this' pointer from 'const std::array' to 'const std::array<_Ty,_Size> &'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Reason: cannot convert from 'const std::array' to 'const std::array<_Ty,_Size>'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Conversion requires a second user-defined-conversion operator or constructor
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(523,39):
+      or       '_Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept'
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+          '_Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept': cannot convert 'this' pointer from 'const std::array' to 'std::array<_Ty,_Size> &'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Reason: cannot convert from 'const std::array' to 'std::array<_Ty,_Size>'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Conversion requires a second user-defined-conversion operator or constructor
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+      while trying to match the argument list '(const std::array, size_t)'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,60): error C2737: 'p': const object must be initialized [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,100): error C3536: 'p': cannot be used before it is initialized [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93): error C2064: term does not evaluate to a function taking 1 arguments [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93):
+      class does not define an 'operator()' or a user defined conversion operator to a pointer-to-function or reference-to-function that takes appropriate number of arguments
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93):
+      while trying to match the argument list '()'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,250): error C2397: conversion from 'bool' to 'double' requires a narrowing conversion [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+  (compiling source file '../../../stalthos-runtime/engine/main.cpp')
+  
+  Stalthos_environmental_exposure.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_environmental_exposure.exe
+  Stalthos_exterior_browse.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_browse.exe
+  Stalthos_exterior_residents.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_residents.exe
+  Stalthos_exterior_water.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_exterior_water.exe
+  Stalthos_fauna_population.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_fauna_population.exe
+  Building Custom Rule E:/Stalthosian Archipelago/stalthos-runtime/CMakeLists.txt
+  Stalthos_fauna_resources.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_fauna_resources.exe
+  Stalthos_foot_support_plane.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_foot_support_plane.exe
+  Stalthos_foot_terrain_diagnostic.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_foot_terrain_diagnostic.exe
+  exterior_woodland.cpp
+  Stalthos_habitat_dressing.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_habitat_dressing.exe
+  Stalthos_hero_autonomy.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_autonomy.exe
+  Stalthos_hero_destination.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_destination.exe
+  Stalthos_hero_rest.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_rest.exe
+  Stalthos_hero_view_controller.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_hero_view_controller.exe
+  Stalthos_host_save.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_host_save.exe
+  Stalthos_locomotion_clip.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_locomotion_clip.exe
+  Stalthos_locomotion_pace.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_locomotion_pace.exe
+  Stalthos_native_population_registry.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_native_population_registry.exe
+  Stalthos_native_save.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_native_save.exe
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,13): error C2065: 'Vec3': undeclared identifier [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,7): error C2923: 'std::array': 'Vec3' is not a valid template type argument for parameter '_Ty' [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,13):
+      see declaration of 'Vec3'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,22): error C3000: 'std::array': use of class template requires template argument list. Argument deduction is not allowed in non-static data member [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(402,7):
+      see declaration of 'std::array'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140): error C2440: 'default argument': cannot convert from 'initializer list' to 'const stalthos::domain::ExteriorWoodlandLayout &' [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140):
+      Reason: cannot convert from 'initializer list' to 'const stalthos::domain::ExteriorWoodlandLayout'
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,140):
+      Invalid aggregate initialization
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,27):
+          'initializing': cannot convert from 'initializer list' to 'std::array'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(8,27):
+              The target type has no constructors
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68): error C2678: binary '[': no operator found which takes a left-hand operand of type 'const std::array' (or there is no acceptable conversion) [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(531,42):
+      could be 'const _Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept const'
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+          'const _Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept const': cannot convert 'this' pointer from 'const std::array' to 'const std::array<_Ty,_Size> &'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Reason: cannot convert from 'const std::array' to 'const std::array<_Ty,_Size>'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Conversion requires a second user-defined-conversion operator or constructor
+      C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.51.36231\include\array(523,39):
+      or       '_Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept'
+          E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+          '_Ty &std::array<_Ty,_Size>::operator [](std::array<_Ty,_Size>::size_type) noexcept': cannot convert 'this' pointer from 'const std::array' to 'std::array<_Ty,_Size> &'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Reason: cannot convert from 'const std::array' to 'std::array<_Ty,_Size>'
+              E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+              Conversion requires a second user-defined-conversion operator or constructor
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,68):
+      while trying to match the argument list '(const std::array, size_t)'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,60): error C2737: 'p': const object must be initialized [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,100): error C3536: 'p': cannot be used before it is initialized [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93): error C2064: term does not evaluate to a function taking 1 arguments [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93):
+      class does not define an 'operator()' or a user defined conversion operator to a pointer-to-function or reference-to-function that takes appropriate number of arguments
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,93):
+      while trying to match the argument list '()'
+  
+E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(12,250): error C2397: conversion from 'bool' to 'double' requires a narrowing conversion [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos_exterior_woodland.vcxproj]
+  (compiling source file '../../../stalthos-runtime/tests/exterior_woodland.cpp')
+  
+  Stalthos_needs.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_needs.exe
+  Stalthos_regional_archive.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_archive.exe
+  Stalthos_regional_contacts.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_contacts.exe
+  Stalthos_regional_habitat.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_habitat.exe
+  Stalthos_regional_legacy_import.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_legacy_import.exe
+  Stalthos_regional_population.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_regional_population.exe
+  Stalthos_relationships.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_relationships.exe
+  Stalthos_rendered_ground_surface.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_rendered_ground_surface.exe
+  Stalthos_resource_ledger.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_resource_ledger.exe
+  Stalthos_resource_presentation.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_resource_presentation.exe
+  Stalthos_shore_mesh.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_shore_mesh.exe
+  Stalthos_terrain_texture.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_terrain_texture.exe
+  Stalthos_terrain_tiles.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_terrain_tiles.exe
+  Stalthos_watershed_terrain.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_watershed_terrain.exe
+  Stalthos_weather_response.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_weather_response.exe
+  Stalthos_wildlife_awareness.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_wildlife_awareness.exe
+  Stalthos_woodland_stands.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_woodland_stands.exe
+  Stalthos_world_environment.vcxproj -> E:\Stalthosian Archipelago\var\build\stalthos-runtime\Release\Stalthos_world_environment.exe
+E:\Stalthosian Archipelago\stalthos-runtime\engine\main.cpp(497,67): error C2660: 'stalthos::domain::exteriorWoodland': function does not take 1 arguments [E:\Stalthosian Archipelago\var\build\stalthos-runtime\Stalthos.vcxproj]
+      E:\Stalthosian Archipelago\stalthos-runtime\domain\exterior_woodland.hpp(10,35):
+      see declaration of 'stalthos::domain::exteriorWoodland'
+      E:\Stalthosian Archipelago\stalthos-runtime\engine\main.cpp(497,67):
+      while trying to match the argument list '(wWinMain::<lambda_c4b0d001793f657f78dbe8d6dce36217>)'
+  
+  ModelImporter_GLTF.cpp
+  Generating Code...

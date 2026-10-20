@@ -1,0 +1,11 @@
+{
+  "quality": "provisional existing corrected-crown parent exports; broad foliage stand-in, replaceable",
+  "adult": {
+    "path": "var/splitcrown-crown-parent-young_adult-20261013/exports/plant.splitcrown.ar1.young_adult.baked.glb",
+    "sha256": "b6468ad00acebc62256d4965b1fe1f75820371abd8b054855a6a971b2183dc92"
+  },
+  "sapling": {
+    "path": "var/splitcrown-crown-parent-sapling-20261013/exports/plant.splitcrown.ar1.sapling.baked.glb",
+    "sha256": "db42c13f5671bf2a977094b7751ddf0cec7dcc62858c06241a0446df369a6794"
+  }
+}
