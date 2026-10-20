@@ -1,0 +1,14 @@
+#include "domain/peer_companionship.hpp"
+#include <iostream>
+using namespace stalthos;using namespace stalthos::fauna;
+void check(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
+int main(){try{
+ ActorView actor{42,HeroSpecies::Smalltrotter,{0,0,0},0,100,0,.2,.2,.2,true,Activity::Rest};std::vector<ActorView> actors{actor};PeerCompanionship peer;
+ for(int i=1;i<=3;++i)peer.update(1,HeroSpecies::Smalltrotter,{7,0,0},true,.5,i*.5,actors);
+ check(peer.peer()==42 && peer.motionPeer()==42,"calm existing conspecific link");auto links=peer.links().getLinks(1);check(links && links->size()==1 && links->front().role==relationships::Role::Peer,"real peer relationship");
+ peer.update(1,HeroSpecies::Smalltrotter,{40,0,0},false,.5,2,actors);check(!peer.present() && peer.motionPeer()==0 && peer.links().getLinks(1)->front().status==relationships::ContactStatus::Separated,"departure separates");peer.update(1,HeroSpecies::Smalltrotter,{7,0,0},false,.5,3,actors);check(peer.present() && peer.links().getLinks(1)->front().status==relationships::ContactStatus::Present,"return observes retained identity");actors[0].thirst=.8;peer.update(1,HeroSpecies::Smalltrotter,{7,0,0},true,.5,4,actors);check(peer.motionPeer()==0 && peer.peer()==42,"needs suspend social movement without deleting link");
+ actors[0].thirst=.2;PeerCompanionship camera;for(int i=0;i<10;++i)camera.update(1,HeroSpecies::Smalltrotter,{40,0,0},true,.5,i*.5,actors);check(camera.peer()==0,"remote body cannot bond from camera");actors[0].thirst=.2;PeerCompanionship direct;for(int i=0;i<10;++i)direct.update(1,HeroSpecies::Smalltrotter,{7,0,0},false,.5,i*.5,actors);check(direct.peer()==0,"active input does not establish calm encounter");
+ std::vector<HabitatSite> sites{{{0,0,0},true,true,{1}},{{4,0,0},false,false,{0,2}},{{8,0,0},false,false,{1}}};Population population(42,1001,sites,1,{1});auto s=population.snapshot();auto& a=s.actors[0];a.position={0,0,0};a.site=0;a.target=0;a.hunger=.2;a.thirst=.2;a.fatigue=.2;a.activity=Activity::Rest;a.isResting=true;population.restore(s,{1});auto id=a.id;
+ population.advance({1,1},false,BodyAwareness{{8,0,0},{},id,3});check(std::abs(population.actors()[0].position.x-.7)<1e-9,"peer actually approaches on existing graph at physical speed");s=population.snapshot();auto& busy=s.actors[0];busy.position={0,0,0};busy.site=0;busy.target=0;busy.thirst=.6;busy.activity=Activity::Drink;busy.isResting=false;population.restore(s,{1});population.advance({1,1},false,BodyAwareness{{8,0,0},{},id,3});check(population.actors()[0].position.x==0 && population.actors()[0].activity==Activity::Drink,"water need retains priority and contact activity");
+ std::cout<<"PEER_OK relationship association separation return body boundary graph motion need priority\n";return 0;
+ }catch(const std::exception&e){std::cerr<<e.what();return 1;}}

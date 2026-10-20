@@ -1,0 +1,120 @@
+{
+  "task": "peer-companionship-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T15:51:19.700708+00:00",
+  "base_revision": "9601389b9bb360cd78fbda3be89a1891af41148e",
+  "owned_paths": [
+    "stalthos-runtime/domain/peer_companionship.hpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/wildlife_awareness.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/peer_companionship.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/peer-companionship.md"
+  ],
+  "review": "root implementation/source/test/native review only; both preserved independent reviewers remain usage-limited; zero dispatches",
+  "checks": {
+    "release": true,
+    "ctest_passed": 51,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 532.34,
+    "doctor_exit": 0
+  },
+  "verification": {
+    "peer": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104431-30cd8822",
+      "peer": 12326054023193623710,
+      "events": [
+        {
+          "peer": 12326054023193623710,
+          "physical_seconds": 1.5020806035026908,
+          "present": true
+        },
+        {
+          "peer": 12326054023193623710,
+          "physical_seconds": 16.51438001077622,
+          "present": false
+        },
+        {
+          "peer": 12326054023193623710,
+          "physical_seconds": 30.0916949135717,
+          "present": true
+        }
+      ],
+      "samples": 234,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "actor_distance_m": 18.57507906228485,
+      "observed_toward_body_segments": 44
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104645-e65c8942",
+      "peer": 0,
+      "events": [],
+      "samples": 69,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "camera_focus_span_m": 3.991547069833075,
+      "min_focus_distance_to_actor_m": 0.05613862513951062,
+      "body_distance_to_actor_m": 24,
+      "configured_camera_distance_m": 5
+    },
+    "animal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104544-332c9338",
+      "peer": 12326054023193623710,
+      "events": [
+        {
+          "peer": 12326054023193623710,
+          "physical_seconds": 1.5035323060001247,
+          "present": true
+        }
+      ],
+      "samples": 69,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104737-302580ed",
+      "peer": 0,
+      "events": [],
+      "samples": 34,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "preserved_original_untracked_files": 135,
+    "baseline": "exact original8/all12 actors and11-resource/session initial state; same existing peer ID, no new population identity",
+    "review": "root-only source/tests/native review; both preserved reviewers usage-limited",
+    "scope": "session-only affiliation, graph wait/short approach; labelled synthetic startup/satisfied NPC/input/noon. Camera/body separation verified; no full family/save/human input/art/FPS claim"
+  },
+  "native_initial_oddity_evidence": {
+    "creek_support": "var/reports/runtime/20261020-103308-057cb385",
+    "camera_leash": "var/reports/runtime/20261020-103933-c2fbd0c7"
+  },
+  "limitations": [
+    "one session-only observed peer, no kinship/family/breeding/connected save support",
+    "graph endpoint waits, mid-edge finish and overshoot; no general following/pathfinding/social AI",
+    "horizontal sensing/no occlusion, existing body/contact/sole/pacing/wetness/asset limits",
+    "wide native departure/return uses proxy; animated body view verifies waiting/association only",
+    "synthetic startup/satisfied NPC/input/noon label; no altered ordinary clocks/ages/resource history",
+    "existing geometric avoidance telemetry differs from effective peer override;18m controller/motor default guards tuned together",
+    "initial creek support and camera leash fixtures preserved honestly, superseded by final native proof",
+    "no human-input/final-art/full-draft/FPS acceptance"
+  ],
+  "graph": "refreshed/delta retained; zero-node artifact omissions logged, not complete architectural proof",
+  "next_task": ".clanker\\tasks\\peer-companionship-20261020\\next-task.md",
+  "hashes": {
+    "stalthos-runtime/domain/peer_companionship.hpp": "b93875a0385ea2c7095f7f55f54295e959a3b5986131741e16cf5edbd7be8370",
+    "stalthos-runtime/domain/fauna_population.hpp": "f4793457fc31011ea0efe539b77538ac56428e992408376ff07d094473c668f0",
+    "stalthos-runtime/domain/wildlife_awareness.hpp": "1471cc4d40374688ba28eeca66f921f9c6d63ac59c39ff2b6922552f2dc87399",
+    "stalthos-runtime/engine/main.cpp": "7710285cf3dcd2719e5842d03cd5117cdd93f289151da4b9a26afd0d24414567",
+    "stalthos-runtime/scripts/Run.ps1": "6bf20a27f32cfcb1849ef4408251e51d3f29e5d8d97356107bc405dd4d6feb5a",
+    "stalthos-runtime/tests/peer_companionship.cpp": "6b18219ea8ff08f88fdc080f20c647585b3e81652c8806f3823411e8a61e3236",
+    "stalthos-runtime/CMakeLists.txt": "f51402f1e6c5e609376187cfd9d374bc6ae6bda01fe0a1a589ccc2637cb5b7da",
+    "stalthos-runtime/docs/peer-companionship.md": "11536dd07648e6c2218c0e215268e0df44bcc416a6a6f839a1f14fdc6bb57f7b"
+  },
+  "secret_scan": "full staged diff pattern scan passed before publication; no credentials detected",
+  "publication": "authorized reviewed normal origin/main; final revision in Git history and remote verification"
+}

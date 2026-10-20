@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "peer-companionship-20261020",
+  "status": "complete",
+  "base_revision": "9601389b9bb360cd78fbda3be89a1891af41148e",
+  "current_step": "working peer association/graph response/separation/camera boundary accepted; next life-stage progression",
+  "completed_steps": [
+    "HALT/AGENTS/current handoff and narrow relationship/motion contracts inspected",
+    "collected both preserved usage-limited reviewers; root-only work",
+    "bounded calm conspecific relationship and existing graph approach/wait implemented",
+    "resource needs retain priority, no snapshot/schema mutation",
+    "focused and existing51CTest passed",
+    "initial creek fixture linked/responded but exposed1647 inherited body support failures; raw evidence preserved, fixture moved to exterior",
+    "native same retained peer linked at calm encounter, moved18.575m total with44 affiliated toward-body segments, separated and returned",
+    "corrected detached camera leash fixture; body24m away while camera sweeps within local encounter range, no peer formed",
+    "actual animated body peer waiting/cue inspected; all final probes have zero support failures/fallbacks",
+    "original12 actor/11-resource/session initial state exactly preserved in ordinary full-asset launch; original saved mode launches",
+    "final51CTest; toolkit2073passed2skipped and doctor; immutable pins and all original untracked hashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/peer_companionship.hpp",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/wildlife_awareness.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/peer_companionship.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/peer-companionship.md"
+  ],
+  "updated": "2026-10-20T15:51:19.700708+00:00",
+  "resume_instructions": "Read next-task; peer draft accepted, log endpoint waits/mid-edge overshoot/session-only limits. No social polish or infrastructure prerequisite.",
+  "validation": {
+    "passed": true,
+    "command": "Release; focused peer test build and51CTest; toolkit2073/2 doctor; verify.py final native peer/camera/animal/normal/original and preservation",
+    "evidence_path": ".clanker\\tasks\\peer-companionship-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\peer-companionship-20261020\\integration-receipt.json",
+  "next_step": "observable hero life-stage progression"
+}

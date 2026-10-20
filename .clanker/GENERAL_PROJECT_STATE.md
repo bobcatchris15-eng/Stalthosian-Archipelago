@@ -268,3 +268,35 @@ start/input/noon lighting labelled; ordinary supported movement, not human input
 NEXT SUBSYSTEM: observable bounded peer companionship with one existing eligible
 nearby conspecific, actual-body awareness and existing relationship/motion contracts.
 .clanker/tasks/exterior-woodland-20261020/next-task.md. No woodland polish.
+
+## Accepted working draft: bounded peer companionship — 2026-10-20 10:50CDT
+
+Connected actual-body calm encounter9m/1.5physical seconds selects one existing
+eligible live conspecific, forms a real RelationshipTracker Peer link, observes
+Present/Separated18m and retains same identity. Eligible peer uses existing
+supported habitat graph approach/wait at.7m/s; ordinary resource/rest thresholds
+win, other actors keep avoidance. No extra actor/session, schema or need tick.
+Hero direct controls/drink/browse/rest unchanged; connected link explicitly
+session-only. Cue reflects nearby/needs/separated. No fabricated kinship.
+Native retained peer12326054023193623710 moved18.575m total,44 affiliated toward-
+body sample segments; link/separation/reunion proved. Animated body waiting/cue
+view inspected. Body stays24m away during detached camera sweep around eligible
+actor, no bond. All final probes0 support failures/fallbacks. Ordinary full-asset
+launch preserves original8/all12 actors and11-resource/session initial state;
+original saved-mode launch works. Final51CTest/toolkit2073passed2skipped/doctor
+passed; immutable pins and135 original untracked files preserved except authorized
+graph marker (use receipt exact count). Root-only review; both workers remain
+usage-limited,zero dispatches. Receipt:
+.clanker/tasks/peer-companionship-20261020/integration-receipt.json
+Parked: graph-only waits/overshoot/mid-edge finish, horizontal/no-occlusion senses,
+standing/proxy social pose, session-only relationship; default18m guards tuned
+together; geometric avoidance telemetry differs from effective peer override.
+Initial creek fixture1647 inherited support failures and camera leash failure
+preserved, replaced by supported exterior/body24m camera sweep. No terrain polish.
+Synthetic startup/satisfied-NPC/input/noon labelled; no human-input/full animal
+separation/family/full-draft/final-art/30FPS claim.
+
+NEXT SUBSYSTEM: observable hero life-stage progression through existing calendar
+Lifecycle, bounded real stage threshold crossing, tunable representation/cue and
+continued ordinary controls/once-only needs. No art/breeding/save framework.
+.clanker/tasks/peer-companionship-20261020/next-task.md. No social polish.

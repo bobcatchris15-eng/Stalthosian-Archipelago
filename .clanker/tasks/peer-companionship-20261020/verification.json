@@ -1,0 +1,66 @@
+{
+  "peer": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104431-30cd8822",
+    "peer": 12326054023193623710,
+    "events": [
+      {
+        "peer": 12326054023193623710,
+        "physical_seconds": 1.5020806035026908,
+        "present": true
+      },
+      {
+        "peer": 12326054023193623710,
+        "physical_seconds": 16.51438001077622,
+        "present": false
+      },
+      {
+        "peer": 12326054023193623710,
+        "physical_seconds": 30.0916949135717,
+        "present": true
+      }
+    ],
+    "samples": 234,
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "actor_distance_m": 18.57507906228485,
+    "observed_toward_body_segments": 44
+  },
+  "camera": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104645-e65c8942",
+    "peer": 0,
+    "events": [],
+    "samples": 69,
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "camera_focus_span_m": 3.991547069833075,
+    "min_focus_distance_to_actor_m": 0.05613862513951062,
+    "body_distance_to_actor_m": 24,
+    "configured_camera_distance_m": 5
+  },
+  "animal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104544-332c9338",
+    "peer": 12326054023193623710,
+    "events": [
+      {
+        "peer": 12326054023193623710,
+        "physical_seconds": 1.5035323060001247,
+        "present": true
+      }
+    ],
+    "samples": 69,
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-104737-302580ed",
+    "peer": 0,
+    "events": [],
+    "samples": 34,
+    "support_failures": 0,
+    "support_fallbacks": 0
+  },
+  "preserved_original_untracked_files": 135,
+  "baseline": "exact original8/all12 actors and11-resource/session initial state; same existing peer ID, no new population identity",
+  "review": "root-only source/tests/native review; both preserved reviewers usage-limited",
+  "scope": "session-only affiliation, graph wait/short approach; labelled synthetic startup/satisfied NPC/input/noon. Camera/body separation verified; no full family/save/human input/art/FPS claim"
+}

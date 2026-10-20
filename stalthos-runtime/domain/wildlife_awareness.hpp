@@ -2,7 +2,7 @@
 #include "foundation.hpp"
 namespace stalthos::fauna {
 struct AwarenessTuning {double noticeMeters=12,comfortMeters=6,avoidanceSpeedMetersPerSecond=.7;};
-struct BodyAwareness {Vec3 body;AwarenessTuning tuning;};
+struct BodyAwareness {Vec3 body;AwarenessTuning tuning;Identity peer=0;double peerWaitMeters=3;};
 struct AwarenessDecision {bool noticed=false,avoid=false;double distance=0,headingToBody=0;};
 inline AwarenessDecision awareness(Vec3 actor,const BodyAwareness& context) {
     const auto& t=context.tuning;

@@ -21,6 +21,7 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Exterior meadow water access | Working draft: visible static seep209, supported dry-bank shared hero/NPC drinking/relief, override and camera separation; creek100 retained | Static/rim/vegetation/wading/contact roughness; original creek-bank fallback persists; no hydrology/refill/connected saves |
 | Calendar day/night presentation | Working draft: calendar phase/aligned sun and sky, warm low light/readable night, native override/recovery; labelled synthetic phase views | Simple black sky/unshadowed night fill; no astronomy/elapsed24h/final art/FPS claim |
 | Exterior woodland habitat | Working draft:10 existing trees/saplings, tunable supported lane, proxy38m and animated animal4.67m entry, normal connected launcher | Sparse broad-foliage stand-in/open canopy/coarse ground; no physical canopy shelter/new collisions/forest ecology |
+| Bounded peer companionship | Working draft:existing conspecific real peer link, graph approach/wait, separation/reunion, needs priority and camera-only boundary | Session-only/one peer, endpoint waits/overshoot/no occlusion/proxy social poses; family/lifecycle still missing |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -50,3 +51,5 @@ Latest accepted: exterior-water-20261020. NEXT observable world day/night cadenc
 Latest accepted: day-night-20261020. NEXT recognizable traversable exterior woodland patch; no accepted lighting/weather/terrain polish.
 
 Latest accepted: exterior-woodland-20261020. NEXT observable bounded peer companionship; no accepted woodland/weather/terrain polish.
+
+Latest accepted: peer-companionship-20261020. NEXT observable hero life-stage progression; no social/woodland/terrain polish.

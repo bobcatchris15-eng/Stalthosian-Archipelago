@@ -223,7 +223,13 @@ public:
             life.advance(dt); needsState.advance(dt);
             if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
             a.life=life; a.needs=needsState;
-            const auto response=bodyAwareness?awareness(a.position,*bodyAwareness):AwarenessDecision{};
+            auto response=bodyAwareness?awareness(a.position,*bodyAwareness):AwarenessDecision{};
+            const bool peer=bodyAwareness && bodyAwareness->peer==a.id && response.distance<18 && a.needs.hunger()<=.42 && a.needs.thirst()<=.48 && a.needs.fatigue()<=.62;
+            if(peer){response.avoid=false;if(distance(a.position,sites_[a.site].position)<1e-6){
+                auto target=a.site;double nearest=response.distance;
+                if(nearest>bodyAwareness->peerWaitMeters)for(auto n:sites_[a.site].neighbors){const double d=std::hypot(sites_[n].position.x-bodyAwareness->body.x,sites_[n].position.z-bodyAwareness->body.z);if(d<nearest-.01){target=n;nearest=d;}}
+                a.target=target;a.activity=target==a.site?Activity::Rest:Activity::Travel;
+            }}
             // Retained actors remain on their authored dry graph. In-flight actors
             // finish their existing hop; only a site arrival may select another edge.
             if(response.avoid && distance(a.position,sites_[a.site].position)<1e-6) {
@@ -238,12 +244,12 @@ public:
             if (a.activity==Activity::Rest) a.needs.setResting(true); else a.needs.setResting(false);
             if (localResourceRelief && !response.avoid && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
             if (localResourceRelief && !response.avoid && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
-            if (a.activity!=Activity::Travel) chooseActivity(a);
+            if (!peer && a.activity!=Activity::Travel) chooseActivity(a);
             if (a.activity==Activity::Travel && a.target!=a.site && dt.physicalSeconds>0) {
                 const auto hop=nextHop(a.site,a.target);
                 if (hop!=a.site) {
                     const auto length=distance(a.position,sites_[hop].position);
-                    const double speed=response.avoid?bodyAwareness->tuning.avoidanceSpeedMetersPerSecond:0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
+                    const double speed=(response.avoid || peer)?bodyAwareness->tuning.avoidanceSpeedMetersPerSecond:0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
                     const double step=std::min(length,speed*dt.physicalSeconds);
                     if (length>0) {
                         const double f=step/length; const Vec3 old=a.position, dest=sites_[hop].position;
@@ -254,7 +260,7 @@ public:
                 }
             }
             if (!std::isfinite(a.distance)||!finite(a.position)||!std::isfinite(a.heading)) throw std::overflow_error("fauna motion overflow");
-            if (a.activity==Activity::Travel && a.site==a.target) chooseActivity(a);
+            if (!peer && a.activity==Activity::Travel && a.site==a.target) chooseActivity(a);
             else if (a.activity==Activity::Browse && !sites_[a.site].browse) chooseActivity(a);
             else if (a.activity==Activity::Drink && !sites_[a.site].freshwater) chooseActivity(a);
             if(response.noticed && a.activity!=Activity::Travel) a.heading=response.headingToBody;

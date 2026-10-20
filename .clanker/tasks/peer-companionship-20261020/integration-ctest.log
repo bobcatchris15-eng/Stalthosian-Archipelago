@@ -1,0 +1,107 @@
+Test project E:/Stalthosian Archipelago/var/build/stalthos-runtime
+      Start  1: domain-scenarios
+ 1/51 Test  #1: domain-scenarios ....................   Passed    0.01 sec
+      Start  2: domain-persistence
+ 2/51 Test  #2: domain-persistence ..................   Passed    0.18 sec
+      Start  3: reference-landscape
+ 3/51 Test  #3: reference-landscape .................   Passed    0.02 sec
+      Start  4: domain-lifecycle
+ 4/51 Test  #4: domain-lifecycle ....................   Passed    0.01 sec
+      Start  5: domain-animation_blend
+ 5/51 Test  #5: domain-animation_blend ..............   Passed    0.01 sec
+      Start  6: domain-needs
+ 6/51 Test  #6: domain-needs ........................   Passed    0.01 sec
+      Start  7: domain-relationships
+ 7/51 Test  #7: domain-relationships ................   Passed    0.01 sec
+      Start  8: domain-activation_plan
+ 8/51 Test  #8: domain-activation_plan ..............   Passed    0.01 sec
+      Start  9: domain-environment_palette
+ 9/51 Test  #9: domain-environment_palette ..........   Passed    0.02 sec
+      Start 10: domain-habitat_dressing
+10/51 Test #10: domain-habitat_dressing .............   Passed    0.01 sec
+      Start 11: domain-shore_mesh
+11/51 Test #11: domain-shore_mesh ...................   Passed    0.05 sec
+      Start 12: domain-locomotion_clip
+12/51 Test #12: domain-locomotion_clip ..............   Passed    0.01 sec
+      Start 13: domain-locomotion_pace
+13/51 Test #13: domain-locomotion_pace ..............   Passed    0.01 sec
+      Start 14: domain-animation_transition
+14/51 Test #14: domain-animation_transition .........   Passed    0.03 sec
+      Start 15: domain-terrain_texture
+15/51 Test #15: domain-terrain_texture ..............   Passed    0.43 sec
+      Start 16: domain-rendered_ground_surface
+16/51 Test #16: domain-rendered_ground_surface ......   Passed    0.02 sec
+      Start 17: domain-body_terrain_support
+17/51 Test #17: domain-body_terrain_support .........   Passed    0.02 sec
+      Start 18: domain-foot_support_plane
+18/51 Test #18: domain-foot_support_plane ...........   Passed    0.02 sec
+      Start 19: domain-foot_terrain_diagnostic
+19/51 Test #19: domain-foot_terrain_diagnostic ......   Passed    0.02 sec
+      Start 20: domain-resource_ledger
+20/51 Test #20: domain-resource_ledger ..............   Passed    0.01 sec
+      Start 21: domain-resource_presentation
+21/51 Test #21: domain-resource_presentation ........   Passed    0.02 sec
+      Start 22: domain-woodland_stands
+22/51 Test #22: domain-woodland_stands ..............   Passed    0.02 sec
+      Start 23: domain-camera_framing
+23/51 Test #23: domain-camera_framing ...............   Passed    0.01 sec
+      Start 24: domain-hero_view_controller
+24/51 Test #24: domain-hero_view_controller .........   Passed    0.02 sec
+      Start 25: domain-fauna_population
+25/51 Test #25: domain-fauna_population .............   Passed    0.02 sec
+      Start 26: domain-world_environment
+26/51 Test #26: domain-world_environment ............   Passed    0.02 sec
+      Start 27: domain-archipelago_world
+27/51 Test #27: domain-archipelago_world ............   Passed    0.02 sec
+      Start 28: domain-fauna_resources
+28/51 Test #28: domain-fauna_resources ..............   Passed    0.01 sec
+      Start 29: domain-terrain_tiles
+29/51 Test #29: domain-terrain_tiles ................   Passed    0.10 sec
+      Start 30: domain-watershed_terrain
+30/51 Test #30: domain-watershed_terrain ............   Passed    0.17 sec
+      Start 31: domain-regional_habitat
+31/51 Test #31: domain-regional_habitat .............   Passed    0.02 sec
+      Start 32: domain-regional_population
+32/51 Test #32: domain-regional_population ..........   Passed    0.02 sec
+      Start 33: domain-regional_contacts
+33/51 Test #33: domain-regional_contacts ............   Passed    0.03 sec
+      Start 34: domain-regional_legacy_import
+34/51 Test #34: domain-regional_legacy_import .......   Passed    0.02 sec
+      Start 35: domain-regional_archive
+35/51 Test #35: domain-regional_archive .............   Passed    0.70 sec
+      Start 36: domain-native_population_registry
+36/51 Test #36: domain-native_population_registry ...   Passed    0.03 sec
+      Start 37: domain-host_save
+37/51 Test #37: domain-host_save ....................   Passed    0.04 sec
+      Start 38: domain-native_save
+38/51 Test #38: domain-native_save ..................   Passed    0.01 sec
+      Start 39: domain-connected_route
+39/51 Test #39: domain-connected_route ..............   Passed    0.02 sec
+      Start 40: domain-weather_response
+40/51 Test #40: domain-weather_response .............   Passed    0.01 sec
+      Start 41: domain-hero_autonomy
+41/51 Test #41: domain-hero_autonomy ................   Passed    0.01 sec
+      Start 42: domain-hero_rest
+42/51 Test #42: domain-hero_rest ....................   Passed    0.01 sec
+      Start 43: domain-hero_destination
+43/51 Test #43: domain-hero_destination .............   Passed    0.01 sec
+      Start 44: domain-environmental_exposure
+44/51 Test #44: domain-environmental_exposure .......   Passed    0.02 sec
+      Start 45: domain-wildlife_awareness
+45/51 Test #45: domain-wildlife_awareness ...........   Passed    0.02 sec
+      Start 46: domain-exterior_residents
+46/51 Test #46: domain-exterior_residents ...........   Passed    0.02 sec
+      Start 47: domain-exterior_browse
+47/51 Test #47: domain-exterior_browse ..............   Passed    0.01 sec
+      Start 48: domain-exterior_water
+48/51 Test #48: domain-exterior_water ...............   Passed    0.01 sec
+      Start 49: domain-day_night
+49/51 Test #49: domain-day_night ....................   Passed    0.01 sec
+      Start 50: domain-exterior_woodland
+50/51 Test #50: domain-exterior_woodland ............   Passed    0.02 sec
+      Start 51: domain-peer_companionship
+51/51 Test #51: domain-peer_companionship ...........   Passed    0.04 sec
+
+100% tests passed, 0 tests failed out of 51
+
+Total Test time (real) =   2.56 sec
