@@ -1,0 +1,110 @@
+{
+  "task": "life-stage-20261020",
+  "status": "working draft accepted",
+  "created": "2026-10-20T16:44:13.433658+00:00",
+  "base_revision": "4176cbc605d093ebeaf293739573c7aaeb716de1",
+  "owned_paths": [
+    "stalthos-runtime/domain/life_stage_presentation.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/life_stage_presentation.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/life-stage.md"
+  ],
+  "review": "root-only source/tests/native visual review; both preserved independent reviewers usage-limited; zero dispatches",
+  "checks": {
+    "release": true,
+    "ctest_passed": 52,
+    "ctest_failed": 0,
+    "toolkit_passed": 2073,
+    "toolkit_skipped": 2,
+    "toolkit_seconds": 513.6,
+    "doctor_exit": 0
+  },
+  "verification": {
+    "proxy": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113343-647bb3a6",
+      "initial_age": 2994.0,
+      "milestones": [
+        {
+          "age": 3000.0028773177764,
+          "calendar_seconds": 6.002877317776438,
+          "physical_seconds": 6.002877317776438,
+          "stage": "adult"
+        }
+      ],
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "samples": 145,
+      "stationary_renderer_bounds_ratio": {
+        "bounds_x": 1.2499771139116902,
+        "bounds_z": 1.2441692893821434
+      },
+      "applied_horizontal_bulk_after": 1.25,
+      "post_stage_direct_displacement_m": 4.003635406494141,
+      "rest_recovery_per_physical_second": 0.05,
+      "thirst_per_calendar_second": 0.0002
+    },
+    "animal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113442-0958b7ea",
+      "initial_age": 2994.0,
+      "milestones": [
+        {
+          "age": 3000.000069205009,
+          "calendar_seconds": 6.000069205008913,
+          "physical_seconds": 6.000069205008913,
+          "stage": "adult"
+        }
+      ],
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "samples": 142,
+      "stationary_renderer_bounds_ratio": {
+        "bounds_x": 1.0987469999912038,
+        "bounds_z": 1.0417349245971657
+      },
+      "applied_horizontal_bulk_after": 1.25,
+      "post_stage_direct_displacement_m": 0.3223400115966797,
+      "rest_recovery_per_physical_second": 0.05,
+      "thirst_per_calendar_second": 0.0002
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113545-5ed05743",
+      "initial_age": 0.0,
+      "milestones": [],
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "samples": 66
+    },
+    "preserved_original_untracked_files": 136,
+    "baseline": "exact original8/all12 actors,11 resources and existing sessions in normal and both growth fixtures",
+    "review": "root-only source/tests/native visual review; both preserved reviewers usage-limited",
+    "scope": "one actual juvenile-to-adult calendar transition, horizontal bulk stand-in; conservative animated bounds vary with pose. No stage anatomy/gait/sole/family/save/performance acceptance",
+    "rest_after_direct_release": "existing rest hysteresis preserved; remaining fatigue below entry threshold, so automatic resume is not claimed"
+  },
+  "native_original_mode": "var/reports/runtime/20261020-113709-93f00987",
+  "scope": "one actual juvenile-to-adult calendar transition with a proposed horizontal bulk display and readable milestone; original saved-mode rendering untouched",
+  "limitations": [
+    "abrupt horizontal-only1.25 bulk, shared juvenile model; no anatomical adult/old-stage assets or full growth physiology",
+    "conservative animated renderer bounds vary with pose, not direct skeletal/anatomical measurements",
+    "original stage/model mismatch remains; initial body size and age not silently changed",
+    "vertical datum and original pace retained, existing gait stride/sole/contact/wetness limitations remain",
+    "post-input rest uses original hysteresis, below entry threshold; automatic resume not claimed",
+    "diagnostic near-adult age/fatigue/input/noon labelled; no human input/full life-cycle/art/FPS acceptance",
+    "generic later-stage milestone wording parked for next death/next-life subsystem"
+  ],
+  "graph": "refreshed/delta retained; zero-node omissions logged, not complete architecture proof",
+  "next_task": ".clanker\\tasks\\life-stage-20261020\\next-task.md",
+  "hashes": {
+    "stalthos-runtime/domain/life_stage_presentation.hpp": "9438d37caa7f7314b09269c1312c64a987a81b6ab7720ad85c9e9bf989e15e9f",
+    "stalthos-runtime/engine/main.cpp": "5cb23d4f5cf053d61b56f34928ddfe8b722928471d021b0174eced7061e57a52",
+    "stalthos-runtime/tests/life_stage_presentation.cpp": "cea37ab297fb8d1ac5d622f6e09855baeb81dbdd9375681808c16fc62de65699",
+    "stalthos-runtime/scripts/Run.ps1": "0b3152a82f83e1e288dfbb75ac71ecd66cfcab63bc2411a3af5547522cad7def",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "1c4947ff9683a35f612754778d1f2c4fb73525b9f317a9bfd28cad3f3da25dcf",
+    "stalthos-runtime/CMakeLists.txt": "dc1a7a27dd7a94d4fe287051987bb34f08808151388c7598fff9b85cbb9724a5",
+    "stalthos-runtime/docs/life-stage.md": "5f6e94ac01099e1078bcb3e26e624ca8afff75a311ed9ca51fa44f5501c19447"
+  },
+  "secret_scan": "full staged diff pattern scan passed before publication; no credentials detected",
+  "publication": "authorized reviewed normal origin/main; final revision in Git history and remote verification"
+}

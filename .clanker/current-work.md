@@ -300,3 +300,33 @@ NEXT SUBSYSTEM: observable hero life-stage progression through existing calendar
 Lifecycle, bounded real stage threshold crossing, tunable representation/cue and
 continued ordinary controls/once-only needs. No art/breeding/save framework.
 .clanker/tasks/peer-companionship-20261020/next-task.md. No social polish.
+
+## Accepted working draft: observable life-stage progression — 2026-10-20 11:44CDT
+
+Existing calendar Lifecycle now drives connected stage cue/milestone and one
+proposed horizontal bulk change at adulthood. Starting Hatchling/Juvenile bulk1,
+Adult1.25; original saved/nonconnected mode always1. No default age, clock/scale,
+profile, needs rate, vertical datum or locomotion speed mutation. Support footprint
+follows display bulk. Existing juvenile GLB/source/rig/animations unchanged.
+Native labelled age2994/fatigue/input/noon fixture crossed actual age3000 once at
+physical6s. Same-place before/after frames inspected for proxy and animated body;
+proxy renderer bounds ratios1.24998/1.24417, animated conservative ratios1.09875/
+1.04173 (pose/component-dependent, not anatomy). Post-stage reverse input moves
+proxy4.00364m/animal.32234m. Recovery.05/physical second across growth and thirst
+.0002/calendar second verified. Existing rest hysteresis retained on release.
+All final connected probes0 support failures/fallbacks. Ordinary age0/bulk1 and
+original saved-mode launch retained. Original8/all12 actors and11-resource/session
+initial state exactly preserved in all connected runs. Release52CTest and toolkit
+2073passed2skipped/doctor pass. Immutable pins and136 original untracked files
+preserved except authorized graph marker. Root-only review; both workers still
+usage-limited,zero dispatches. Receipt:
+.clanker/tasks/life-stage-20261020/integration-receipt.json
+Parked: abrupt horizontal-only stand-in/shared juvenile anatomy, other-stage assets,
+generic later-stage milestone wording, existing gait/sole/contact/wet-material and
+slow pace limits. No full growth/family/physiology/human input/final-art/full-draft/
+30FPS acceptance. No growth or creature polish after this working role.
+
+NEXT SUBSYSTEM: readable death and explicit next-life continuation in the same
+retained connected world using existing Lifecycle/WorldSim death and identity/
+contact-session contracts. Keep world/NPC/resource/history, no new ordinary hazard
+or save framework. .clanker/tasks/life-stage-20261020/next-task.md

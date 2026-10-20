@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "life-stage-20261020",
+  "status": "complete",
+  "base_revision": "4176cbc605d093ebeaf293739573c7aaeb716de1",
+  "current_step": "one observable juvenile-to-adult transition accepted; next death/explicit next-life loop",
+  "completed_steps": [
+    "HALT/current handoff/actual lifecycle and native transform contracts inspected",
+    "collected two usage-limited reviewers; root-only work",
+    "existing Lifecycle drives connected horizontal bulk/milestone, starting bulk and vertical datum retained",
+    "labelled near-adult age and fatigue/input/noon fixture; no clock/profile/save changes",
+    "Release and52domain checks pass",
+    "real age3000 transition once in native proxy and animated body, labelled synthetic initial age2994",
+    "stationary before/after composed captures inspected; native applied bulk and conservative bounds changed",
+    "physical recovery.05/s and thirst.0002/calendar second unchanged across growth; post-stage direct4.0036m proxy/.32234m animal",
+    "all native probes zero support failures/fallbacks; original mode launch and untouched ordinary age0/bulk1 confirmed",
+    "original12 actors/11-resource/session initial state exactly preserved for all connected runs",
+    "Release52CTest/toolkit2073passed2skipped doctor; immutable assets and original untracked hashes preserved"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/life_stage_presentation.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/life_stage_presentation.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/life-stage.md"
+  ],
+  "updated": "2026-10-20T16:44:13.433658+00:00",
+  "resume_instructions": "Read next-task. Stage role accepted; park horizontal-only abrupt bulk/shared anatomy/gait/other-stage representation limits. No growth polish.",
+  "validation": {
+    "passed": true,
+    "command": "Release; CTest52; toolkit2073/2 doctor; verify.py actual calendar threshold/native bounds/needs/direct controls/default/baseline/preservation",
+    "evidence_path": ".clanker\\tasks\\life-stage-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\life-stage-20261020\\integration-receipt.json",
+  "next_step": "readable death and explicit next-life continuation in retained connected world"
+}

@@ -1,0 +1,61 @@
+{
+  "proxy": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113343-647bb3a6",
+    "initial_age": 2994.0,
+    "milestones": [
+      {
+        "age": 3000.0028773177764,
+        "calendar_seconds": 6.002877317776438,
+        "physical_seconds": 6.002877317776438,
+        "stage": "adult"
+      }
+    ],
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "samples": 145,
+    "stationary_renderer_bounds_ratio": {
+      "bounds_x": 1.2499771139116902,
+      "bounds_z": 1.2441692893821434
+    },
+    "applied_horizontal_bulk_after": 1.25,
+    "post_stage_direct_displacement_m": 4.003635406494141,
+    "rest_recovery_per_physical_second": 0.05,
+    "thirst_per_calendar_second": 0.0002
+  },
+  "animal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113442-0958b7ea",
+    "initial_age": 2994.0,
+    "milestones": [
+      {
+        "age": 3000.000069205009,
+        "calendar_seconds": 6.000069205008913,
+        "physical_seconds": 6.000069205008913,
+        "stage": "adult"
+      }
+    ],
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "samples": 142,
+    "stationary_renderer_bounds_ratio": {
+      "bounds_x": 1.0987469999912038,
+      "bounds_z": 1.0417349245971657
+    },
+    "applied_horizontal_bulk_after": 1.25,
+    "post_stage_direct_displacement_m": 0.3223400115966797,
+    "rest_recovery_per_physical_second": 0.05,
+    "thirst_per_calendar_second": 0.0002
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-113545-5ed05743",
+    "initial_age": 0.0,
+    "milestones": [],
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "samples": 66
+  },
+  "preserved_original_untracked_files": 136,
+  "baseline": "exact original8/all12 actors,11 resources and existing sessions in normal and both growth fixtures",
+  "review": "root-only source/tests/native visual review; both preserved reviewers usage-limited",
+  "scope": "one actual juvenile-to-adult calendar transition, horizontal bulk stand-in; conservative animated bounds vary with pose. No stage anatomy/gait/sole/family/save/performance acceptance",
+  "rest_after_direct_release": "existing rest hysteresis preserved; remaining fatigue below entry threshold, so automatic resume is not claimed"
+}

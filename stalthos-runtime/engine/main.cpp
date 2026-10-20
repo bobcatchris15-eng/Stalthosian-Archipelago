@@ -1,3 +1,4 @@
+#include "domain/life_stage_presentation.hpp"
 #include "domain/peer_companionship.hpp"
 #include "domain/exterior_woodland.hpp"
 #include "day_night_scene.hpp"
@@ -194,7 +195,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
+    bool lifeStageProbe=false;unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
     unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
@@ -207,6 +208,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--life-stage-probe"){lifeStageProbe=true;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--peer-probe"){peerProbe=1;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--peer-camera-probe"){peerProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--exterior-woodland-probe"){woodlandProbe=true;connectedWorld=true;populatedWorld=true;}
@@ -276,6 +278,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(lifeStageProbe && (interactive || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("life-stage probe requires standalone timed connected mode");
         if(peerProbe && (interactive || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("peer probe requires standalone timed connected mode");
         if(woodlandProbe && (interactive || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview || woodlandAdultTree.empty() || woodlandSaplingTree.empty()))throw std::runtime_error("woodland probe requires timed connected world and both tree assets only");
         if(dayNightProbe && (interactive || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("day/night probe uses timed connected world without another diagnostic");
@@ -380,9 +383,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             world.setHero(1, 1);
         }
         if(!lifecycle) lifecycle.emplace(heroSpecies);
+        if(lifeStageProbe){const auto& profile=stalthos::getHeroProfile(heroSpecies);lifecycle->restoreState(heroSpecies,profile.hatchlingDuration+profile.juvenileDuration-6,stalthos::LifeStage::Juvenile);}
+        const double initialHeroLifecycleAge=lifecycle->calendarAge();double heroStageBulk=connectedWorld?stalthos::domain::lifeStageBulk(lifecycle->stage()):1;
         needs.emplace(heroSpecies);
         if (loadedNeeds && loadedNeeds->species == heroSpecies)
             needs->restoreState(loadedNeeds->hunger, loadedNeeds->thirst, loadedNeeds->fatigue, loadedNeeds->injury, loadedNeeds->isResting);
+        if(lifeStageProbe)needs->restoreState(0,0,.8,0,false); // Explicit rest/override fixture only.
         if(restProbe) needs->restoreState(0,0,.8,0,false); // Explicit synthetic fatigue only.
         if(dayNightProbe==2) needs->restoreState(0,0,.8,0,false);
         if(exteriorWaterProbe) needs->restoreState(0,.8,0,0,false);
@@ -777,9 +783,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::Identity wildlifeWatched=0;stalthos::Vec3 wildlifeAnchor{};
         stalthos::fauna::PeerCompanionship peerCompanion;json peerSamples=json::array(),peerCaptures=json::array(),peerEvents=json::array();double nextPeerSample=0;std::array<bool,4> peerCaptured{};stalthos::Identity previousPeer=0;bool previousPeerPresent=false;stalthos::Vec3 peerAnchor{};
         wi::SpriteFont peerCue("Peer nearby");peerCue.params.size=22;peerCue.params.h_align=wi::font::WIFALIGN_CENTER;peerCue.params.color=wi::Color(180,240,220,255);peerCue.params.shadowColor=wi::Color(0,0,0,255);peerCue.SetHidden(true);renderPath.AddFont(&peerCue);
+        json lifeStageSamples=json::array(),lifeStageMilestones=json::array(),lifeStageCaptures=json::array();double nextLifeStageSample=0,lastLifeStageMilestone=-1e30;std::array<bool,4> lifeStageCaptured{};
+        wi::SpriteFont lifeStageCue("Life stage: hatchling");lifeStageCue.params.size=22;lifeStageCue.params.h_align=wi::font::WIFALIGN_CENTER;lifeStageCue.params.color=wi::Color(230,235,185,255);lifeStageCue.params.shadowColor=wi::Color(0,0,0,255);lifeStageCue.SetHidden(!connectedWorld);renderPath.AddFont(&lifeStageCue);
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
-        wi::SpriteFont phasePreviewCue(peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe && !peerProbe);renderPath.AddFont(&phasePreviewCue);
+        wi::SpriteFont phasePreviewCue(lifeStageProbe?"Growth test - near-adult age, fatigue/input/noon fixtures":peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe && !peerProbe && !lifeStageProbe);renderPath.AddFont(&phasePreviewCue);
         wi::SpriteFont destinationCue("Right-click nearby ground to go there"),destinationPin("+");
         for(auto* font:{&destinationCue,&destinationPin}){font->params.size=22;font->params.h_align=wi::font::WIFALIGN_CENTER;font->params.color=wi::Color(255,240,180,255);font->params.shadowColor=wi::Color(0,0,0,255);font->SetHidden(!connectedWorld);renderPath.AddFont(font);}
         destinationPin.SetHidden(true);std::string destinationStatus="ready";json destinationEvents=json::array(),destinationSamples=json::array(),destinationCaptures=json::array();std::array<bool,3> destinationCaptured{};double nextDestinationSample=0;bool destinationInjected=false;
@@ -1193,9 +1201,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             for(const auto transition:lifecycle->advance(timeStep)) {
                 const char* names[]={"hatchling","juvenile","adult","old","dead"};
                 lifecycleTransitions.push_back(names[static_cast<unsigned>(transition)]);
+                if(connectedWorld){lastLifeStageMilestone=clock.physicalSeconds();lifeStageMilestones.push_back({{"stage",names[static_cast<unsigned>(transition)]},{"age",lifecycle->calendarAge()},{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()}});}
                 if(transition==stalthos::LifeStage::Dead) { world.heroDied(); for(size_t i=0;i<heroAnimationCount;++i) scene.animations[i].Pause(); }
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
+            heroStageBulk=connectedWorld?stalthos::domain::lifeStageBulk(lifecycle->stage()):1;
+            if(connectedWorld){const auto name=std::string(stalthos::domain::lifeStageName(lifecycle->stage()));lifeStageCue.SetText(clock.physicalSeconds()-lastLifeStageMilestone<6?"Reached "+name+" stage - growth milestone":"Life stage: "+name);lifeStageCue.params.posX=app.canvas.GetLogicalWidth()*.5f;lifeStageCue.params.posY=app.canvas.GetLogicalHeight()*.7f;}
             if (diagnosticTransition) {
                 int targetPhaseIndex = std::clamp(static_cast<int>(elapsed / 2.0), 0, 4);
                 if (targetPhaseIndex != activeTransitionPhaseIndex) {
@@ -1231,7 +1242,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     activeTransitionPhaseIndex = targetPhaseIndex;
                 }
             }
-            syntheticDirect=((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4);
+            syntheticDirect=((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (lifeStageProbe && clock.physicalSeconds()>=9 && clock.physicalSeconds()<11);
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
             bool userWalk = (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
             bool userReverse = (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
@@ -1388,7 +1399,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             try {
                 support = stalthos::domain::calculateTerrainSupport(
                     static_cast<double>(x), static_cast<double>(z), static_cast<double>(yaw),
-                    kCreatureLongitudinalHalfspan, kCreatureLateralHalfspan, groundSampler);
+                    kCreatureLongitudinalHalfspan*heroStageBulk, kCreatureLateralHalfspan*heroStageBulk, groundSampler);
                 supportCalculated = true;
                 latestSlopeRadians = support.slopeAngleRadians;
                 latestNormal = support.surfaceNormal;
@@ -1400,7 +1411,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 try {
                     support = stalthos::domain::calculateTerrainSupport(
                         static_cast<double>(x), static_cast<double>(z), static_cast<double>(yaw),
-                        kCreatureLongitudinalHalfspan, kCreatureLateralHalfspan,
+                        kCreatureLongitudinalHalfspan*heroStageBulk, kCreatureLateralHalfspan*heroStageBulk,
                         [&](double sx, double sz) {
                             ++renderedSupportFallbackCount;
                             return static_cast<double>(landscape.height(sx, sz));
@@ -1450,7 +1461,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             auto* transform=scene.transforms.GetComponent(heroMotionRoot); transform->ClearTransform();
             if(!creatureLoaded) {
-                transform->Scale(XMFLOAT3(.45f,.4f,1.f));
+                transform->Scale(XMFLOAT3(.45f*float(heroStageBulk),.4f,float(heroStageBulk)));
                 if (latestSupportMode == "terrain_supported") {
                     XMMATRIX supportMatrix = XMMATRIX(
                         static_cast<float>(support.right.x),   static_cast<float>(support.right.y),   static_cast<float>(support.right.z),   0.0f,
@@ -1465,6 +1476,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
                 transform->Translate(XMFLOAT3(x,y+.65f,z));
             } else {
+                transform->Scale(XMFLOAT3(float(heroStageBulk),1,float(heroStageBulk)));
                 // Blender's authored +X longitudinal axis is turned to the host's +Z forward axis at the motion parent.
                 // In DirectX row-vector basis, composite rotation is assetOffsetMatrix * supportMatrix.
                 // If terrain support is disabled or unsupported (>20 deg slope), falls back to flat yaw (yaw - pi * 0.5f).
@@ -1620,7 +1632,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 localWeather=bodyWeather.advance(conditions,timeStep.physicalSeconds,shelter);
                 stalthos::engine::applyWeatherToScene(scene,conditions,{.8f,0,.6f});
                 scene.weather.rain_amount=0; // Pinned native emitter AV on rain transition; use lighting/wetting draft.
-                const std::array<double,4> previewPhases{{.28,.5,.72,0}};renderedDayFraction=(woodlandProbe || peerProbe)?.5:dayNightProbe==1?previewPhases[std::min(std::size_t(3),std::size_t(elapsed/(duration/4)))]:dayNightProbe==2?0:conditions.dayFraction;
+                const std::array<double,4> previewPhases{{.28,.5,.72,0}};renderedDayFraction=(woodlandProbe || peerProbe || lifeStageProbe)?.5:dayNightProbe==1?previewPhases[std::min(std::size_t(3),std::size_t(elapsed/(duration/4)))]:dayNightProbe==2?0:conditions.dayFraction;
                 dayNightLight=stalthos::environment::dayNight(renderedDayFraction,conditions.cloud);stalthos::engine::dayNightScene(scene,sun,nightFill,clearSunIntensity,dayNightLight);
                 scene.weather.fogStart=30;scene.weather.fogDensity=float(.0025*conditions.rainfall);
 
@@ -1728,6 +1740,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             wi::scene::GetCamera().UpdateCamera();
 
             app.Run(); ++runCalls;
+            if(lifeStageProbe)for(std::size_t i=0;i<4;++i)if(!lifeStageCaptured[i] && clock.physicalSeconds()>=(i==0?2:i==1?7.5:i==2?11.5:14)){const auto filename="life-stage-"+std::to_string(i)+".png";lifeStageCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());lifeStageCaptures.push_back({{"filename",filename},{"saved",lifeStageCaptured[i]},{"age",lifecycle->calendarAge()},{"stage",stalthos::domain::lifeStageName(lifecycle->stage())},{"bulk",heroStageBulk},{"body_x",x},{"body_z",z}});}
             if(peerProbe)for(std::size_t i=0;i<4;++i)if(!peerCaptured[i] && clock.physicalSeconds()>=(i==0?3:i==1?9:i==2?25:39)){const auto filename="peer-"+std::to_string(i)+".png";peerCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());peerCaptures.push_back({{"filename",filename},{"saved",peerCaptured[i]}});}
             if(connectedWorld && elapsed>=nextDayNightSample){const auto* lamp=scene.lights.GetComponent(sun);const auto sky=scene.weather.sunDirection;const double error=std::sqrt(std::pow(lamp->direction.x-dayNightLight.sunDirection.x,2)+std::pow(lamp->direction.y-dayNightLight.sunDirection.y,2)+std::pow(lamp->direction.z-dayNightLight.sunDirection.z,2));dayNightSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"calendar_fraction",std::fmod(clock.calendarSeconds(),86400)/86400},{"rendered_fraction",renderedDayFraction},{"sun_intensity",lamp->intensity},{"fill_intensity",scene.lights.GetComponent(nightFill)->intensity},{"direction_error",error},{"sky_light_direction_error",std::hypot(std::hypot(double(sky.x-lamp->direction.x),double(sky.y-lamp->direction.y)),double(sky.z-lamp->direction.z))},{"body_x",x},{"body_z",z},{"resting",resting},{"direct",directInput},{"fatigue",needs->fatigue()},{"thirst",needs->thirst()}});nextDayNightSample=elapsed+.1;}
             if(dayNightProbe || woodlandProbe)for(std::size_t i=0;i<4;++i)if(!dayNightCaptured[i] && elapsed>=duration*(double(i)+.5)/4){const auto filename="day-night-"+std::to_string(i)+".png";dayNightCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/filename).u8string());dayNightCaptures.push_back({{"filename",filename},{"saved",dayNightCaptured[i]},{"rendered_fraction",renderedDayFraction},{"body_x",x},{"body_z",z}});}
@@ -1940,6 +1953,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(connectedWorld){exposureResponse=stalthos::environment::applyExposure(*needs,localWeather,timeStep.physicalSeconds,heroAlive);const bool cue=exposureResponse.severity>.01;const bool inLee=localWeather.shelter>=.35;if(inLee!=previousExposureLee){exposureCue.SetText(inLee?"Rock lee - exposure eased; still tiring":"Weather exposure - tiring faster; seek a rock lee");previousExposureLee=inLee;}if(cue==exposureCue.IsHidden())exposureCue.SetHidden(!cue);if(elapsed>=nextExposureSample){exposureSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",x},{"body_z",z},{"shelter",localWeather.shelter},{"comfort",localWeather.comfort},{"wetness",localWeather.wetness},{"severity",exposureResponse.severity},{"fatigue_added",exposureResponse.fatigueAdded},{"fatigue",needs->fatigue()},{"dt",timeStep.physicalSeconds},{"direct",directInput},{"speed",speed},{"cue_visible",!exposureCue.IsHidden()},{"lee_cue",inLee}});nextExposureSample=elapsed+.1;}}
             if(heroAutonomyEnabled && elapsed>=nextRestSample){restSamples.push_back({{"elapsed",elapsed},{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"body_x",x},{"body_z",z},{"fatigue",needs->fatigue()},{"resting",resting},{"direct",directInput},{"cue_visible",!restCue.IsHidden()},{"speed",speed},{"camera_target_x",cameraOut.cameraState.target.x},{"camera_target_z",cameraOut.cameraState.target.z}});nextRestSample=elapsed+.1;}
 
+            if(connectedWorld && elapsed>=nextLifeStageSample){stalthos::Vec3 lo{1e30,1e30,1e30},hi{-1e30,-1e30,-1e30};std::size_t objects=0;for(std::size_t i=0;i<scene.objects.GetCount();++i){auto entity=scene.objects.GetEntity(i);if(entity!=heroMotionRoot && !scene.Entity_IsDescendant(entity,heroMotionRoot))continue;const auto low=scene.aabb_objects[i].getMin(),high=scene.aabb_objects[i].getMax();lo={std::min(lo.x,double(low.x)),std::min(lo.y,double(low.y)),std::min(lo.z,double(low.z))};hi={std::max(hi.x,double(high.x)),std::max(hi.y,double(high.y)),std::max(hi.z,double(high.z))};++objects;}const auto scale=scene.transforms.GetComponent(heroMotionRoot)->scale_local;lifeStageSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"age",lifecycle->calendarAge()},{"stage",stalthos::domain::lifeStageName(lifecycle->stage())},{"bulk",heroStageBulk},{"scale_x",scale.x},{"scale_y",scale.y},{"scale_z",scale.z},{"bounds_x",hi.x-lo.x},{"bounds_y",hi.y-lo.y},{"bounds_z",hi.z-lo.z},{"body_objects",objects},{"body_x",x},{"body_z",z},{"fatigue",needs->fatigue()},{"thirst",needs->thirst()},{"resting",resting},{"direct",directInput},{"speed",speed}});nextLifeStageSample=elapsed+.1;}
             // Retrieve body-relative physical position for eligibility, independent of camera
             XMFLOAT3 bodyPos;
             if (auto* transform = scene.transforms.GetComponent(heroMotionRoot)) {
@@ -2115,8 +2129,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});
+        if(connectedWorld)WriteJson(output/"life-stage.json",{{"synthetic_start_age_fatigue_input_and_noon",lifeStageProbe},{"initial_age",initialHeroLifecycleAge},{"ordinary_start_or_saved_age_modified",false},{"clock_scale_modified",false},{"milestones",lifeStageMilestones},{"samples",lifeStageSamples},{"captures",lifeStageCaptures},{"scope","actual calendar Lifecycle; proposed horizontal bulk only, existing vertical datum and locomotion pace preserved; no anatomical stage or full growth acceptance"}});
         if(connectedWorld)WriteJson(output/"peer-companionship.json",{{"probe_mode",peerProbe},{"synthetic_start_satisfied_npc_input_and_noon",peerProbe!=0},{"peer",peerCompanion.peer()},{"events",peerEvents},{"samples",peerSamples},{"captures",peerCaptures},{"scope","one existing conspecific peer, session-only relationship and graph approach/wait; no kinship or connected save support"}});
-        if(connectedWorld)WriteJson(output/"day-night.json",{{"probe_mode",dayNightProbe},{"synthetic_renderer_phase",dayNightProbe!=0 || woodlandProbe || peerProbe},{"woodland_entry_probe",woodlandProbe},{"renderer_modifies_clock_or_needs",false},{"synthetic_initial_fatigue_and_body_input",dayNightProbe==2},{"samples",dayNightSamples},{"captures",dayNightCaptures},{"scope","proposed calendar lighting plus readable night fill, not astronomy or elapsed24h proof"}});
+        if(connectedWorld)WriteJson(output/"day-night.json",{{"probe_mode",dayNightProbe},{"synthetic_renderer_phase",dayNightProbe!=0 || woodlandProbe || peerProbe || lifeStageProbe},{"woodland_entry_probe",woodlandProbe},{"renderer_modifies_clock_or_needs",false},{"synthetic_initial_fatigue_and_body_input",dayNightProbe==2},{"samples",dayNightSamples},{"captures",dayNightCaptures},{"scope","proposed calendar lighting plus readable night fill, not astronomy or elapsed24h proof"}});
         if(connectedWorld)WriteJson(output/"exterior-water.json",{{"resource",209},{"quantity",exteriorWater.quantity},{"water_height",exteriorWaterHeight},{"bank_x",exteriorWater.bankX},{"bank_z",exteriorWater.bankZ},{"probe_mode",exteriorWaterProbe},{"synthetic_initial_thirst_and_pose",exteriorWaterProbe!=0},{"samples",exteriorWaterSamples},{"npc_contacts",exteriorWaterNpcContacts},{"hero_contacts",autonomyContacts},{"captures",exteriorWaterCaptures},{"scope","static rock-lined seep, dry supported bank; no fluid solver or connected saves"}});
         if(exteriorBrowseEnabled)WriteJson(output/"exterior-browse.json",{{"resource",208},{"initial_quantity",exteriorBrowse.quantity},{"patch_x",exteriorBrowse.x},{"patch_z",exteriorBrowse.z},{"probe_mode",exteriorBrowseProbe},{"synthetic_initial_hunger_and_pose",exteriorBrowseProbe!=0},{"samples",exteriorBrowseSamples},{"npc_contacts",exteriorBrowseNpcContacts},{"hero_contacts",autonomyContacts},{"captures",exteriorBrowseCaptures},{"scope","one existing-asset shared finite exterior food patch; no connected saves or exterior hydrology"}});
         if(connectedWorld) WriteJson(output/"hero-destination.json",{{"probe_mode",destinationProbe},{"synthetic_native_mouse_event",destinationProbe!=0},{"physical_human_mouse_tested",false},{"events",destinationEvents},{"samples",destinationSamples},{"captures",destinationCaptures},{"scope","nearby12m dry supported straight-line destination; no general pathfinding"}});
@@ -2472,8 +2487,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"supportfailure", supportFailureCount},
             {"support_failure_count", supportFailureCount},
             {"disable_terrain_support", disableTerrainSupport},
-            {"terrain_support_longitudinal_halfspan_m", kCreatureLongitudinalHalfspan},
-            {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan},
+            {"terrain_support_longitudinal_halfspan_m", kCreatureLongitudinalHalfspan*heroStageBulk},
+            {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan*heroStageBulk},
             {"terrain_support_policy", "proposed approximate visual body plane alignment only; per-foot IK and terrain foot locking not claimed"},
             {"rendered_ground_support_active", latestGroundSampleSource == "rendered_triangles"},
             {"rendered_ground_support_samples", renderedSupportSampleCount},
