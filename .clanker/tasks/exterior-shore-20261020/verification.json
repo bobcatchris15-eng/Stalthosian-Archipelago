@@ -1,0 +1,79 @@
+{
+  "route": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-175821-b4e4a465",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 45.469238099918584,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6,
+    "distance_m": 74.00454711914062,
+    "max_sampled_grade": 0.251739018727162,
+    "final_ground_y": 0.4887731075286865,
+    "body_tile_crossings": 2,
+    "speed_m_s": 2.0
+  },
+  "entry": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-175912-84e55993",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 33.9115999067144,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 0,
+    "distance_m": 4.00091552734375,
+    "max_sampled_grade": 0.21647196261682242,
+    "final_ground_y": 0.48948144912719727,
+    "body_tile_crossings": 2,
+    "speed_m_s": 0.16128000617027283
+  },
+  "still": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180302-7f2ab4e7",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 23.143942805356346,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6
+  },
+  "overview": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180331-f55f61bf",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 23.528763842681656,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6
+  },
+  "normal": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180029-3035c0ff",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 8.13366880256217,
+    "actor_count": 12,
+    "retained_sessions": 12,
+    "history_keys": 6
+  },
+  "original": {
+    "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180041-6afaf6c0",
+    "support_failures": 0,
+    "support_fallbacks": 0,
+    "physical_seconds": 6.577293698093854,
+    "actor_count": 8,
+    "retained_sessions": 8,
+    "history_keys": 4
+  },
+  "camera_boundary": {
+    "identical_initial_body_actors_ledger_sessions": true,
+    "body_fixed_x": 184,
+    "camera_span_m": 11.818732018203093,
+    "activation_unchanged": true,
+    "terrain_footprint_unchanged": true,
+    "hero_attention_and_goals_empty": true,
+    "final_actor_position_difference_m": 0.16353349518542074,
+    "physical_duration_difference_s": 0.3848210373253096
+  },
+  "preserved_original_untracked": 157,
+  "review": "root-only; both preserved reviewers usage-limited; zero dispatches",
+  "limits": "authored finite cove, flat water/visible sheet edge/coarse cliffs/material bands; local animated4m entry and proxy74m descent, not full animated watershed-to-coast route, global shoreline, foot-contact, hydrology/swimming or full-game/FPS acceptance"
+}

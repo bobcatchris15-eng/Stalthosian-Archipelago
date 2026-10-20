@@ -1,5 +1,6 @@
 #pragma once
 #include "watershed_terrain.hpp"
+#include "exterior_shore.hpp"
 namespace stalthos::world {
 // Editable layout in meters; connected preview uses existing world-space mesh datum.
 struct ConnectedRouteLayout {
@@ -9,13 +10,14 @@ struct ConnectedRouteLayout {
 class ConnectedRoute {
     WatershedTerrain base_;
     ConnectedRouteLayout layout_;
+    ExteriorShore shore_;
     static double smooth(double a,double b,double v) {const auto t=std::clamp((v-a)/(b-a),0.0,1.0);return t*t*(3-2*t);}
 public:
-    explicit ConnectedRoute(std::uint64_t seed,ConnectedRouteLayout layout={}):base_(seed,{64,2,1}),layout_(layout) {
+    explicit ConnectedRoute(std::uint64_t seed,ConnectedRouteLayout layout={},ExteriorShoreLayout shore={}):base_(seed,{64,2,1}),layout_(layout),shore_(shore) {
         if(!std::isfinite(layout.centerZ) || !std::isfinite(layout.dryBankX) || !std::isfinite(layout.joinX) || !std::isfinite(layout.meadowX) || !std::isfinite(layout.openHalfWidth) || !std::isfinite(layout.bluffBlendWidth) || !std::isfinite(layout.gentleRise) || layout.joinX!=96 || layout.dryBankX<16 || layout.dryBankX>=layout.joinX || layout.meadowX<=layout.joinX || layout.openHalfWidth<=0 || layout.bluffBlendWidth<=0 || std::abs(layout.gentleRise)>.1) throw std::invalid_argument("invalid connected route layout");
     }
     const ConnectedRouteLayout& layout() const {return layout_;}
-    double height(double x,double z) const {
+    double inlandHeight(double x,double z) const {
         const auto existing=base_.height(x,z);
         if(x<=layout_.joinX) return existing;
         const double d=x-layout_.joinX;
@@ -27,6 +29,12 @@ public:
         const double weight=1-smooth(layout_.openHalfWidth,layout_.openHalfWidth+layout_.bluffBlendWidth,cross);
         return existing+(meadow-existing)*weight;
     }
+    const ExteriorShore& shore()const{return shore_;}
+    double height(double x,double z) const {
+        const double inland=inlandHeight(x,z);
+        if(x<=shore_.layout().startX)return inland;
+        return shore_.height(inland,inlandHeight(shore_.layout().startX,z),x,z);
+    }
     // Same two-meter triangles and diagonal as the emitted exterior mesh.
     double triangleHeight(double x,double z) const {
         const double left=std::floor(x/2)*2,back=std::floor(z/2)*2,fx=(x-left)/2,fz=(z-back)/2;
@@ -35,7 +43,7 @@ public:
     }
     TerrainVertex sample(double x,double z) const {
         const double h=1,dx=(height(x+h,z)-height(x-h,z))/(2*h),dz=(height(x,z+h)-height(x,z-h))/(2*h);
-        const double inv=1/std::sqrt(1+dx*dx+dz*dz);return {{x,height(x,z),z},{-dx*inv,inv,-dz*inv},.35,false};
+        const double inv=1/std::sqrt(1+dx*dx+dz*dz);return {{x,height(x,z),z},{-dx*inv,inv,-dz*inv},.35,x>shore_.layout().startX && height(x,z)<=shore_.layout().seaLevel};
     }
 };
 }

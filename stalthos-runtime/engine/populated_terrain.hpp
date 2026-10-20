@@ -137,6 +137,7 @@ public:
                         if(habitat==Habitat::Creek) green=wi::Color(91,81,63);else if(habitat==Habitat::Riparian) green=wi::Color(72,93,48);else if(habitat==Habitat::Woodland) green=wi::Color(61,80,42);else if(habitat==Habitat::Bluff || habitat==Habitat::Outcrop) green=wi::Color(112,104,89);
                         const float t=std::clamp((vertex.x-96.f)/56.f,0.f,1.f);
                         const float mosaic=1.f-t*.04f+t*.04f*std::sin(vertex.x*.12f)*std::sin(vertex.z*.19f);
+                        if(vertex.x>route_.shore().layout().startX && vertex.y<3.0f) {const bool wet=vertex.y<.35f;mesh->vertex_colors.push_back((wet?wi::Color(92,89,69):wi::Color(184,169,125)).rgba);continue;}
                         mesh->vertex_colors.push_back(wi::Color(uint8_t((green.getR()*(1-t)+131*t)*mosaic),uint8_t((green.getG()*(1-t)+122*t)*mosaic),uint8_t((green.getB()*(1-t)+76*t)*mosaic)).rgba);
                     }
                     for(const auto& subset:mesh->subsets) scene.materials.GetComponent(subset.materialID)->SetUseVertexColors(true);

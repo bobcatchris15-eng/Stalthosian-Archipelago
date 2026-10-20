@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-shore-20261020",
+  "status": "working-draft-accepted",
+  "base_revision": "aabe005aee0503f895cf3984b776f4acf22217b2",
+  "updated": "2026-10-20T23:05:23.665484+00:00",
+  "owned_paths": [
+    "stalthos-runtime/domain/exterior_shore.hpp",
+    "stalthos-runtime/domain/connected_route.hpp",
+    "stalthos-runtime/engine/exterior_shore_scene.hpp",
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/exterior_shore.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/exterior-shore.md"
+  ],
+  "source_sha256": {
+    "stalthos-runtime/domain/exterior_shore.hpp": "1f80e600ad149c4f2340415ad4e77bd1998ec9b9a2bae68aa921172812302c0d",
+    "stalthos-runtime/domain/connected_route.hpp": "62eada78a083d313ad6b6aa2827e542ff7e37b39086e02fa75b0ce2c9a6124da",
+    "stalthos-runtime/engine/exterior_shore_scene.hpp": "f9fe064d487c757eb47e2b79ee1470e64c3c4c6a5de5af90ee0b68c24245a40e",
+    "stalthos-runtime/engine/populated_terrain.hpp": "1211ea278a6dadf52d10df2a8e5cc19e1532d3b11ccac95e12338a5e8a4cfaf5",
+    "stalthos-runtime/engine/main.cpp": "4ac8626bde6435f6d7a0c18d470ace20e8eba33b5259dbf4a6f2f779bebad2ba",
+    "stalthos-runtime/tests/exterior_shore.cpp": "0f6f5d40083f7b2d39905cadfd80b01d7a9c46a6933e021ca3d072a5b395a824",
+    "stalthos-runtime/CMakeLists.txt": "1cee67871583c4fe0a1fd9ec7f71653ef015f549940ca2c02d98fc792b6f2f80",
+    "stalthos-runtime/scripts/Run.ps1": "f94d59ff4fcfa105579f1db63db3d9becd7b8f2e3053cc80fcca231f5d5f6592",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "09cb2a36a74d2868ba6e10199b0661c7c72bf873b9f4a4ac44a9c80a0a4933d8",
+    "stalthos-runtime/docs/exterior-shore.md": "53842ecf967f0cc7d7e94f5f21a83b7b61df5a78b56d67826f1ad25b59a6145e"
+  },
+  "executable_sha256": "8b03dff1984d38640a0ecd09685c2c04be4d835129bad6c2181b14b6afe0e325",
+  "validation": {
+    "Release": "passed final executable8b03dff",
+    "CTest": "58 passed",
+    "toolkit": "2073 passed,2 skipped in533.32s",
+    "doctor_exit": 0,
+    "native": "six accepted final-executable runs; zero support failures/fallbacks; see verification.json",
+    "visual": "actual native sand/rock cove views, proxy descent and existing animated local entry",
+    "preservation": "157 original untracked plus pinned creature/plant/woodland hashes; original12/8 actor initial baselines and sessions/ledger intact"
+  },
+  "native_metrics": {
+    "route": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-175821-b4e4a465",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 45.469238099918584,
+      "actor_count": 12,
+      "retained_sessions": 12,
+      "history_keys": 6,
+      "distance_m": 74.00454711914062,
+      "max_sampled_grade": 0.251739018727162,
+      "final_ground_y": 0.4887731075286865,
+      "body_tile_crossings": 2,
+      "speed_m_s": 2.0
+    },
+    "entry": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-175912-84e55993",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 33.9115999067144,
+      "actor_count": 12,
+      "retained_sessions": 12,
+      "history_keys": 0,
+      "distance_m": 4.00091552734375,
+      "max_sampled_grade": 0.21647196261682242,
+      "final_ground_y": 0.48948144912719727,
+      "body_tile_crossings": 2,
+      "speed_m_s": 0.16128000617027283
+    },
+    "still": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180302-7f2ab4e7",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 23.143942805356346,
+      "actor_count": 12,
+      "retained_sessions": 12,
+      "history_keys": 6
+    },
+    "overview": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180331-f55f61bf",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 23.528763842681656,
+      "actor_count": 12,
+      "retained_sessions": 12,
+      "history_keys": 6
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180029-3035c0ff",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 8.13366880256217,
+      "actor_count": 12,
+      "retained_sessions": 12,
+      "history_keys": 6
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261020-180041-6afaf6c0",
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "physical_seconds": 6.577293698093854,
+      "actor_count": 8,
+      "retained_sessions": 8,
+      "history_keys": 4
+    },
+    "camera_boundary": {
+      "identical_initial_body_actors_ledger_sessions": true,
+      "body_fixed_x": 184,
+      "camera_span_m": 11.818732018203093,
+      "activation_unchanged": true,
+      "terrain_footprint_unchanged": true,
+      "hero_attention_and_goals_empty": true,
+      "final_actor_position_difference_m": 0.16353349518542074,
+      "physical_duration_difference_s": 0.3848210373253096
+    },
+    "preserved_original_untracked": 157,
+    "review": "root-only; both preserved reviewers usage-limited; zero dispatches",
+    "limits": "authored finite cove, flat water/visible sheet edge/coarse cliffs/material bands; local animated4m entry and proxy74m descent, not full animated watershed-to-coast route, global shoreline, foot-contact, hydrology/swimming or full-game/FPS acceptance"
+  },
+  "review": "root-only direct central terrain/host/body/camera review; preserved workers usage-limited, zero dispatches; graph warnings/noise not independent proof",
+  "retained_failures": [
+    "undefined sample water flag and ambiguous Translate overload, fixed",
+    "old executable diagnostic after failed host build excluded from acceptance",
+    "CameraDistance24 typed refusal preserved; valid18 retained",
+    "out-of-tether camera fixture clamped, initial detachment excluded as motion; fixed within existing tether",
+    "36s still fixture reached existing idle-goal timer after31physical seconds; final bounded26wall-second camera/still window below timer, no accepted autonomy changes"
+  ],
+  "limitations": [
+    "bounded authored local cove preview; no global/coarse island coastline or full animated watershed-to-coast route proof",
+    "flat finite static water sheet, visible straight edge/dark horizon band, coarse cliff slopes and abrupt sand bands; no tides/foam/hydrology/swimming/salinity/sea resource",
+    "existing slow animal pace/sole contact/wet-material/contact/full-art/game/FPS limits remain",
+    "camera boundary proven within bounded below-idle-goal window; later mode-specific autonomy behavior remains unaccepted here",
+    "connected saves remain refused; original saved-mode contracts retained"
+  ],
+  "next_subsystem": "body-local existing adult carnivore potential-danger cue and interruptible detached-camera recall; inspect actual controller/perception and planning species roles, no fabricated attack/harm/hunting framework",
+  "automation": "Observed saved reminder already PAUSED; preserved PAUSED while narrowing prompt to durable checkpoints and next task"
+}

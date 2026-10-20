@@ -71,3 +71,6 @@ Latest accepted: body-audio-20261020. NEXT bounded NPC-to-NPC peer association; 
 
 
 Latest accepted: npc-peer-20261020. One session-only NPC peer link/graph approach/3m idle wait/needs/contact/camera boundary. Wide native departure/reunion unproven (domain only); no general social/family/save claim. NEXT recognizable traversable exterior shore approach; no social/asset polish.
+
+
+Latest accepted: exterior-shore-20261020. Authored cove/74m proxy descent/local4m animated entry, native body-ground and bounded actual moving-camera boundary. Flat/finite water/coarse cliffs/global shoreline/native long crossing/contact limits parked. NEXT body-local carnivore potential-danger cue and interruptible camera recall; no shore/asset polish.

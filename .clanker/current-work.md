@@ -467,3 +467,29 @@ Read .clanker/tasks/npc-peer-20261020/next-task.md first.
 Final audit pending: NPC synthetic noon metadata flag and near-hero waiting presentation priority corrected; rebuilding/rechecking before publication. Earlier native draft evidence retained.
 
 Final audit resolved: executable44b1514b8b29a3fbe33b0ce1526f6861f3b7dfb66a3067f3db247a804ce18ba7 marks synthetic noon correctly and yields waiting presentation to actual hero avoidance. Fresh57CTest/five native runs pass; max matched-time actor error.001562m under20.88m camera motion, exact water209 relief.002348066. Original scene/session/history/asset/untracked gates pass. NPC pair task complete; shore approach next.
+
+
+## 2026-10-20 exterior shore working draft accepted
+Bounded authored cove beyondx200 preserves prior reference/meadow heights,
+woodland and resources208/209. Central editable descent/width/depth/flare; actual
+streamed2m triangles remain ground authority. Static sea0 sheet and14 existing-
+generator rock instances/sand bands make a readable shore. No coarse/global
+island coastline claim. Native proxy covers74.005m fromx184 to258; actual pinned
+animal local4.000m entry at existing.16128m/s. Max sampled grade.252, dry endpoint
+about.489m above water. Six final-executable8b03dff runs have zero support failures/
+fallbacks; normal12/original8 baseline, IDs/sessions/ledger and once-only ages pass.
+Camera fixture corrected inside existing tether; actual post-startup pan verified,
+not initial detachment. Final still/camera window26wall seconds stays below the
+existing idle-goal timer; later mode-specific autonomy not newly accepted/repaired.
+Release58CTest/toolkit2073pass2skip/doctor0;157 originaluntracked/assets preserved.
+Root-only ownership/graph/diff/native review; two preserved workers usage-limited,
+zero dispatches. Retained compile-name/Translate failures, stale-executable run,
+CameraDistance24 refusal, clamped-camera and long-still fixtures are excluded.
+Park flat/finite sheet/visible edge-dark horizon band, coarse cliffs/abrupt sand
+bands, no tides/foam/hydrology/swimming/salinity/sea resource, existing pace/sole/
+wet-material/full-art/game/FPS/connected-save limits. No full animated watershed-
+to-coast crossing. Working place good; do not polish accepted shore/terrain/assets.
+Receipt: .clanker/tasks/exterior-shore-20261020/integration-receipt.json
+NEXT SUBSYSTEM: body-local existing adult carnivore potential-danger cue and
+interruptible detached-camera recall using actual perception/view ownership.
+Read .clanker/tasks/exterior-shore-20261020/next-task.md first.

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task_id": "exterior-shore-20261020",
+  "status": "complete",
+  "base_revision": "aabe005aee0503f895cf3984b776f4acf22217b2",
+  "current_step": "bounded authored shore working draft accepted; next body-local carnivore awareness/recall",
+  "completed_steps": [
+    "HALT/AGENTS/narrow receipt read; reviewers usage-limited, zero dispatches",
+    "existing coarse coast kilometres away; explicit authored preview decision, prior meadow heights throughx200 preserved",
+    "bounded tunable descent, sea0 sheet,14 existing-generator rocks and sand/wet-bank colors",
+    "Release58CTest; toolkit2073pass2skip/doctor0",
+    "six fresh same-executable native runs:74m proxy and4m animated supported entry; two tile transitions include labelled startup",
+    "post-startup camera span measured inside existing tether; below-idle-goal still/camera comparison, unchanged activation/terrain footprint/empty hero awareness and goal",
+    "source/asset/157untracked/12actor-8actor original baseline/session/finite ledger/once-only calendar gates pass",
+    "all compile/stale-executable/tether/timer fixture failures retained and excluded honestly; root-only review",
+    "working role accepted; flat/finite water/coarse cliffs/native long-route and contact limits parked, next subsystem queued"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/exterior_shore.hpp",
+    "stalthos-runtime/domain/connected_route.hpp",
+    "stalthos-runtime/engine/exterior_shore_scene.hpp",
+    "stalthos-runtime/engine/populated_terrain.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/tests/exterior_shore.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/exterior-shore.md"
+  ],
+  "updated": "2026-10-20T23:05:23.665484+00:00",
+  "resume_instructions": "Read next-task. Shore role accepted with explicit authored/finite/static/local-entry scope; do not polish shore/terrain/assets.",
+  "validation": {
+    "passed": true,
+    "command": "Release58CTest; toolkit2073/2 doctor; verify.py six final native runs, body integration/camera boundary/baseline/preservation",
+    "evidence_path": ".clanker\\tasks\\exterior-shore-20261020\\integration-receipt.json"
+  },
+  "receipt_path": ".clanker\\tasks\\exterior-shore-20261020\\integration-receipt.json",
+  "next_step": "body-local adult carnivore awareness cue and interruptible camera recall"
+}

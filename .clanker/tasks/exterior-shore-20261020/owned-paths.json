@@ -1,0 +1,12 @@
+[
+  "stalthos-runtime/domain/exterior_shore.hpp",
+  "stalthos-runtime/domain/connected_route.hpp",
+  "stalthos-runtime/engine/exterior_shore_scene.hpp",
+  "stalthos-runtime/engine/populated_terrain.hpp",
+  "stalthos-runtime/engine/main.cpp",
+  "stalthos-runtime/tests/exterior_shore.cpp",
+  "stalthos-runtime/CMakeLists.txt",
+  "stalthos-runtime/scripts/Run.ps1",
+  "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+  "stalthos-runtime/docs/exterior-shore.md"
+]
