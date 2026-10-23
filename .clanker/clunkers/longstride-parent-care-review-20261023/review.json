@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "task": "longstride-parent-care-review-20261023",
+  "reviewer": "gameplay_review",
+  "base_commit": "1e381a4",
+  "worker_source_commit": "148c8eb",
+  "integrated_source_commit": "e2131ce",
+  "scope": {
+    "graph_digest": "not computed; bounded direct ownership and intention review",
+    "base_digest": "1e381a4",
+    "implementation_read_only": true,
+    "owned_output": ".clanker/clunkers/longstride-parent-care-review-20261023",
+    "artifacts": [
+      "probe.cpp",
+      "probe-output.txt",
+      "probe-range-failure.txt",
+      "source-hashes.json"
+    ]
+  },
+  "goal_alignment": {
+    "reason": "Corrected before implementation from independent Smalltrotter young to planning-supported Longstride wild caregiver. Actual adult identity binds once to young hero; existing controller and registry remain sole owners.",
+    "verdict": "pass final source/domain scope; native gameplay acceptance pending root"
+  },
+  "findings": [],
+  "resolved_findings": [
+    {
+      "source": "148c8eb domain/longstride_care.hpp observe",
+      "resolution": "e2131ce bounds body-relative waypoint to min(d-3,8m) with interpolated height; same17m probe now passes.",
+      "evidence": "At17m body sensing succeeds (<18), but original target3m from parent is14m from young and exceeds HeroDestination radius12. Independent compiled probe failed supported submission.",
+      "severity": "P1"
+    },
+    {
+      "source": "main.cpp generic companionship owner",
+      "resolution": "e2131ce excludes Longstride Hatchling/Juvenile generic hero peer learning, including after N.",
+      "evidence": "After N cleared care, generic peer learning could create an alternate adult peer owner for immature Longstride.",
+      "severity": "P2"
+    }
+  ],
+  "effort": {
+    "attempted": [
+      "Preserved previous review40aefb0 branch and exact dirty helper/weather copies/hashes/patch before safely advancing detached1e381a4.",
+      "Read planning input creatures.md lines41 and69–70 read-only; rejected Small parent following before implementation and reviewed corrected Longstride asymmetry.",
+      "Audited startup actual caregiver/young IDs, terrain edge support, existing HeroDestination ownership, direct/playergoal/needs priority, body-local separation/reunion, N reset, registry context and danger filtering.",
+      "Independently compiled helper+existing registry adversarial probe against emerging source, reproduced17m controller-range blocker, then rebuilt same probe against final root e2131ce helper.",
+      "Computed final rawSHA/canonicalLF/CRLF/Git blobs for all9 changed paths; separately recorded148c8eb baseline hashes and2 intentional final fix deltas; all final working blobs equal e2131ce.",
+      "Parsed both changed PowerShell launch scripts; original Small nest/courtship/registry/save contract files unchanged."
+    ],
+    "native_build_performed": false,
+    "probes_run": [
+      "Final MSVC C++17 independent probe: PASS.",
+      "Small/adult/self association refused; actual adult binds once; direct/playergoal/needs override; waiting and body/vertical/inactive/separation/reunion guards.",
+      "Actual dead/missing caregiver terminates without retarget; resurrected/replacement adult and new hero cannot inherit association.",
+      "Recognized caregiver17m target submits through supported existing HeroDestination; unsupported path refuses; direct cancels.",
+      "Actual parent urgent shared-water contact within1m young succeeds through existing single registry tick; age advances exactly2calendar seconds, identity/session binding unchanged, old cumulative ledger key retained, continuation restores.",
+      "Final9 file raw/canonical/blob verification and2 script parses pass."
+    ]
+  },
+  "source_audit": [
+    "Birth selection changes only supported young hero startup pose3.5m along existing real edge with8 dry/grade ground samples; existing caregiver NPC ID/species/position/needs/session remain unmodified.",
+    "Follow submits only its own supported contextual goal. Pending player click clears that owner before player goal submission; direct and needs relinquish it. Parent receives peerLeads context only to preserve ordinary route/contact and exclude conflicting NPC association, never reciprocal approach command.",
+    "Known locally present caregiver alone is removed from a copied sensed carnivore list, preventing false caregiver danger/forced recall; other actors and registry remain unchanged.",
+    "Only one existing faunaPopulation.advance call. No actor creation, resource replacement, new binding/session or extra clock.",
+    "N clears care and goal owner without replacing NPC or ledger state; new immature Longstride cannot learn a generic substitute family owner.",
+    "Partial persistence excludes care at startup; original connected saved-mode refusal and strict original archives remain unchanged.",
+    "Camera-only diagnostic labels synthetic body24,24 and verifies caregiver>=18m, then only changes camera state; no traversal or care authority claim from camera."
+  ],
+  "limitations": [
+    "No reviewer native build/launch/GPU capture, measured following distance, rendered contact or performance claim; root owns final native proof.",
+    "Actual caregiver death/missing/maturity tested in domain; native diagnostic injects young death/N only. Do not claim caregiver-death native proof.",
+    "Wild caregiver association, not proven biological lineage, actual Longstride laying/birth history, provisioning, hunting, parent-playing offspring care or full dependency implementation.",
+    "N currently starts no new caregiver association; this is an explicit limited first-life feature.",
+    "Smalltrotter offspring remain independent; full family/social persistence and unrestricted connected-save coverage remain open."
+  ],
+  "source_hashes_file": "source-hashes.json"
+}
