@@ -88,3 +88,9 @@ If the executable is missing, build from this folder with
 That requires the pinned Wicked source, verified local compiled dependency cache,
 CMake and Visual Studio C++ build tools described in the runtime documentation.
 The play launcher does not download or rebuild dependencies.
+
+Adult Smalltrotter B now invites an actual nearby calm adult conspecific. Its physical
+approach and quiet readiness precede clutch admission; no mate or interrupted
+response means no clutch. Direct input, a player destination or ordinary needs
+cancel the temporary courtship. This is a speculative paired-readiness draft,
+not complete reproductive biology or other-species breeding.

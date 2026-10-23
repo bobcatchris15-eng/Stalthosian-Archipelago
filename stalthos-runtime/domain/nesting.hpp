@@ -8,7 +8,7 @@ namespace stalthos::domain {
 // Proposed fictional first-draft tuning. One bounded clutch per connected session.
 // Birth identity is recorded only after authoritative live population admission.
 struct NestSite { Vec3 position{}; bool supported=false, dry=false, clear=false; double relief=0; };
-struct Clutch { Identity parent=0; Vec3 position{}; double laidAt=0, incubatedSeconds=0; };
+struct Clutch { Identity parent=0; Vec3 position{}; double laidAt=0, incubatedSeconds=0;Identity mate=0; };
 class Nesting {
     std::optional<Clutch> clutch_;
     Identity offspring_=0;
@@ -24,9 +24,9 @@ public:
         if(!site.clear) return "Choose ground clear of plants, rocks and animals";
         return {};
     }
-    bool lay(Identity parent,HeroSpecies species,LifeStage stage,double hunger,double thirst,double fatigue,const NestSite& site,double calendar) {
-        if(!std::isfinite(calendar) || calendar<0 || !refusal(parent,species,stage,hunger,thirst,fatigue,site).empty()) return false;
-        clutch_=Clutch{parent,site.position,calendar,0}; return true;
+    bool lay(Identity parent,HeroSpecies species,LifeStage stage,double hunger,double thirst,double fatigue,const NestSite& site,double calendar,Identity acceptedMate=0) {
+        if(!acceptedMate || acceptedMate==parent || !std::isfinite(calendar) || calendar<0 || !refusal(parent,species,stage,hunger,thirst,fatigue,site).empty()) return false;
+        clutch_=Clutch{parent,site.position,calendar,0,acceptedMate}; return true;
     }
     void advance(const TimeStep& step) {
         if(!std::isfinite(step.calendarSeconds) || step.calendarSeconds<0) throw std::invalid_argument("invalid incubation calendar step");
