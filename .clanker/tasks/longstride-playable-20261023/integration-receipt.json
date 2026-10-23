@@ -1,0 +1,133 @@
+{
+  "status": "accepted_bounded_partial_species_role",
+  "task": "longstride-playable-20261023",
+  "source_commits": [
+    "0f67bc9",
+    "d4e2226"
+  ],
+  "review_commits": [
+    "2997987"
+  ],
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "b8ee80718d4ee4106025ad70562f2f85a76773839e22a9c56e5207f8af85b5f6",
+      "canonical_lf_sha256": "8bf2dbaf7cc9d7d118630bdb6d73ba9225a7a2e05ebdc96fab1bd5c5e086cbca",
+      "git_blob": "3579672edaccd971653f391fc63a137e61880c29",
+      "crlf": 90
+    },
+    {
+      "path": "Play.ps1",
+      "sha256": "6a1960a3a30fc0d016b8f7901d198402b79755cbf515b16453ef51aa7ce1d8e9",
+      "canonical_lf_sha256": "f86e065ad289c54751f54077bf7224f2801a8d4d23d84af4a70a4588014271f7",
+      "git_blob": "1f4dbc7d21fa4b18305bf60558194f781ab979d3",
+      "crlf": 28
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "54cdf4e5df7ae890fffd612c1eb894a4986bec7d84080a0495a28a1f5c212649",
+      "canonical_lf_sha256": "a7a52be744d20e96a00cc7168c1c5c30aab130ed90fc2d9114785a947faa8f3e",
+      "git_blob": "9a572b0abe1e71001b05455343b27d23aa7ccdb7",
+      "crlf": 89
+    },
+    {
+      "path": "stalthos-runtime/docs/longstride.md",
+      "sha256": "bc0d9886387acc0e863c373804fa942bf23039a84f2eb08b80455ca2cfeeaad5",
+      "canonical_lf_sha256": "219da4c10440c93f0d64e0571bbdf3e74b7d2cf4ecaad298a1979f5ef34f9ac0",
+      "git_blob": "796f2a6f72e70284c05e0df169f82defcfecd348",
+      "crlf": 73
+    },
+    {
+      "path": "stalthos-runtime/domain/longstride.hpp",
+      "sha256": "25e02cf19b0f08a385eb88ad895eb80ddc0c166bc20ae52a94e6b2ff903d9726",
+      "canonical_lf_sha256": "25e02cf19b0f08a385eb88ad895eb80ddc0c166bc20ae52a94e6b2ff903d9726",
+      "git_blob": "6862065815a961d601a1a5e94116d55185ba03ec",
+      "crlf": 0
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "1a1ccb56676943146f0141665bebec0604cdcf6803d43ccdfcc9a9a41832ae26",
+      "canonical_lf_sha256": "a6c17ceb249a7b8e8e8ae4de3ad1727560069b9178b287d7133e080d9406f2af",
+      "git_blob": "2b0f770b28c17abee8183e4c30a424a395bf2fe7",
+      "crlf": 15
+    },
+    {
+      "path": "stalthos-runtime/engine/longstride_scene.hpp",
+      "sha256": "719ce4878ae30cd26030d9561e33806500b0cd887da8c8e63654ff2166ba1733",
+      "canonical_lf_sha256": "19238c6cb67e61c8b8b28f111991ea9c2f9feceb33f239a19d1007b7f0f2dd0a",
+      "git_blob": "e55504f812333e501bfd0680988df28304754966",
+      "crlf": 45
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "7e5a810923740095631a202f01f8e26952fb21744478e9d77d14750d59f6384f",
+      "canonical_lf_sha256": "ad3dc2b97f209c35637609667031bd7e6f72c68c779bd833f6d976a3fc3907b1",
+      "git_blob": "1c1cc834d076ffbd21617511d85b31d7924760c0",
+      "crlf": 2932
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "c96213ef3db69bbda640f55796688247bad1ec53565ea6d053a9f35cc962595d",
+      "canonical_lf_sha256": "9e88993cb00f903eebe156553e5d34b2d6280f542664680f57e20c85878ea59f",
+      "git_blob": "80b69f66cfbf776d26ea670306d6d46407d58aa4",
+      "crlf": 84
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "cd817472c4196a3f134dd2b3de12711bfc25067799fa0e6268ca22dab4839b2f",
+      "canonical_lf_sha256": "5e6f307fc5938776fa7ff7d16d8be344df5bd4aa628343bb13a494f9f7b02057",
+      "git_blob": "0e6320c4a72cffb47a3a89c7e7acc33699c26907",
+      "crlf": 204
+    },
+    {
+      "path": "stalthos-runtime/tests/longstride.cpp",
+      "sha256": "213b142f4e5f4e282abb3c0c53f46a05366fb6bbdc1713aac5eeded6fedf2191",
+      "canonical_lf_sha256": "398b9006b348187ed2324e834919726941e139a06e3331d498aedaacdcc6b8e1",
+      "git_blob": "9a3425a8add39c9ee90515ecf79ed64fc151aa1b",
+      "crlf": 22
+    },
+    {
+      "path": "stalthos-runtime/tests/thistletail.cpp",
+      "sha256": "66f8d5f2058257d9fcd1a9cef95eb54211914e5b80b116aeb90beb883672a8e1",
+      "canonical_lf_sha256": "4ea3929212e484ca17aa2cc1b272a1db4ed77704ca49e356d5ca4d1a120f8cf5",
+      "git_blob": "cdb1524f02718465c32d3f329aab2c127326cd1b",
+      "crlf": 22
+    }
+  ],
+  "line_ending_equivalence": [
+    {
+      "path": "stalthos-runtime/domain/longstride.hpp",
+      "integrated_raw_sha256": "4ed65a0770216777b6962bc718e0b3bc8e0a5d5803e27d18d7dc5015e90fda0b",
+      "reviewed_raw_sha256": "25e02cf19b0f08a385eb88ad895eb80ddc0c166bc20ae52a94e6b2ff903d9726",
+      "canonical_lf_and_git_blob_equal": true
+    }
+  ],
+  "verification": "verification.json",
+  "common_verification": "common-verification.json",
+  "native_runs": "native-runs.json",
+  "executable_sha256": "ef58c61719313841e46f0b045631019149da45d65c49b1e077d2474a5e2e928b",
+  "visual_inspection": [
+    "var/reports/runtime/20261023-055853-fbb83bca/carrion-1.png",
+    "var/reports/runtime/20261023-055853-fbb83bca/carrion-3.png"
+  ],
+  "limitations": [
+    "Authored finite food cohort using historical Shrub/genericfood ledger enum; not a killed NPC",
+    "No NPC carrionfeeding/speciesdiet, hunting, attacks or dependentyoung care",
+    "Procedural fixed-stage theropod/simple gait; no anatomical bite/foot/growth/finalart acceptance",
+    "Nativefixtures inject hunger/start/terminalstate/N/noon; no natural hunger/death pacing claim",
+    "Allfive startup lives have bounded roles, fullspecieslifecycles/reproduction/parenting remain gaps",
+    "Four islands/crossings and connected persistence still missing; no target30FPS acceptance"
+  ],
+  "next_task": "next-task.md",
+  "next_task_state": ".clanker/tasks/smalltrotter-courtship-20261023/task-state.json",
+  "graph": {
+    "base_digest": "2ea32970c451471f",
+    "current_digest": "3103e6a6aff659d4",
+    "nodes_added": 1489,
+    "nodes_removed": 75,
+    "edges_added": 2842,
+    "edges_removed": 1116,
+    "scope": "Project-wideexistingbaseline delta; refresh retains knownzero-node/stale-labelwarnings. Independent12source review and65CTest supplementgraph."
+  },
+  "secret_scan": "secret-scan.json"
+}

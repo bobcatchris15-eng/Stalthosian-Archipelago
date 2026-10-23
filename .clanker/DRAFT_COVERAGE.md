@@ -28,6 +28,7 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Thistletail selectable life/microforage | Working bounded native draft: species lifecycle/needs, separate feathered biped, finite body-local food, controls/rest/drink/destination/N | Fixed stage/generic gait; single patch/no insects; breeding/parenting missing |
 | Brackenback selectable life/protection approach | Working bounded native draft: actual selected components, separate armored quadruped/adult-only club, controls/rest/drink/destination/N and2.52m local interposition approach/direct/camera boundaries | Injected existing actor encounter; no demonstrated brace/deterrence or NPC defense; fixed body/gait; breeding/parenting missing |
 | Reedcrest selectable life/reciprocal peer pair | Working bounded native draft: fourth selected life, distinct body, actual NPC/hero lead-follow, needs/direct priority,23.46m same-ID separation/return, controls/water/rest/destination/N | One quiet-proximity sessionpair/no kindergarten or2-4cohort; steep-route yaw-only posing; generic NPC art; family/persistence missing |
+| Longstride selectable life/finite scavenging | Working bounded native draft: fifthselectedlife/distincttheropod, foodonlyauthored211, .5+.5depletion/exactrelief, retainedemptyfood acrossN, control/camera/water/rest/destination | NoNPCdiet/scavenging oractualkill/hunting/caregiver/dependentyoung; fixedbody/gait; fullspecieslife stillmissing |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -89,3 +90,5 @@ Latest accepted: thistletail-playable-20261022/integration-receipt.json. Two pla
 Latest accepted: brackenback-playable-20261023/integration-receipt.json;63CTest/eleven final-executable native runs. Three selectable species. NEXT Reedcrest and bounded reciprocal peer behavior; full families/four islands/connected saves remain gaps.
 
 Latest accepted: reedcrest-playable-20261023/integration-receipt.json;64CTest/14final-executable native runs, four selectable species. Steep-route yaw-only pose exceptions explicitly recorded, not all-supported acceptance. NEXT Longstride life and finite carrion; full families/four islands/connected saves remain gaps.
+
+Latestaccepted: longstride-playable-20261023/integration-receipt.json;65CTest/13same-executable native runs, allfive startupchoices withboundedroles. Fullspecieslife/reproduction/parenting/fourislands/connectedsaves remain gaps. NEXT actualSmalltrottercourtship/materesponse (isolatedworkactive).

@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "ctest": "65/65 pass",
+  "same_executable_native_runs": 13,
+  "canonical_lf_and_git_blob_match_independent_review": true,
+  "line_ending_only_raw_differences": [
+    {
+      "path": "stalthos-runtime/domain/longstride.hpp",
+      "integrated_raw_sha256": "4ed65a0770216777b6962bc718e0b3bc8e0a5d5803e27d18d7dc5015e90fda0b",
+      "reviewed_raw_sha256": "25e02cf19b0f08a385eb88ad895eb80ddc0c166bc20ae52a94e6b2ff903d9726",
+      "canonical_lf_and_git_blob_equal": true
+    }
+  ],
+  "actual_feed_contacts": [
+    {
+      "amount": 0.5,
+      "body_x": 22.908977508544922,
+      "body_z": 30.0,
+      "elapsed": 3.4804223,
+      "eligible": true,
+      "foliage_fraction": 0.5,
+      "hunger_after": 0.3002235508709322,
+      "hunger_before": 0.8002235508709322,
+      "resource": 211,
+      "session": 13
+    },
+    {
+      "amount": 0.5,
+      "body_x": 22.908977508544922,
+      "body_z": 30.0,
+      "elapsed": 11.0663686,
+      "eligible": true,
+      "foliage_fraction": 0.0,
+      "hunger_after": 0.300000404299982,
+      "hunger_before": 0.800000404299982,
+      "resource": 211,
+      "session": 14
+    }
+  ],
+  "camera_body_separation_m": 31.76653313984446,
+  "depleted_food_retained_across_native_N": true,
+  "successor": 2,
+  "fresh_session": 15,
+  "limits": [
+    "Authored finite food cohort using historical Shrub/genericfood ledger enum; not a killed NPC",
+    "No NPC carrionfeeding/speciesdiet, hunting, attacks or dependentyoung care",
+    "Procedural fixed-stage theropod/simple gait; no anatomical bite/foot/growth/finalart acceptance",
+    "Nativefixtures inject hunger/start/terminalstate/N/noon; no natural hunger/death pacing claim",
+    "Allfive startup lives have bounded roles, fullspecieslifecycles/reproduction/parenting remain gaps",
+    "Four islands/crossings and connected persistence still missing; no target30FPS acceptance"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "smalltrotter-courtship-20261023",
+  "status": "running",
+  "base_revision": "2997987",
+  "current_step": "Isolated actual Smalltrotter courtship/mate response while root validates settled Longstride",
+  "completed_steps": [
+    "Collected settled fifthspecies implementation and independentreview before pipelining missingbreeding work",
+    "Bounded source/review ownership; source11:06/nativewake11:19 deadline"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T10:55:59.210911+00:00",
+  "resume_instructions": "Collect nesting_draft/gameplay_review beforedispatch; rootmust finishLongstride native packet/checkpoint before courtship integration/nativebuild. No courtshipnativeclaimyet. Preserveoldsource/workerstate."
+}

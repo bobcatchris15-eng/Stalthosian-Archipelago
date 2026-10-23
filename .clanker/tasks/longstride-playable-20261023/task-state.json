@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "longstride-playable-20261023",
+  "status": "complete",
+  "base_revision": "596445a",
+  "current_step": "Fifth selectable life/carrion accepted; nextmissing courtshipdispatched",
+  "completed_steps": [
+    "Collected interrupted workers; partialowned source preserved in isolated nesting-draft tree",
+    "Renewed existing bounded implementation/review after usage reset; no paidfallback",
+    "Settledfifthsource/review integrated; normalfoodonlycarrion/noformat changes",
+    "65CTest/13native final-executable runs; exacttwofeeding/depletion/retainedN verified",
+    "CanonicalLF/blob12source matchreview, visualsideinspection,230olduntrackedpaths/pins preserved"
+  ],
+  "touched_artifacts": [
+    "PLAY.md",
+    "Play.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/longstride.md",
+    "stalthos-runtime/domain/longstride.hpp",
+    "stalthos-runtime/domain/thistletail.hpp",
+    "stalthos-runtime/engine/longstride_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/longstride.cpp",
+    "stalthos-runtime/tests/thistletail.cpp"
+  ],
+  "updated": "2026-10-23T11:02:26.381295+00:00",
+  "resume_instructions": "Accepted fifth boundedlife. Collectactive courtshipworkers/taskstate beforedispatch. Fullspeciesfamily/island/persistence gapsremain; no food/art polish.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/longstride-playable-20261023/verify.py"
+  },
+  "receipt_path": ".clanker/tasks/longstride-playable-20261023/integration-receipt.json"
+}

@@ -1,39 +1,40 @@
-# Accepted selectable Reedcrest and reciprocal pair - 2026-10-23
+# Active Smalltrotter courtship construction - 2026-10-23
 
-Receipt: .clanker/tasks/reedcrest-playable-20261023/integration-receipt.json.
-Normal Play offers4actual choices: Smalltrotter/default, Thistletail, Brackenback,
-Reedcrest. Fourth real lifecycle/needs, separate beaked hadrosauroid body, supported
-root projection/proposed1.6m/sforward1.2reverse, normal controls/rest/drink/destination
-and same-speciesN work.64/64CTest pass. Independent14source/registry boundary and
-directed-edge probes pass; integrated header CRLF is byte-equivalent to reviewedLF.
-Final executable20f7b62 has14same-executable native runs and0rendered-ground sampling
-fallbacks. Ten runs have0body support-plane failures; four exceptions below.
+Task: .clanker/tasks/smalltrotter-courtship-20261023/task-state.json. SettledLongstride
+source/review collected; rootnativepacket/checkpoint accepted below. Isolated
+nesting_draft and gameplay_review now own new missing courtship/mate-response work.
+Rootowns integration/nativeGPU/state. No courtshipnativeacceptance yet. Source
+hardtarget11:06UTC/wake11:19UTC. Collectworkers beforedispatch; preservepartialwork.
 
-One actual existing conspecific learns through local calm encounter. Native partner
-leads: hero9.4777m displacement/NPC6.5715m travel. Native hero leads: actual NPC
-reverses3.343m toward departing hero, then2.312m back with returning hero. Single
-registrytick, real edge reversal/wait and own-needs contact; IDs/bindings/history
-preserved. Full58.69s native departure/return reaches23.457m separation, retains
-samepeer1618853389043787304 throughout, returns6.745m/presenttrue. No teleport/newNPC.
-Camera30.614m from stationarybody learns no link. Hero thirst interrupts follow and
-accepted creek100 drink consumes0.5/relieves0.5. N gives hero2/session14 and retains
-NPC snapshots/ledger. All prior normal choices and original8 baseline retain exact
-initial actors/resources.212prior untracked paths and pinned asset hashes preserved.
-Composed peer-following capture inspected; NPC art remains generic stand-in.
+# Accepted fifth Longstride life/finite scavenging - 2026-10-23
 
-Explicit pose limits: inherited20degree five-point alignment falls back to yaw-only
-on leading758frames, camera3713, urgentneed503, separation2298; no all-supported or
-foot/growth/anatomy acceptance. Ground sampling has0fallbacks throughout. Camera
-proof is knowledge-only on a stationary steep hillside. Primaryfollow, normal,
-rest/drink/destination/N and oldspecies runs have0pose failures. No terrain/controller
-polish detour. Cohort is one sessionpair from quiet proximity, not kindergarten or
-2-4companions. Partner urgent contact/dormant onceclock have registry/domain proof;
-native need run instead proves HERO override/contact. Clearing an already-linked
-old hero onN is source/domain proof; nativeN proves species/world retention.
+Receipt: .clanker/tasks/longstride-playable-20261023/integration-receipt.json.
+Allfive actual normalstartup choices now exist: Smalltrotter/default, Thistletail,
+Brackenback, Reedcrest, Longstride. Fifth real lifecycle/needs, distinct procedural
+theropod body/+Zdatum0, proposed2.2forward1.4reverse, normalcontrols/water/rest/
+destination and selectednextlife.65/65CTest, independent12source canonicalLF/blob
+review and real registry/contact/replay/remainder probes pass. One header differs
+onlyCRLF in root; normalizedbytes/blob exact. Settled executableef58c617 has13native
+runs includingallfive normalchoices/original8 and threequarterinspection.
+All0support-planefailures/0rendered-groundfallbacks for this packet.
 
-NEXT missing breadth: Longstride selectable carnivore life and one finite body-local
-carrion/scavenging affordance. Read tasks/reedcrest-playable-20261023/next-task.md.
-All-five-species full experience, complete life/reproduction/parenting, four-island
-physical crossings and connected persistence remain gaps. Original saved mode and
-connected-save refusal retained; no fresh original native save roundtrip this pass.
-No full-game/final-art/target-hardware30FPS acceptance; park passing systems' polish.
+Longstride foodselection excludes plants; authored finite carrion211 uses existing
+Shrub/genericfood ledger alias withoutschema change. Nativeactual .5+.5 contacts
+sessions13/14 give exact .5hungerrelief each, emptyfood/flesh0/bonesremain. Labelled
+death17/N18 giveshero2/session15 and retains depleted211, allNPCsnapshots/ledger.
+32m camerastart/max31.767m measured separation grantsnofoodawareness/contact/body
+movement. Override resumes one .5contact. Composed sideinspection confirms distinct
+biped/reducedarms/longtail and beforeflesh/afterbones.230prioruntrackedpaths andpins
+hash-verified preserved. Originalsave authority/connectedrefusal preserved; nofresh
+original native save roundtrip claim thispass. AlloldNPCages/bindings/history valid.
+
+Limits: authoredcohort isnotactualdeadNPC; noNPCcarnivorediet/feeding,hunting,attack,
+wildcaregiver/dependentyoung. Fixed-stage replaceablebody/simplegait, noanatomical
+bite/foot/growth/finalart acceptance. Hunger/death/N/time fixtures labelled, not
+natural-life pacing proof. Allfive startupchoices doNOT establishfullspecieslives;
+complete reproduction/parenting, allfour islands/crossings andconnectedpersistence
+remain realgaps. No full-game/targethardware30FPS acceptance. Park passingfood/art.
+
+NEXT missingfunction is ordinarySmalltrotter courtship/actualmateNPCresponse tiedto
+clutch admission; root next-task.md now dispatched in isolation. No mate-less normal
+bypass, no imaginarypartner/teleport/cameraknowledge; preserveactualchild/N/history.
