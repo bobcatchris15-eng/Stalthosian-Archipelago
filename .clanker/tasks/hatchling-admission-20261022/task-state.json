@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "hatchling-admission-20261022",
+  "status": "complete",
+  "base_revision": "5968a6c2e3fadf9041d29a5d8201672fd47c8467",
+  "current_step": "Native one-child hatch working draft accepted; next contrasting playable Thistletail",
+  "completed_steps": [
+    "HALT absent; current receipt and next task read",
+    "Existing workers complete; clean nesting and carnivore managed worktrees reused; old commits preserved on branches",
+    "Bounded implementation and independent review dispatched with two protocol slots",
+    "Transactional birth source6ff9968 integrated as59c72d5",
+    "Independent adversarial boundary review83b8aa5 integrated asb2d7f31; no blocking source findings",
+    "Five focused worker CTest pass; root native Release building only after settled integration",
+    "Four final native runsb43988e: real child2/session13, successor3/session14, once-only ages and ledger preserved",
+    "61CTest, exact-source independent boundary review, composed hatch/nextlife captures passed",
+    "175 prior untracked files and all pinned assets preserved; original12/8 baselines exact"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/nesting.md",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/hatchling_path.hpp",
+    "stalthos-runtime/domain/nesting.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/engine/fauna_scene.hpp",
+    "stalthos-runtime/engine/hatchling_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/hatchling_admission.cpp",
+    "Play.ps1",
+    "PLAY.md"
+  ],
+  "updated": "2026-10-23T02:01:18.231804+00:00",
+  "next_step": "Contrasting selectable Thistletail with grounded biped body and finite microforage",
+  "resume_instructions": "Read next-task.md. Newborn role accepted with exact limitations; do not polish hatch geometry/crowding. No active workers. Implementation/review worktrees retained.",
+  "validation": {
+    "passed": true,
+    "command": "Release61CTest; verify.py four native runs; exact-source independent review and composed captures",
+    "evidence_path": ".clanker/tasks/hatchling-admission-20261022/integration-receipt.json"
+  },
+  "receipt_path": ".clanker/tasks/hatchling-admission-20261022/integration-receipt.json"
+}

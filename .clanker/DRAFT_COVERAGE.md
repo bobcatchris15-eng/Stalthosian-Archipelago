@@ -24,7 +24,7 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Bounded peer companionship | Working draft:existing conspecific real peer link, graph approach/wait, separation/reunion, needs priority and camera-only boundary | Session-only/one peer, endpoint waits/overshoot/no occlusion/proxy social poses; family/lifecycle still missing |
 | Observable hero life-stage progression | Working draft:actual juvenile-to-adult calendar threshold, milestone and tunable horizontal bulk, native before/after bounds/captures, continued controls and once-only needs | Shared anatomy/abrupt bulk, other-stage forms/gait/contact and full life-history not accepted |
 | Body-local carnivore awareness and alarm recall | Working draft: actual retained adult Longstride body cue, smooth once-per-encounter recall, camera cancellation/separation and camera-only native proof | Conservative proximity only, no attack/hunting/occlusion; synthetic proxy diagnostics |
-| Smalltrotter nesting and incubation | Partial reproduction draft: adult B dry clear supported clutch, visible3eggs, shared-calendar incubation, responsive movement | Actual hatchling admission NEXT; mating/parenting/full reproduction/connected saves missing; new-life retention source/domain only |
+| Smalltrotter nesting/incubation/one actual young | Working bounded native draft: supported adult clutch, one real unique child/session, ordinary needs/age/local motion, retained across actual nextlife | Two inactive eggs; coarse near-nest crowding/fixed procedural body; mating/other-species care and connected saves missing; regional retention domain only |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -78,3 +78,5 @@ Latest accepted: npc-peer-20261020. One session-only NPC peer link/graph approac
 Latest accepted: exterior-shore-20261020. Authored cove/74m proxy descent/local4m animated entry, native body-ground and bounded actual moving-camera boundary. Flat/finite water/coarse cliffs/global shoreline/native long crossing/contact limits parked. NEXT body-local carnivore potential-danger cue and interruptible camera recall; no shore/asset polish.
 
 Latest accepted: continuation-20261022/integration-receipt.json. Play entry, body-local potential-danger/interruptible recall and partial nest/incubation. NEXT actual independent hatchling admission; no polish detour.
+
+Latest accepted: hatchling-admission-20261022/integration-receipt.json. Real child/ownership/needs/localmotion/nextlife,61CTest and four native runs. NEXT selectable contrasting Thistletail with finite ground microforage; no hatch polish.

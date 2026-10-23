@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "task_id": "hatchling-admission-20261022",
+  "status": "bounded-native-hatch-working-draft-accepted",
+  "updated": "2026-10-23T02:01:18.231804+00:00",
+  "source_revision": "e8d778db8a4d5cf2bc09488f191b0ffdcbbebc63",
+  "source_sha256": {
+    "stalthos-runtime/CMakeLists.txt": "9eb04465a3f47efef624ab68e487f34105bde66b7efc4c4b73f4e9484264e78c",
+    "stalthos-runtime/docs/nesting.md": "1e7d95631f563342aa9c0d66fbf3f241618b24b8b2c38f1ce8f2d86929e597b3",
+    "stalthos-runtime/domain/fauna_population.hpp": "e781eff8e82cbbbf959c6cb1c700d4fb0da2850d8e943c253f42100cd1530a32",
+    "stalthos-runtime/domain/hatchling_path.hpp": "8d3d6bf25077ceaf6f36d5274b01f3d21735f8fc99fe91759f2cd61417bca6ea",
+    "stalthos-runtime/domain/nesting.hpp": "7572515ebc5915935b3167410def8166f400669a82048ba3b6b45d901b8106ca",
+    "stalthos-runtime/domain/regional_population.hpp": "144c7754cd794229fc8f4113185652261d7af10e8caccc4c7fef47b0b6ebe4f2",
+    "stalthos-runtime/engine/fauna_scene.hpp": "4af8325f058feb58c1f9bece6b1233d0b6864af4f12832037dda40e6db76b283",
+    "stalthos-runtime/engine/hatchling_scene.hpp": "6ab555f0905cd39b97592a5f219285105ef03d1b4ffab308f12132dbc0c9d15c",
+    "stalthos-runtime/engine/main.cpp": "13433e17c4c6fb474b6949cae5332d461af6ff2ea1c8c0d846d33685149add6e",
+    "stalthos-runtime/engine/native_population_registry.hpp": "44f6eca046f51032daaab89076c12c8a6b18aea1b8426ad86b12f580b075a357",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "adf2f12eb14647eb91c7adb413546af6fa9804efed6fd654c8a7bca9568a9a12",
+    "stalthos-runtime/scripts/Run.ps1": "f50e7f46a49af7f6904261ea29347a6085e46be51ce82cce2f574f80fb1cb7ca",
+    "stalthos-runtime/tests/hatchling_admission.cpp": "f8f2924e21d37f3281bf23449fa3d8147554865dac9a94f47348e22cf7a94f1d",
+    "Play.ps1": "39cb22b9aa8016d3e8e082744ffbce300eb68a3597659bba6cad5e53e6f52bb4",
+    "PLAY.md": "29574dd5673c29d459283849bf8a8b6bcc234cb36e757ba98e90768be43401d3"
+  },
+  "executable_sha256": "b43988e8d5c709f8cd7949fbe430e8c3649632002a84051a9085149638e59796",
+  "validation": {
+    "Release": "passed after all implementation source settled",
+    "CTest": "61/61 passed3.66s",
+    "native": "four same-executable runs; verify.py passed",
+    "independent_review": ".clanker/clunkers/hatchling-review-20261022/review.json and final-source-confirmation.json; MSVC adversarial boundaries passed",
+    "visual": "composed pre/post-birth, short parent movement and post-nextlife captures inspected",
+    "preservation": "175 previously untracked files plus pinned assets; original12/8 initial actor/resource baselines exact",
+    "toolkit": "unchanged; no repeated full suite"
+  },
+  "metrics": {
+    "hatch": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-204501-b6342332",
+      "physical_seconds": 36.47008060695953,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "actors": 13,
+      "sessions": 13,
+      "child": 2,
+      "child_session": 13,
+      "birth_physical_seconds": 11.002586100337794,
+      "child_age": 2546.7494506621733,
+      "child_cumulative_distance_m": 6.135181077979233,
+      "sampled_child_position_span_m": 0.4532337188355455,
+      "max_child_ground_error_m": 8.881784197001252e-16,
+      "captures": 5,
+      "successor": 3,
+      "parent_local_departure_m": 0.7761955261230469,
+      "retained_through_next_life": true
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-204543-4b1fb6e7",
+      "physical_seconds": 28.757661824231036,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "actors": 13,
+      "sessions": 13,
+      "child": 2,
+      "child_session": 13,
+      "birth_physical_seconds": 11.005914311972447,
+      "child_age": 1775.174751225859,
+      "child_cumulative_distance_m": 0.9196543672680515,
+      "sampled_child_position_span_m": 0.4473265866219322,
+      "max_child_ground_error_m": 8.881784197001252e-16,
+      "captures": 5,
+      "camera_span_m": 33.73809912131263,
+      "scope": "After-birth retained-young observation; normal body autonomy remains active. Inactive birth refusal is source/domain evidence."
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-204617-9ca94244",
+      "physical_seconds": 6.6999759088794235,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "actors": 12,
+      "sessions": 12
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-204627-acdf4883",
+      "physical_seconds": 6.529443012404954,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "actors": 8,
+      "sessions": 8
+    },
+    "executable_sha256": "b43988e8d5c709f8cd7949fbe430e8c3649632002a84051a9085149638e59796",
+    "preserved_untracked_files": 175,
+    "limits": "Synthetic adult/time/input/death fixtures; local parent movement only, not regional traversal. Camera moves after birth and body autonomy may act; no zero-attention claim. Inactive admission, full-capacity and dormant retention have independent source/domain proof. No hatchling resource-contact, final anatomy/gait/growth art, mating, connected-save, full-game or FPS acceptance."
+  },
+  "accepted_scope": "one real nest-local independent Smalltrotter, fresh ID/session and unchanged prior population/ledger, local grounded motion/needs/age, one-shot closure and next-life retention, retained-young moving-camera observation",
+  "limits": [
+    "one of3eggs hatches; two remain inactive/unmodelled",
+    "simple replaceable newborn anatomy/limb motion; fixed size despite age, inherited peer/avoidance can cause short near-nest back-and-forth motion",
+    "parent native departure/return0.776m local only; child6.135m cumulative with0.453m sampled position span, not6m exploration",
+    "inactive/camera-origin refusal and dormant retention source/domain only; camera native body autonomy remains active, not zeroattention",
+    "no newborn resource contact observed, mating/courtship/other-species care, connected-save, full-game or30FPS acceptance"
+  ],
+  "next_task": "next-task.md: contrasting playable Thistletail and finite ground microforage"
+}

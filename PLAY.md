@@ -29,8 +29,10 @@ remain provisional. The calendar starts at midnight, so the initial scene is dar
 **Connected sessions currently start fresh and do not support saving or loading.**
 
 An adult can place one visible nest with three eggs; incubation follows the world
-calendar. This is a partial reproduction draft: eggs do not hatch into new animals
-yet. Nearby adult Longstride bodies can cause a potential-danger cue and recall a
+calendar. One egg can produce a real independent Smalltrotter with its own needs,
+age and movement. One egg becomes a shell; the other two currently remain inactive.
+This is a bounded reproduction draft: mating and other species' parental care
+remain unfinished. Nearby adult Longstride bodies can cause a potential-danger cue and recall a
 detached camera. Intentional camera input cancels recall; proximity alone does not
 mean the Longstride intends to attack.
 
