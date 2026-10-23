@@ -1,0 +1,18 @@
+{
+  "native": [
+    {
+      "path": "var/reports/runtime/20261023-060732-3f0f8fe9",
+      "scope": "Actualsuccess onpre-camerafixture-fix executable; retainhistorical, finalmatrixwillrerun"
+    },
+    {
+      "path": "var/reports/runtime/20261023-060814-007e6064",
+      "scope": "Startupfailure no supportedclearfar nestsite; excludedfromacceptance"
+    }
+  ],
+  "builds": [
+    {
+      "revision": "bb7e719",
+      "reason": "Compilefailed ActorSnapshot.alive; fixedstagepredicatebefore native"
+    }
+  ]
+}

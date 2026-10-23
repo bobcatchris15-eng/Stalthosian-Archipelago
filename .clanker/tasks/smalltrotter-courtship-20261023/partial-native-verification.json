@@ -1,0 +1,119 @@
+{
+  "status": "partial_not_accepted_for_publication",
+  "tests": "66/66",
+  "native": {
+    "courtship": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061745-b03689cd",
+      "clutch_mate": 3572998927451126612,
+      "offspring_admitted": 0,
+      "events": [
+        {
+          "calendar_seconds": 8.524839101097314,
+          "clear": true,
+          "dry": true,
+          "input": "actual B courtship and physical mate response",
+          "mate": 3572998927451126612,
+          "physical_seconds": 8.524839101097314,
+          "placed": true,
+          "relief": 0.012014317512512251,
+          "supported": true,
+          "x": 10.050000107683225,
+          "y": 1.933617543059751,
+          "z": -8.1
+        }
+      ],
+      "courtship_events": [
+        {
+          "event": "courtship_request",
+          "invited": true,
+          "mate": 3572998927451126612,
+          "physical_seconds": 2.0014732028066646,
+          "reason": "Courtship invitation - mate approaching; stay quiet, WASD cancels"
+        }
+      ],
+      "hatch_events": []
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061803-135ed788",
+      "clutch_mate": 0,
+      "offspring_admitted": 0,
+      "events": [],
+      "courtship_events": [
+        {
+          "all_eligible_mates_beyond_meters": 12,
+          "event": "synthetic_camera_body_startup_pose",
+          "x": 24.0,
+          "yaw": 0.0,
+          "z": 24.0
+        },
+        {
+          "event": "courtship_request",
+          "invited": false,
+          "mate": 0,
+          "physical_seconds": 2.0023239018482855,
+          "reason": "Choose gently sloping supported ground"
+        }
+      ],
+      "hatch_events": []
+    },
+    "hatch": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061817-14395d00",
+      "clutch_mate": 3572998927451126612,
+      "offspring_admitted": 1,
+      "events": [
+        {
+          "calendar_seconds": 852.9235905865789,
+          "clear": true,
+          "dry": true,
+          "input": "actual B courtship and physical mate response",
+          "mate": 3572998927451126612,
+          "physical_seconds": 8.52923590586579,
+          "placed": true,
+          "relief": 0.012014317512512251,
+          "supported": true,
+          "x": 10.050000107683225,
+          "y": 1.933617543059751,
+          "z": -8.1
+        }
+      ],
+      "courtship_events": [
+        {
+          "event": "courtship_request",
+          "invited": true,
+          "mate": 3572998927451126612,
+          "physical_seconds": 2.00242650033033,
+          "reason": "Courtship invitation - mate approaching; stay quiet, WASD cancels"
+        }
+      ],
+      "hatch_events": [
+        {
+          "birth_calendar": 1752.9800204225467,
+          "child": 2,
+          "event": "admission_attempt",
+          "ledger_unchanged": true,
+          "old_actors_unchanged": true,
+          "old_session_count": 12,
+          "path_points": 5,
+          "physical_seconds": 17.529800204225467,
+          "position": [
+            10.050000107683225,
+            1.933617543059751,
+            -8.1
+          ],
+          "result": 0,
+          "session": 13,
+          "session_count": 13
+        },
+        {
+          "child": 2,
+          "event": "synthetic_parent_death_fixture",
+          "physical_seconds": 24.002203303054557
+        }
+      ]
+    }
+  },
+  "preserved_paths": 230,
+  "reviewed_source_canonical_hashes_match": true,
+  "composed_visual": "courtship nest-2.png inspected; actual mate and clutch with readable acceptance cue",
+  "remaining": "Final executable override/refusal and five normal/original regression packet, full verify.py, final receipt/publication"
+}

@@ -1,3 +1,7 @@
+# Courtship source reviewed; final native matrix incomplete - 2026-10-23
+
+Read .clanker/tasks/smalltrotter-courtship-20261023/partial-native-verification.json and task-state.json first. Longstride fifth species published at40eddd9. Courtship source local HEADfa941f2, 66tests and three final native probes only; NOT publication accepted. Finish remaining final-executable packet before source changes or dispatch. Preserve all state. Next missing gameplay after acceptance: connected persistence per task next-task.md.
+
 # Active Smalltrotter courtship construction - 2026-10-23
 
 Task: .clanker/tasks/smalltrotter-courtship-20261023/task-state.json. SettledLongstride
