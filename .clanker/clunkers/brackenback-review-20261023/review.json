@@ -1,0 +1,98 @@
+{
+  "scope": {
+    "artifacts": [
+      "PLAY.md",
+      "Play.ps1",
+      "stalthos-runtime/CMakeLists.txt",
+      "stalthos-runtime/docs/brackenback.md",
+      "stalthos-runtime/domain/brackenback.hpp",
+      "stalthos-runtime/domain/thistletail.hpp",
+      "stalthos-runtime/engine/brackenback_scene.hpp",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "stalthos-runtime/scripts/Run.ps1",
+      "stalthos-runtime/tests/brackenback.cpp"
+    ],
+    "graph_digest": "not computed; bounded direct decision and host ownership review",
+    "base_digest": "adacbe2"
+  },
+  "implementation_revision": "4112c1b",
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "fccdc500072f9d38b0cde350268acfa5767bf0e82b9775d65ea821570e4b8e79",
+      "git_blob": "f302a5e3d6d8e084944f905f450e557ff8a57d17"
+    },
+    {
+      "path": "Play.ps1",
+      "sha256": "62f76642d848790dfa4627c32479a8f08ddc8123dc763c60739aa73bfe5edff9",
+      "git_blob": "a3a8a014a5eec709e35a9df41996c6cb02d529c4"
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "d13f0cd4d52d3bfe326b283a07e6b2ecf23c8cb7f4991ad7b395bdf30425a21b",
+      "git_blob": "32ad75361224add1b6aa200af13fcb39e5e7375e"
+    },
+    {
+      "path": "stalthos-runtime/docs/brackenback.md",
+      "sha256": "e60c01803ac7ba913e2b5cad13890ce822315dd1dba5c75d1b1786aa8175c397",
+      "git_blob": "55712a58cba34dc34cd0235b79ba03887ceacfa7"
+    },
+    {
+      "path": "stalthos-runtime/domain/brackenback.hpp",
+      "sha256": "d3b02f89eb3381618cabfd5578d3bc544b7151156501f8b2370ba6ee821cdbbe",
+      "git_blob": "cb93dba6672bea396a89945236a4176229345e63"
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "592e819a42b693bad1481d4c5bd27b2c5c6354aad721b7f902c56d5a76d78612",
+      "git_blob": "2efcdf37fd90121b1e7b978a741278928450acf8"
+    },
+    {
+      "path": "stalthos-runtime/engine/brackenback_scene.hpp",
+      "sha256": "435f73aa4af2793841c0d56ed4023700e1f92a2a76ece88d5194e9e83338494a",
+      "git_blob": "f934254be4d958970b2a5715913090ff78d04cf7"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "9fed1aa82d40007e1a8f48a2b6e50683532d75e9b8c5e952623aaec7e394df15",
+      "git_blob": "9998c0c93cc2d90333abd2dc7c0de5a1eb0bb7bc"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "c507091bf3ebaa0732117cbf31d0fffe9dbffa5358409c35a6e3f52fb29dc6c2",
+      "git_blob": "d94ff36cde139dca69b56f156860d41932bd93fb"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "4fd11a31f7c49dc6203699d537cc2ec65f983517d756c8eef2c60174ea4328c4",
+      "git_blob": "0203dc7342ce6e5be64486fb195e3ff9241c78f1"
+    },
+    {
+      "path": "stalthos-runtime/tests/brackenback.cpp",
+      "sha256": "42280d7ce16098a683022e8335881a8173c816ad6c8e42e560ce88695813e50a",
+      "git_blob": "30b14264b7704f60291d27cccc6e54728bf3a8a7"
+    }
+  ],
+  "goal_alignment": {
+    "verdict": "advances_partially",
+    "drift": []
+  },
+  "findings": [],
+  "unproven_claims": [
+    "No native build/execution/visual/performance acceptance was independently performed.",
+    "NPC defensive motion is explicitly not integrated. Helper reuse does not prove NPC behavior."
+  ],
+  "validation_debt": [
+    "Root native must prove actual supported armored quadruped motion and readable interposition/flank brace, direct override, camera-only refusal, same-species N, ordinary food/water/rest/destination and preserved default/original modes.",
+    "Critical hunger/thirst >=.85 plus projected label is a declared condition-distress approximation; it does not prove frantic fleeing, injury reaction or predator attack intent.",
+    "Existing NPC age fixture does not rescale imported replicas by life stage; native visual smallness of the protected actor remains unproven."
+  ],
+  "asks": [],
+  "effort": {
+    "attempted": "Independently MSVC17 compiled/reran boundary-probe.cpp against final helper exact SHA256. Probes local actual living adult Brackenback, distinct actual critical-condition adult Thistletail or immature Smalltrotter, real adult Longstride3..6m away, safe1m interpose, absent/calm/dead/self/remote/vertical/juvenile threat/unsafe too-close refusal. Checks third actual selection, Brackenback lifecycle threshold/NeedsCore, same HeroDestination forward intention and immediate direct cancellation/player contextual route, ordinary successor selected component. Source-reviewed connected-only selection/original save refusal, unchanged implicit original load authority/defaultSmall, same-species N clears transient state, separate procedural grounddatum0/+Z root independent NPCGLB, supportedDestination and sole intention controller. Direct/playerclick/urgentneeds/stimulus loss cancel only owned defense, player contextual route prevents takeover; arrival brace established before exploration and guarded against direct/destination/needs. No world actors, ledger, resources, IDs, sessions or persistence schema changed by response. New samples/events bounded4096/256. Projected camera used only after body-local observation for display. Fixture changes existing ages/needs only explicitly labelled; no position/newactor admission.",
+    "probes_run": 1
+  },
+  "probe_output": "BRACKEN_REVIEW_OK local_condition_distress_distinct_live_adult_threat_safe_interpose_remote_no_threat_calm_dead_vertical_juvenile_refusals",
+  "preservation": "Prior untracked thistletail header preserved byte-exact at ignored var/review-brackenback-preserved with hash receipt, prior reviewcommit54b7bf3 preserved on codex/preserved-thistletail-review-20261023. Review tree advanced cleanly detachedadacbe2 without reset/cleanup. Candidate copied headers uncommitted; integrate only this review directory."
+}
