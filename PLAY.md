@@ -146,3 +146,6 @@ policy is unchanged. Authored carrion is not a killed retained NPC and there is 
 hunting/provisioning claim. The manual persistent profile's configuration revision
 has changed; old partial files refuse without modification. Keep them and use a new
 save filename for this world revision rather than overwriting them.
+
+
+Connected terrain now extends into the shared four-island draft field at provisional scale0.1. WASD can wade/swim through actual marine water; swimming adds fatigue and prevents resting recovery. The location cue follows the body and reports sea without island arrival. No new island ecology or full region/save coverage is claimed; see stalthos-runtime/docs/native-islands.md.

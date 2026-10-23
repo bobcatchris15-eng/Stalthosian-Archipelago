@@ -6,8 +6,10 @@ namespace stalthos::engine {
 inline std::size_t exteriorShoreScene(wi::scene::Scene& scene,const world::ConnectedRoute& route) {
  const auto& layout=route.shore().layout();
  // One finite static zero-level water sheet. Actual terrain occludes its dry banks.
- using DirectX::XMFLOAT3;std::vector<XMFLOAT3> vertices{{float(layout.startX),float(layout.seaLevel),-400},{800,float(layout.seaLevel),-400},{float(layout.startX),float(layout.seaLevel),448},{800,float(layout.seaLevel),448}};
- std::vector<uint32_t> indices{0,1,2,1,3,2};
+ using DirectX::XMFLOAT3;std::vector<XMFLOAT3> vertices;std::vector<uint32_t> indices;
+ const auto sheet=[&](float left,float right,float back,float front){const auto start=uint32_t(vertices.size());vertices.insert(vertices.end(),{{left,0,back},{right,0,back},{left,0,front},{right,0,front}});indices.insert(indices.end(),{start,start+1,start+2,start+1,start+3,start+2});};
+ // Keep original reference watershed water untouched; sea covers all outer channels.
+ sheet(-1400,-96,-1400,1400);sheet(96,1400,-1400,1400);sheet(-96,96,-1400,-96);sheet(-96,96,96,1400);
  const auto water=scene.Entity_CreateMeshFromData("bounded exterior coastal cove water",indices.size(),indices.data(),vertices.size(),vertices.data());
  const auto* object=scene.objects.GetComponent(water);auto* mesh=scene.meshes.GetComponent(object->meshID);
  for(const auto& subset:mesh->subsets){auto* m=scene.materials.GetComponent(subset.materialID);m->shaderType=wi::scene::MaterialComponent::SHADERTYPE_WATER;m->SetBaseColor({.035f,.22f,.28f,.92f});m->SetRoughness(.17f);m->SetDoubleSided(true);}mesh->CreateRenderData();

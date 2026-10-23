@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$NpcCarrionProbe,[switch]$NpcCarrionCameraProbe,[switch]$ParentCareProbe,[switch]$ParentCareCameraProbe,[switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[switch]$ConnectedPersistenceCameraProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
+param([switch]$IslandCrossingProbe,[switch]$IslandCameraProbe,[switch]$NpcCarrionProbe,[switch]$NpcCarrionCameraProbe,[switch]$ParentCareProbe,[switch]$ParentCareCameraProbe,[switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[switch]$ConnectedPersistenceCameraProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
@@ -8,6 +8,7 @@ param([switch]$NpcCarrionProbe,[switch]$NpcCarrionCameraProbe,[switch]$ParentCar
 $ErrorActionPreference = 'Stop'
 if($ConnectedLoad -or $ConnectedSave -or $ConnectedPersistenceProbe -or $ConnectedPersistenceCameraProbe){$ConnectedPersistence=$true}
 if($ConnectedPersistence){$ConnectedWorld=$true;Write-Host 'PARTIAL PERSISTENCE PROFILE: manual WASD/E/R/N and camera/destinations; no social, courtship or automatic hero behavior. Release controls before F5. Reload by restarting with ConnectedLoad.'}
+if($IslandCrossingProbe -or $IslandCameraProbe){$ConnectedWorld=$true}
 if($NpcCarrionProbe -or $NpcCarrionCameraProbe){$ConnectedWorld=$true;$HeroSpecies='Longstride'}
 if($ParentCareProbe -or $ParentCareCameraProbe){$ConnectedWorld=$true;$HeroSpecies='Longstride'}
 if($CourtshipProbe -or $CourtshipOverrideProbe -or $CourtshipCameraProbe -or $CourtshipRefusalProbe){if(@($CourtshipProbe,$CourtshipOverrideProbe,$CourtshipCameraProbe,$CourtshipRefusalProbe).Where({$_}).Count -ne 1){throw 'Choose one courtship diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Smalltrotter'}
@@ -124,6 +125,8 @@ if(($ConnectedWorld -or $ConnectedRouteWalk) -and (-not $ConnectedLoad -or $PSBo
 if($ConnectedPersistence){$start.ArgumentList.Add('--connected-persistence')}
 if($ConnectedPersistenceProbe){$start.ArgumentList.Add('--connected-persistence-probe')}
 if($ConnectedPersistenceCameraProbe){$start.ArgumentList.Add('--connected-persistence-camera-probe')}
+if($IslandCrossingProbe){$start.ArgumentList.Add('--island-crossing-probe')}
+if($IslandCameraProbe){$start.ArgumentList.Add('--island-camera-probe')}
 if($NpcCarrionProbe){$start.ArgumentList.Add('--npc-carrion-probe')}
 if($NpcCarrionCameraProbe){$start.ArgumentList.Add('--npc-carrion-camera-probe')}
 if($ParentCareProbe){$start.ArgumentList.Add('--parent-care-probe')}

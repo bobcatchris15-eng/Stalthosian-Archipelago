@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include "domain/watershed_terrain.hpp"
 #include "domain/connected_route.hpp"
+#include "domain/native_archipelago.hpp"
 #include "organic_rocks.hpp"
 #include "meadow_scene.hpp"
 #include "terrain_surface.hpp"
@@ -20,13 +21,13 @@ class PopulatedTerrain {
     using Key=std::pair<std::int64_t,std::int64_t>;
     struct Patch { wi::ecs::Entity entity; domain::RenderedGroundSurface ground; std::vector<DirectX::XMFLOAT3> normals; };
     world::WatershedTerrain source_;
-    world::ConnectedRoute route_;
+    world::ConnectedRoute route_;world::NativeArchipelago islands_;
     bool connected_;
     domain::ReferenceLandscape reference_;
     std::size_t routeTufts_=0,routeRocks_=0;
     std::vector<wi::ecs::Entity> routeScenery_;
     bool dressed_=false;
-    world::TerrainVertex sample(double x,double z) const {return connected_?route_.sample(x,z):source_.sample(x,z);}
+    world::TerrainVertex sample(double x,double z) const {return connected_?islands_.sample(x,z):source_.sample(x,z);}
     void dressRoute(wi::scene::Scene& scene) {
         if(dressed_ || !connected_) return; dressed_=true;
         // A bounded composition belongs to this route, not camera activation.
@@ -70,7 +71,7 @@ class PopulatedTerrain {
     double seamHeight_=0,seamNormal_=0;
     Key previous_{INT64_MAX,INT64_MAX};
 public:
-    explicit PopulatedTerrain(std::uint64_t seed,wi::scene::Scene& scene,bool connected=false):source_(seed,{64,2.0,1.0}),route_(seed),connected_(connected),reference_(seed) {
+    explicit PopulatedTerrain(std::uint64_t seed,wi::scene::Scene& scene,bool connected=false):source_(seed,{64,2.0,1.0}),route_(seed),islands_(seed),connected_(connected),reference_(seed) {
         const auto entity=scene.Entity_FindByName("draft reference ground");
         const auto* object=scene.objects.GetComponent(entity);
         const auto* mesh=object?scene.meshes.GetComponent(object->meshID):nullptr;
@@ -80,7 +81,7 @@ public:
             if(std::abs(p.x)==96 || std::abs(p.z)==96) boundary_[{int(p.x),int(p.z)}]=mesh->vertex_normals.at(i);
         }
     }
-    double analytical(double x,double z) const {return connected_?route_.height(x,z):source_.height(x,z);}
+    double analytical(double x,double z) const {return connected_?islands_.height(x,z):source_.height(x,z);}
     double height(double x,double z) const {
         if(local_.inBounds(x,z)) return local_.sampleHeight(x,z);
         // Include adjacent resident pieces at exact shared edges.
@@ -100,6 +101,7 @@ public:
         // Current connected cohort reaches x144/z32 while its coarse group stays active.
         // Keep its bounded support tile resident even when the hero is west of x0.
         if(connected_) wanted.emplace(1,0);
+        if(connected_)for(const auto& region:islands_.field().regions()){const auto ix=std::int64_t(std::floor(region.centerX*islands_.layout().horizontalScale/128)),iz=std::int64_t(std::floor(region.centerZ*islands_.layout().horizontalScale/128));for(int dz=-3;dz<=3;++dz)for(int dx=-3;dx<=3;++dx)wanted.emplace(ix+dx,iz+dz);}
         for(auto it=resident_.begin();it!=resident_.end();) if(!wanted.count(it->first)) {
             for(const auto& p:it->second) scene.Entity_Remove(p.entity);
             it=resident_.erase(it); ++evicted_;
@@ -137,6 +139,7 @@ public:
                         if(habitat==Habitat::Creek) green=wi::Color(91,81,63);else if(habitat==Habitat::Riparian) green=wi::Color(72,93,48);else if(habitat==Habitat::Woodland) green=wi::Color(61,80,42);else if(habitat==Habitat::Bluff || habitat==Habitat::Outcrop) green=wi::Color(112,104,89);
                         const float t=std::clamp((vertex.x-96.f)/56.f,0.f,1.f);
                         const float mosaic=1.f-t*.04f+t*.04f*std::sin(vertex.x*.12f)*std::sin(vertex.z*.19f);
+                        if(!islands_.protectedOrigin(vertex.x,vertex.z)){const auto region=islands_.landRegion(vertex.x,vertex.z,vertex.y);const auto color=vertex.y<.35f?wi::Color(118,111,92):region==1002?wi::Color(58,88,60):region==1003?wi::Color(132,132,100):region==1004?wi::Color(151,116,83):wi::Color(105,117,73);mesh->vertex_colors.push_back(color.rgba);continue;}
                         if(vertex.x>route_.shore().layout().startX && vertex.y<3.0f) {const bool wet=vertex.y<.35f;mesh->vertex_colors.push_back((wet?wi::Color(92,89,69):wi::Color(184,169,125)).rgba);continue;}
                         mesh->vertex_colors.push_back(wi::Color(uint8_t((green.getR()*(1-t)+131*t)*mosaic),uint8_t((green.getG()*(1-t)+122*t)*mosaic),uint8_t((green.getB()*(1-t)+76*t)*mosaic)).rgba);
                     }
@@ -165,6 +168,6 @@ public:
             }
         }
     }
-    nlohmann::json receipt() const {return {{"connected_world_preview",connected_},{"route_grass_tufts",routeTufts_},{"route_organic_rocks",routeRocks_},{"created_tiles",created_},{"evicted_tiles",evicted_},{"regenerated_tiles",regenerated_},{"regenerated_mesh_mismatches",mismatches_},{"peak_resident_tiles",peak_},{"resident_tiles",resident_.size()},{"body_tile_crossings",crossings_},{"visited_body_tiles",visited_.size()},{"shared_edge_samples",seamChecks_},{"max_shared_height_error_m",seamHeight_},{"max_shared_normal_component_error",seamNormal_},{"reference_mesh_retained",true},{"exterior_cells_overlap_reference",false},{"residency_driver","body"},{"population_activation_implemented",false}};}
+    nlohmann::json receipt() const {return {{"connected_world_preview",connected_},{"shared_geological_four_landforms",connected_},{"draft_horizontal_scale",.1},{"draft_vertical_scale",.1},{"new_island_ecology",false},{"route_grass_tufts",routeTufts_},{"route_organic_rocks",routeRocks_},{"created_tiles",created_},{"evicted_tiles",evicted_},{"regenerated_tiles",regenerated_},{"regenerated_mesh_mismatches",mismatches_},{"peak_resident_tiles",peak_},{"resident_tiles",resident_.size()},{"body_tile_crossings",crossings_},{"visited_body_tiles",visited_.size()},{"shared_edge_samples",seamChecks_},{"max_shared_height_error_m",seamHeight_},{"max_shared_normal_component_error",seamNormal_},{"reference_mesh_retained",true},{"exterior_cells_overlap_reference",false},{"residency_driver","body"},{"population_activation_implemented",false}};}
 };
 }

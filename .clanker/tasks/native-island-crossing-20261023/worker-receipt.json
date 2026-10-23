@@ -1,0 +1,68 @@
+{
+  "task_id": "native-island-crossing-20261023",
+  "base": "e73f6a1",
+  "outcome": "coherent_partial_source_pending_native",
+  "verification": [
+    "Release Stalthos_native_archipelago compiled",
+    "domain-native_archipelago passed0.05s",
+    "Run scripts parsed",
+    "git diff --check"
+  ],
+  "native_run": false,
+  "gaps": [
+    "actual shore-water-land native proof root-owned",
+    "all-four traversal/new island ecology/foundation hero-region migration not implemented",
+    "gait/current/drowning/photoreal terrain/FPS unaccepted",
+    "partial persistence refuses water/extended region; previous config files retained"
+  ],
+  "hashes": {
+    "PLAY.md": {
+      "raw_sha256": "0f1ddab92e3c293edb3443b1896306441d2dcd155e3e2fcf9b22462ee3130f44",
+      "git_blob": "1a10290d09a118eb0facdd9cf1362c8205bed51f"
+    },
+    "stalthos-runtime/CMakeLists.txt": {
+      "raw_sha256": "04796826c1805721bca09d5c713f45096a12f13b6cc6cbbc26ed5fd8f0bd35ed",
+      "git_blob": "f2d5a0603b8003889484981a7d37a94f6cd81237"
+    },
+    "stalthos-runtime/domain/native_archipelago.hpp": {
+      "raw_sha256": "4646ad7f2886451acabef7fa5706edb02c977b0e6253f3d7b20d93206395964a",
+      "git_blob": "846501b3c933a3985713efe6afbd92065250dfae"
+    },
+    "stalthos-runtime/domain/water_locomotion.hpp": {
+      "raw_sha256": "02ac6e40b91335a04c620e68aaff0a8722c858ba81fe8e752c6e35e2c6a04b35",
+      "git_blob": "f83c6e4c2ee4278ee222aa03846b0c36af0baec1"
+    },
+    "stalthos-runtime/engine/populated_terrain.hpp": {
+      "raw_sha256": "eef17bbc0f3108afc6d0f8a7feaffa3537ac73bf7818ddd90324e2a37de17566",
+      "git_blob": "9d39c1ffb80ddcc3141b7f07866865d775ba57df"
+    },
+    "stalthos-runtime/engine/exterior_shore_scene.hpp": {
+      "raw_sha256": "06e1d827e3cf4edae8ebcc1bc0cef2d8e6e8c43db10e0dc33e639b9a53910e66",
+      "git_blob": "4567c58ad3404ba61229a5cce2acbd2b7490f3c6"
+    },
+    "stalthos-runtime/engine/connected_save.hpp": {
+      "raw_sha256": "439cd4ccc15b70f335bf74296f1b3d4d6b5625786d0c1b2b0ecf431a84007446",
+      "git_blob": "8d99532fdd9a01838833b17e20c7bef3bb7e39f1"
+    },
+    "stalthos-runtime/engine/main.cpp": {
+      "raw_sha256": "d4573c38c49cfb8d2680b5a45b8b8956a06e284106f03e2c0cb0493ea9232252",
+      "git_blob": "452d62a68a8435e6fbe97f19f5911e6557cb3f2f"
+    },
+    "stalthos-runtime/scripts/Run.ps1": {
+      "raw_sha256": "eecb06562b4443a015f794086548a4efb6f46a0382fa5799160d78fcef96c5e0",
+      "git_blob": "b7b9ae68a6ebdf03022a976b6a390cceccfd2308"
+    },
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": {
+      "raw_sha256": "b216cdee4e65c6d7e0e096fe0ee363d0cc884844242185c6c69705625d53b70e",
+      "git_blob": "3a88682e9afd020518e000a7ba8699a7dfa77444"
+    },
+    "stalthos-runtime/tests/native_archipelago.cpp": {
+      "raw_sha256": "975ba4f7bd0c19008beb49ee268e25984fa4f0d2193ad8db85f9bfafe52d14e3",
+      "git_blob": "23f81fd886f4bc1b0f9355088fa2cfc959eba838"
+    },
+    "stalthos-runtime/docs/native-islands.md": {
+      "raw_sha256": "4a6a59e985ce09397aecc5bea4620fda2e879b6c8b90f201ed67f67669bae1e4",
+      "git_blob": "cbe09d12c1bd928e58fd19b00a1d8624fb3428f1"
+    }
+  }
+}
