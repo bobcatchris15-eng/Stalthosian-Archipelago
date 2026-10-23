@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "executable_sha256": "19d79c8418e1522556a4b12ff5630cb3f81e35a7e8e959aa847625ad22ea85b9",
+  "same_executable_successful_runs": 12,
+  "runs": {
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141021-13b88061",
+      "physical_seconds": 14.982425103342393,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "crossing": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-140614-1b5c088b",
+      "physical_seconds": 237.76123110283515,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "long-start": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141043-f97a290a",
+      "physical_seconds": 6.524448309588479,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "ordinary-Brackenback": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141120-fcfb45ed",
+      "physical_seconds": 3.779235001420602,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "ordinary-Longstride": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141142-67828135",
+      "physical_seconds": 3.81423329829704,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "ordinary-Reedcrest": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141131-d4f5e28c",
+      "physical_seconds": 3.7723069014318753,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "ordinary-Smalltrotter": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141058-9b6190b2",
+      "physical_seconds": 3.777382002095692,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "ordinary-Thistletail": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141109-47128fa0",
+      "physical_seconds": 3.774557600496337,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": false
+    },
+    "original-load": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141200-2afb5db5",
+      "physical_seconds": 7.251818911492592,
+      "support_failures": 0,
+      "state_loaded": true,
+      "state_saved": false
+    },
+    "original-save": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141154-30d03be7",
+      "physical_seconds": 3.6154059051768854,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": true
+    },
+    "partial-load": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141218-2854a921",
+      "physical_seconds": 7.534535110113211,
+      "support_failures": 0,
+      "state_loaded": true,
+      "state_saved": false
+    },
+    "partial-save": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-141207-201a04e1",
+      "physical_seconds": 3.756442405981943,
+      "support_failures": 0,
+      "state_loaded": false,
+      "state_saved": true
+    }
+  },
+  "crossing": {
+    "physical_seconds_to_landing": 194.3284468165075,
+    "swim_samples": 322,
+    "start": [
+      280.02081298828125,
+      -254.65780639648438
+    ],
+    "end": [
+      423.1567077636719,
+      -384.8233642578125
+    ],
+    "final_fatigue": 1.0
+  },
+  "exact_partial_restart": true,
+  "pins_unchanged": true,
+  "preserved_paths": 253,
+  "limits": [
+    "One Main-to-Stone crossing, not all-four traversal",
+    "No new-island population or foundation region migration",
+    "No full connected save or complete all-species family claim",
+    "No target30FPS or final swimming/scenery acceptance"
+  ]
+}

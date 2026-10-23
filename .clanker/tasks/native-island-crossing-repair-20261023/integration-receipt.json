@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task": "native-island-crossing-repair-20261023",
+  "disposition": "accepted bounded native Main-to-Stone physical crossing draft",
+  "source_revision": "eda1135",
+  "independent_review_revisions": [
+    "22877cd",
+    "0a29443"
+  ],
+  "source_stable_executable_sha256": "19d79c8418e1522556a4b12ff5630cb3f81e35a7e8e959aa847625ad22ea85b9",
+  "build": "build-receipt.json; build.log (existing wchar conversion warning retained)",
+  "ctest": "70/70 passed",
+  "native_verification": "native-verification.json",
+  "same_executable_native_runs": 12,
+  "native_landing_physical_seconds": 194.3284468165075,
+  "native_zero_dry_wade_support_failures": true,
+  "native_swim_samples": 322,
+  "native_camera": {
+    "body_displacement_m": 0,
+    "camera_displacement_m": 25.019975111225865,
+    "body_island": 1001,
+    "watershed_population_active": false,
+    "ledger_unchanged": true,
+    "limits": "No remote-island tour, new-island admission or autonomous perception proof; island diagnostics disable autonomous hero goals."
+  },
+  "state_retention": [
+    "All12 connected identities preserved; original saved-mode8 identities preserved",
+    "All12 runs actor calendar-age deltas equal single existing calendar delta",
+    "Complete partial live-owner recapture equals saved candidate before first tick",
+    "Original saved-mode STL9 and manual partial STLC binary version1 checked",
+    "Older partial300 config refused with exact old-file and existing destination bytes preserved"
+  ],
+  "review": [
+    "Independent source/domain exact-owner reproduction of old native failure",
+    "14 final source canonical byte hashes and Git blobs match independently reviewed files",
+    "Dry/wading20deg support still enforced; actual water stance classified separately without masking dry failures",
+    "Original protected terrain8645 point checks and padded streaming bounds retained"
+  ],
+  "preserved_unrelated_paths": 253,
+  "pins_unchanged": true,
+  "graph": "graph-final.log; graph-delta.json; ancient baseline means projectwide delta, not unit-only attribution. Known zero-node artifact/stale community-label warnings retained; no paid relabel.",
+  "visual_inspection": [
+    "Viewed actual composed pinned departure, swimming, Stone landing and post-pan camera images",
+    "Location/water text agrees with body transition Main/sea/Stone; camera oversea still reports actual body on Main",
+    "Bare/dark terrain, stiff walking pose in water, coarse coast/foot/contact presentation remain replaceable first-draft limitations"
+  ],
+  "prior_failure_evidence": ".clanker/tasks/native-island-crossing-20261023/integration-receipt.json retained unchanged",
+  "configuration": "Partial connected config202610230400 intentionally rejects earlier layouts; no migration/reset",
+  "limits": [
+    "Synthetic shore startup and held ordinary forward input; no teleport or speed/needs/exposure buffs",
+    "One actual Main-to-Stone crossing only; four rendered landforms do not prove all-four travel",
+    "Foundation hero.region and registry ownership remain original; physical-island text is geography only",
+    "No new-island population/ecology or unrestricted connected save",
+    "Complete all-five species life/reproduction/parenting and target-hardware30FPS remain open",
+    "Fatigue reaches1; no currents/drowning/anatomical swimming acceptance"
+  ],
+  "next_task": "next-task.md",
+  "publication": "Ordinary origin/main authorized; publish after explicit owned checkpoint and secret scan",
+  "diff_check": "git diff --cached --check excluding **/*.log passes; raw MSBuild whitespace retained verbatim in build.log"
+}

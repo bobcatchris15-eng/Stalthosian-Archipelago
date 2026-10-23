@@ -1,3 +1,33 @@
+# Accepted first native island crossing - 2026-10-23
+
+Receipt .clanker/tasks/native-island-crossing-repair-20261023/integration-receipt.json.
+70CTest/12same-executable native runs pass. Actual pinned Smalltrotter walks from
+Main shore, swims real sharedfield sea and lands on dry Stone at194.33physicalsec.
+Zero genuine dry/wade support failures, no ground fallback, distinct buoyant stance.
+Ordinary pace/Needs/weather/exposure unchanged; synthetic shore start/input labelled.
+Camera25.02m pan keeps body/island/Main population inactive and ledger unchanged.
+Original STL9 and partial STLC restart pass; exact partial owner recapture matches.
+All12 connected actors retained/aged once; originalmode8 unchanged. Config400
+explicitly refuses older partialfiles/destination bytes retained;253paths unchanged.
+Independent14source canonical/blobs match. Actual composed captures viewed; bare
+coasts/darkness/stiff water gait and anatomical/contact roughness remain limitations.
+
+This is ONE crossing, not all-four travel or new-island ecology. Foundation/registry
+hero region intentionally stays legacy while UI physical island is geography only.
+Allfive complete life/reproduction/parenting, full connected saves and target30FPS
+remain open. NEXT actual retained Stone population via existing registry, body-only
+admission/activation/dormancy/return; save must refuse additional retained populations
+before any write until deliberately supported. See task next-task.md.
+Both workers collected, slots released, no native app remains. Historical partial
+headings below are superseded by this accepted bounded receipt, evidence retained.
+
+# Active island crossing repair - 2026-10-23
+
+Task .clanker/tasks/native-island-crossing-repair-20261023/task-state.json.
+Collect existing local partial source bc48b8f; two isolated existing workers,
+root native/build. Source19:05UTC/wake19:28UTC. Native pinned crossing/support
+failed previously: no acceptance or publication until relevant proof.
+
 # Partial native island construction checkpoint - 2026-10-23
 
 Task .clanker/tasks/native-island-crossing-20261023/integration-receipt.json.

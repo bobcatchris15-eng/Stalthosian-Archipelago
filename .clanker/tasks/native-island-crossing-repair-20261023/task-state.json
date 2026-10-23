@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "native-island-crossing-repair-20261023",
+  "status": "complete",
+  "base_revision": "bc48b8f",
+  "current_step": "Accepted bounded native Main-to-Stone crossing; next missing gameplay retained island population",
+  "completed_steps": [
+    "Read narrow partial checkpoint/native failures",
+    "Collected both existing completed workers before two bounded followups",
+    "Preserved253 unrelated paths",
+    "Reviewed repair integrated and source frozen",
+    "Build/70CTest pass",
+    "12 same-executable native runs; real194.33s landing,zero dry/wade failures",
+    "Camera body boundary and both saved modes/exact partial reconstruction pass",
+    "Older save/destination bytes and253 unrelated paths retained;14source hashes/blobs match",
+    "Graph refreshed and next missing native island-population task recorded"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/native_archipelago.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/connected_save.hpp",
+    "stalthos-runtime/tests/native_archipelago.cpp",
+    "stalthos-runtime/docs/native-islands.md",
+    "PLAY.md"
+  ],
+  "updated": "2026-10-23T19:15:12.401030+00:00",
+  "resume_instructions": "Read this task integration-receipt.json and next-task.md. First actual Main-to-Stone crossing accepted; no all-four/ecology/fullpersistence/FPS claim. All workers collected/slots released, no native app remains. Continue missing island population using existing registry, never camera admission or silent loss on return/save. Original saved mode unchanged; old partial files retained/refused.",
+  "next_step": "Actual Stone Island population with body-only admission/dormancy/return and retained identities/resource history; see next-task.md",
+  "validation": {
+    "passed": true,
+    "command": "Build.ps1;70CTest;12same-executable native runs;verify-native.py;verify-refusal.py;verify-save-formats.py;verify-source.py;verify-preservation.py",
+    "evidence_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-island-crossing-repair-20261023\\native-verification.json"
+  },
+  "receipt_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-island-crossing-repair-20261023\\integration-receipt.json"
+}

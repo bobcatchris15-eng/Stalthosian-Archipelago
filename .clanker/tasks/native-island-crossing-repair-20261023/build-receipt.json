@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+  "configuration": "Release",
+  "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+  "executable_sha256": "19d79c8418e1522556a4b12ff5630cb3f81e35a7e8e959aa847625ad22ea85b9",
+  "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+  "source_revision": "eda11350c50636bfa276f551e3935f9556e50de9",
+  "dirty_working_tree": true,
+  "note": "Application built locally against engine inputs: Verified local copy of existing compiled inputs; not a fresh engine rebuild"
+}

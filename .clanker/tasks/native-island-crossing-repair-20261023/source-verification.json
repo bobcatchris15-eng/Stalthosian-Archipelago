@@ -1,0 +1,72 @@
+[
+  {
+    "path": ".clanker/tasks/native-island-crossing-20261023/worker-receipt.json",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": ".clanker/tasks/native-island-crossing-repair-20261023/worker-receipt.json",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "PLAY.md",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/CMakeLists.txt",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/docs/native-islands.md",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/domain/native_archipelago.hpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/domain/water_locomotion.hpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/engine/connected_save.hpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/engine/exterior_shore_scene.hpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/engine/main.cpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/engine/populated_terrain.hpp",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/scripts/Run.ps1",
+    "canonical_match": true,
+    "blob_match": true
+  },
+  {
+    "path": "stalthos-runtime/tests/native_archipelago.cpp",
+    "canonical_match": true,
+    "blob_match": true
+  }
+]
