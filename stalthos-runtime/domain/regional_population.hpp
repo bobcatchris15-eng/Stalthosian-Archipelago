@@ -187,6 +187,26 @@ public:
         try { return insert(std::move(population), history, reservation, savedSessions); }
         catch (const std::bad_alloc&) { return RegionalAdmission::StorageFailure; }
     }
+    // Birth changes no resource, history key, old actor or old binding. All
+    // allocations/validation precede the single population+binding commit.
+    RegionalAdmission admitHatchling(RegionId region,Identity id,std::uint64_t session,const std::vector<Vec3>& path,std::size_t attach,RegionalAdmissionOrigin origin) {
+        if(origin==RegionalAdmissionOrigin::CameraPrewarm)return RegionalAdmission::CameraOnly;
+        if(origin!=RegionalAdmissionOrigin::PhysicalArrival)return RegionalAdmission::InvalidOrigin;
+        const auto found=regions_.find(region);
+        if(found==regions_.end() || !found->second.active || !found->second.contactsConfigured || !id || id==1 || !session)return RegionalAdmission::InvalidReservation;
+        if(used_.individuals>=maxIndividuals || found->second.population.actors().size()>=Population::maxActors)return RegionalAdmission::IndividualLimit;
+        for(const auto& r:regions_){for(const auto& a:r.second.population.actors())if(a.id==id)return RegionalAdmission::IdentityConflict;
+            if(r.second.importedSessions.count(session))return RegionalAdmission::SessionConflict;
+            for(const auto& b:r.second.sessions)if(b.second==session)return RegionalAdmission::SessionConflict;
+            for(const auto& k:r.second.ledger.continuationSnapshot().sessions)if(k.sessionId==session)return RegionalAdmission::SessionConflict;
+        }
+        try{auto population=found->second.population;auto bindings=found->second.sessions;
+            if(!population.appendHatchling(id,path,attach))return RegionalAdmission::InvalidReservation;
+            bindings.emplace(id,session);found->second.population=std::move(population);found->second.sessions.swap(bindings);++used_.individuals;
+            return RegionalAdmission::Accepted;
+        }catch(const std::bad_alloc&){return RegionalAdmission::StorageFailure;}
+    }
+    std::vector<HabitatSite> habitat(RegionId region)const {const auto found=regions_.find(region);return found==regions_.end()?std::vector<HabitatSite>{}:found->second.population.sites();}
     RegionalCapacity capacity() const noexcept { return used_; }
     RegionId legacyRegion() const noexcept { return legacyRegion_; }
     std::optional<RetainedRegionSnapshot> snapshot(RegionId region) const {

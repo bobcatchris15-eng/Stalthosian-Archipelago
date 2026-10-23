@@ -19,6 +19,8 @@ class FaunaScene {
         wi::ecs::Entity walk = wi::ecs::INVALID_ENTITY;
         wi::ecs::Entity idle = wi::ecs::INVALID_ENTITY;
         double scale = 1;
+        bool imported=false;
+        std::vector<wi::ecs::Entity> hatchlingLegs;
         struct Visibility { wi::ecs::Entity entity; bool renderable; bool shadow; };
         std::vector<Visibility> objects;
     };
@@ -41,6 +43,7 @@ public:
     }
     void setGroundQuery(std::function<double(double,double)> query) {groundQuery_=std::move(query);}
     double height(double x, double z) const { return groundQuery_ ? groundQuery_(x,z) : ground_.sampleHeight(x,z); }
+    std::size_t replicaCount()const{return replicas_.size();}
     std::uint64_t groundedUpdates() const { return groundedUpdates_; }
 
     std::vector<fauna::HabitatSite> habitat(const domain::ReferenceLandscape& land, const std::vector<Vec3>& food) const {
@@ -125,7 +128,7 @@ public:
             }
         }
         for(std::size_t i=0;i<actors.size();++i) {
-            Replica replica;
+            Replica replica;replica.imported=!path.empty();
             replica.scale=0.85+double(actors[i].id%21)/100.0;
             if(path.empty()) replica.root=proxy(i);
             else {
@@ -150,6 +153,14 @@ public:
             }
             replicas_.push_back(replica);
         }
+    }
+    // Only the newly admitted actor is appended. Existing clones, animation
+    // state and index order remain unchanged, including imported/proxy mixes.
+    void appendHatchling(wi::scene::Scene& scene,const std::vector<fauna::ActorView>& actors,wi::ecs::Entity root,const std::vector<wi::ecs::Entity>& legs) {
+        if(actors.size()!=replicas_.size()+1 || actors.back().species!=HeroSpecies::Smalltrotter || !scene.transforms.GetComponent(root))throw std::runtime_error("hatchling replica admission mismatch");
+        Replica r;r.root=root;r.scale=.65;r.hatchlingLegs=legs;
+        for(std::size_t j=0;j<scene.objects.GetCount();++j){const auto e=scene.objects.GetEntity(j);if(e==root || scene.Entity_IsDescendant(e,root)){const auto& o=scene.objects[j];r.objects.push_back({e,(o._flags & wi::scene::ObjectComponent::RENDERABLE)!=0,o.IsCastingShadow()});}}
+        replicas_.push_back(std::move(r));
     }
     // Dormant replicas remain allocated for exact identity retention, but neither
     // their transforms nor their animations advance until body reactivation.
@@ -202,9 +213,10 @@ public:
             transform->translation_local={float(a.position.x),float(y),float(a.position.z)};
             transform->scale_local={float(r.scale),float(r.scale),float(r.scale)};
             transform->rotation_local=DirectX::XMFLOAT4{};
-            DirectX::XMStoreFloat4(&transform->rotation_local,DirectX::XMQuaternionRotationRollPitchYaw(0,float(a.headingRadians-(importedMeshes_?1.5707963267948966:0.0)),0));
+            DirectX::XMStoreFloat4(&transform->rotation_local,DirectX::XMQuaternionRotationRollPitchYaw(0,float(a.headingRadians-(r.imported?1.5707963267948966:0.0)),0));
             transform->SetDirty(); transform->UpdateTransform(); ++groundedUpdates_;
             const bool travel=a.alive && a.activity==fauna::Activity::Travel && a.id!=waitingNpc;
+            for(std::size_t k=0;k<r.hatchlingLegs.size();++k){auto* leg=scene.transforms.GetComponent(r.hatchlingLegs[k]);if(leg){const float angle=travel?float(.28*std::sin(a.distanceTravelledMeters*18+(k==0 || k==3?0:3.141592653589793))):0;DirectX::XMStoreFloat4(&leg->rotation_local,DirectX::XMQuaternionRotationRollPitchYaw(angle,0,0));leg->SetDirty();leg->UpdateTransform();}}
             auto* walk=scene.animations.GetComponent(r.walk);
             auto* idle=scene.animations.GetComponent(r.idle);
             if(walk) {

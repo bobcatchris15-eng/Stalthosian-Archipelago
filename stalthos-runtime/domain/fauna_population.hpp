@@ -211,6 +211,19 @@ public:
         }
         refreshViews();
     }
+    // Session-local birth appends a supported host-sampled path into the existing
+    // graph. Existing indices, route state and actors are never regenerated.
+    bool appendHatchling(Identity id,const std::vector<Vec3>& path,std::size_t attach) {
+        if(!id || id==1 || actors_.size()>=maxActors || attach>=sites_.size() || path.empty() || path.size()>256 || sites_.size()+path.size()>maxSites) return false;
+        for(const auto& a:actors_)if(a.id==id)return false;
+        Vec3 previous=sites_[attach].position;
+        for(auto i=path.rbegin();i!=path.rend();++i){if(!finite(*i) || distance(previous,*i)<1e-5 || distance(previous,*i)>.8)return false;previous=*i;}
+        auto next=*this;const auto first=next.sites_.size();
+        for(std::size_t i=0;i<path.size();++i){std::vector<std::size_t> links;if(i)links.push_back(first+i-1);links.push_back(i+1<path.size()?first+i+1:attach);next.sites_.push_back({path[i],false,false,std::move(links)});}
+        next.sites_[attach].neighbors.push_back(first+path.size()-1);
+        Actor child{id,HeroSpecies::Smalltrotter,0,first,path.front(),Activity::Travel,.12,.12,.12,LifeStage::Hatchling};child.target=attach;
+        next.actors_.push_back(std::move(child));next.refreshViews();*this=std::move(next);return true;
+    }
     void advance(const TimeStep& dt, bool localResourceRelief = true, const std::optional<BodyAwareness>& bodyAwareness = std::nullopt, const std::optional<NpcPeerMotion>& npcPair = std::nullopt) {
         if (!std::isfinite(dt.physicalSeconds)||dt.physicalSeconds<0||!std::isfinite(dt.calendarSeconds)||dt.calendarSeconds<0)
             throw std::invalid_argument("invalid fauna time step");

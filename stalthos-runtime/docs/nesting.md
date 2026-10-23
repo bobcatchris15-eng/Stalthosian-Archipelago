@@ -1,64 +1,74 @@
-# Smalltrotter nest and incubation working slice
+# Smalltrotter nesting and one independent hatchling
 
-Proposed fictional draft, October 22, 2026. In connected play, **B** explicitly
-chooses the ground beside the animal and lays one clutch if the living adult
-Smalltrotter is reasonably fed, hydrated and rested. The ordinary HUD explains
-availability or refusal. Walking, turning, drinking, foraging and resting remain
-immediate; nesting does not take locomotion control or lock the animal in place.
-There is no special camera permission, parenting timer or mandatory nest vigil.
+Proposed fictional working draft, October 22, 2026. In connected play, **B**
+explicitly chooses nearby dry supported clear ground and lays a bounded three-egg
+clutch when the living adult Smalltrotter has hunger/thirst/fatigue below0.7.
+The HUD gives availability/refusal. There is no locomotion lock or parent vigil;
+ordinary controls and needs continue. No mating, genetics or prolonged care.
 
-This is **partial reproduction**. There is no mating, actual hatch, offspring
-admission, mortality or connected save. Three visible tapered eggs sit in a
-replaceable earthen/twig nest. Incubation uses the same calendar step as aging,
-weather and native populations, with a proposed 900 calendar seconds duration.
-The end cue says explicitly that hatching is not implemented. No successful
-birth, demographic increase, generated child identity or family is claimed.
-The one clutch stays at its world location when the animal leaves, dies or a
-new life starts in the running session. Returning within 12 m shows progress.
+One egg can now produce **one actual independent Smalltrotter** after900 shared
+calendar seconds. The authoritative live registry admits the newborn with age0,
+ordinary needs and a fresh unique ID/contact session. It appends a half-meter
+sampled dry supported local path from the real nest into the existing habitat.
+Existing actor indices, routes, needs, identities, bindings, resources and complete
+ledger/history are preserved. The graph signature changes deliberately as the new
+local path is admitted; this is session-only. Original saved mode cannot enter the
+birth path, and connected save/load still refuses. Continuation restoration works
+against the same already-admitted in-memory graph, as before.
 
-Placement is deliberately conservative: the original 192 m reference patch,
-resident rendered ground at nine footprint points, <=0.18 m height relief,
-dry creek exclusion, enlarged authored plant/rock/tree footprints and 3 m live
-NPC spacing. This is a bounded clear-site approximation, not general collision
-or nest habitat suitability. Exterior nesting waits for equivalent authored
-obstacle coverage. Eggs have proposed dimensions and speculative anatomy.
+Physical body activation is required; a detached camera cannot admit a birth.
+The clutch waits/retries once per physical second if inactive, full, or lacking a
+safe local path. It closes its first egg into a flattened shell only after a real
+Accepted admission. The other two intact eggs are explicitly unmodelled; this
+slice has no clutch mortality or future second/third birth. The single-child
+marker prevents duplicates on ticks, departure/return or next player life.
+A newborn stays in the ordinary retained regional population after parent death.
 
-`domain/nesting.hpp` contains eligibility and bounded calendar progression.
-`engine/nest_scene.hpp` supplies replaceable visible geometry; no new art
-pipeline is required. Neither changes identity/resource/session allocation.
-Connected save/load refusal and original saved mode remain in their existing
-owners. One session clutch is the explicit memory cap.
+The new replica is appended separately without reloading/resetting old animals.
+Its replaceable procedural body has a barrel torso, long neck, head/muzzle, tail,
+four limbs/feet and eyes. Simple distance-driven limb swing conveys travel. It
+uses per-replica orientation, so a procedural newborn and imported adult models
+coexist correctly. No final anatomy, authored baby animation, stage-growth art,
+contact polish or performance acceptance is claimed.
 
-Focused verification:
+Placement remains the conservative original192m patch with nine-point rendered
+support, <=0.18m relief, creek dry mask and enlarged scenery/NPC footprints.
+Hatch paths test rendered height/dry eligibility every0.5m, <=0.6grade, <=96m
+length, <=256new sites and the existing16actor local cap. This does not provide
+general obstacle navigation. Authoritative child y follows the sampled polyline;
+the scene adapter grounds the actual model against resident rendered terrain.
+Native telemetry reports child polyline/terrain error separately from hero support.
+
+Focused source verification (no engine, no network):
 
 ```powershell
 cmake -S stalthos-runtime -B var/build/nesting-domain -DSTALTHOS_BUILD_WICKED_HOST=OFF
-cmake --build var/build/nesting-domain --config Release --target Stalthos_nesting
-ctest --test-dir var/build/nesting-domain -C Release -R '^domain-nesting$' --output-on-failure
+cmake --build var/build/nesting-domain --config Release --target Stalthos_hatchling_admission Stalthos_nesting Stalthos_native_population_registry Stalthos_regional_population Stalthos_next_life
+ctest --test-dir var/build/nesting-domain -C Release -R '^domain-(hatchling_admission|nesting|native_population_registry|regional_population|next-life)$' --output-on-failure
 ```
 
-Native diagnostic after an integrated build:
+Native evidence commands after the root's final integrated build:
 
 ```powershell
-stalthos-runtime/scripts/Run.ps1 -NestProbe -Duration 14 -CalendarScale 100
+stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HatchProbe -Duration 30 -CalendarScale 100 -AssetRoot 'E:/Stalthosian Archipelago'
+stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HatchCameraProbe -Duration 30 -CalendarScale 100 -AssetRoot 'E:/Stalthosian Archipelago'
 ```
 
-The diagnostic alone restores an adult and searches a clear starting pose. It
-injects the same B intention at 2 physical seconds and ordinary reverse input
-at 4–7 seconds, with noon presentation. The shared calendar still advances all
-systems normally. It captures composed frames at 3, 8 and 12 seconds and writes
-`nesting.json` with eligibility, position, input, incubation, movement and
-explicit zero offspring. Use an ordinary interactive connected run to exercise
-the real B key after the animal reaches adulthood. Domain verification does
-not establish the native visual result or 30 FPS acceptance.
+Use `-Proxy` for a clearly labelled proxy adult diagnostic. Both fixtures restore
+an adult/start site, inject the ordinary B intention at2s and use synthetic noon;
+calendar100 accelerates every existing calendar-driven system. Birth is around11s.
+Primary fixture injects ordinary reverse13-18s and forward18-23s, an explicitly
+synthetic parent-death state at24s and the existing ordinary N transition at25s.
+This proves short physical departure/return and next-life retention if native
+telemetry passes; it does not prove a long regional traversal. The camera fixture
+pans only afterbirth12-20s and tests retained-young observation, **not inactive
+birth prevention** (that is source/domain proof unless separately run natively).
+Composed captures occur3/8/12/22/27s. `nesting.json` includes admission events,
+full old-actor/ledger equality atcommit, ID/session, born-calendar, child age,
+needs, motion, ground error, replica count, physical activity and camera/attention.
+Native visual/input acceptance belongs to the root's combined executable review;
+domain checks alone do not establish it.
 
-Next bounded task: add actual independent Smalltrotter hatchling admission.
-First inspect `native_population_registry.hpp`, region population caps, unique
-world IDs and fresh interaction sessions, and `fauna_scene.hpp` actor loading.
-Admit a bounded clutch through the live authoritative population only once,
-close the egg state after successful admission, and give each actual newborn
-the ordinary needs/lifecycle/graph locomotion with hatchling bulk. Keep eggs
-when admission is blocked, never silently invent success or replace existing
-actors. Prove no duplicated IDs/sessions or ledger reset, retained new actors
-after body departure/return and next life, visible shell-to-independent-young
-transition, and that Smalltrotter hatchlings require no prolonged parent care.
+Remaining reproduction breadth: independent clutches outside the original patch,
+actual mating/courtship and other species' distinct neonatal care. Preserve this
+small verified path and avoid a universal family/save/genetics framework.

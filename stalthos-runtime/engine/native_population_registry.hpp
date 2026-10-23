@@ -35,6 +35,13 @@ public:
     }
     explicit NativePopulationRegistry(fauna::RegionalPopulationRegistry restored)
         :registry_(std::move(restored)),region_(registry_.legacyRegion()) {refreshViews();}
+    fauna::RegionalAdmission admitHatchling(Identity id,const std::vector<Vec3>& path,std::size_t attach,std::uint64_t& nextSession,const std::set<Identity>& excluded,fauna::RegionalAdmissionOrigin origin=physical) {
+        if(excluded.count(id))return fauna::RegionalAdmission::IdentityConflict;
+        if(!nextSession || nextSession==std::numeric_limits<std::uint64_t>::max())return fauna::RegionalAdmission::SessionConflict;
+        const auto result=registry_.admitHatchling(region_,id,nextSession,path,attach,origin);
+        if(result==fauna::RegionalAdmission::Accepted){++nextSession;refreshViews();}return result;
+    }
+    std::vector<fauna::HabitatSite> habitat()const{return registry_.habitat(region_);}
     const fauna::NpcPeerAssociation& npcPeers()const{return npcPeers_;}
     const fauna::RegionalPopulationRegistry& registry() const {return registry_;}
     fauna::RegionalContinuationDto continuation() const {return registry_.continuationSnapshot();}

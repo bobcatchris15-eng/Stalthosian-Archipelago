@@ -6,11 +6,12 @@
 
 namespace stalthos::domain {
 // Proposed fictional first-draft tuning. One bounded clutch per connected session.
-// This is an egg/incubation slice: it never invents offspring or population IDs.
+// Birth identity is recorded only after authoritative live population admission.
 struct NestSite { Vec3 position{}; bool supported=false, dry=false, clear=false; double relief=0; };
 struct Clutch { Identity parent=0; Vec3 position{}; double laidAt=0, incubatedSeconds=0; };
 class Nesting {
     std::optional<Clutch> clutch_;
+    Identity offspring_=0;
 public:
     static constexpr double incubationSeconds=900;
     const std::optional<Clutch>& clutch() const { return clutch_; }
@@ -33,5 +34,7 @@ public:
     }
     double progress() const { return clutch_?clutch_->incubatedSeconds/incubationSeconds:0; }
     bool incubated() const { return clutch_ && progress()>=1; }
+    Identity offspring()const{return offspring_;}
+    bool recordAdmittedOffspring(Identity id){if(!incubated() || offspring_ || !id)return false;offspring_=id;return true;}
 };
 }
