@@ -46,3 +46,5 @@ succeed. Fixtures are labelled actual-adult/needs/body/input/noon conditions, no
 natural mating proof. Nesting telemetry includes request/refusal, real mate ID,
 actual position/distance/needs, courtship readiness/quiet and actual clutch mate.
 Root owns final native build/captures and acceptance; worker runs no native build.
+
+Camera refusal diagnostic uses the synthetic supported body startup pose (24,24), yaw zero, with every eligible actual adult Smalltrotter verified beyond 12 m. The actual selected mate remains at its original graph position (about 39 m from this body); detached camera movement targets that mate without granting readiness.
