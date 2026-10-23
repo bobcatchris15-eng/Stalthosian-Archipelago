@@ -1,0 +1,50 @@
+{
+  "effort": {
+    "probes_run": [
+      "repair-probe.exe exit0:194.02s landing,0dry/wade failures at3spans,fatigue1",
+      "8645 originheight comparisons/432 streamedboundaryqueries pass",
+      "14 rootcanonicalLF/Gitblob matches"
+    ],
+    "attempted": [
+      "Read actual rootnative receipts andsource; independently matched original dryslope/native endposition",
+      "Compiled independent MSVC C++17 exactowners: LocomotionPace(.16128,2), actualseed42 region1001 Conditions/BodyWeather/Exposure, soleNeeds+waterhelpers",
+      "Recompiledsettledheader; readhostdiff;14 final islandpacketfiles canonicalLF+gitblob compared torooteda1135"
+    ]
+  },
+  "scope": {
+    "graph_digest": "bounded direct terrain/water/support/save ownership review",
+    "artifacts": [
+      "repair-probe.cpp",
+      "repair-baseline.txt",
+      "repair-probe-output.txt",
+      "repair-source-hashes.json"
+    ],
+    "implementation_read_only": true,
+    "base_digest": "bc48b8f"
+  },
+  "resolved_findings": [
+    "Independent originalnative diagnosis reproduced dry slope.60126rad>20deg, old158sposition andfatigue1; true oldlanding253.26s. Prior2m/sproxy122s excluded from nativeproof.",
+    "Repairedroute:0dry/wade unsupported steps atbulk.45/.7/1 checked every.01s withsame20deg threshold,max19.64deg; firstdryStone194.02s,fatigue1.",
+    "Host swimming buoyancy classified before footfailurecount; dry/wade failures preserved; supportedwaders retain terrain-plane rotation. Rawseabedslope recorded. No masked dryfailure.",
+    "Longstride islandfixture skipslatercaregiver startup; ordinarybirth unchanged.",
+    "STLCconfiguration202610230400 fails oldlayout; existing marine/extended savepreflight and originalsavedmode unchanged."
+  ],
+  "limits": [
+    "Reviewer no nativeapplication/build/GPU. Root240s source-stable crossing/camera acceptance required.",
+    "Fixed.01s integration is timingprediction, not nativeproof.",
+    "One supported real route; othercoasts mayexceed20deg. Allfour traversal/ecology/regionmigration/fullpersistence/FPS missing.",
+    "Swimming buoyancyprototype; no completed anatomicalswim/foot-on-seabed claim.",
+    "Legacy foundationregion/registry distinct from body-derivedislandUI."
+  ],
+  "base_commit": "bc48b8f",
+  "findings": [],
+  "integrated_commit": "eda1135",
+  "source_commit": "a39157b",
+  "schema_version": 1,
+  "goal_alignment": {
+    "verdict": "pass source/domain repair; native proof pending",
+    "reason": "Global sharedfieldblend192 preservesorigin and enables actual gentler shore route. Real pinnedpace/weather/exposure/Needs/swim owners predict landing within240s without movement/fatigue benefit."
+  },
+  "reviewer": "gameplay_review",
+  "task": "native-island-crossing-repair-review-20261023"
+}

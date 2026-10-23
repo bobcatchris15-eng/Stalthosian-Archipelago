@@ -1,0 +1,5 @@
+Source baseline e55ffe4/bc48b8f. Exact existing owners, no native launch by reviewer.
+AT158 t=158.18 d=233.836 fatigue=1 x=433.179 z=-313.681
+REAL_OWNER_ROUTE land_pace=0.16128 start_slope=0.60126 start_supported=0 landed=1 seconds=253.26 distance=260.283 fatigue=1 dry_failure_steps=3260 swim_steps=13287
+Root native at158.183s x432.948,z-313.503,fatigue1; stationary camera slope.6012600245/normalY.8246234966 =>34.45degrees vs20degree support limit.
+Reviewer integration approximates .01s fixed timestep vs native variable dt; agreement establishes cause, not native rendering/foot acceptance.

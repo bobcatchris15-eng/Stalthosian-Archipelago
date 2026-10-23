@@ -1,0 +1,149 @@
+{
+  "source_count": 14,
+  "all_integrated_canonical_and_blobs_match": true,
+  "sources": [
+    {
+      "crlf_count": 68,
+      "raw_sha256": "f1181630ec491b4243ac6c83726b7da17c08cca96983492cb40a8f662d5d1945",
+      "path": ".clanker/tasks/native-island-crossing-20261023/worker-receipt.json",
+      "integrated_crlf_count": 68,
+      "integrated_raw_sha256": "f1181630ec491b4243ac6c83726b7da17c08cca96983492cb40a8f662d5d1945",
+      "integrated_git_blob": "d50e46f3c9c4871cc083058653bb8f0b2f5e0423",
+      "canonical_lf_sha256": "66767d7ba6d8f1424e340bd2532136a935072d1e39650438036d988f7e3a5f9b",
+      "git_blob": "d50e46f3c9c4871cc083058653bb8f0b2f5e0423"
+    },
+    {
+      "crlf_count": 65,
+      "raw_sha256": "9986b5539b4dffe7f4a7322ae8b0657ffa7c9d0c4e0d99d2de5da8db378a8294",
+      "path": ".clanker/tasks/native-island-crossing-repair-20261023/worker-receipt.json",
+      "integrated_crlf_count": 65,
+      "integrated_raw_sha256": "9986b5539b4dffe7f4a7322ae8b0657ffa7c9d0c4e0d99d2de5da8db378a8294",
+      "integrated_git_blob": "de34620957d5371d2908a348c64d027c521fc28d",
+      "canonical_lf_sha256": "802693f1bd833cdb4a7e8b225295bc896d581ee49c57e27d4c85fd7a68b27561",
+      "git_blob": "de34620957d5371d2908a348c64d027c521fc28d"
+    },
+    {
+      "crlf_count": 159,
+      "raw_sha256": "221bbe8e0ba3f1861042ba299682fa0414b9fcf898eac5410e6f5c29f2df5665",
+      "path": "PLAY.md",
+      "integrated_crlf_count": 159,
+      "integrated_raw_sha256": "221bbe8e0ba3f1861042ba299682fa0414b9fcf898eac5410e6f5c29f2df5665",
+      "integrated_git_blob": "e983c77c5a7561c18ae25ae06f4d3eae3650806c",
+      "canonical_lf_sha256": "1702f1489f96dd4dc8a5798dce23b0caca33a5ea657876730d043e17563adb73",
+      "git_blob": "e983c77c5a7561c18ae25ae06f4d3eae3650806c"
+    },
+    {
+      "crlf_count": 89,
+      "raw_sha256": "04796826c1805721bca09d5c713f45096a12f13b6cc6cbbc26ed5fd8f0bd35ed",
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "integrated_crlf_count": 89,
+      "integrated_raw_sha256": "04796826c1805721bca09d5c713f45096a12f13b6cc6cbbc26ed5fd8f0bd35ed",
+      "integrated_git_blob": "f2d5a0603b8003889484981a7d37a94f6cd81237",
+      "canonical_lf_sha256": "c8e5eaffee2c1b431c8c592f8435a5d298708292e50a90739a94c5477bacc4ef",
+      "git_blob": "f2d5a0603b8003889484981a7d37a94f6cd81237"
+    },
+    {
+      "crlf_count": 65,
+      "raw_sha256": "1b6a5fef579b1b5293f695d88c1696b9d0350e559179c7bfa59ad153b7cfa874",
+      "path": "stalthos-runtime/docs/native-islands.md",
+      "integrated_crlf_count": 65,
+      "integrated_raw_sha256": "1b6a5fef579b1b5293f695d88c1696b9d0350e559179c7bfa59ad153b7cfa874",
+      "integrated_git_blob": "5a065f59bdff4e444872c13935a1e68a21283b7d",
+      "canonical_lf_sha256": "d86ace8960b4a6daefb83de89ec4e6a949545c311fde3b706e1930abeb0f1fcf",
+      "git_blob": "5a065f59bdff4e444872c13935a1e68a21283b7d"
+    },
+    {
+      "crlf_count": 40,
+      "raw_sha256": "5f410a0c3593650deca7ac493722920fea90950eea2b995351dc2c45be5c3f31",
+      "path": "stalthos-runtime/domain/native_archipelago.hpp",
+      "integrated_crlf_count": 40,
+      "integrated_raw_sha256": "5f410a0c3593650deca7ac493722920fea90950eea2b995351dc2c45be5c3f31",
+      "integrated_git_blob": "c557e858cd7289386b371da43d155ec0c496fb38",
+      "canonical_lf_sha256": "82b2705a2506ea2bbcedae4d194582c88a8bf07244d5b8c7c377295414754a0a",
+      "git_blob": "c557e858cd7289386b371da43d155ec0c496fb38"
+    },
+    {
+      "crlf_count": 0,
+      "raw_sha256": "02ac6e40b91335a04c620e68aaff0a8722c858ba81fe8e752c6e35e2c6a04b35",
+      "path": "stalthos-runtime/domain/water_locomotion.hpp",
+      "integrated_crlf_count": 12,
+      "integrated_raw_sha256": "6953387417da436ba1c9a4bb48193fcb661df6b9c28cbac4fb6aa1ffa8d83356",
+      "integrated_git_blob": "f83c6e4c2ee4278ee222aa03846b0c36af0baec1",
+      "canonical_lf_sha256": "02ac6e40b91335a04c620e68aaff0a8722c858ba81fe8e752c6e35e2c6a04b35",
+      "git_blob": "f83c6e4c2ee4278ee222aa03846b0c36af0baec1"
+    },
+    {
+      "crlf_count": 93,
+      "raw_sha256": "4005016feb59c54ed70535fa67f90458df8290e1f56963b2310c6103bfd8376f",
+      "path": "stalthos-runtime/engine/connected_save.hpp",
+      "integrated_crlf_count": 93,
+      "integrated_raw_sha256": "4005016feb59c54ed70535fa67f90458df8290e1f56963b2310c6103bfd8376f",
+      "integrated_git_blob": "d39b972b0d353c190235af4c9d4608bda7fc23ad",
+      "canonical_lf_sha256": "a9e7764bfbd9605696c0ab5965c78a25280adde3d39cf2c79aad2368ba3fb7a3",
+      "git_blob": "d39b972b0d353c190235af4c9d4608bda7fc23ad"
+    },
+    {
+      "crlf_count": 21,
+      "raw_sha256": "06e1d827e3cf4edae8ebcc1bc0cef2d8e6e8c43db10e0dc33e639b9a53910e66",
+      "path": "stalthos-runtime/engine/exterior_shore_scene.hpp",
+      "integrated_crlf_count": 21,
+      "integrated_raw_sha256": "06e1d827e3cf4edae8ebcc1bc0cef2d8e6e8c43db10e0dc33e639b9a53910e66",
+      "integrated_git_blob": "4567c58ad3404ba61229a5cce2acbd2b7490f3c6",
+      "canonical_lf_sha256": "0f598561ae7c3939f0c0662881c31515f81f86bca9c720565df88d5fe1338031",
+      "git_blob": "4567c58ad3404ba61229a5cce2acbd2b7490f3c6"
+    },
+    {
+      "crlf_count": 3060,
+      "raw_sha256": "9d72bc0e0750f6e7177af4770073bf93b3c83893426a1185d0ed3274ca4a7dab",
+      "path": "stalthos-runtime/engine/main.cpp",
+      "integrated_crlf_count": 3060,
+      "integrated_raw_sha256": "9d72bc0e0750f6e7177af4770073bf93b3c83893426a1185d0ed3274ca4a7dab",
+      "integrated_git_blob": "f55c8eafece1a5cee25cae2d89b5785dc4f0eb4f",
+      "canonical_lf_sha256": "fd166eb1d8f4a33fe4b0a5c8e05e0da2a29ee9cbccb6e62d16e62596852b5647",
+      "git_blob": "f55c8eafece1a5cee25cae2d89b5785dc4f0eb4f"
+    },
+    {
+      "crlf_count": 173,
+      "raw_sha256": "eef17bbc0f3108afc6d0f8a7feaffa3537ac73bf7818ddd90324e2a37de17566",
+      "path": "stalthos-runtime/engine/populated_terrain.hpp",
+      "integrated_crlf_count": 173,
+      "integrated_raw_sha256": "eef17bbc0f3108afc6d0f8a7feaffa3537ac73bf7818ddd90324e2a37de17566",
+      "integrated_git_blob": "9d39c1ffb80ddcc3141b7f07866865d775ba57df",
+      "canonical_lf_sha256": "f5d854f7d20b14f3c7e9c1bd17f491d372b283acbb1903adcb16546e3a2fa487",
+      "git_blob": "9d39c1ffb80ddcc3141b7f07866865d775ba57df"
+    },
+    {
+      "crlf_count": 101,
+      "raw_sha256": "b216cdee4e65c6d7e0e096fe0ee363d0cc884844242185c6c69705625d53b70e",
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "integrated_crlf_count": 101,
+      "integrated_raw_sha256": "b216cdee4e65c6d7e0e096fe0ee363d0cc884844242185c6c69705625d53b70e",
+      "integrated_git_blob": "3a88682e9afd020518e000a7ba8699a7dfa77444",
+      "canonical_lf_sha256": "26d36af70ba83e85e90e2e4e04cefd556cac6ab840ca8e6ddd5204b618a2626b",
+      "git_blob": "3a88682e9afd020518e000a7ba8699a7dfa77444"
+    },
+    {
+      "crlf_count": 223,
+      "raw_sha256": "eecb06562b4443a015f794086548a4efb6f46a0382fa5799160d78fcef96c5e0",
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "integrated_crlf_count": 223,
+      "integrated_raw_sha256": "eecb06562b4443a015f794086548a4efb6f46a0382fa5799160d78fcef96c5e0",
+      "integrated_git_blob": "b7b9ae68a6ebdf03022a976b6a390cceccfd2308",
+      "canonical_lf_sha256": "2a899de5b16f672f7ae421110ffbc0013fb2ad869db7a410282f0780e06f9d26",
+      "git_blob": "b7b9ae68a6ebdf03022a976b6a390cceccfd2308"
+    },
+    {
+      "crlf_count": 22,
+      "raw_sha256": "8e8d67de63c6dc602b17572711730aeca6ce0a60db783e7aa968f3cdce57d7f7",
+      "path": "stalthos-runtime/tests/native_archipelago.cpp",
+      "integrated_crlf_count": 22,
+      "integrated_raw_sha256": "8e8d67de63c6dc602b17572711730aeca6ce0a60db783e7aa968f3cdce57d7f7",
+      "integrated_git_blob": "fbaab7b7f7a80d90fbc30979e214f0ff5e96032e",
+      "canonical_lf_sha256": "3955e38180e615256a4d02d6cdcfe5f2699f9e946c4b4be5f8972365139530b3",
+      "git_blob": "fbaab7b7f7a80d90fbc30979e214f0ff5e96032e"
+    }
+  ],
+  "integrated_commit": "eda1135",
+  "reviewed_commit": "a39157b",
+  "repair_base": "bc48b8f"
+}

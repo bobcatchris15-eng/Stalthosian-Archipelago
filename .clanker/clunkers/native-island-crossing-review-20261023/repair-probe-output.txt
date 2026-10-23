@@ -1,0 +1,3 @@
+Settled a39157b exact header recompiled; candidate differed only trailing blankline.
+REAL_OWNER_ROUTE land_pace=0.16128 start_slope=0.342764 start_supported=1 landed=1 seconds=194.02 distance=193.472 fatigue=1 dry_failure_steps=0 wade_failure_steps=0 max_ground_slope=0.342815 swim_steps=8130
+Independent preservation probe8645 exactorigin heights/432 streamedcornerqueries passed. Proxy timing excluded from pinned acceptance.
