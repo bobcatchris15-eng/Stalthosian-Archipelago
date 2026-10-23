@@ -246,7 +246,7 @@ public:
             // A reciprocal partner may turn back on its current real edge. Swap
             // endpoint ownership while retaining exact position, rather than
             // finishing a long outward hop before noticing its departing peer.
-            if(peerFollowing && bodyAwareness->reciprocalPeer && a.site!=a.target && distance(a.position,sites_[a.site].position)>1e-6){const auto hop=nextHop(a.site,a.target);if(std::hypot(sites_[a.site].position.x-bodyAwareness->body.x,sites_[a.site].position.z-bodyAwareness->body.z)+.01<std::hypot(sites_[hop].position.x-bodyAwareness->body.x,sites_[hop].position.z-bodyAwareness->body.z)){const auto prior=a.site;a.site=hop;a.target=prior;}}
+            if(peerFollowing && bodyAwareness->reciprocalPeer && a.site!=a.target && distance(a.position,sites_[a.site].position)>1e-6){const auto hop=nextHop(a.site,a.target);if(std::find(sites_[hop].neighbors.begin(),sites_[hop].neighbors.end(),a.site)!=sites_[hop].neighbors.end() && std::hypot(sites_[a.site].position.x-bodyAwareness->body.x,sites_[a.site].position.z-bodyAwareness->body.z)+.01<std::hypot(sites_[hop].position.x-bodyAwareness->body.x,sites_[hop].position.z-bodyAwareness->body.z)){const auto prior=a.site;a.site=hop;a.target=prior;}}
             if(peer){response.avoid=false;if(peerFollowing && distance(a.position,sites_[a.site].position)<1e-6){
                 auto target=a.site;double nearest=response.distance;
                 if(nearest>bodyAwareness->peerWaitMeters)for(auto n:sites_[a.site].neighbors){const double d=std::hypot(sites_[n].position.x-bodyAwareness->body.x,sites_[n].position.z-bodyAwareness->body.z);if(d<nearest-.01){target=n;nearest=d;}}
