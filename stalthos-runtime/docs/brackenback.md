@@ -44,8 +44,11 @@ stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HeroSpecies Brackenback -DeathN
 ```
 
 Protection fixtures restore adult hero/startup pose and alter age/critical hunger
-on a close pair of actual existing actors. IDs/species and positions are preserved;
-no actor is teleported/duplicated. The adult Longstride receives a resting need
+on actual existing actors. The vulnerable actor receives a labelled synthetic
+startup position exactly4m from a real adult Longstride along an existing adjacent
+habitat edge, with valid site/target/Travel snapshot state. IDs/species/sessions and
+the adult threat position remain preserved; no actor is duplicated. This is not
+ordinary/natural actor placement. The adult Longstride receives a resting need
 fixture. Subsequent activity is ordinary population behavior. Primary hero starts
 3m off the interposition point; override reverses normally1-3s. Camera starts36m
 away and pans toward the actual pair2-10s without body awareness. Noon and all
