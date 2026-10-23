@@ -1,26 +1,45 @@
 {
   "schema_version": 1,
   "task_id": "continuation-20261022",
-  "status": "running",
+  "status": "complete",
   "base_revision": "6454531ee3cd3099675f0fdc5d6ce1d164bf9957",
-  "current_step": "Isolated carnivore recall and nesting implementation; root launcher and integration",
+  "current_step": "bounded playable drafts integrated, independently reviewed and native verified; actual hatchling admission next",
   "completed_steps": [
     "HALT absent; current durable handoff and coverage checked",
     "58/58 baseline CTest and normal pinned-animal12actor native launch pass",
     "Play entry added and timed native launch passes",
-    "Existing paused heartbeat retargeted in place to current chat and resumed hourly"
+    "Existing paused heartbeat retargeted in place to current chat and resumed hourly",
+    "Carnivore source two commits integrated; independent moving-body defect corrected and repro passes",
+    "Nesting source and receipts integrated; three additive conflicts resolved preserving both probes",
+    "Independent source review and moving recall resolution integrated; no outstanding source blocker",
+    "60/60 current CTest pass; stale-executable race identified and earlier native runs excluded",
+    "Settled-source native executable746baa2 verified six runs; all body/camera/control/nest/ledger/age/baseline gates pass",
+    "157 unrelated untracked files and pinned assets preserved; task-owned slots released through helper",
+    "Visible nest and danger composed captures inspected; partial reproduction gaps explicitly retained"
   ],
   "touched_artifacts": [
+    "stalthos-runtime/domain/carnivore_awareness.hpp",
+    "stalthos-runtime/domain/hero_view_controller.hpp",
+    "stalthos-runtime/tests/carnivore_awareness.cpp",
+    "stalthos-runtime/domain/nesting.hpp",
+    "stalthos-runtime/tests/nesting.cpp",
+    "stalthos-runtime/engine/nest_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/CMakeLists.txt",
     "Play.cmd",
     "Play.ps1",
     "PLAY.md",
     "README.md"
   ],
-  "updated": "2026-10-23T00:30:11.830120+00:00",
-  "resume_instructions": "Collect current collaboration worker commits before any new dispatch. Root integrates carnivore then nesting and verifies same executable native behavior.",
+  "updated": "2026-10-23T00:47:00.855213+00:00",
+  "resume_instructions": "Read next-task.md and final integration-receipt.json. Earlier native packet4154a82 excluded; only746baa2 final accepted. No active workers. Reuse suitable attached worktrees.",
   "validation": {
-    "passed": false,
-    "command": "integration pending",
-    "evidence_path": ".clanker/tasks/continuation-20261022/"
-  }
+    "passed": true,
+    "command": "Release settled-source; CTest60/60; verify.py six same-executable native runs; composed captures; independent moving-recall reproducer",
+    "evidence_path": ".clanker/tasks/continuation-20261022/integration-receipt.json"
+  },
+  "receipt_path": ".clanker/tasks/continuation-20261022/integration-receipt.json",
+  "next_step": "Actual independent Smalltrotter hatchling admission from incubated clutch"
 }

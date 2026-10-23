@@ -23,6 +23,8 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Exterior woodland habitat | Working draft:10 existing trees/saplings, tunable supported lane, proxy38m and animated animal4.67m entry, normal connected launcher | Sparse broad-foliage stand-in/open canopy/coarse ground; no physical canopy shelter/new collisions/forest ecology |
 | Bounded peer companionship | Working draft:existing conspecific real peer link, graph approach/wait, separation/reunion, needs priority and camera-only boundary | Session-only/one peer, endpoint waits/overshoot/no occlusion/proxy social poses; family/lifecycle still missing |
 | Observable hero life-stage progression | Working draft:actual juvenile-to-adult calendar threshold, milestone and tunable horizontal bulk, native before/after bounds/captures, continued controls and once-only needs | Shared anatomy/abrupt bulk, other-stage forms/gait/contact and full life-history not accepted |
+| Body-local carnivore awareness and alarm recall | Working draft: actual retained adult Longstride body cue, smooth once-per-encounter recall, camera cancellation/separation and camera-only native proof | Conservative proximity only, no attack/hunting/occlusion; synthetic proxy diagnostics |
+| Smalltrotter nesting and incubation | Partial reproduction draft: adult B dry clear supported clutch, visible3eggs, shared-calendar incubation, responsive movement | Actual hatchling admission NEXT; mating/parenting/full reproduction/connected saves missing; new-life retention source/domain only |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -74,3 +76,5 @@ Latest accepted: npc-peer-20261020. One session-only NPC peer link/graph approac
 
 
 Latest accepted: exterior-shore-20261020. Authored cove/74m proxy descent/local4m animated entry, native body-ground and bounded actual moving-camera boundary. Flat/finite water/coarse cliffs/global shoreline/native long crossing/contact limits parked. NEXT body-local carnivore potential-danger cue and interruptible camera recall; no shore/asset polish.
+
+Latest accepted: continuation-20261022/integration-receipt.json. Play entry, body-local potential-danger/interruptible recall and partial nest/incubation. NEXT actual independent hatchling admission; no polish detour.

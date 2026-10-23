@@ -1,0 +1,6 @@
+{
+  "reason": "source mutated while older compile in flight; object mtime falsely current; executable lacked nesting report",
+  "executable_sha256": "4154a82f721427ede815f82a30ba224ae2fd02d5d47cfdda11345aafc465bf5f",
+  "runs": "native-body/cancel/camera/nest/normal/original.log",
+  "excluded_from_final_acceptance": true
+}

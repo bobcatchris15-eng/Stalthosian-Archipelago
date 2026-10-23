@@ -16,6 +16,7 @@ pinned animal, fern and woodland assets when available; missing assets are annou
 | Right-click nearby clear dry ground | Ask the animal to travel there; direct steering cancels |
 | E | Attempt an eligible nearby resource interaction |
 | F with animal control | Disturb the eligible nearby sapling |
+| B with animal control | Adult Smalltrotter: attempt to lay one clutch on nearby dry clear ground |
 | N after death | Begin the next life in the current session |
 | Esc | Exit |
 
@@ -26,6 +27,13 @@ shared food and water. The existing animal moves slowly; its anatomy and animati
 remain provisional. The calendar starts at midnight, so the initial scene is dark.
 
 **Connected sessions currently start fresh and do not support saving or loading.**
+
+An adult can place one visible nest with three eggs; incubation follows the world
+calendar. This is a partial reproduction draft: eggs do not hatch into new animals
+yet. Nearby adult Longstride bodies can cause a potential-danger cue and recall a
+detached camera. Intentional camera input cancels recall; proximity alone does not
+mean the Longstride intends to attack.
+
 The original watershed save mode remains available through the existing runtime
 scripts. This connected draft does not yet deliver all five playable species,
 family/reproduction gameplay, four traversable islands or verified target-hardware

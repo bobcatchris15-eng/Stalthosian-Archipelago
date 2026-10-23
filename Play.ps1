@@ -16,6 +16,7 @@ Write-Host 'The Stalthosian Archipelago - connected working draft'
 Write-Host 'W/S move; A/D turn. F1 detach/return; detached WASD pans the camera.'
 Write-Host 'Left-drag orbit; wheel zoom; V inspect; right-click nearby ground to travel.'
 Write-Host 'E interact; F disturb a nearby eligible sapling; N next life after death; Esc exit.'
+Write-Host 'Adult Smalltrotter: B attempts a clutch on dry clear ground; hatching is unfinished.'
 Write-Host 'Left alone, the animal follows its ordinary needs and explores.'
 Write-Host 'Connected sessions currently start fresh and do not save. See PLAY.md for draft limits.'
 $options = @{ Proxy = [bool]$Proxy }

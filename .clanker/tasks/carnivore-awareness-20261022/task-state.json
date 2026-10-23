@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "task_id": "carnivore-awareness-20261022",
-  "status": "running",
+  "status": "complete",
   "base_revision": "6454531",
-  "current_step": "ready for root integration and native acceptance",
+  "current_step": "body-local cue and interruptible recall accepted by root native integration",
   "completed_steps": [
     "inspected existing actor and camera ownership",
     "implemented body cue and interruptible controller recall",
@@ -18,11 +18,12 @@
     "stalthos-runtime/CMakeLists.txt",
     "stalthos-runtime/scripts/Run.ps1"
   ],
-  "updated": "2026-10-23T00:34:37.158602+00:00",
+  "updated": "2026-10-23T00:47:00.855213+00:00",
   "resume_instructions": "Cherry-pick61a2d52 then followup moving-body recall fix. Root runs native CarnivoreProbe/CarnivoreCancelProbe/CarnivoreCameraProbe25seconds and inspects composed captures. Focused domain2/2pass. Final header change not native rebuilt in worker; root owns combined native integration build.",
   "validation": {
-    "passed": false,
-    "command": "focused ctest 2/2 passed; native acceptance pending"
+    "passed": true,
+    "command": "root settled Release60CTest and six-run verification.py; exact accepted scope in integration receipt",
+    "evidence_path": ".clanker/tasks/continuation-20261022/integration-receipt.json"
   },
-  "receipt_path": ".clanker/tasks/carnivore-awareness-20261022/receipt.json"
+  "receipt_path": ".clanker/tasks/continuation-20261022/integration-receipt.json"
 }

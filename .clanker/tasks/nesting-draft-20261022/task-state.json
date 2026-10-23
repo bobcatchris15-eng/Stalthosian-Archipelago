@@ -3,7 +3,7 @@
   "task_id": "nesting-draft-20261022",
   "status": "complete",
   "base_revision": "6454531",
-  "current_step": "source packet handed to root",
+  "current_step": "bounded assigned slice accepted by root native integration; full hatching remains missing",
   "completed_steps": [
     "Scoped partial incubation slice approved",
     "Implemented domain native adapter input/cues/probe/report/docs",
@@ -22,10 +22,10 @@
   ],
   "validation": {
     "passed": true,
-    "command": "ctest --test-dir var/build/nesting-domain -C Release -R ^domain-nesting$ --output-on-failure",
-    "evidence_path": "var/build/nesting-domain/Testing/Temporary/LastTest.log"
+    "command": "root settled Release60CTest and six-run verification.py; exact accepted scope in integration receipt",
+    "evidence_path": ".clanker/tasks/continuation-20261022/integration-receipt.json"
   },
-  "receipt_path": ".clanker/tasks/nesting-draft-20261022/receipt.json",
+  "receipt_path": ".clanker/tasks/continuation-20261022/integration-receipt.json",
   "resume_instructions": "Source packet3421a0b ready root integration. Root must run combined native build and NestProbe atscale100duration14 plus ordinary input proof. This slice never claims hatching. Follow-on actual hatchling admission task in stalthos-runtime/docs/nesting.md.",
-  "updated": "2026-10-23T00:36:15.023731+00:00"
+  "updated": "2026-10-23T00:47:00.855213+00:00"
 }

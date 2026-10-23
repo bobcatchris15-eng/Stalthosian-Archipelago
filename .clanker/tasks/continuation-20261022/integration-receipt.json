@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "task_id": "continuation-20261022",
+  "status": "bounded-drafts-accepted",
+  "updated": "2026-10-23T00:47:00.855213+00:00",
+  "source_revision": "bd0302ac3a9d76546dd35f24a9d1e0ffaba7d19c",
+  "source_sha256": {
+    "stalthos-runtime/domain/carnivore_awareness.hpp": "3a2531d8d034b598f4f8cc563fca59cc28d5d070dcb984c643f78f8acde2996e",
+    "stalthos-runtime/domain/hero_view_controller.hpp": "113be555262c834a742a382086f24741226c5035b81743833943ce6fabbffe77",
+    "stalthos-runtime/tests/carnivore_awareness.cpp": "46f7f6d6fbdc3e01509bc9058e49dae642272a42633109f004006e198f31b69e",
+    "stalthos-runtime/domain/nesting.hpp": "28483b8cbdd24f12ec9cf752b0975219950a7a30131621015ebf13ebe2608fcf",
+    "stalthos-runtime/tests/nesting.cpp": "efa92be3f6bf9270271842edcef48e35ac526157ca38dd4aa17e0b7ae126a42a",
+    "stalthos-runtime/engine/nest_scene.hpp": "f8a5252aeec592688b245c1da8ee4bf892ae45d8e6f2858cdd47755adf32b875",
+    "stalthos-runtime/engine/main.cpp": "30229ebda9d1175363b17a0127764a764ba894765edb98d2c1b4e9dbc669663c",
+    "stalthos-runtime/scripts/Run.ps1": "66509c7a17d62e691d4223b058ba239fbbf4bc3066f35cb315695fd3407f1043",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "eb5146da869543b8e1dcb7012269d92167e73d6872ef98caf798f351883aed4c",
+    "stalthos-runtime/CMakeLists.txt": "73bb5b6c626766cf06c203f5f24c2d343717f09c9d7d6c49d4f93cb5b752a455",
+    "Play.cmd": "a418df931ff779f54f1a239a309b471649ce1303459b367df0f63e217064a791",
+    "Play.ps1": "cb30fc0c5a32243f9eac03b24d59718ed991bc0d126a5dd072f38d1bb2352a34",
+    "PLAY.md": "569089ee845d4ba4e8e51ecc786421a4c7a7633d6622d64fe284dae8c1ae23ee",
+    "README.md": "7fa94db2d5caffaf8f9b8c1cddc24dcac2b1ba1283d0c693da44841dd0dd111f"
+  },
+  "executable_sha256": "746baa2cd712a8a59f0cba55b88dba33f8b79f0168b1b61edf283942bf4a3237",
+  "validation": {
+    "Release": "settled-source forced main.cpp rebuild passed",
+    "CTest": "60/60 passed in4.08s",
+    "native": "six final-executable runs; verification.json",
+    "independent_review": ".clanker/clunkers/gameplay-review-20261022/review.json; moving-body defect independently reproduced, fixed and rerun",
+    "visual": "composed danger cue and3egg/twig-bowl captures inspected",
+    "toolkit": "unchanged; full suite not repeated"
+  },
+  "accepted": [
+    "Direct normal connected play entry",
+    "Actual retained adult Longstride body-only conservative presence cue and once-per-encounter interruptible camera recall",
+    "Partial reproduction: adult Smalltrotter one visible clutch and calendar incubation; no hatching"
+  ],
+  "metrics": {
+    "body": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194318-19458665",
+      "physical_seconds": 24.224439308512956,
+      "support_failures": 0,
+      "actors": 12,
+      "sessions": 12,
+      "support_fallbacks": 0,
+      "recall_requests": 1,
+      "final_detached": false,
+      "captures": 3
+    },
+    "cancel": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194348-136e20d0",
+      "physical_seconds": 23.955656716774683,
+      "support_failures": 0,
+      "actors": 12,
+      "sessions": 12,
+      "support_fallbacks": 0,
+      "recall_requests": 1,
+      "final_detached": true,
+      "captures": 3
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194422-104bea95",
+      "physical_seconds": 21.040201925148722,
+      "support_failures": 0,
+      "actors": 12,
+      "sessions": 12,
+      "support_fallbacks": 0,
+      "recall_requests": 0,
+      "final_detached": true,
+      "captures": 2
+    },
+    "nest": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194256-9fce1654",
+      "physical_seconds": 14.748063628736418,
+      "support_failures": 0,
+      "actors": 12,
+      "sessions": 12,
+      "support_fallbacks": 0,
+      "eggs": 3,
+      "progress": 1,
+      "offspring": 0,
+      "captures": 3
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194453-ee2f4bae",
+      "physical_seconds": 6.512095996469725,
+      "support_failures": 0,
+      "actors": 12,
+      "sessions": 12,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-194503-046dad34",
+      "physical_seconds": 4.684726209903602,
+      "support_failures": 0
+    },
+    "executable_sha256": "746baa2cd712a8a59f0cba55b88dba33f8b79f0168b1b61edf283942bf4a3237",
+    "preserved_untracked_files": 157,
+    "coordination_lock_lifecycle": "Three task-owned slots acquired and released through the protocol helper; excluded from unrelated-file preservation.",
+    "limits": "Synthetic native fixtures; proxy encounter/nest proof, normal animated launch. No human input, hatching, connected save, complete game or FPS acceptance. New-life nest retention is source/domain proof only."
+  },
+  "excluded_native_packet": "excluded-native.json; stale-object race discovered by missing nesting report, corrected before final acceptance",
+  "next_task": "next-task.md: actual authoritative independent hatchling admission",
+  "limits": [
+    "Synthetic startup/input/time fixtures, proxy encounter/nesting proof; normal existing animated animal launch only",
+    "No actual hatching, mating or parenting; no new-life native nest-retention trial (source/domain only)",
+    "Conservative original-patch nest placement; one clutch/session and900calendar-seconds provisional tuning",
+    "No new connected saves, full five-species/four-island coverage, human physical input or30FPS acceptance"
+  ]
+}

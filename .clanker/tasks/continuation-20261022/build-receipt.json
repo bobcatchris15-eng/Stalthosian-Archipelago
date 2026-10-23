@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+  "configuration": "Release",
+  "executable": "E:\\Stalthosian Archipelago\\var\\build\\stalthos-runtime\\Release\\Stalthos.exe",
+  "executable_sha256": "746baa2cd712a8a59f0cba55b88dba33f8b79f0168b1b61edf283942bf4a3237",
+  "cache_provenance_sha256": "d0857b3c00aa29a33aa1b9ebc1ca08c4eecfece068ca7ee5b489bd5e86fbb3eb",
+  "source_revision": "bd0302ac3a9d76546dd35f24a9d1e0ffaba7d19c",
+  "dirty_working_tree": true,
+  "note": "Final settled-source forced main.cpp rebuild after source integration; verified local engine inputs from initial Build.ps1 provenance; final six native runs match this hash",
+  "source_sha256": {
+    "stalthos-runtime/domain/carnivore_awareness.hpp": "3a2531d8d034b598f4f8cc563fca59cc28d5d070dcb984c643f78f8acde2996e",
+    "stalthos-runtime/domain/hero_view_controller.hpp": "113be555262c834a742a382086f24741226c5035b81743833943ce6fabbffe77",
+    "stalthos-runtime/tests/carnivore_awareness.cpp": "46f7f6d6fbdc3e01509bc9058e49dae642272a42633109f004006e198f31b69e",
+    "stalthos-runtime/domain/nesting.hpp": "28483b8cbdd24f12ec9cf752b0975219950a7a30131621015ebf13ebe2608fcf",
+    "stalthos-runtime/tests/nesting.cpp": "efa92be3f6bf9270271842edcef48e35ac526157ca38dd4aa17e0b7ae126a42a",
+    "stalthos-runtime/engine/nest_scene.hpp": "f8a5252aeec592688b245c1da8ee4bf892ae45d8e6f2858cdd47755adf32b875",
+    "stalthos-runtime/engine/main.cpp": "30229ebda9d1175363b17a0127764a764ba894765edb98d2c1b4e9dbc669663c",
+    "stalthos-runtime/scripts/Run.ps1": "66509c7a17d62e691d4223b058ba239fbbf4bc3066f35cb315695fd3407f1043",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": "eb5146da869543b8e1dcb7012269d92167e73d6872ef98caf798f351883aed4c",
+    "stalthos-runtime/CMakeLists.txt": "73bb5b6c626766cf06c203f5f24c2d343717f09c9d7d6c49d4f93cb5b752a455",
+    "Play.cmd": "a418df931ff779f54f1a239a309b471649ce1303459b367df0f63e217064a791",
+    "Play.ps1": "cb30fc0c5a32243f9eac03b24d59718ed991bc0d126a5dd072f38d1bb2352a34",
+    "PLAY.md": "569089ee845d4ba4e8e51ecc786421a4c7a7633d6622d64fe284dae8c1ae23ee",
+    "README.md": "7fa94db2d5caffaf8f9b8c1cddc24dcac2b1ba1283d0c693da44841dd0dd111f"
+  }
+}
