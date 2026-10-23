@@ -1,3 +1,23 @@
+# Accepted bounded Longstride wild caregiver association - 2026-10-23
+
+Receipt .clanker/tasks/longstride-parent-care-20261023/integration-receipt.json.
+68 tests and 12 final-executable native runs pass. Fresh normal Longstride young
+binds one actual retained adult at supported birth, approaches/waits, yields to
+direct reverse input, and returns to the same caregiver. Actual caregiver remains
+on its existing drinking behavior with ordinary shared ledger/age owner. Young
+death/N preserves population and ledger and creates no inherited association.
+Smalltrotter independence and partial manual save/restart remain intact.
+
+Limits: parent stationary/drinking during native window; moving journeys and native
+caregiver death unproven. Camera-only run gives no follow intention, but tether
+keeps remote parent beyond camera reach; no near-parent camera-knowledge claim.
+Generic NPC art/occluded caregiver and full parenting/provisioning remain gaps.
+No new caregiver after N. Full families, four islands, unrestricted connected saves
+and target-hardware FPS remain unaccepted. NEXT: species-correct wild Longstride
+finite carrion access, shared with hero; see task next-task.md.
+
+Earlier active headings are historical; this receipt supersedes them. No workers remain assigned new work this wake.
+
 # Accepted partial manual connected persistence - 2026-10-23
 
 Receipt: .clanker/tasks/connected-persistence-20261023/integration-receipt.json.

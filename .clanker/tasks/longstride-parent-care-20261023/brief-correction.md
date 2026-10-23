@@ -1,0 +1,1 @@
+Root corrected proposed Smalltrotter parentfollowing before implementation after reading planning creatures.md: Smalltrotter hatchlings are independent; Longstride young depend on a wild parent. Reused the same bounded implementation/review assignments without additional dispatch. Original abandoned brief/state preserved.

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "task_id": "longstride-parent-care-20261023",
+  "status": "complete",
+  "base_revision": "1e381a4",
+  "current_step": "Accepted bounded caregiver association/approach/wait; move to missing NPC carnivore food behavior",
+  "completed_steps": [
+    "Collected and accepted partial persistence native draft before dispatch",
+    "Preserved unrelated untracked hashes; root owns integrated build and GPU"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T16:22:00Z",
+  "resume_instructions": "Working bounded association accepted. Moving parent journey/nativeparentdeath/provisioning/fullfamily remain gaps; do not polish assets. Next missingNPCdiet per next-task.md; collectworkers beforedispatch.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/longstride-parent-care-20261023/verify.py",
+    "evidence_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\longstride-parent-care-20261023\\verification.json"
+  },
+  "receipt_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\longstride-parent-care-20261023\\integration-receipt.json"
+}

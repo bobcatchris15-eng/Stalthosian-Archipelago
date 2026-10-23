@@ -1,0 +1,16 @@
+{
+  "reason": "Earlier executable lacked syntheticreverse directauthority; historical only. Finalpacket reruns correctedfixture.",
+  "runs": {
+    "native-Brackenback.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111628-bd1d014e",
+    "native-camera.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111428-72964282",
+    "native-care.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111358-84f152e0",
+    "native-normal.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111443-3dc9062b",
+    "native-original.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111642-4027b9f2",
+    "native-partial-load.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111528-1b15f275",
+    "native-partial-save.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111505-eb0e25f5",
+    "native-Reedcrest.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111635-b44b4b1f",
+    "native-small-hatch.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111538-8bb711e1",
+    "native-Smalltrotter.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111614-325c8f70",
+    "native-Thistletail.log": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111621-d2198852"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "smalltrotter-parent-care-20261023",
+  "status": "abandoned",
+  "base_revision": "1e381a4",
+  "current_step": "Brief corrected before implementation: Smalltrotter independent hatchlings; Longstride dependent care belongs to plan",
+  "completed_steps": [
+    "Collected and accepted partial persistence native draft before dispatch",
+    "Preserved unrelated untracked hashes; root owns integrated build and GPU"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T16:03:00Z",
+  "resume_instructions": "No Smalltrotter parent-follow work. Continue longstride-parent-care-20261023; oldbrief/preservation retained as historical evidence."
+}

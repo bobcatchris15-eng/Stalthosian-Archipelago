@@ -1,0 +1,104 @@
+{
+  "status": "accepted_bounded_actual_wild_caregiver_association_approach_wait",
+  "source_commits": [
+    "643b6ff",
+    "e2131ce",
+    "c41510c"
+  ],
+  "independent_review": "0eb6584 reviews e2131ce; c41510c is root-owned diagnostic-only two-line input/sample wiring, exact delta reconstruction asserted by verify.py",
+  "verification": {
+    "ok": true,
+    "ctest": "68/68",
+    "same_executable_native_runs": 12,
+    "executable_sha256": "c0bc7eae8b0aa6c5a1823f32a48e9bb9cb5fec578de57eef43f45e38cd707d96",
+    "native_runs": {
+      "Brackenback": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-112005-4f5de9b5",
+        "physical_seconds": 3.7400147057778668,
+        "actors": 12
+      },
+      "camera": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111804-bb54f04d",
+        "physical_seconds": 10.088299909315538,
+        "actors": 12
+      },
+      "care": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111734-10c33e2d",
+        "physical_seconds": 25.120165210799314,
+        "actors": 12
+      },
+      "inspection": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-112048-aa709196",
+        "physical_seconds": 6.8320880007813685,
+        "actors": 12
+      },
+      "normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111818-eca138c5",
+        "physical_seconds": 18.770486402790993,
+        "actors": 12
+      },
+      "original": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-112019-ee1813c3",
+        "physical_seconds": 3.581786807219032,
+        "actors": 8
+      },
+      "partial-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111904-aefa15eb",
+        "physical_seconds": 27.51461850985652,
+        "actors": 12
+      },
+      "partial-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111841-32342d0f",
+        "physical_seconds": 20.740322004887275,
+        "actors": 12
+      },
+      "Reedcrest": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-112012-2cbe4ff5",
+        "physical_seconds": 3.733561804285273,
+        "actors": 12
+      },
+      "small-hatch": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111916-0d59d622",
+        "physical_seconds": 30.449438701441977,
+        "actors": 13
+      },
+      "Smalltrotter": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111952-8adca009",
+        "physical_seconds": 3.7306519980193116,
+        "actors": 12
+      },
+      "Thistletail": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-111959-40e3e1b6",
+        "physical_seconds": 3.7119827035348862,
+        "actors": 12
+      }
+    },
+    "care": {
+      "peak_separation": 6.069945907648201,
+      "returned_separation": 3.4993133546252597,
+      "caregiver": 14296929078188075222,
+      "parent_native_travel": 0.0,
+      "parent_thirst_start": 0.5999991446399828,
+      "parent_thirst_end": 0.564358523264269
+    },
+    "camera_parent_nearest_meters": 63.77968186903548,
+    "preserved_unrelated_paths": 253,
+    "source_review": "e2131ce independently reviewed9paths; only two-line exact reconstructed diagnostic authority/sample delta c41510c applied by root, ordinary behavior unchanged",
+    "limits": [
+      "Actual parent remains drinking in native window; moving journey/family provisioning not native proven",
+      "Camera remains constrained by tether and cannot reach actual remote parent; only absence of camera-granted follow intent proven",
+      "Caregiver death domain only; young death/N native, no new caregiver afterN",
+      "Generic NPC art, full allspecies families, full connected saves, four islands and target30FPS remain unaccepted"
+    ]
+  },
+  "visuals": "Final composed parent-care-0.png inspected: actual hero and readable waiting-care cue, caregiver occluded from rear; extra same-executable inspection native run shows body and generic NPC proxies. NPC caregiver species art, anatomical growth and composed family presentation remain unaccepted. No performance claim.",
+  "proof_limits": [
+    "Actual parent remains drinking in native window; moving journey/family provisioning not native proven",
+    "Camera remains constrained by tether and cannot reach actual remote parent; only absence of camera-granted follow intent proven",
+    "Caregiver death domain only; young death/N native, no new caregiver afterN",
+    "Generic NPC art, full allspecies families, full connected saves, four islands and target30FPS remain unaccepted"
+  ],
+  "next_task": "Actual Longstride NPC species-correct finite carrion access via sole shared registry/ledger; see next-task.md",
+  "historical": "pre-diagnostic-fix logs/native reports are excluded from12 final-executable runs; old failed17m source test retained in independent review",
+  "scope_correction": "Initial Smalltrotter parent-follow brief abandoned before implementation after planning species rule read; Longstride dependence implemented instead."
+}
