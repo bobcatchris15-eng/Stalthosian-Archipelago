@@ -1,0 +1,13 @@
+{
+  "status": "launcher-native-verified",
+  "date": "2026-10-22",
+  "launch": "pwsh -NoProfile -File Play.ps1 -Duration 6",
+  "whatif": "passed; no window launched",
+  "native_evidence": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261022-192749-99c9e857",
+  "executable_sha256": "8b03dff1984d38640a0ecd09685c2c04be4d835129bad6c2181b14b6afe0e325",
+  "existing_creature_loaded": true,
+  "actors": 12,
+  "support_failures": 0,
+  "support_fallbacks": 0,
+  "limits": "Timed normal launch verified. Interactive indefinite behavior uses existing tested Interactive switch; no human input or FPS acceptance claimed."
+}

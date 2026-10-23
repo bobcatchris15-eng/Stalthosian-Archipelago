@@ -2,6 +2,13 @@
 
 A Late Cretaceous-inspired fictional island archipelago and small-dinosaur life simulator. The target is a **full draft**: five playable lives, four islands, complete lifecycles and persistent world continuity. Wicked Engine is the selected native C++17/DX12 engine. The target machine is a GTX 1080 8 GB and first-generation Ryzen, with a 30 FPS floor still awaiting representative runtime evidence.
 
+## Play the current connected draft
+
+Double-click **Play.cmd**, or run `pwsh -NoProfile -File .\Play.ps1`.
+See [PLAY.md](PLAY.md) for controls, local build requirements and current limits.
+Connected sessions currently start fresh; full playable draft coverage is tracked
+in [.clanker/DRAFT_COVERAGE.md](.clanker/DRAFT_COVERAGE.md).
+
 ## Project layout
 
 - `stalthos-runtime/`: Wicked diagnostic host, engine-independent domain foundations and native scenarios. Read its README for build and run commands.

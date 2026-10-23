@@ -1,4 +1,20 @@
-# Current world construction checkpoint â€” 2026-10-20
+# Active continuation - 2026-10-22
+
+Direct user renewed rapid full-playable-draft construction. Current root task:
+.clanker/tasks/continuation-20261022/task-state.json. Existing hourly heartbeat
+retargeted in place to this chat and resumed; no duplicate automation.
+
+Baseline58CTest and fresh normal animated12actor native launch pass. Root adds
+Play.cmd/Play.ps1/PLAY.md normal connected entry. Missing gameplay underway in
+isolated managed worktrees: carnivore-awareness (body-local cue/interruptible
+recall), nesting-draft (adult Smalltrotter visible clutch/incubation; hatching
+explicitly missing until actual independent actor admission), gameplay-review.
+Collect/integrate/review these before new dispatch. Never claim worker drafts
+accepted before final integrated Release/native evidence. Preserve original
+saved mode and connected-save refusal. All five playable species, family/full
+reproduction, four-island traversal and connected persistence remain open.
+
+# Current world construction checkpoint — 2026-10-20
 
 WORLD WORKING AND REFINABLE. Working draft -> log oddities -> NEXT SUBSYSTEM.
 Wicked Engine. Assets are replaceable. No save/infrastructure/polish prerequisite.
@@ -83,7 +99,7 @@ planning and historical evidence/worktrees. Explicit paths, graph refresh, secre
 scan and reviewed origin main publication authorized. No force/releases/deploy,
 paid APIs or credential mutation. Wake<=35active minutes and<=6dispatches.
 
-## Working draft accepted: environmental exposure â€” 2026-10-20
+## Working draft accepted: environmental exposure — 2026-10-20
 
 Existing local weather comfort adds capped physical-time fatigue below0.5, with
 exposure/partial-lee cues. No injury/lifecycle/new save fields. Ordinary controls
@@ -109,7 +125,7 @@ player go-there input, immediate direct override, arrival return to autonomy and
 body-local/camera boundary. No generalized navigation/save framework.
 Working draft -> log oddities -> next. Wake04:19CDT root-only, zero dispatch.
 
-## Working draft accepted: player-issued contextual destination â€” 2026-10-20
+## Working draft accepted: player-issued contextual destination — 2026-10-20
 
 Connected right-click visible nearby clear dry ground -> native scene raycast,
 body-local12m validation, resident terrain/grade/water/obstruction checks, existing
@@ -143,7 +159,7 @@ shared resource identity/contact/history and visible depletion. No ecology/save/
 activation framework, new plant art, water simulation or accepted-draft polish.
 Working draft -> log oddities -> next. Wake05:20CDT root-only, zero dispatches.
 
-## Working draft accepted: exterior meadow browse patch â€” 2026-10-20
+## Working draft accepted: exterior meadow browse patch — 2026-10-20
 
 Connected world with existing imported Plant now has one fern at144,20 on the
 existing last resident node. Shared finite resource208, quantity1, shrub index8,
@@ -177,7 +193,7 @@ contact/relief and camera-only separation. Static/shallow approximation allowed;
 no hydrology solver, lethal drinking, new persistence or accepted-draft polish.
 Working draft -> log oddities -> next. Wake06:18CDT root-only, zero dispatch.
 
-## Working draft accepted: exterior meadow water access â€” 2026-10-20
+## Working draft accepted: exterior meadow water access — 2026-10-20
 
 Connected world now has static rock-lined shallow seep209 (quantity2), center
 132,33.5/radius2.6, existing dry bank node132,30. Water plane10.76859m with low
@@ -218,7 +234,7 @@ readable night controls and aligned light/sky, without changing clocks/needs/age
 or accepted weather response. No astronomy/new art/save framework or polish.
 Working draft -> log oddities -> next. Wake07:17CDT root-only, zero dispatches.
 
-## Accepted working draft: calendar day/night â€” 2026-10-20 08:40CDT
+## Accepted working draft: calendar day/night — 2026-10-20 08:40CDT
 
 Connected lighting now follows existing Conditions.dayFraction with aligned sun/
 sky, warm morning/evening, brighter noon and readable night fill. Normal calendar
@@ -242,7 +258,7 @@ NEXT SUBSYSTEM: recognizable traversable exterior woodland patch using existing
 reviewed replaceable trees, bounded tunable layout and ordinary body entry.
 .clanker/tasks/day-night-20261020/next-task.md. No accepted-draft polish.
 
-## Accepted working draft: exterior woodland â€” 2026-10-20 09:42CDT
+## Accepted working draft: exterior woodland — 2026-10-20 09:42CDT
 
 Ten existing shared-prototype trees/saplings adjoining exterior meadow; tunable
 layout x148..184,z38..56 and clear central lane146..184,z47. Connected wrapper
@@ -269,7 +285,7 @@ NEXT SUBSYSTEM: observable bounded peer companionship with one existing eligible
 nearby conspecific, actual-body awareness and existing relationship/motion contracts.
 .clanker/tasks/exterior-woodland-20261020/next-task.md. No woodland polish.
 
-## Accepted working draft: bounded peer companionship â€” 2026-10-20 10:50CDT
+## Accepted working draft: bounded peer companionship — 2026-10-20 10:50CDT
 
 Connected actual-body calm encounter9m/1.5physical seconds selects one existing
 eligible live conspecific, forms a real RelationshipTracker Peer link, observes
@@ -301,7 +317,7 @@ Lifecycle, bounded real stage threshold crossing, tunable representation/cue and
 continued ordinary controls/once-only needs. No art/breeding/save framework.
 .clanker/tasks/peer-companionship-20261020/next-task.md. No social polish.
 
-## Accepted working draft: observable life-stage progression â€” 2026-10-20 11:44CDT
+## Accepted working draft: observable life-stage progression — 2026-10-20 11:44CDT
 
 Existing calendar Lifecycle now drives connected stage cue/milestone and one
 proposed horizontal bulk change at adulthood. Starting Hatchling/Juvenile bulk1,

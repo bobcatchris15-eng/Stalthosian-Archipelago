@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "task_id": "continuation-20261022",
+  "status": "running",
+  "base_revision": "6454531ee3cd3099675f0fdc5d6ce1d164bf9957",
+  "current_step": "Isolated carnivore recall and nesting implementation; root launcher and integration",
+  "completed_steps": [
+    "HALT absent; current durable handoff and coverage checked",
+    "58/58 baseline CTest and normal pinned-animal12actor native launch pass",
+    "Play entry added and timed native launch passes",
+    "Existing paused heartbeat retargeted in place to current chat and resumed hourly"
+  ],
+  "touched_artifacts": [
+    "Play.cmd",
+    "Play.ps1",
+    "PLAY.md",
+    "README.md"
+  ],
+  "updated": "2026-10-23T00:30:11.830120+00:00",
+  "resume_instructions": "Collect current collaboration worker commits before any new dispatch. Root integrates carnivore then nesting and verifies same executable native behavior.",
+  "validation": {
+    "passed": false,
+    "command": "integration pending",
+    "evidence_path": ".clanker/tasks/continuation-20261022/"
+  }
+}
