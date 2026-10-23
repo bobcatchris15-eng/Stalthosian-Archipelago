@@ -1,0 +1,86 @@
+{
+  "ok": true,
+  "executable_sha256": "8f24a55c8f1fa138be9984a9bdae3af50e0b6579644860c87e14b4bf0eb59c22",
+  "native_runs": {
+    "courtship": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061745-b03689cd",
+      "physical_seconds": 13.355694797093747,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "override": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064029-e24d19b2",
+      "physical_seconds": 8.000019899292965,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061803-135ed788",
+      "physical_seconds": 9.597382909953012,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "refusal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064041-8cec0f73",
+      "physical_seconds": 8.000687603635015,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "hatch": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-061817-14395d00",
+      "physical_seconds": 30.38762520313321,
+      "actors": 13,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "long-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064114-254c65a3",
+      "physical_seconds": 3.754879307714873,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "bird-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064121-307d575c",
+      "physical_seconds": 3.720089602677035,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "bracken-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064128-2341f727",
+      "physical_seconds": 3.738548505338258,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "reed-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064135-68f63a0d",
+      "physical_seconds": 3.6944505037536146,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "small-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064142-9fa7a4a0",
+      "physical_seconds": 3.7462946028535953,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-064054-66e27449",
+      "physical_seconds": 3.585545507594361,
+      "actors": 8,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    }
+  },
+  "unrelated_untracked_preserved": 230,
+  "pinned_asset_hashes_unchanged": true
+}
+COURTSHIP_NATIVE_VERIFIED

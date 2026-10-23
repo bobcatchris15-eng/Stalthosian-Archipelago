@@ -1,3 +1,14 @@
+# Active connected persistence construction - 2026-10-23
+
+Task: .clanker/tasks/connected-persistence-20261023/task-state.json. Existingworkers collected beforedispatch: nesting_draft owns isolated implementation; gameplay_review independent state-loss/atomicity review. Root owns integratedbuild/nativeGPU/state. Source target12:03UTC; wakeend12:15UTC. No connected-save acceptance yet. Preserve original saved mode/refusal; quiescent partial subset must preserve or explicitly refuse ALL live state before writing/discarding.
+
+# Accepted Smalltrotter actual mate response - 2026-10-23
+
+Receipt: .clanker/tasks/smalltrotter-courtship-20261023/integration-receipt.json.
+66tests and11 same-final-executable native runs pass. Actual mate approaches5m to3.25m, quiet2seconds then clutch at8.525s. Direct cancels; unavailablemate/body-remote camera refuse. One actual child enters retained population, preserved acrossN with NPC/ledger unchanged. One speculativequiet rule, no fullsex/genetics/care; twoinactiveeggs/fixedchild/crowding remain. Original8/baselines and230unrelatedpaths/pins preserved.
+
+Prior courtship partial checkpoint completed this wake; supersedes older pending headings below.
+
 # Courtship source reviewed; final native matrix incomplete - 2026-10-23
 
 Read .clanker/tasks/smalltrotter-courtship-20261023/partial-native-verification.json and task-state.json first. Longstride fifth species published at40eddd9. Courtship source local HEADfa941f2, 66tests and three final native probes only; NOT publication accepted. Finish remaining final-executable packet before source changes or dispatch. Preserve all state. Next missing gameplay after acceptance: connected persistence per task next-task.md.

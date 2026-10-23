@@ -1,0 +1,108 @@
+{
+  "status": "accepted_bounded_smalltrotter_mate_response",
+  "source_commits": [
+    "ee46ee4",
+    "bb7e719",
+    "fcef5f4",
+    "0d5b580"
+  ],
+  "review_commits": [
+    "06fa6d9",
+    "fa941f2"
+  ],
+  "executable_sha256": "8f24a55c8f1fa138be9984a9bdae3af50e0b6579644860c87e14b4bf0eb59c22",
+  "tests": "66/66 CTest",
+  "native_runs": 11,
+  "verification": "verify.py passed all assertions; canonical LF hashes and Git blobs match independent review for11 source paths",
+  "proof": {
+    "courtship": {
+      "mate": 3572998927451126612,
+      "laid_physical_seconds": 8.524839101097314,
+      "observed_mate_min_distance": 3.25
+    },
+    "override": {
+      "no_clutch": true,
+      "requests": [
+        {
+          "event": "courtship_request",
+          "invited": true,
+          "mate": 3572998927451126612,
+          "physical_seconds": 2.000877899772604,
+          "reason": "Courtship invitation - mate approaching; stay quiet, WASD cancels"
+        }
+      ]
+    },
+    "camera": {
+      "no_clutch": true,
+      "requests": [
+        {
+          "event": "courtship_request",
+          "invited": false,
+          "mate": 0,
+          "physical_seconds": 2.0023239018482855,
+          "reason": "Choose gently sloping supported ground"
+        }
+      ]
+    },
+    "refusal": {
+      "no_clutch": true,
+      "requests": [
+        {
+          "event": "courtship_request",
+          "invited": false,
+          "mate": 0,
+          "physical_seconds": 2.0009351990011055,
+          "reason": "No nearby calm living adult Smalltrotter is ready to respond"
+        }
+      ]
+    },
+    "hatch": {
+      "mate": 3572998927451126612,
+      "laid_physical_seconds": 8.52923590586579,
+      "observed_mate_min_distance": 3.25,
+      "birth": {
+        "birth_calendar": 1752.9800204225467,
+        "child": 2,
+        "event": "admission_attempt",
+        "ledger_unchanged": true,
+        "old_actors_unchanged": true,
+        "old_session_count": 12,
+        "path_points": 5,
+        "physical_seconds": 17.529800204225467,
+        "position": [
+          10.050000107683225,
+          1.933617543059751,
+          -8.1
+        ],
+        "result": 0,
+        "session": 13,
+        "session_count": 13
+      },
+      "next_life": {
+        "calendar_seconds": 2500.0604303684668,
+        "event": "explicit_next_life",
+        "fresh_session": 14,
+        "hero_id": 3,
+        "input": "labelled synthetic N action",
+        "ledger_unchanged_at_handoff": true,
+        "new_age": 0.0,
+        "new_stage": "hatchling",
+        "npc_count": 13,
+        "npc_snapshot_unchanged_at_handoff": true,
+        "old_death_known": true,
+        "old_hero": 1,
+        "old_id_excluded": true,
+        "physical_seconds": 25.000604303684668
+      }
+    }
+  },
+  "preservation": 230,
+  "visual": "Actual composed nest-2.png inspected: nearby actual mate, clutch and readable accepted cue. Provisional bodies/eggs/terrain remain rough draft.",
+  "limits": [
+    "One speculative quiet-response pairing rule; no sex/genetics/authored display or fullreproductive biology",
+    "Twoinactiveeggs, fixedchildbody/near-nest crowding and incompleteparentcare remain",
+    "Other species family lives,fourislands,connectedpersistence andtarget30FPS unaccepted"
+  ],
+  "next_task": "connected-persistence-20261023: deliberately separate quiescent partial save/reload, preserve or refuse all state before writes",
+  "historical_exclusions": "Earlier failed builds/camera startup and earlier-executable probes are not part of accepted packet; see excluded-evidence.json and partial-native-verification.json history"
+}

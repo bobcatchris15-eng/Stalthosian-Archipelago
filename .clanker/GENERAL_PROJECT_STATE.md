@@ -1,3 +1,8 @@
+# Accepted Smalltrotter actual mate response - 2026-10-23
+
+Receipt: .clanker/tasks/smalltrotter-courtship-20261023/integration-receipt.json.
+66tests and11 same-final-executable native runs pass. Actual mate approaches5m to3.25m, quiet2seconds then clutch at8.525s. Direct cancels; unavailablemate/body-remote camera refuse. One actual child enters retained population, preserved acrossN with NPC/ledger unchanged. One speculativequiet rule, no fullsex/genetics/care; twoinactiveeggs/fixedchild/crowding remain. Original8/baselines and230unrelatedpaths/pins preserved.
+
 # Accepted fifth Longstride life/finite scavenging - 2026-10-23
 
 Receipt: .clanker/tasks/longstride-playable-20261023/integration-receipt.json.

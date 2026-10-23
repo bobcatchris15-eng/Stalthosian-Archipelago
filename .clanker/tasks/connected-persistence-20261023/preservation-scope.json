@@ -1,0 +1,20 @@
+{
+  "excluded_owned_courtship_paths": [
+    ".clanker/tasks/smalltrotter-courtship-20261023/build-camera-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/build-final-launch.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/build-launch.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-Brackenback-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-Longstride-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-Reedcrest-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-Smalltrotter-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-Thistletail-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-camera.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-courtship.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-original-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-override-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-override.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-refusal-final.log",
+    ".clanker/tasks/smalltrotter-courtship-20261023/native-runs.json"
+  ],
+  "reason": "Root courtship acceptance packet was still running at snapshot time; owned paths explicitly excluded from unrelated preservation, historical snapshot retained in prior git checkpoint where tracked"
+}

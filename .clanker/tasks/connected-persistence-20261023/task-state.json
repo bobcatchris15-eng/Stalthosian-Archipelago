@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "connected-persistence-20261023",
+  "status": "running",
+  "base_revision": "7a52e9a",
+  "current_step": "Isolated implementation and independent state-loss/atomicity review; root finishes courtship acceptance",
+  "completed_steps": [
+    "Collected completed existing workers before two bounded dispatches",
+    "Preserved unrelated untracked paths before new root owned state"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T11:42:00Z",
+  "resume_instructions": "Collect nesting_draft and gameplay_review; do not dispatch before checking existing integration. Never silently discard connected state. Source target12:03UTC, wakeend12:15UTC. Root nativeGPU ownership."
+}
