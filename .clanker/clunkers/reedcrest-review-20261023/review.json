@@ -48,8 +48,10 @@
     },
     {
       "path": "stalthos-runtime/domain/reedcrest.hpp",
-      "sha256": "ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc",
-      "git_blob": "f00101177dd5f6cf0eab6c08852af4f6836b9a01"
+      "sha256": "dd697a44720c82eb8edc3c2d6e50322297ca20bc1e68a7cecddd90c29c85bce9",
+      "git_blob": "f00101177dd5f6cf0eab6c08852af4f6836b9a01",
+      "canonical_review_lf_sha256": "ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc",
+      "line_ending_equivalence": "Independently read integrated root header. Exactly14CRLF and0loneLF; replacing CRLF with LF gives byte-identical reviewed canonical source SHA256 ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc. Both git hash-object canonical blobs f00101177dd5f6cf0eab6c08852af4f6836b9a01. No source behavior change, root edit or rebuild."
     },
     {
       "path": "stalthos-runtime/domain/thistletail.hpp",
