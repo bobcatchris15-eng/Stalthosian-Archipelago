@@ -1,0 +1,59 @@
+{
+  "scope": {
+    "graph_digest": "not computed; bounded direct ownership/source review",
+    "base_digest": "5968a6c2e3fadf9041d29a5d8201672fd47c8467",
+    "artifacts": [
+      {
+        "path": "stalthos-runtime/domain/fauna_population.hpp",
+        "sha256": "e781eff8e82cbbbf959c6cb1c700d4fb0da2850d8e943c253f42100cd1530a32"
+      },
+      {
+        "path": "stalthos-runtime/domain/regional_population.hpp",
+        "sha256": "144c7754cd794229fc8f4113185652261d7af10e8caccc4c7fef47b0b6ebe4f2"
+      },
+      {
+        "path": "stalthos-runtime/domain/nesting.hpp",
+        "sha256": "7572515ebc5915935b3167410def8166f400669a82048ba3b6b45d901b8106ca"
+      },
+      {
+        "path": "stalthos-runtime/domain/hatchling_path.hpp",
+        "sha256": "afa8ad2187ee099c6bf0697b9524bd0fe2ab55d66018c185273457a03bb6ece8"
+      },
+      {
+        "path": "stalthos-runtime/engine/native_population_registry.hpp",
+        "sha256": "44f6eca046f51032daaab89076c12c8a6b18aea1b8426ad86b12f580b075a357"
+      },
+      {
+        "path": "stalthos-runtime/engine/fauna_scene.hpp",
+        "sha256": "4af8325f058feb58c1f9bece6b1233d0b6864af4f12832037dda40e6db76b283"
+      },
+      {
+        "path": "stalthos-runtime/engine/main.cpp",
+        "sha256": "bc1450733476b2565551024339aaecb318eb9daa45d4f2c5225a328cb02fa5a6"
+      },
+      {
+        "path": "stalthos-runtime/engine/hatchling_scene.hpp",
+        "sha256": "997893717cdda5dc65bc4925c75ed72a82bebfd2efc4d05c6bda017d4ed960db"
+      }
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "advances_goal",
+    "drift": []
+  },
+  "findings": [],
+  "unproven_claims": [
+    "No native execution, composed screenshots or target-hardware performance was independently reviewed."
+  ],
+  "validation_debt": [
+    "Root native birth must show recognizable one-new-replica hatchling, preserved actor/session/history counts, supported actual child motion/needs and no duplicate birth.",
+    "Root native post-birth body departure/return and nextlife retention remain required.",
+    "Camera fixture pans after birth; describe it as retained-young camera observation, not inactive admission refusal. Camera/inactive admission denial is independently probed at authoritative registry boundary."
+  ],
+  "asks": [],
+  "effort": {
+    "attempted": "Compiled and ran independent MSVC17 admission-probe.cpp repeatedly as boundary checks were added. Checks CameraPrewarm rejection, inactive refusal, actor cap16 refusal, invalid empty/long route, excluded hero identity, duplicate actor, historical ledger session collision, empty-history NPC session collision, empty-history hero allocator reservation, exact every old ActorSnapshot field/binding/ledger preservation at birth, one fresh session/actor, actual newborn lifecycle/needs/motion, once-only dormant age/no contact, same-admitted-graph continuation, childID2 causes nextlifeID3, dry support route and wet/steep rejection. Read host physical-only one-shot admission, world ID exclusions, immediate dynamic append and original-mode connected guards. No broad audit/native rebuild.",
+    "probes_run": 1
+  },
+  "probe_output": "HATCH_REVIEW_OK atomic rejection old_actor_binding_history retained unique_session actual_lifecycle_needs_motion continuation dormant"
+}
