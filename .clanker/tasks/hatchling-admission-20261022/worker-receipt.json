@@ -1,0 +1,79 @@
+{
+  "task_id": "hatchling-admission-20261022",
+  "outcome": "partial",
+  "source_commit": "6ff9968",
+  "acceptance": [
+    {
+      "condition": "One real independent hatchling admitted from incubated local nest with fresh identity/session",
+      "met": true,
+      "how_checked": "Stalthos_hatchling_admission Release /W4/WX domain test and CTest passed; live registry owns staged population+binding transaction; host closure after Accepted only"
+    },
+    {
+      "condition": "Every preexisting actor/session/shared resource/history field retained; no duplicate on ticks/next-life",
+      "met": true,
+      "how_checked": "Focused test exact oldactor fields, session membership, ledger history, identity retry refusal, capacity rollback, next-life exclusion and same admitted graph continuation; host birth event compares full old actor JSON and exact full ledger"
+    },
+    {
+      "condition": "Supported local movement, needs and lifecycle",
+      "met": true,
+      "how_checked": "Host0.5m dry rendered-ground route/max0.6grade; domain newborn position exactly nest, age0 then dormant10calendar+active7=17, independent positive distance/thirst, flat-route y error0; native telemetry separate child ground error"
+    },
+    {
+      "condition": "Camera cannot admit or activate hatch; original saved mode protected",
+      "met": true,
+      "how_checked": "Focused camera-origin and inactive refusal; connected-only host birth path with physical-active gate; connected save/load refusal unchanged; no original mode call"
+    },
+    {
+      "condition": "Dynamically append recognizable hatchling without rebuilding old replica state",
+      "met": false,
+      "how_checked": "Source adapter appends exactly one per-actor-oriented replica with body/longneck/head/muzzle/tail/four limbs/feet/eyes; no reload calls. Actual native composed visual and scene API compilation pending root final build."
+    },
+    {
+      "condition": "Native incubation, physical departure/return, new-life retention and camera observation evidence",
+      "met": false,
+      "how_checked": "HatchProbe/HatchCameraProbe implemented and scripts parsed; root owns final integrated native build/runs. No optional native compile executed."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/nesting.md",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/nesting.hpp",
+    "stalthos-runtime/domain/regional_population.hpp",
+    "stalthos-runtime/domain/hatchling_path.hpp",
+    "stalthos-runtime/engine/fauna_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/hatchling_scene.hpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/hatchling_admission.cpp"
+  ],
+  "evidence": [
+    "source6ff9968",
+    "var/build/nesting-domain/Testing/Temporary/LastTest.log",
+    "5/5focusedCTestpassed0.14seconds",
+    "RUN_SCRIPT_PARSE_OK",
+    "git diff --check exit0"
+  ],
+  "findings": [
+    "Camera native fixture pans only after birth; do not claim inactive birth prevention natively from it",
+    "Primary native fixture reverse13-18/forward18-23 is short physical departure/return, not regional traversal; parent death24 is labelled synthetic then ordinary existing N25",
+    "One actual young and one closed shell; two intact eggs explicitly unmodelled",
+    "Connected session only; dynamic habitat signature continuation requires same already-admitted in-memory graph; original saved mode not changed",
+    "Procedural baby is recognizable draft with simple distance-driven limb swing, no stage-growth visual/full-anatomy/FPS acceptance"
+  ],
+  "blockers": [
+    "Root final native build, composed captures and telemetry acceptance pending"
+  ],
+  "assumptions_made": [
+    "One child per session clutch",
+    "Admission requires body-active existing watershed; inactive incubation waits for reactivation",
+    "Dry host-sampled straight path into existing graph, up to96m/256sites, not general obstacle navigation",
+    "Unique nextSession supplied by existing monotonically advanced host allocator; failed admission never increments it"
+  ],
+  "native_commands": [
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HatchProbe -Duration40 -CalendarScale100 -AssetRoot E:/Stalthosian Archipelago",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HatchCameraProbe -Duration32 -CalendarScale100 -AssetRoot E:/Stalthosian Archipelago"
+  ]
+}
