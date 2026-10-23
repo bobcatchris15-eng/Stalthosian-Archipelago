@@ -1,0 +1,63 @@
+{
+  "task_id": "nesting-draft-20261022",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "Player intention and eligibility for one supported dry clear adult Smalltrotter nest",
+      "met": true,
+      "how_checked": "Release domain test Stalthos_nesting and CTest domain-nesting 1/1passed; native input/cue wiring inspected; native proof delegated root"
+    },
+    {
+      "condition": "Shared-calendar incubation remains at stable session location across new life",
+      "met": true,
+      "how_checked": "Domain test physical500/calendar0 leavesprogress0; calendar450 half;10000 clamps1; newparent18 cannot replace parent17 clutch; host next-life branch does not reset nesting"
+    },
+    {
+      "condition": "Visible replaceable nest/eggs and ordinary movement/native composed captures",
+      "met": false,
+      "how_checked": "Scene adapter plus synthetic adult/start/B/reverse/noon and3/8/12s captures implemented. Native main compile passed but visual launch/captures pending root integrated build."
+    },
+    {
+      "condition": "Actual independent retained hatchling admission",
+      "met": false,
+      "how_checked": "No safe native population admission API; explicit approved partial incubation-only scope; hatching_implemented=false offspring_admitted=0 and end cue states missing hatching."
+    },
+    {
+      "condition": "Preserve save refusal, original saved mode, IDs, sessions, resource ledger",
+      "met": true,
+      "how_checked": "Source inspection no edits to persistence/identity/session/resource owners; connected save/load refusal untouched; nesting only runs connected."
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/nesting.hpp",
+    "stalthos-runtime/tests/nesting.cpp",
+    "stalthos-runtime/engine/nest_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/nesting.md"
+  ],
+  "evidence": [
+    "source commit3421a0b",
+    "var/build/nesting-domain/Testing/Temporary/LastTest.log",
+    "NESTING_CONTRACT_OK eligibility, retained location, calendar-only progress, bounded clutch, no offspring admission",
+    "RUN_SCRIPT_PARSE_OK",
+    "git diff --check exit0"
+  ],
+  "findings": [
+    "Placement conservatively limited to original192m patch with enlarged authored obstacle footprints; no generalized collision framework",
+    "No mating/clutch mortality/hatching/connected save; partial reproduction explicitly labelled in cue/report/docs",
+    "Wrapper supports NestProbe but acceleration100 must be supplied through Run.ps1 or executable; normal default incubation900physicalseconds at calendarScale1."
+  ],
+  "blockers": [
+    "Root integrated native verification and visual review pending",
+    "Actual hatching requires coordinated authoritative native population/registry admission and fauna presentation reconciliation"
+  ],
+  "assumptions_made": [
+    "One session clutch and three fictional eggs",
+    "Incubation900sharedcalendarseconds",
+    "No prolonged Smalltrotter care",
+    "Instant explicit laying intention while needs<.7; no animation lock or control ownership"
+  ]
+}

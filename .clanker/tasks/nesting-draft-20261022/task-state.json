@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "nesting-draft-20261022",
+  "status": "complete",
+  "base_revision": "6454531",
+  "current_step": "source packet handed to root",
+  "completed_steps": [
+    "Scoped partial incubation slice approved",
+    "Implemented domain native adapter input/cues/probe/report/docs",
+    "Release domain verification1/1passed and scripts parsed",
+    "Source commit3421a0b handed to root"
+  ],
+  "touched_artifacts": [
+    "stalthos-runtime/domain/nesting.hpp",
+    "stalthos-runtime/tests/nesting.cpp",
+    "stalthos-runtime/engine/nest_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/docs/nesting.md"
+  ],
+  "validation": {
+    "passed": true,
+    "command": "ctest --test-dir var/build/nesting-domain -C Release -R ^domain-nesting$ --output-on-failure",
+    "evidence_path": "var/build/nesting-domain/Testing/Temporary/LastTest.log"
+  },
+  "receipt_path": ".clanker/tasks/nesting-draft-20261022/receipt.json",
+  "resume_instructions": "Source packet3421a0b ready root integration. Root must run combined native build and NestProbe atscale100duration14 plus ordinary input proof. This slice never claims hatching. Follow-on actual hatchling admission task in stalthos-runtime/docs/nesting.md.",
+  "updated": "2026-10-23T00:36:15.023731+00:00"
+}
