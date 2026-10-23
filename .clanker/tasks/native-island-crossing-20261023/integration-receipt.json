@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task": "native-island-crossing-20261023",
+  "disposition": "partial local construction checkpoint; NOT native accepted; NOT published",
+  "source_revision": "e55ffe4",
+  "review_revision": "c9711b3",
+  "build_receipt": "var/build/stalthos-runtime/build-receipt.json",
+  "executable_sha256": "fe6370a4a4a9c4c8509c3cf59e869fdae8a6e952c001931e43ad54e02b842cea",
+  "ctest": "70/70 passed",
+  "native_verification": "native-verification.json",
+  "preservation": "253 unrelated untracked paths hash-identical",
+  "old_config_refusal": {
+    "failure": {
+      "error": "STL9 configuration or bounded payload lengths mismatch",
+      "ok": false
+    },
+    "old_file_sha256_unchanged": "4739090B9A4BB6C8C9188CA4AFF89D82D78D6DF1D9C51A52A2D4471D774CDF0A"
+  },
+  "verified": [
+    "Shared four-landform source/domain and actual native shore/wade/swim body movement",
+    "453 native swim samples: root-.55, no resting/no island arrival",
+    "Camera fixture body position fixed; no remote-island tour claim",
+    "Original STL9 save/restart and partial STLC save/restart pass; exact partial reconstructed owner before first tick",
+    "Independent exact source blobs,8645 protected-origin height comparisons and432 streaming boundary probes"
+  ],
+  "native_failures": [
+    "Pinned Smalltrotter160s requested/158.18 physical ended at432.948,-313.503; Stone not reached; fatigue1 reduces swim speed to.88",
+    "11476 terrain-foot support failures crossing; camera stationary shore3567 too. Diagnose actual shore slope/stance and water modes, do not dismiss as only water diagnostics",
+    "Domain122.46s calculation omitted actual pinned land stride and environmental exposure; not native proof"
+  ],
+  "visual_inspection": [
+    "Viewed actual composed island-crossing-1/2.png: visible body, shore, water and island silhouette plus location/water UI",
+    "Very dark bare coast, stiff airborne-looking walking body over sea; final scenery/swim animation not accepted"
+  ],
+  "limits": [
+    "No physical all-four travel acceptance",
+    "No new-island populations or foundation region migration",
+    "No unrestricted connected persistence",
+    "No target hardware30FPS evidence",
+    "Longstride-selected island diagnostic startup ordering limitation"
+  ],
+  "next_task": "next-task.md",
+  "publication": "held locally until native failures resolved"
+}

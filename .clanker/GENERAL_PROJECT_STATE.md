@@ -1,3 +1,19 @@
+# Partial native island construction checkpoint - 2026-10-23
+
+Task .clanker/tasks/native-island-crossing-20261023/integration-receipt.json.
+Shared four-landform geometry, physical water datum/fatigue and body island UI are
+implemented and independently reviewed;70CTest pass. Native pinned160s run swims
+but does NOT land on Stone, fatigue reaches1, and terrain-foot support failures
+occur at shore and sea. Domain timing omitted actual pinned stride/exposure.
+Source remains LOCAL, unaccepted/unpublished. Six native runs include original
+STL9 and partial STLC restart; exact partial reconstructed owner matches. Older
+partial config refused with exact bytes retained;253 unrelated paths unchanged.
+NEXT repair actual pinned crossing balance/shore-water support, rerun landing;
+then missing island population/region ownership, not asset polish. Allfour travel,
+allfive complete life/families, unrestricted connected saves/FPS remain gaps.
+No worker remains assigned or native app running. Earlier accepted NPCdiet is
+published e73f6a1; this local checkpoint does not replace its accepted evidence.
+
 # Accepted connected NPC finite carrion diet - 2026-10-23
 
 Receipt .clanker/tasks/npc-carrion-diet-20261023/integration-receipt.json.

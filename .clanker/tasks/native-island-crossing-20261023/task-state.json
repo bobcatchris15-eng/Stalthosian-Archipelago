@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "native-island-crossing-20261023",
+  "status": "running",
+  "base_revision": "e73f6a1",
+  "current_step": "Partial local checkpoint: native crossing failed landing/support gates; repair before publication",
+  "completed_steps": [
+    "Source/domain implementation and independent exact-blob review integrated",
+    "Build and70CTest pass",
+    "Six native runs, partial exact reconstruction, original saved mode and old-file refusal checked",
+    "253 preserved paths verified; graph refreshed"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T18:24:31.046011+00:00",
+  "resume_instructions": "Read integration-receipt.json/native-verification.json/next-task.md first. Source e55ffe4+reviewc9711b3 local; do not publish until native landing/support failures resolved. Both workers collected, slots released. Preserve all saves/unrelated paths; no native process remains. Full four-island/ecology/region saves remain gaps.",
+  "next_step": "Resolve actual pinned crossing duration/fatigue and shore/water support; then rerun physical landing and regressions",
+  "validation": {
+    "passed": false,
+    "command": "Build.ps1;70CTest;six native runs",
+    "evidence_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-island-crossing-20261023\\native-verification.json"
+  },
+  "receipt_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\native-island-crossing-20261023\\integration-receipt.json"
+}

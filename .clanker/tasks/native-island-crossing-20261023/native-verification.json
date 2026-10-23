@@ -1,0 +1,93 @@
+{
+  "executable_sha256": "fe6370a4a4a9c4c8509c3cf59e869fdae8a6e952c001931e43ad54e02b842cea",
+  "runs": {
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-132144-59f0c28d",
+      "physical_seconds": 15.121733809472062,
+      "support_failures": 3567,
+      "ground_fallbacks": 0,
+      "state_loaded": false,
+      "state_saved": false,
+      "sea_entered": false,
+      "stone_landed": false,
+      "sample_count": 60,
+      "swim_samples": 0,
+      "last_pose": [
+        243.79257202148438,
+        -176.53945922851562
+      ],
+      "final_fatigue": 0.07477646404935524,
+      "captures": [
+        {
+          "filename": "island-crossing-0.png",
+          "saved": true
+        }
+      ]
+    },
+    "crossing": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-131838-665953f9",
+      "physical_seconds": 158.18321640026988,
+      "support_failures": 11476,
+      "ground_fallbacks": 0,
+      "state_loaded": false,
+      "state_saved": false,
+      "sea_entered": true,
+      "stone_landed": false,
+      "sample_count": 628,
+      "swim_samples": 453,
+      "last_pose": [
+        432.9482116699219,
+        -313.5030517578125
+      ],
+      "final_fatigue": 1.0,
+      "captures": [
+        {
+          "filename": "island-crossing-0.png",
+          "saved": true
+        },
+        {
+          "filename": "island-crossing-1.png",
+          "saved": true
+        },
+        {
+          "filename": "island-crossing-2.png",
+          "saved": true
+        }
+      ]
+    },
+    "original-load": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-132213-306c4f44",
+      "physical_seconds": 7.165757805661997,
+      "support_failures": 0,
+      "ground_fallbacks": 0,
+      "state_loaded": true,
+      "state_saved": false
+    },
+    "original-save": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-132206-080c08d2",
+      "physical_seconds": 3.5755972017650492,
+      "support_failures": 0,
+      "ground_fallbacks": 0,
+      "state_loaded": false,
+      "state_saved": true
+    },
+    "partial-load": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-132231-53c76a2f",
+      "physical_seconds": 7.538666513108183,
+      "support_failures": 0,
+      "ground_fallbacks": 0,
+      "state_loaded": true,
+      "state_saved": false
+    },
+    "partial-save": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-132220-04a98862",
+      "physical_seconds": 3.778172904625535,
+      "support_failures": 0,
+      "ground_fallbacks": 0,
+      "state_loaded": false,
+      "state_saved": true
+    }
+  },
+  "native_crossing_accepted": false,
+  "reason": "Pinned embodiment did not land in160s; terrain-foot support diagnostics report failures during water motion. Domain pass is not native acceptance."
+}
