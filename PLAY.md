@@ -5,6 +5,20 @@ The game stays open until you close its window or press **Esc**. PowerShell 7 an
 the locally built Windows executable are required. The launcher uses the existing
 pinned animal, fern and woodland assets when available; missing assets are announced.
 
+Choose the contrasting implemented bird life with:
+
+```powershell
+pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Thistletail
+```
+
+The default remains `Smalltrotter`. These are the two implemented choices.
+Thistletail uses a replaceable feather-layered procedural biped with its own
+selected needs/lifecycle, ordinary controls and next life. It can forage a finite
+litter/seed cohort near24,24 through the same food ledger and ordinary needs
+intention. No individual insects, bird breeding/parenting or finished plumage art
+is claimed. Imported Smalltrotter meshes, when available, remain NPC presentation.
+
+
 | Input | Action |
 |---|---|
 | W / S | Move forward / reverse relative to the animal |

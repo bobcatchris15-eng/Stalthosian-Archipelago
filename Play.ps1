@@ -1,6 +1,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [ValidateRange(0, 3600)][double]$Duration = 0,
+    [ValidateSet("Smalltrotter","Thistletail")][string]$HeroSpecies = "Smalltrotter",
     [switch]$Proxy
 )
 $ErrorActionPreference = 'Stop'
@@ -17,9 +18,10 @@ Write-Host 'W/S move; A/D turn. F1 detach/return; detached WASD pans the camera.
 Write-Host 'Left-drag orbit; wheel zoom; V inspect; right-click nearby ground to travel.'
 Write-Host 'E interact; F disturb a nearby eligible sapling; N next life after death; Esc exit.'
 Write-Host 'Adult Smalltrotter: B attempts a clutch on dry clear ground; one independent young can hatch.'
+Write-Host "Selected hero: $HeroSpecies. Thistletail uses a procedural feathered biped and finite litter microforage."
 Write-Host 'Left alone, the animal follows its ordinary needs and explores.'
 Write-Host 'Connected sessions currently start fresh and do not save. See PLAY.md for draft limits.'
-$options = @{ Proxy = [bool]$Proxy }
+$options = @{ Proxy = [bool]$Proxy; HeroSpecies=$HeroSpecies }
 if ($Duration -gt 0) { $options.Duration = $Duration } else { $options.Interactive = $true }
 if ($PSCmdlet.ShouldProcess($executable, 'Launch connected world')) {
     & $launcher @options
