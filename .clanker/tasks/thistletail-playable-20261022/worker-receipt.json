@@ -1,0 +1,73 @@
+{
+  "task_id": "thistletail-playable-20261022",
+  "outcome": "partial",
+  "source_commit": "880b69d",
+  "acceptance": [
+    {
+      "condition": "Two validated normal connected hero choices with real selected NeedsCore/Lifecycle and correct next life",
+      "met": true,
+      "how_checked": "Focused Thistletail selection/profile test; Play/Run validated options; host connected-only selection; existing N lifecycle.emplace(heroSpecies)/needs.emplace(heroSpecies) unchanged. Default saved mode remains restored species."
+    },
+    {
+      "condition": "Recognizable biped hero with ordinary supported motion/direct control/camera",
+      "met": false,
+      "how_checked": "Source procedural body/head/beak/wingfeathers/tail/twolegs/feet/eyes, distance-driven alternating limbs, shared support basis/grounddatum0 and generic2m/s integrator. Imported Smalltrotter metadata applies NPCs only in birdlife. Final native compile/composed visual acceptance pending root."
+    },
+    {
+      "condition": "Finite visible microforage patch, body-local approach/contact/relief through shared intention/session/ledger",
+      "met": true,
+      "how_checked": "Focused test body-local approach12m, contact0.85m/0.4m/support/alive, direct override, camera body36m hasnoattention, finite1unit resource210 and idempotent0.5contacts through existing Shrub ledger. Independent reviewer additionally compiled actual native-registry210 consumption probe with exact oldledger/history preservation."
+    },
+    {
+      "condition": "Normal Smalltrotter and original saved mode preserved; live world actors/session/history retained",
+      "met": true,
+      "how_checked": "Source resource/presentation210 onlybirdconnected; no writes to registry, population, hatchling, save or session owners. Native-registry and next-life focusedregressions passed. Native same-executable regressions remain root gate."
+    },
+    {
+      "condition": "Native diagnostic primary, override, camera and next-life evidence",
+      "met": false,
+      "how_checked": "Three labelled fixtures implemented; capture/report wiring and scripts parsed. No optional native compile executed per root instruction; final build and evidence owned root."
+    }
+  ],
+  "artifacts_changed": [
+    "Play.ps1",
+    "PLAY.md",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/thistletail.hpp",
+    "stalthos-runtime/engine/thistletail_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/thistletail.cpp",
+    "stalthos-runtime/docs/thistletail.md"
+  ],
+  "evidence": [
+    "source880b69d",
+    "4/4focusedCTestpassed0.07seconds",
+    "SCRIPTS_PARSE_OK Play.ps1 Run.ps1 Run-ConnectedWorld.ps1",
+    "git diff --check exit0",
+    "var/build/nesting-domain/Testing/Temporary/LastTest.log"
+  ],
+  "findings": [
+    "Bird microforage is litter/seed/cohort stand-in only; no individual insect simulation or second AI framework",
+    "Original mode explicit --hero-species refuses; loaded species/default behavior unchanged",
+    "One new210food resource onlybirdconnected; imported Smalltrotter GLB retained for NPCs, never used asbirdhero",
+    "Primary synthetic death17physical/N18 validates selected-species retention if native proof passes; no real longevity/deathcause claim",
+    "Procedural figure/gait and horizontal stage bulk are replaceable provisional art, no authored plumage/contact/FPS acceptance",
+    "Bird normal uses existing2m/s proxy integrator independently of NPC Smalltrotter metadata; rates remain existing proposed NeedsProfile values"
+  ],
+  "blockers": [
+    "Root integrated native build/projection/actual movement/contact/camera/N acceptance pending"
+  ],
+  "assumptions_made": [
+    "Only Smalltrotter and Thistletail are advertised selectable choices",
+    "Finite microforage resource210at24,24 quantity1 sense12m reach0.85m uses generic Shrub semantics",
+    "No new bird parenting/courtship/childhood subsystem or saveformat work"
+  ],
+  "native_commands": [
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -BirdProbe -Duration 35 -AssetRoot 'E:/Stalthosian Archipelago'",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -BirdOverrideProbe -Duration 24 -AssetRoot 'E:/Stalthosian Archipelago'",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -BirdCameraProbe -Duration 18 -AssetRoot 'E:/Stalthosian Archipelago'",
+    "Play.ps1 -HeroSpecies Thistletail"
+  ]
+}
