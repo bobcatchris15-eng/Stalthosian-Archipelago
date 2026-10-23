@@ -1,0 +1,125 @@
+{
+  "scope": {
+    "base_digest": "2997987",
+    "graph_digest": "not computed; bounded direct courtship/mate and normal-nest ownership review",
+    "artifacts": [
+      "PLAY.md",
+      "stalthos-runtime/CMakeLists.txt",
+      "stalthos-runtime/docs/courtship.md",
+      "stalthos-runtime/domain/courtship.hpp",
+      "stalthos-runtime/domain/nesting.hpp",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "stalthos-runtime/scripts/Run.ps1",
+      "stalthos-runtime/tests/courtship.cpp",
+      "stalthos-runtime/tests/hatchling_admission.cpp",
+      "stalthos-runtime/tests/nesting.cpp"
+    ]
+  },
+  "implementation_revision": "f14926b",
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "fbaddbfe7fdc06d3ece8a12bbe8c082e615730de1108bc5b49ee02ad77359a9d",
+      "canonical_lf_sha256": "78ee68aee055a2fc8af151e00d9e9b36514214569fef9bb9b23e7f49613ad367",
+      "git_blob": "af4c5f349dd892ec94a352199f91e3ed501b97d9",
+      "crlf": 96
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "9b77ffb1800b523a12fd229d0e3f187962768cbcbdac12f949c1fec8f0163588",
+      "canonical_lf_sha256": "e38646d844c345c016b85ba11bf819f90c3d9619dec45178cdbe97050e4e4f61",
+      "git_blob": "9e734767a5331196633c774fc709087b6e9f2c48",
+      "crlf": 89
+    },
+    {
+      "path": "stalthos-runtime/docs/courtship.md",
+      "sha256": "125bd995d9844815c83ccdfb4361ebc6f186818cc0e27c4221f1b9ed35bd7623",
+      "canonical_lf_sha256": "863b9466467dd399c3a2e6aaba67e437a91e2a02130fb98ccdbd0763cfe3037f",
+      "git_blob": "adca83b3130d00d0e0f9ec99fadb636e7e5cf017",
+      "crlf": 48
+    },
+    {
+      "path": "stalthos-runtime/domain/courtship.hpp",
+      "sha256": "390664bbcbbcc5d1d5507acb62f57e103035df24cf3ba914c41de64a5611cd94",
+      "canonical_lf_sha256": "09543bf162f499ad02f0750dd9496237e5f0666093b64822a1ce4f2621604773",
+      "git_blob": "7ad2a38d2ca5a47fcf7a0fe86328f3dfd37e21e9",
+      "crlf": 34
+    },
+    {
+      "path": "stalthos-runtime/domain/nesting.hpp",
+      "sha256": "0e34ee2b7b88846007db981626dd575e012d934883ff2dc4d34d04f30f032e78",
+      "canonical_lf_sha256": "c9512497416ea7712817a60e2e20bbed3e9ff9fbc448e0cbb8661bdb1f7153f4",
+      "git_blob": "0714b888288274bf564e6d8e10e1c7a0e803d153",
+      "crlf": 40
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "f6450b270181b5e2be684d663efd121d97eeb2150df0b9a44f5880d7e4503c42",
+      "canonical_lf_sha256": "c5df2f0dae79621aad5fa6cd10a29d82019e4e05bee2a2095133cf8cd226bd8b",
+      "git_blob": "d9284800911ba1bc61dda2898c017fa316e0c34c",
+      "crlf": 2946
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "4bccc7d81ca891bbf7f9a092daf1f3de26c2b0f3c1f19169332096eddaa897d0",
+      "canonical_lf_sha256": "daddb85fda7fc5101698e25d001261c0e9a40fee2f33eeca0f3a327b994e49e2",
+      "git_blob": "e37b2ea2cb68e3ea8d57b8bf3e4a613939fe53ad",
+      "crlf": 88
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "53322e67073d9442b740e988359237770faa6ed8a6ac69e2d254c67309b6a75a",
+      "canonical_lf_sha256": "f6179639adb9c519a4c462609880e2a1c1430a71e3a03bfa4e5e27521a44bffd",
+      "git_blob": "f027fd1bd35c727cf1493c683446843dfacacc86",
+      "crlf": 209
+    },
+    {
+      "path": "stalthos-runtime/tests/courtship.cpp",
+      "sha256": "d90878333df3e639a6c70e69da9d586a302d97049fce87426170903a85d3d0a1",
+      "canonical_lf_sha256": "d90878333df3e639a6c70e69da9d586a302d97049fce87426170903a85d3d0a1",
+      "git_blob": "6703d559ad94ff1eefc904b9dab314130916e094",
+      "crlf": 0
+    },
+    {
+      "path": "stalthos-runtime/tests/hatchling_admission.cpp",
+      "sha256": "12c948cb02b2334e8a1617d841675e75864531d149cadc44943e79b20af71ada",
+      "canonical_lf_sha256": "285860f89855c75d8560afecedca379d47f5dfab7250123ee58d7d3de013993b",
+      "git_blob": "9de16e9d19d7ff2311a95075759cc3bf6bb04121",
+      "crlf": 38
+    },
+    {
+      "path": "stalthos-runtime/tests/nesting.cpp",
+      "sha256": "6884afa983a28ca1af491e04e5f442aac9923c77b9552944d8ce8013a3f21467",
+      "canonical_lf_sha256": "ba66b83d1ff88734afa9e162650aada1436f018f2920d309f4931d333f562a4c",
+      "git_blob": "dff2b6a2bc4f3dd220869f0369f80c18ad5c170a",
+      "crlf": 23
+    }
+  ],
+  "goal_alignment": {
+    "drift": [],
+    "verdict": "advances_partially"
+  },
+  "findings": [],
+  "resolved_findings": [
+    "Camera/refusal startup fixture checked only chosen mate, leaving alternate eligible local mates ambiguous. 652fac7 excludes other actual eligible local adult Smalltrotters from these body startup candidates; ordinary selection unchanged.",
+    "652fac7 guard used other.alive on ActorSnapshot lacking that field, a concrete native compilation error. Review caught it before acceptance; f14926b changes it to other.stage!=Dead."
+  ],
+  "unproven_claims": [
+    "No reviewer native build/execution or composed animation/visual/performance acceptance.",
+    "Courtship is speculative calm local invitation/approach/quiet response; no sex/genetics/fertility or full mating animation/biology established."
+  ],
+  "validation_debt": [
+    "Root native ordinary B must show actual retained mate response/quiet readiness before actual clutch, direct cancellation/refusal and camera-body boundary; inspect all eligible actual actors during diagnostic, not only selected fixture mate.",
+    "Old nest/hatch diagnostics now use real mate and later clutch. Root must reprove actual one-young admission and N retention rather than assuming old synthetic fixture times.",
+    "Native original-mode/default/five-species preservation and exact actor/session/history baseline remain root gates."
+  ],
+  "asks": [],
+  "effort": {
+    "probes_run": 1,
+    "attempted": "Independently MSVC17 compiled actual NativePopulationRegistry response probe against final Courtship/Nesting headers. Existing actual adult Smalltrotter moves>4.7m through sole normal registry tick with reciprocal3.25m wait, then quiet2physicalseconds permits readiness; ID unchanged, exact lifecycle once perframe, old resource100/200 consumption and90/91 keys/bindings retained. Mate-less Nesting.lay refuses; accepted actual mateID stored. Tests mature/living/local/available mate requirements, missing/remote/dead/urgent/immature refusal, direct/hero needs/lost mate/new hero cancellation. Late currentMateReady rejects a mate that departed after earlier readiness. Source traces normal B request only, actual fresh postNPCtick mate recheck, only acceptedMate(heroId) capability into Nesting.lay, same gate for old nest/hatch fixtures with actual retained identity/startupneeds and no ready injection. Courtship active suppresses incidental exploration/autonomy but ordinary needs/direct/playerdestination advance cancels before next NPC override; active mateID passed existing BodyAwareness owner with reciprocal waiting and social exclusion. Past canceled mate motion suppression explicit. No extra advance or new actors/resource/session/reset, no connected-save/schema expansion. N resets transient courtship; existing world/clutch/hatch retain ownership. Reviewed request/ready/timeout qualitative refusal cues and labelled diagnostic startup. Final fixture guard stage field corrected; root native compiler remains gate."
+  },
+  "probe_output": "COURTSHIP_REVIEW_OK actual_registry_response_onceclock_history_local_refusals_priority_mate_gated_clutch",
+  "line_endings": "Independent raw worker SHA256, canonical CRLF-to-LF SHA256 and Git blob recorded for every changed source file; root normalization must still be verified if raw differs.",
+  "preservation": "Prior e9d6bb5 review branch and old candidate header copies/patch/hash receipts under ignored var/review-courtship-preserved. Current candidate Courtship/Nesting header copies uncommitted; integrate only this review directory."
+}
