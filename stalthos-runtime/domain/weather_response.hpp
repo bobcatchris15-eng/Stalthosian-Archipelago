@@ -24,6 +24,8 @@ public:
     explicit BodyWeatherResponse(WeatherResponseTuning tuning={}):tuning_(tuning) {
         if(!std::isfinite(tuning.wettingPerSecond)||tuning.wettingPerSecond<0||!std::isfinite(tuning.dryingPerSecond)||tuning.dryingPerSecond<0||!std::isfinite(tuning.windReduction)||tuning.windReduction<0||tuning.windReduction>1) throw std::invalid_argument("invalid weather response tuning");
     }
+    double wetness()const{return wetness_;}
+    void restoreWetness(double value){if(!std::isfinite(value)||value<0||value>1)throw std::invalid_argument("invalid restored wetness");wetness_=value;}
     LocalWeatherResponse advance(const Conditions& c,double physicalSeconds,double shelter) {
         if(!std::isfinite(physicalSeconds)||physicalSeconds<0||!std::isfinite(shelter)||shelter<0||shelter>1||!std::isfinite(c.rainfall)||c.rainfall<0||c.rainfall>1||!std::isfinite(c.cloud)||c.cloud<0||c.cloud>1||!std::isfinite(c.windMetersPerSecond)||c.windMetersPerSecond<0) throw std::invalid_argument("invalid local weather response");
         // Wind shelter never intercepts rainfall. Wetness integrates physical time.

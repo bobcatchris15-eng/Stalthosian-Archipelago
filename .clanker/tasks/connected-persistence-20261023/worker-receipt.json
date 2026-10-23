@@ -1,0 +1,90 @@
+{
+  "task_id": "connected-persistence-20261023",
+  "outcome": "implemented_partial_pending_native",
+  "base": "7a52e9a",
+  "source_paths": [
+    "Play.ps1",
+    "PLAY.md",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/domain/weather_response.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/connected_save.hpp",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/tests/connected_save.cpp",
+    "stalthos-runtime/docs/connected-persistence.md"
+  ],
+  "checks": [
+    "focused Release domain builds connected_save/native_save/weather_response",
+    "3/3 focused CTest pass 0.08s",
+    "three PowerShell scripts parse",
+    "git diff --check"
+  ],
+  "native_run": false,
+  "profile": "explicit STLC1 manual connected entry; normal connected and original STL8/9 unchanged",
+  "preserved_untracked": [
+    ".clanker/tasks/hatchling-admission-20261022/worker-local-state.json",
+    ".clanker/tasks/thistletail-playable-20261022/worker-local-state.json"
+  ],
+  "scope_limits": [
+    "automatic hero behavior/social learning/protection/courtship unavailable from explicit profile entry",
+    "nests/clutches/offspring/bonds/dynamic habitats not persistable",
+    "only living hero at checkpoint; use actual N after death",
+    "in-flight goals/direct/contact/recall/custom tether refused before writing",
+    "animation/audio/perception caches recomputed; no in-flight action resumed",
+    "native compile/restart/movement/contact/depletion/refusal and allfive regression acceptance pending root"
+  ],
+  "native_plan": "See stalthos-runtime/docs/connected-persistence.md. Duration22 Longstride ConnectedPersistenceProbe + owned ConnectedSave, restart Duration8 ConnectedLoad/new ConnectedSave; compare exact saved simulation_bytes_hex/current+nextsession/wetness/scale to actual pre-first-tick capture. Probe includes unsafe checkpoint10.2 with exact destination/live-world equality, actual 2 contacts, motion, synthetic death and ordinary N.",
+  "hashes": {
+    "Play.ps1": {
+      "raw_sha256": "f3c757cfcbfe66f205ee24e17997103617b532311ee216110ccc8b4010f23f6c",
+      "canonical_lf_sha256": "dba01ed23c3ce52537504a5fc516a4dd1c214326133b371c1207deaf81827220",
+      "git_blob": "a213d51916238a5c8c90e85bdfc69554a0d513d2"
+    },
+    "PLAY.md": {
+      "raw_sha256": "1d179eb9d5bcb978bda079ecce553926dffac5a7f9fd5cf94f7368279c2a34fb",
+      "canonical_lf_sha256": "b7f900e94fd3f092bbbe9a36cda4a0c2e9f8749cbb4a1c348a92ddeadd600d7a",
+      "git_blob": "1e34d486026553b115cbdf3763567b0179adc372"
+    },
+    "stalthos-runtime/CMakeLists.txt": {
+      "raw_sha256": "6a4dfa29790dc2abecdbc854ce8c5947e6a092cb3917b107c3fceb1708441bf4",
+      "canonical_lf_sha256": "058c744aa83425b7faf949b44d229d0df3162631e8ca041b87fcb7cb3cc40efd",
+      "git_blob": "75de8a07246c3442302c441e37f5805991074b96"
+    },
+    "stalthos-runtime/domain/weather_response.hpp": {
+      "raw_sha256": "3a708fa2423cb11bb31029f84d9b0dacc9683b8105e0c002ee7ee93d3d2bdb09",
+      "canonical_lf_sha256": "3fca2dbf01b61538fc40c6292a808b7e381a0d5eb8cc49fe12c3298a275cd02b",
+      "git_blob": "ca71ea5e4ca924cb5c64851ff24ce5f5a4ca7568"
+    },
+    "stalthos-runtime/engine/main.cpp": {
+      "raw_sha256": "220ca42c413137aa724fd81898a389ba0a06633542119c78c8564bd906ccd0ec",
+      "canonical_lf_sha256": "dd0477d13efeff1e714e567181908768da686a600748f8c3bdb70ecbea6fb09d",
+      "git_blob": "e2387d81ca321982b3e726d59883e14d68adc53e"
+    },
+    "stalthos-runtime/engine/connected_save.hpp": {
+      "raw_sha256": "6ff5d409d940d6f4c04338f5f532673fb985324ea9b0028f7240bf6fc80d0788",
+      "canonical_lf_sha256": "185fbc9e7855f4ff89f3236e989830eef70296c27ad33b7f800bd6629c404f7f",
+      "git_blob": "284196c93331a9247993edb133fce820e74ecbfc"
+    },
+    "stalthos-runtime/scripts/Run.ps1": {
+      "raw_sha256": "fd0f0e2d10474d41ef16e68abb7ba35315e592895fb49d3ac5491a5f90180597",
+      "canonical_lf_sha256": "abaf3f118769d6d12959407caa6ab6ca552d6d1177295bdc11a23ddf27dc8473",
+      "git_blob": "043b0fddbec205136b10505023b39a8e5a0d9ee7"
+    },
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": {
+      "raw_sha256": "25666e492f8e5de9d48cf74e002af871e8348f2a596e2ffe253e41e9629146c7",
+      "canonical_lf_sha256": "a93a5bd9b4b16a738f5ccfa8c22781b6f9063890fefc86abab0b6ac9286653de",
+      "git_blob": "a50a0bb0760333b840b1909360e9215fdef9d700"
+    },
+    "stalthos-runtime/tests/connected_save.cpp": {
+      "raw_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+      "canonical_lf_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+      "git_blob": "522b4f1fe45122d99a0ed6e7eacb71c30ef87094"
+    },
+    "stalthos-runtime/docs/connected-persistence.md": {
+      "raw_sha256": "7c25e041cc2ccf1cc407187eeee242112ef2455a766b6fda6644534e35194d68",
+      "canonical_lf_sha256": "800d646a5015d9f517a947872a190eb25339943b7e4c577f01c8b804e27e2b28",
+      "git_blob": "e343fc8c08b38c9e626f6650d96c61f4f84c5e6c"
+    }
+  }
+}

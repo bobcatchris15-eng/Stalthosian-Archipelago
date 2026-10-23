@@ -26,6 +26,7 @@
 #include "domain/hero_rest.hpp"
 #include "domain/exterior_residents.hpp"
 #include "native_save.hpp"
+#include "connected_save.hpp"
 #include "domain/weather_response.hpp"
 #include "domain/hero_autonomy.hpp"
 // Initial Wicked host for the full draft. Geometry here is diagnostic blockout.
@@ -203,7 +204,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     std::filesystem::path woodlandSaplingTree;
     std::filesystem::path creature;
     double creatureClipDuration = 0.0, creatureStrideLength = 0.0;
-    std::filesystem::path loadState, saveState;
+    std::filesystem::path loadState, saveState, connectedLoad, connectedSave;bool connectedPersistence=false,persistenceProbe=false;
     std::optional<uint64_t> successorId;
     double duration = 15;
     double calendarScale = 1.0;
@@ -319,6 +320,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             else if (key == L"--stride-length" && i+1 < argumentCount) creatureStrideLength = std::stod(argv[++i]);
             else if (key == L"--calendar-scale" && i+1 < argumentCount) calendarScale = std::stod(argv[++i]);
             else if (key == L"--creature-sole-offset" && i+1 < argumentCount) creatureSoleOffset = std::stod(argv[++i]);
+            else if(key==L"--connected-persistence"){connectedPersistence=true;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--connected-persistence-probe"){persistenceProbe=true;connectedPersistence=true;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--connected-load" && i+1<argumentCount){connectedLoad=argv[++i];connectedPersistence=true;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--connected-save" && i+1<argumentCount){connectedSave=argv[++i];connectedPersistence=true;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--load-state" && i+1 < argumentCount) loadState = argv[++i];
             else if (key == L"--save-state" && i+1 < argumentCount) saveState = argv[++i];
             else if (key == L"--successor-id" && i+1 < argumentCount) {
@@ -339,6 +344,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             throw std::runtime_error("conflicting diagnostic modes specified: only one of --diagnostic-walk, --diagnostic-reverse-walk, --diagnostic-needs, --diagnostic-transition may be active");
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
+        if(connectedPersistence){loadState=connectedLoad;saveState=connectedSave;if(nestProbe || peerProbe || npcPeerProbe || reedProbe || protectionProbe || carrionProbe || birdProbe || carnivoreProbe || explorationProbe || saplingProbe || connectedRouteWalk || weatherPreview || diagCount || autonomyProbe || foragingProbe || restProbe || exposureProbe || deathNextLifeProbe || lifeStageProbe || shoreProbe || audioProbe || dayNightProbe || woodlandProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || wildlifeProbe)throw std::runtime_error("partial persistence profile refuses incompatible diagnostic fixtures");}
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
         if(speciesSpecified && !connectedWorld)throw std::runtime_error("hero-species is connected-only; saved original mode keeps its own species");
         if(birdProbe){if(interactive || nestProbe || carnivoreProbe || diagCount || hatchProbe || shoreProbe || npcPeerProbe || audioProbe || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview)throw std::runtime_error("bird diagnostic requires standalone timed connected mode");requestedSpecies="Thistletail";}
@@ -400,6 +406,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::domain::HeroViewController viewController;
         double loadedCalendar=0, loadedPhysical=0;
         stalthos::HeroSpecies heroSpecies=connectedWorld?selectedSpecies:stalthos::HeroSpecies::Smalltrotter;
+        const auto connectedConfiguration=connectedPersistence?stalthos::engine::connected_save::fingerprint(!plant.empty(),{plant,creature,woodlandAdultTree,woodlandSaplingTree},{creatureClipDuration,creatureStrideLength,creatureSoleOffset}):0;
+        std::optional<stalthos::engine::connected_save::Candidate> loadedConnected;
+        if(connectedPersistence && !loadState.empty()){loadedConnected=stalthos::engine::connected_save::read(loadState,connectedConfiguration);if(loadedConnected->simulation.host.seed!=world.worldSeed())throw std::runtime_error("connected seed mismatch");heroSpecies=loadedConnected->simulation.host.heroLifecycle->species;if(speciesSpecified && heroSpecies!=selectedSpecies)throw std::runtime_error("connected saved species conflicts with explicit selection");calendarScale=loadedConnected->calendarScale;}
         const bool longstrideLife=connectedWorld && heroSpecies==stalthos::HeroSpecies::Longstride;const stalthos::domain::CarrionPatch carrion;
         const bool reedLife=connectedWorld && heroSpecies==stalthos::HeroSpecies::Reedcrest;
         const bool brackenLife=connectedWorld && heroSpecies==stalthos::HeroSpecies::Brackenback;
@@ -412,9 +421,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         bool successorSavedDeathTruthPreserved=false; std::size_t savedDeadHeroCount=0;
         std::optional<stalthos::persistence::SaveData> loadedSaveData;
         std::optional<stalthos::persistence::host_save::Candidate> loadedHostSave;
-        const auto hostConfiguration=stalthos::engine::nativeSaveConfiguration(populatedWorld);
+        const auto hostConfiguration=connectedPersistence?connectedConfiguration:stalthos::engine::nativeSaveConfiguration(populatedWorld);
         if (!loadState.empty()) {
-            loadedHostSave=stalthos::persistence::host_save::read(loadState,hostConfiguration);
+            loadedHostSave=loadedConnected?loadedConnected->simulation:stalthos::persistence::host_save::read(loadState,hostConfiguration);
             if(loadedHostSave->regional && !populatedWorld) throw std::runtime_error("native STL9 requires populated world configuration");
             loadedSaveData = loadedHostSave->host;
             const auto& data = *loadedSaveData;
@@ -508,9 +517,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                                  {207, stalthos::ResourceKind::Shrub, 2.0, 0.0}});
         }
 
-        if(exteriorBrowseEnabled){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({stalthos::fauna::ExteriorBrowsePatch::resource,stalthos::ResourceKind::Shrub,exteriorBrowse.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("exterior browse ledger initialization rejected");}
+        if(exteriorBrowseEnabled && !loadedSaveData){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({stalthos::fauna::ExteriorBrowsePatch::resource,stalthos::ResourceKind::Shrub,exteriorBrowse.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("exterior browse ledger initialization rejected");}
 
-        if(connectedWorld){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({209,stalthos::ResourceKind::Creek,exteriorWater.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("exterior water initialization rejected");}
+        if(connectedWorld && !loadedSaveData){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({209,stalthos::ResourceKind::Creek,exteriorWater.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("exterior water initialization rejected");}
         uint64_t maxPersistedSessionId = 0;
         if (loadedSaveData && loadedSaveData->resourceLedger.has_value()) {
             for (const auto& s : loadedSaveData->resourceLedger->sessions) {
@@ -522,10 +531,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (maxPersistedSessionId == std::numeric_limits<uint64_t>::max()) {
             throw std::runtime_error("resource ledger session id overflow");
         }
-        uint64_t nextInteractionSession = maxPersistedSessionId + 1;
+        uint64_t nextInteractionSession = loadedConnected?loadedConnected->nextSession:maxPersistedSessionId+1;
 
-        if(birdLife){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({microforage.resource,stalthos::ResourceKind::Shrub,microforage.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("microforage resource admission rejected");}
-        if(longstrideLife){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({carrion.resource,stalthos::ResourceKind::Shrub,carrion.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("authored carrion resource admission rejected");}
+        if(birdLife && !loadedSaveData){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({microforage.resource,stalthos::ResourceKind::Shrub,microforage.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("microforage resource admission rejected");}
+        if(longstrideLife && !loadedSaveData){auto resources=bootstrapLedger->continuationSnapshot().resources;resources.push_back({carrion.resource,stalthos::ResourceKind::Shrub,carrion.quantity,0});if(!bootstrapLedger->load(resources))throw std::runtime_error("authored carrion resource admission rejected");}
         std::map<uint64_t, stalthos::ResourceDto> cachedResourceDtos;
         for (const auto& res : resourceSnapshot()) {
             cachedResourceDtos[res.id] = res;
@@ -907,7 +916,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
         stalthos::domain::HeroExploration heroExploration;
-        const bool explorationEnabled=connectedWorld && !carrionProbe && !reedProbe && !protectionProbe && !birdProbe && !nestProbe && !carnivoreProbe && !shoreProbe && !npcPeerProbe && !audioProbe && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
+        const bool explorationEnabled=connectedWorld && !connectedPersistence && !carrionProbe && !reedProbe && !protectionProbe && !birdProbe && !nestProbe && !carnivoreProbe && !shoreProbe && !npcPeerProbe && !audioProbe && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
         wi::SpriteFont explorationCue("Exploring nearby ground - WASD takes control");explorationCue.params.size=22;explorationCue.params.h_align=wi::font::WIFALIGN_CENTER;explorationCue.params.color=wi::Color(220,240,210,255);explorationCue.params.shadowColor=wi::Color(0,0,0,255);explorationCue.SetHidden(true);renderPath.AddFont(&explorationCue);
         json explorationSamples=json::array(),explorationCaptures=json::array(),explorationEvents=json::array();double nextExplorationSample=0;std::array<bool,3> explorationCaptured{};bool explorationNeedInjected=false,explorationDestinationInjected=false;
         wi::SpriteFont phasePreviewCue(carrionProbe?"Carrion test - authored food, synthetic hunger/start/input/death/N/noon fixtures":reedProbe?"Reedcrest test - body/NPC needs/route/input/noon fixtures":protectionProbe?"Protection test - synthetic adult/body/NPC edge-position/condition, input/noon fixtures":birdProbe?"Thistletail test - synthetic hunger/start/input/death/N/noon fixtures":nestProbe?(hatchProbe==1?"Hatch test - adult/start/time/B/movement/death/N fixtures":hatchProbe==2?"Hatch camera test - adult/start/time/B/camera fixtures":"Nest test - synthetic adults/mate-needs/B/input/noon; real courtship response"):shoreProbe?"Shore test - synthetic local start/input/noon, authored cove":npcPeerProbe?"NPC pair test - synthetic body/actor/needs/noon fixtures":audioProbe?"Body audio test - synthetic body or camera input":saplingProbe?"Sapling test - synthetic body/camera start, input and noon":explorationProbe?"Exploration test - bank start/input/need/destination/noon fixtures":deathNextLifeProbe?"Death test - near-terminal age, thirst, input and noon fixtures":lifeStageProbe?"Growth test - near-adult age, fatigue/input/noon fixtures":peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!carrionProbe && !reedProbe && !protectionProbe && !birdProbe && !nestProbe && !dayNightProbe && !woodlandProbe && !peerProbe && !lifeStageProbe && !deathNextLifeProbe && !explorationProbe && !saplingProbe && !audioProbe && !npcPeerProbe && !shoreProbe);renderPath.AddFont(&phasePreviewCue);
@@ -938,7 +947,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         unsigned previousInteractionOwner=0;
         double nextAutonomySample=0;
         bool syntheticDirect=false;
-        const bool heroAutonomyEnabled=connectedWorld && !connectedRouteWalk && !weatherPreview;
+        const bool heroAutonomyEnabled=connectedWorld && !connectedPersistence && !connectedRouteWalk && !weatherPreview;
         uint64_t runCalls=0; bool screenshot=false, userClosed=false, earlyScreenshot=false, lateScreenshot=false;
         std::vector<std::string> lifecycleTransitions;
         std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> channelPoseBaseline; float localBoneDelta=0, minimumAnimationTimer=std::numeric_limits<float>::infinity(), maximumAnimationTimer=0; uint64_t animationPlayingFrames=0;
@@ -988,7 +997,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         bool previousInspectionKey = false, previousToggleKey = false;
         json connectedTrajectory=json::array(),shoreTrajectory=json::array(),shoreCaptures=json::array();std::array<bool,4> shoreCaptured{};double nextShoreSample=0;
         double connectedMaxGrade=0,connectedMaxStep=0;
-        stalthos::environment::BodyWeatherResponse bodyWeather;
+        stalthos::environment::BodyWeatherResponse bodyWeather;if(loadedConnected)bodyWeather.restoreWetness(loadedConnected->wetness);
         stalthos::environment::LocalWeatherResponse localWeather;
         json weatherResponseSamples=json::array(),weatherResponseCaptures=json::array();
         std::array<bool,3> weatherCaptured{};
@@ -1114,7 +1123,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 legacyPopulation=stalthos::fauna::withExteriorWater(legacyPopulation,habitat,excluded,exteriorBrowseEnabled,exteriorWater);faunaSites=habitat.sites;
                 json nodes=json::array();for(const auto& site:faunaSites)nodes.push_back({{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},{"neighbors",site.neighbors},{"browse",site.browse},{"freshwater",site.freshwater}});
                 WriteJson(output/"exterior-residents-habitat.json",{{"sites",nodes},{"resident_sites",habitat.residents},{"max_measured_grade",habitat.maxMeasuredGrade},{"sample_count",habitat.samples},{"sample_m",.5},{"max_grade",.6},{"original_eight_state_preserved",true},{"new_residents",4},{"activation","same coarse body-radius192m watershed group; no separate region"},{"exterior_resource_anchors",exteriorBrowseEnabled?2:1},{"exterior_water_resource",209},{"exterior_food_resource",exteriorBrowseEnabled?208:0}});
-            }            if(loadedSaveData && loadedSaveData->faunaPopulation) {
+            }            if(loadedConnected){stalthos::ResourceLedgerDto expected;expected.resources.push_back({100,stalthos::ResourceKind::Creek,1000000,0});for(std::uint64_t id=200;id<=207;++id)expected.resources.push_back({id,stalthos::ResourceKind::Shrub,2,0});if(exteriorBrowseEnabled)expected.resources.push_back({208,stalthos::ResourceKind::Shrub,exteriorBrowse.quantity,0});expected.resources.push_back({209,stalthos::ResourceKind::Creek,exteriorWater.quantity,0});if(birdLife)expected.resources.push_back({210,stalthos::ResourceKind::Shrub,microforage.quantity,0});if(longstrideLife)expected.resources.push_back({211,stalthos::ResourceKind::Shrub,carrion.quantity,0});stalthos::engine::connected_save::validateAdmission(*loadedConnected,legacyPopulation.snapshot(),expected);}
+            if(loadedSaveData && loadedSaveData->faunaPopulation) {
                 legacyPopulation.restore(*loadedSaveData->faunaPopulation,excluded);
                 faunaPopulationRestored=true;
             }
@@ -1173,8 +1183,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             faunaPopulation.emplace(std::move(legacyPopulation),bootstrapLedger->continuationSnapshot(),
                 loadedSaveData ? loadedSaveData->faunaResourceSessions : std::vector<std::pair<stalthos::Identity,uint64_t>>{},
                 anchors,nextInteractionSession);
+            if(loadedConnected && loadedConnected->simulation.host.pose){const auto& pose=*loadedConnected->simulation.host.pose;if(!std::isfinite(Ground(float(pose.position.x),float(pose.position.z))) || std::abs(Ground(float(pose.position.x),float(pose.position.z))-pose.position.y)>1e-6)throw std::runtime_error("connected saved body ground datum mismatch");}
             if(loadedHostSave && loadedHostSave->regional) {
-                auto detached=stalthos::engine::restoreNativeSave(*loadedHostSave,*faunaPopulation,populatedWorld);
+                auto detached=loadedConnected?stalthos::engine::connected_save::restore(*loadedConnected,*faunaPopulation,hostConfiguration):stalthos::engine::restoreNativeSave(*loadedHostSave,*faunaPopulation,populatedWorld);
                 simulationOwner=std::move(detached); // One complete owner assignment before any simulation/contact.
                 // Successor selection is a new explicit user transition, applied only
                 // after complete persisted restoration; it must not be overwritten.
@@ -1331,7 +1342,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         int diagnosticSequenceStage = 0;
         double diagnosticTimer = 0.0;
 
-        uint64_t physicalInteractionSession = 0;
+        uint64_t physicalInteractionSession = loadedConnected?loadedConnected->physicalSession:0;
         bool previousNextLifeKey=false,nextLifeProbeRequested=false;
         uint64_t priorDeadHero=0;
         json nextLifeEvents=json::array(),nextLifeSamples=json::array(),nextLifeCaptures=json::array();
@@ -1364,6 +1375,30 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::domain::BodyMotionAudio bodyMotionAudio;wi::audio::Sound rustleSound;wi::audio::SoundInstance rustleInstance;bool rustleReady=false;uint64_t rustleMaxCursor=0,rustleRequests=0,rustleEventsDropped=0;json rustleEvents=json::array();
         if(connectedWorld){const auto bytes=stalthos::engine::bodyRustleWave();std::ofstream source(output/"body-rustle-source.wav",std::ios::binary);source.write((const char*)bytes.data(),bytes.size());rustleReady=wi::audio::CreateSound(bytes.data(),bytes.size(),&rustleSound)&&wi::audio::CreateSoundInstance(&rustleSound,&rustleInstance);if(rustleReady)wi::audio::SetVolume(.12f,&rustleInstance);}
         stalthos::engine::NativeAudioCapture audioCapture;if(audioProbe)audioCapture.start();
+        bool previousPersistentRest=false,previousCheckpointKey=false,connectedWritten=false,persistenceSaveRequested=false,persistenceUnsafeRequested=false;double checkpointSpeed=0;std::uint64_t checkpointGeneration=loadedHostSave?loadedHostSave->generation:0;
+        json persistenceEvents=json::array();std::string persistenceMessage="PARTIAL SAVE PROFILE: WASD / E contact / R rest / N next life; F5 save. No social, courtship or automatic behavior.";
+        wi::SpriteFont persistenceCue(persistenceMessage);persistenceCue.params.size=16;persistenceCue.params.posX=15;persistenceCue.params.posY=55;persistenceCue.SetHidden(!connectedPersistence);renderPath.AddFont(&persistenceCue);
+        auto connectedEvidence=[&](const stalthos::engine::connected_save::Candidate& c){std::string hex;const auto bytes=stalthos::persistence::host_save::encode(c.simulation);const char* digits="0123456789abcdef";for(unsigned char b:bytes){hex+=digits[b>>4];hex+=digits[b&15];}return json{{"format","STLC1_partial_manual_profile"},{"simulation_bytes_hex",hex},{"next_session",c.nextSession},{"physical_session",c.physicalSession},{"calendar_scale",c.calendarScale},{"wetness",c.wetness},{"population",populationJson(*c.simulation.host.faunaPopulation)},{"ledger",ledgerJson(*c.simulation.host.resourceLedger)}};};
+        auto captureConnected=[&](std::uint64_t generation){
+            const auto& camera=viewController.getState();auto data=stalthos::persistence::captureSave(clock,world,stalthos::persistence::HostPose{{x,Ground(x,z),z},yaw,static_cast<std::uint8_t>(cameraMode)});
+            data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,heroId);data.heroNeeds=stalthos::persistence::captureHeroNeeds(*needs,heroId);data.resourceLedger=ledgerSnapshot();data.faunaPopulation=faunaPopulation->snapshot();data.faunaResourceSessions=faunaPopulation->sessions();
+            data.cameraState=stalthos::persistence::CameraStateSnapshot{static_cast<std::uint8_t>(camera.mode),static_cast<std::uint8_t>(camera.focus),camera.detachedAnchor,camera.orbit.azimuth,camera.orbit.elevation,camera.orbit.distance};
+            return stalthos::engine::connected_save::Candidate{{data,faunaPopulation->continuation(),hostConfiguration,generation},nextInteractionSession,physicalInteractionSession,calendarScale,bodyWeather.wetness()};
+        };
+        if(loadedConnected){const auto actual=captureConnected(checkpointGeneration);if(stalthos::engine::connected_save::encode(actual)!=stalthos::engine::connected_save::encode(*loadedConnected))throw std::runtime_error("connected actual reconstructed owner differs before first tick");WriteJson(output/"connected-restored-before-first-tick.json",connectedEvidence(actual));}
+        auto checkpoint=[&](){
+            if(saveState.empty())throw std::runtime_error("Choose ConnectedSave path before entry to enable F5");
+            const auto& camera=viewController.getState();
+            if(!world.snapshot().hero || lifecycle->stage()==stalthos::LifeStage::Dead)throw std::runtime_error("Partial save needs a living hero; use N first");
+            if(heroIntent.authority()!=stalthos::Authority::Autonomy || previousInteractDown || std::abs(checkpointSpeed)>.001 || camera.pendingDestination || viewController.dangerRecallActive())throw std::runtime_error("Finish or cancel movement/destination/contact/camera recall before saving");
+            if(nesting.clutch() || courtship.mate() || peerCompanion.peer() || faunaPopulation->npcPeers().leader() || faunaPopulation->habitat().size()!=faunaSites.size())throw std::runtime_error("Partial save refuses nests, courtship, bonds or changed habitat");
+            if(camera.comfortRadius!=stalthos::domain::HeroViewController::kDefaultComfortRadius || camera.hardRadius!=stalthos::domain::HeroViewController::kDefaultHardRadius)throw std::runtime_error("Partial save refuses custom camera tether");
+            if(checkpointGeneration==std::numeric_limits<uint64_t>::max())throw std::runtime_error("connected generation exhausted");
+            auto c=captureConnected(checkpointGeneration+1);
+            stalthos::engine::connected_save::write(saveState,c,*faunaPopulation,hostConfiguration);++checkpointGeneration;connectedWritten=true;
+            WriteJson(output/"connected-saved-candidate.json",connectedEvidence(c));persistenceMessage="Partial connected checkpoint saved; restart using ConnectedLoad.";
+        };
+        if(persistenceProbe && !loadedConnected){persistenceEvents.push_back({{"fixture","synthetic supported body pose, hunger, E at2/9.2, forward/reverse10..11, death12 then ordinary N13; no actor/resource teleport"}});if(!longstrideLife)throw std::runtime_error("Persistence contact fixture requires Longstride");x=float(carrion.x);z=float(carrion.z);needs->restoreState(.8,0,0,0,false);populatedTerrain->update(scene,x,z);}
         const auto started = std::chrono::steady_clock::now(); auto previous = started;
         MSG message{};
         while (true) {
@@ -1405,7 +1440,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
             if(courtshipProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<10){auto state=viewController.getState();if(state.mode!=stalthos::domain::CameraMode::LocallyDetached){state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;for(const auto& a:faunaPopulation->actors())if(a.id==courtshipFixtureMate)state.detachedAnchor=a.position;viewController.setState(state);}viewController.applyDetachedPan(.3,0,dt,{x,Ground(x,z),z});}
             if(carrionProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<10){auto state=viewController.getState();if(state.mode!=stalthos::domain::CameraMode::LocallyDetached){state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={carrion.x,Ground(float(carrion.x),float(carrion.z)),carrion.z};viewController.setState(state);}viewController.applyDetachedPan(.4,0,dt,{x,Ground(x,z),z});}
-            if(carrionProbe==1 && !repeatHungerInjected && clock.physicalSeconds()>=9){needs->restoreState(.8,needs->thirst(),needs->fatigue(),needs->injury(),needs->isResting());repeatHungerInjected=true;carrionEvents.push_back({{"event","synthetic_repeat_hunger_for_second_finite_contact"},{"physical_seconds",clock.physicalSeconds()}});}
+            if((carrionProbe==1 || (persistenceProbe && !loadedConnected)) && !repeatHungerInjected && clock.physicalSeconds()>=9){needs->restoreState(.8,needs->thirst(),needs->fatigue(),needs->injury(),needs->isResting());repeatHungerInjected=true;carrionEvents.push_back({{"event","synthetic_repeat_hunger_for_second_finite_contact"},{"physical_seconds",clock.physicalSeconds()}});}
             if(reedProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<10){auto state=viewController.getState();if(state.mode!=stalthos::domain::CameraMode::LocallyDetached){state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;for(const auto& a:faunaPopulation->actors())if(a.id==reedFixturePeer)state.detachedAnchor=a.position;viewController.setState(state);}viewController.applyDetachedPan(.3,0,dt,{x,Ground(x,z),z});}
             if(reedProbe==4 && !reedNeedInjected && clock.physicalSeconds()>=5){needs->restoreState(0,.8,0,0,false);reedNeedInjected=true;}
             if(protectionProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<10){auto state=viewController.getState();if(state.mode!=stalthos::domain::CameraMode::LocallyDetached){state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;const auto actors=faunaPopulation->actors();for(const auto& a:actors)if(a.id==fixtureSmall)state.detachedAnchor=a.position;viewController.setState(state);}viewController.applyDetachedPan(.3,0,dt,{x,Ground(x,z),z});}
@@ -1427,8 +1462,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             heroAlive=lifecycle->stage()!=stalthos::LifeStage::Dead;
             if(hatchProbe==1 && nesting.offspring() && !hatchDiagnosticDeath && clock.physicalSeconds()>=24){lifecycle->restoreState(heroSpecies,stalthos::getHeroProfile(heroSpecies).hatchlingDuration+stalthos::getHeroProfile(heroSpecies).juvenileDuration+stalthos::getHeroProfile(heroSpecies).adultDuration+stalthos::getHeroProfile(heroSpecies).oldDuration,stalthos::LifeStage::Dead);priorDeadHero=heroId;world.heroDied();heroAlive=false;hatchDiagnosticDeath=true;hatchEvents.push_back({{"event","synthetic_parent_death_fixture"},{"physical_seconds",clock.physicalSeconds()},{"child",nesting.offspring()}});}
-            if((birdProbe==1 || carrionProbe==1) && !birdDeathRequested && clock.physicalSeconds()>=17){const auto& p=stalthos::getHeroProfile(heroSpecies);lifecycle->restoreState(heroSpecies,p.hatchlingDuration+p.juvenileDuration+p.adultDuration+p.oldDuration,stalthos::LifeStage::Dead);priorDeadHero=heroId;world.heroDied();heroAlive=false;birdDeathRequested=true;if(carrionProbe==1)carrionEvents.push_back({{"event","synthetic_death_fixture_then_ordinary_N_at_18"},{"physical_seconds",clock.physicalSeconds()},{"remaining",getResourceRemaining(carrion.resource)}});}
-            const bool syntheticNextLife=((birdProbe==1 || carrionProbe==1) && birdDeathRequested && !nextLifeProbeRequested && clock.physicalSeconds()>=18) || (deathNextLifeProbe && !nextLifeProbeRequested && clock.physicalSeconds()>=10) || (hatchProbe==1 && hatchDiagnosticDeath && !nextLifeProbeRequested && clock.physicalSeconds()>=25);
+            if((birdProbe==1 || carrionProbe==1 || (persistenceProbe && !loadedConnected)) && !birdDeathRequested && clock.physicalSeconds()>=(persistenceProbe?12:17)){const auto& p=stalthos::getHeroProfile(heroSpecies);lifecycle->restoreState(heroSpecies,p.hatchlingDuration+p.juvenileDuration+p.adultDuration+p.oldDuration,stalthos::LifeStage::Dead);priorDeadHero=heroId;world.heroDied();heroAlive=false;birdDeathRequested=true;if(carrionProbe==1)carrionEvents.push_back({{"event","synthetic_death_fixture_then_ordinary_N_at_18"},{"physical_seconds",clock.physicalSeconds()},{"remaining",getResourceRemaining(carrion.resource)}});}
+            const bool syntheticNextLife=((birdProbe==1 || carrionProbe==1 || (persistenceProbe && !loadedConnected)) && birdDeathRequested && !nextLifeProbeRequested && clock.physicalSeconds()>=(persistenceProbe?13:18)) || (deathNextLifeProbe && !nextLifeProbeRequested && clock.physicalSeconds()>=10) || (hatchProbe==1 && hatchDiagnosticDeath && !nextLifeProbeRequested && clock.physicalSeconds()>=25);
             const bool nextLifeKey=down('N') || syntheticNextLife;
             if(connectedWorld && !heroAlive && nextLifeKey && !previousNextLifeKey){
                 if(syntheticNextLife)nextLifeProbeRequested=true;
@@ -1489,8 +1524,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             syntheticDirect=(courtshipProbe==2 && clock.physicalSeconds()>=3 && clock.physicalSeconds()<5) || (carrionProbe==2 && clock.physicalSeconds()>=1 && clock.physicalSeconds()<3) || (reedProbe==5 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<29) || (reedProbe==2 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<10) || (protectionProbe==2 && clock.physicalSeconds()>=1 && clock.physicalSeconds()<3) || (birdProbe==2 && clock.physicalSeconds()>=1 && clock.physicalSeconds()<3) || (hatchProbe==1 && clock.physicalSeconds()>=13 && clock.physicalSeconds()<18) || (!hatchProbe && !courtshipProbe && nestProbe && clock.physicalSeconds()>=12 && clock.physicalSeconds()<15) || (audioProbe==1 && clock.physicalSeconds()>=8 && clock.physicalSeconds()<10) || (saplingProbe==1 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<(creatureLoaded?18:7)) || ((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (explorationProbe==2 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<5) || (lifeStageProbe && clock.physicalSeconds()>=9 && clock.physicalSeconds()<11) || (deathNextLifeProbe && ((clock.physicalSeconds()>=7 && clock.physicalSeconds()<9) || (clock.physicalSeconds()>=12 && clock.physicalSeconds()<14)));
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
-            bool userWalk = (reedProbe==5 && clock.physicalSeconds()>=29 && clock.physicalSeconds()<49) || (reedProbe==2 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<16) || (hatchProbe==1 && clock.physicalSeconds()>=18 && clock.physicalSeconds()<23) || ((shoreProbe==1 || shoreProbe==2) && x<258) || (audioProbe==1 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<6) || (saplingProbe==1 && clock.physicalSeconds()>=(creatureLoaded?18:7) && clock.physicalSeconds()<(creatureLoaded?32:10)) || (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
-            bool userReverse = ((carnivoreProbe==1 || carnivoreProbe==2) && clock.physicalSeconds()>=6 && clock.physicalSeconds()<20) || (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
+            bool userWalk = (persistenceProbe && !loadedConnected && clock.physicalSeconds()>=10 && clock.physicalSeconds()<10.5) || (reedProbe==5 && clock.physicalSeconds()>=29 && clock.physicalSeconds()<49) || (reedProbe==2 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<16) || (hatchProbe==1 && clock.physicalSeconds()>=18 && clock.physicalSeconds()<23) || ((shoreProbe==1 || shoreProbe==2) && x<258) || (audioProbe==1 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<6) || (saplingProbe==1 && clock.physicalSeconds()>=(creatureLoaded?18:7) && clock.physicalSeconds()<(creatureLoaded?32:10)) || (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
+            bool userReverse = (persistenceProbe && !loadedConnected && clock.physicalSeconds()>=10.5 && clock.physicalSeconds()<11) || ((carnivoreProbe==1 || carnivoreProbe==2) && clock.physicalSeconds()>=6 && clock.physicalSeconds()<20) || (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
@@ -1515,14 +1550,14 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             heroIntent.setDirect(directInput);
             const stalthos::Vec3 destinationBody{x,Ground(x,z),z};
             if(connectedWorld)courtship.advance(heroId,destinationBody,heroAlive && lifecycle->stage()==stalthos::LifeStage::Adult,needs->suggestActivity()==stalthos::needs::SuggestedActivity::None,directInput || bool(pendingDestinationClick) || stalthos::domain::HeroDestination::active(heroIntent),timeStep.physicalSeconds,faunaPhysical?faunaPopulation->actors():std::vector<stalthos::fauna::ActorView>{});
-            if(reedLife){const stalthos::fauna::ActorView* partner=nullptr;if(faunaPhysical && peerCompanion.peer())for(const auto& a:faunaPopulation->actors())if(a.id==peerCompanion.peer())partner=&a;
+            if(reedLife && !connectedPersistence){const stalthos::fauna::ActorView* partner=nullptr;if(faunaPhysical && peerCompanion.peer())for(const auto& a:faunaPopulation->actors())if(a.id==peerCompanion.peer())partner=&a;
                 const bool playerDestination=heroIntent.goal() && heroIntent.goal()->status==stalthos::GoalStatus::Active && !reedFollowOwned;
                 reedDecision=stalthos::domain::reedPeerDecision(destinationBody,heroAlive,directInput,playerDestination || bool(pendingDestinationClick),needs->suggestActivity()!=stalthos::needs::SuggestedActivity::None,partner);
                 if(reedFollowOwned && (directInput || pendingDestinationClick || reedDecision.leader!=stalthos::domain::ReedLeader::Partner || !reedDecision.heroTarget)){if(stalthos::domain::HeroDestination::active(heroIntent))heroIntent.setGoalStatus(stalthos::GoalStatus::Abandoned);reedFollowOwned=false;}
                 if(reedFollowOwned && !stalthos::domain::HeroDestination::active(heroIntent))reedFollowOwned=false;
                 if(reedDecision.heroTarget && !directInput && !pendingDestinationClick && (!stalthos::domain::HeroDestination::active(heroIntent) || reedFollowOwned) && clock.physicalSeconds()>=reedGoalRefresh){auto target=*reedDecision.heroTarget;target.y=Ground(float(target.x),float(target.z));if(stalthos::domain::HeroDestination::submit(heroIntent,destinationBody,target,supportedDestination(destinationBody,target))){heroAutonomy.yieldToDestination();reedFollowOwned=true;}reedGoalRefresh=clock.physicalSeconds()+.5;}
             }
-            if(brackenLife){const auto empty=std::vector<stalthos::fauna::ActorView>{};defenseObservation=stalthos::domain::brackenProtection(heroId,heroSpecies,destinationBody,lifecycle->stage(),heroAlive,faunaPhysical?faunaPopulation->actors():empty);
+            if(brackenLife && !connectedPersistence){const auto empty=std::vector<stalthos::fauna::ActorView>{};defenseObservation=stalthos::domain::brackenProtection(heroId,heroSpecies,destinationBody,lifecycle->stage(),heroAlive,faunaPhysical?faunaPopulation->actors():empty);
                 if(defenseOwned && (directInput || pendingDestinationClick || needs->suggestActivity()!=stalthos::needs::SuggestedActivity::None || !defenseObservation)){if(stalthos::domain::HeroDestination::active(heroIntent))heroIntent.setGoalStatus(stalthos::GoalStatus::Abandoned);defenseOwned=false;braceUntil=0;defenseCooldown=clock.physicalSeconds()+3;if(defenseEvents.size()<256)defenseEvents.push_back({{"event","yield_or_lost_stimulus"},{"physical_seconds",clock.physicalSeconds()},{"direct",directInput}});}
                 if(defenseOwned && !stalthos::domain::HeroDestination::active(heroIntent)){const bool arrived=heroIntent.goal() && heroIntent.goal()->status==stalthos::GoalStatus::Completed;braceUntil=arrived?clock.physicalSeconds()+2:0;defenseOwned=false;defenseCooldown=clock.physicalSeconds()+8;}
                 if(defenseObservation && !defenseOwned && !pendingDestinationClick && !directInput && !stalthos::domain::HeroDestination::active(heroIntent) && needs->suggestActivity()==stalthos::needs::SuggestedActivity::None && clock.physicalSeconds()>=defenseCooldown){auto target=defenseObservation->interpose;target.y=Ground(float(target.x),float(target.z));const bool accepted=stalthos::domain::HeroDestination::submit(heroIntent,destinationBody,target,supportedDestination(destinationBody,target));if(accepted){heroAutonomy.yieldToDestination();defenseOwned=true;++defenseStarts;if(defenseEvents.size()<256)defenseEvents.push_back({{"event","interposition_intention"},{"vulnerable",defenseObservation->vulnerable},{"threat",defenseObservation->threat},{"target_x",target.x},{"target_z",target.z},{"physical_seconds",clock.physicalSeconds()}});}}
@@ -1542,7 +1577,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             phasePreviewCue.params.posX=20;phasePreviewCue.params.posY=20;
             destinationCue.params.posX=app.canvas.GetLogicalWidth()*.5f;destinationCue.params.posY=app.canvas.GetLogicalHeight()*.8f;
             destinationPin.SetHidden(!destinationActive);if(destinationActive){const auto& t=heroIntent.goal()->target;DirectX::XMFLOAT3 projected;DirectX::XMStoreFloat3(&projected,DirectX::XMVector3Project(DirectX::XMVectorSet(float(t.x),float(t.y+.15),float(t.z),1),0,0,app.canvas.GetLogicalWidth(),app.canvas.GetLogicalHeight(),0,1,wi::scene::GetCamera().GetProjection(),wi::scene::GetCamera().GetView(),DirectX::XMMatrixIdentity()));destinationPin.params.posX=projected.x;destinationPin.params.posY=projected.y;}
-            resting=heroAutonomyEnabled?heroRest.update(*needs,heroAlive,directInput||destinationActive):false; // Original saved-mode resting state is untouched.
+            if(connectedPersistence){if(userSteering && down('R') && !previousPersistentRest)needs->setResting(!needs->isResting());previousPersistentRest=userSteering && down('R');if(directInput||destinationActive)needs->setResting(false);resting=needs->isResting();}else resting=heroAutonomyEnabled?heroRest.update(*needs,heroAlive,directInput||destinationActive):false; // Original saved-mode resting state is untouched.
             if(resting!=previousRestCue){restCue.SetHidden(!resting);previousRestCue=resting;++restCueChanges;}
             if(cueCanvasWidth!=app.canvas.GetLogicalWidth() || cueCanvasHeight!=app.canvas.GetLogicalHeight()){cueCanvasWidth=app.canvas.GetLogicalWidth();cueCanvasHeight=app.canvas.GetLogicalHeight();restCue.params.posX=cueCanvasWidth*.5f;restCue.params.posY=cueCanvasHeight*.9f;exposureCue.params.posX=cueCanvasWidth*.5f;exposureCue.params.posY=cueCanvasHeight*.85f;}
             autonomyAction={};
@@ -1948,10 +1983,10 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     faunaDormantPhysicalSeconds+=timeStep.physicalSeconds;faunaDormantCalendarSeconds+=timeStep.calendarSeconds;
                 } else {
                 std::optional<stalthos::fauna::BodyAwareness> actualBodyAwareness;
-                if(connectedWorld && heroAlive) {const auto body=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();peerCompanion.update(heroId,heroSpecies,{body.x,body.y,body.z},!directInput,timeStep.physicalSeconds,clock.physicalSeconds(),faunaPopulation->actors());actualBodyAwareness=stalthos::fauna::BodyAwareness{{body.x,body.y,body.z},wildlifeTuning,reedLife && peerCompanion.present()?peerCompanion.peer():peerCompanion.motionPeer(),peerCompanion.tuning().waitMeters,reedLife && reedDecision.leader!=stalthos::domain::ReedLeader::Hero,reedLife};if(heroSpecies==stalthos::HeroSpecies::Smalltrotter && courtship.mate()){if(courtship.active()){actualBodyAwareness->peer=courtship.mate();actualBodyAwareness->peerWaitMeters=3.25;actualBodyAwareness->peerLeads=false;actualBodyAwareness->reciprocalPeer=true;}else if(actualBodyAwareness->peer==courtship.mate())actualBodyAwareness->peer=0;}
+                if(connectedWorld && heroAlive) {const auto body=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();if(!connectedPersistence)peerCompanion.update(heroId,heroSpecies,{body.x,body.y,body.z},!directInput,timeStep.physicalSeconds,clock.physicalSeconds(),faunaPopulation->actors());actualBodyAwareness=stalthos::fauna::BodyAwareness{{body.x,body.y,body.z},wildlifeTuning,reedLife && peerCompanion.present()?peerCompanion.peer():peerCompanion.motionPeer(),peerCompanion.tuning().waitMeters,reedLife && reedDecision.leader!=stalthos::domain::ReedLeader::Hero,reedLife};if(heroSpecies==stalthos::HeroSpecies::Smalltrotter && courtship.mate()){if(courtship.active()){actualBodyAwareness->peer=courtship.mate();actualBodyAwareness->peerWaitMeters=3.25;actualBodyAwareness->peerLeads=false;actualBodyAwareness->reciprocalPeer=true;}else if(actualBodyAwareness->peer==courtship.mate())actualBodyAwareness->peer=0;}
                     peerCue.SetHidden(!peerCompanion.peer());peerCue.SetText(reedLife?( !peerCompanion.present()?"Reedcrest peer separated - ordinary activity":reedDecision.leader==stalthos::domain::ReedLeader::Hero?"Reedcrest peer follows or waits - own needs first":reedDecision.leader==stalthos::domain::ReedLeader::Partner?"Following Reedcrest peer - WASD takes lead":"Reedcrest peer tending its own needs"):!peerCompanion.present()?"Peer separated - ordinary activity":peerCompanion.motionPeer()?"Peer nearby - approaching or waiting":"Peer nearby - tending its needs");peerCue.params.posX=app.canvas.GetLogicalWidth()*.5f;peerCue.params.posY=app.canvas.GetLogicalHeight()*.75f;
                     if(peerCompanion.peer()!=previousPeer || peerCompanion.present()!=previousPeerPresent){peerEvents.push_back({{"peer",peerCompanion.peer()},{"present",peerCompanion.present()},{"physical_seconds",clock.physicalSeconds()}});previousPeer=peerCompanion.peer();previousPeerPresent=peerCompanion.present();}}
-                faunaPopulation->advance(timeStep,true,actualBodyAwareness,connectedWorld);
+                faunaPopulation->advance(timeStep,true,actualBodyAwareness,connectedWorld && !connectedPersistence);
                 if(connectedWorld) {const auto& pair=faunaPopulation->npcPeers();const bool moving=bool(pair.motion(faunaPopulation->actors(),peerCompanion.motionPeer()));if(moving!=lastNpcPeerMotion && npcPeerEvents.size()<128){npcPeerEvents.push_back({{"physical_seconds",clock.physicalSeconds()},{"motion",moving},{"leader",pair.leader()},{"follower",pair.link().peer()},{"present",pair.link().present()}});lastNpcPeerMotion=moving;}}
                 if(connectedWorld && elapsed>=nextNpcPeerSample && npcPeerSamples.size()<600) {
                     const auto& pair=faunaPopulation->npcPeers();json actors=json::array();
@@ -2007,7 +2042,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
 
-            if(connectedWorld && faunaPopulation) {
+            if(connectedWorld && faunaPopulation && !connectedPersistence) {
                 const auto body=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();
                 static const std::vector<stalthos::fauna::ActorView> noPhysicalActors;
                 carnivoreAwareness.update(heroId,{body.x,body.y,body.z},heroAlive,faunaPhysical?faunaPopulation->actors():noPhysicalActors);
@@ -2049,7 +2084,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 const auto site=nestSite();const auto refusal=nesting.refusal(heroId,heroSpecies,lifecycle->stage(),needs->hunger(),needs->thirst(),needs->fatigue(),site);
                 const bool syntheticNest=nestProbe && !nestProbeRequested && clock.physicalSeconds()>=2;
                 const bool requested=(userSteering && down('B')) || syntheticNest;
-                if(requested && !previousNestKey){if(syntheticNest)nestProbeRequested=true;const bool permitted=refusal.empty() && !stalthos::domain::HeroDestination::active(heroIntent);const bool invited=permitted && courtship.request(heroId,heroSpecies,lifecycle->stage(),{x,y,z},heroAlive && needs->suggestActivity()==stalthos::needs::SuggestedActivity::None,faunaPhysical?faunaPopulation->actors():std::vector<stalthos::fauna::ActorView>{});if(invited){if(heroIntent.goal() && heroIntent.goal()->status==stalthos::GoalStatus::Active)heroIntent.setGoalStatus(stalthos::GoalStatus::Abandoned);heroAutonomy.yieldToDestination();}nestMessage=invited?courtship.status():permitted?courtship.status():refusal.empty()?"Finish or cancel the selected destination before courtship":refusal;nestMessageUntil=clock.physicalSeconds()+3;courtshipEvents.push_back({{"event","courtship_request"},{"invited",invited},{"mate",courtship.mate()},{"physical_seconds",clock.physicalSeconds()},{"reason",nestMessage}});}
+                if(requested && !previousNestKey){if(syntheticNest)nestProbeRequested=true;const bool permitted=!connectedPersistence && refusal.empty() && !stalthos::domain::HeroDestination::active(heroIntent);const bool invited=permitted && courtship.request(heroId,heroSpecies,lifecycle->stage(),{x,y,z},heroAlive && needs->suggestActivity()==stalthos::needs::SuggestedActivity::None,faunaPhysical?faunaPopulation->actors():std::vector<stalthos::fauna::ActorView>{});if(invited){if(heroIntent.goal() && heroIntent.goal()->status==stalthos::GoalStatus::Active)heroIntent.setGoalStatus(stalthos::GoalStatus::Abandoned);heroAutonomy.yieldToDestination();}nestMessage=connectedPersistence?"Courtship unavailable in partial persistence profile":invited?courtship.status():permitted?courtship.status():refusal.empty()?"Finish or cancel the selected destination before courtship":refusal;nestMessageUntil=clock.physicalSeconds()+3;courtshipEvents.push_back({{"event","courtship_request"},{"invited",invited},{"mate",courtship.mate()},{"physical_seconds",clock.physicalSeconds()},{"reason",nestMessage}});}
                 if(courtship.ready() && !courtship.currentMateReady({x,y,z},faunaPopulation->actors()))courtship.cancel("Mate response lost before clutch admission");
                 if(courtship.ready() && !nesting.clutch()){const auto acceptedMate=courtship.acceptedMate(heroId);const bool placed=nesting.lay(heroId,heroSpecies,lifecycle->stage(),needs->hunger(),needs->thirst(),needs->fatigue(),site,clock.calendarSeconds(),acceptedMate);if(placed){nestEntities=stalthos::engine::nestScene(scene,*nesting.clutch(),[&](double gx,double gz){return populatedTerrain->height(gx,gz);});courtship.complete();nestMessage="Actual mate response accepted - clutch laid";nestMessageUntil=clock.physicalSeconds()+5;nestEvents.push_back({{"placed",true},{"mate",acceptedMate},{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"x",site.position.x},{"y",site.position.y},{"z",site.position.z},{"supported",site.supported},{"dry",site.dry},{"clear",site.clear},{"relief",site.relief},{"input","actual B courtship and physical mate response"}});}else nestMessage="Pair ready, but nest ground blocked - courtship will wait briefly";}
 
@@ -2378,7 +2413,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
 
             const bool autoInteract=heroAutonomyEnabled && autonomyAction.contact && !directInput && (autonomyBrowsing?eligibilityShrub:eligibilityWater);
-            bool interactDown = down('E') || tryInteract || autoInteract;
+            bool interactDown = down('E') || tryInteract || autoInteract || (persistenceProbe && !loadedConnected && ((clock.physicalSeconds()>=2 && clock.physicalSeconds()<2.5)||(clock.physicalSeconds()>=9.2 && clock.physicalSeconds()<9.7)));
             const unsigned interactionOwner=down('E')?1:autoInteract?2:tryInteract?3:0;
             if (heroAlive && interactDown) {
                 // Ensure idempotence: holding E produces one session. Re-pressing increments session.
@@ -2446,6 +2481,12 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 if(clock.physicalSeconds()>=nextCarrionSample && carrionSamples.size()<4096){carrionSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"hero",heroId},{"session",physicalInteractionSession},{"species",unsigned(heroSpecies)},{"needs_species",unsigned(needs->species())},{"lifecycle_species",unsigned(lifecycle->species())},{"age",lifecycle->calendarAge()},{"stage",unsigned(lifecycle->stage())},{"body_x",x},{"body_y",y},{"body_z",z},{"speed",speed},{"direct",directInput},{"hunger",needs->hunger()},{"thirst",needs->thirst()},{"fatigue",needs->fatigue()},{"resting",resting},{"attention",heroIntent.perception.attention().has_value()},{"resource",autonomyResource},{"auto_forward",autonomyAction.forward},{"auto_contact",autonomyAction.contact},{"eligible",carrionEligible},{"remaining",getResourceRemaining(carrion.resource)},{"fraction",fraction},{"visible_flesh",fraction>0},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"npc_count",faunaPopulation->actors().size()},{"npc_sessions",faunaPopulation->sessions().size()},{"body_supported",latestSupportMode=="terrain_supported"}});nextCarrionSample=clock.physicalSeconds()+.1;}
             }
             previousInteractDown = interactDown;previousInteractionOwner=interactionOwner;
+            if(connectedPersistence){checkpointSpeed=speed;const bool unsafeAttempt=persistenceProbe && !loadedConnected && !persistenceUnsafeRequested && clock.physicalSeconds()>=10.2 && clock.physicalSeconds()<11;const bool key=down(VK_F5) || unsafeAttempt || (persistenceProbe && !persistenceSaveRequested && clock.physicalSeconds()>=5);
+                if(key && !previousCheckpointKey){persistenceSaveRequested=true;const auto generationBefore=checkpointGeneration;std::string destinationBefore,liveBefore;bool saved=false;std::string reason;
+                    try{if(unsafeAttempt){persistenceUnsafeRequested=true;destinationBefore=stalthos::engine::connected_save::encode(stalthos::engine::connected_save::read(saveState,hostConfiguration));liveBefore=stalthos::engine::connected_save::encode(captureConnected(generationBefore));}checkpoint();saved=true;}catch(const std::exception& e){reason=e.what();persistenceMessage=std::string("Save refused: ")+reason;}
+                    json event={{"saved",saved},{"physical_seconds",clock.physicalSeconds()},{"reason",reason},{"unsafe_diagnostic",unsafeAttempt}};
+                    if(unsafeAttempt && !destinationBefore.empty()){const auto after=stalthos::engine::connected_save::encode(stalthos::engine::connected_save::read(saveState,hostConfiguration));event["destination_bytes_preserved"]=destinationBefore==after;event["live_world_bytes_preserved"]=liveBefore==stalthos::engine::connected_save::encode(captureConnected(generationBefore));event["destination_checksum_before"]=stalthos::persistence::host_save::checksum(destinationBefore);event["destination_checksum_after"]=stalthos::persistence::host_save::checksum(after);}persistenceEvents.push_back(event);
+                }previousCheckpointKey=key;persistenceCue.SetText(std::string("PARTIAL PROFILE | ")+persistenceMessage);}
             if(explorationEnabled && elapsed>=nextExplorationSample){explorationSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",x},{"body_z",z},{"yaw",yaw},{"phase",unsigned(heroExploration.phase())},{"target_x",heroExploration.target().x},{"target_z",heroExploration.target().z},{"direct",directInput},{"speed",speed},{"thirst",needs->thirst()},{"resting",resting},{"destination",destinationActive},{"goal_contextual",heroIntent.goal()?heroIntent.goal()->contextual:false},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"cue_visible",!explorationCue.IsHidden()},{"need",unsigned(needs->suggestActivity())}});nextExplorationSample=elapsed+.1;}
             if(connectedWorld && elapsed>=nextCarnivoreSample && carnivoreSamples.size()<2400){const auto b=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();json actors=json::array();for(const auto&a:faunaPopulation->actors())if(a.species==stalthos::HeroSpecies::Longstride)actors.push_back({{"id",a.id},{"age",a.calendarAge},{"alive",a.alive},{"x",a.position.x},{"y",a.position.y},{"z",a.position.z}});carnivoreSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",b.x},{"body_y",b.y},{"body_z",b.z},{"actor",carnivoreAwareness.actor()},{"distance",carnivoreAwareness.distance()},{"cue_visible",!carnivoreCue.IsHidden()},{"recall",viewController.dangerRecallActive()},{"recall_requests",carnivoreRecallRequests},{"detached",viewController.getState().mode==stalthos::domain::CameraMode::LocallyDetached},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"direct",directInput},{"thirst",needs->thirst()},{"hunger",needs->hunger()},{"actors",actors}});nextCarnivoreSample=elapsed+.1;}
             if(carrionProbe)for(std::size_t i=0;i<4;++i)if(!carrionCaptured[i] && clock.physicalSeconds()>=(i==0?.5:i==1?5:i==2?11:20)){const auto name="carrion-"+std::to_string(i)+".png";carrionCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/name).u8string());carrionCaptures.push_back({{"filename",name},{"saved",carrionCaptured[i]}});}
@@ -2462,7 +2503,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(!lateScreenshot && elapsed>=std::min(1.35,duration*.75)) lateScreenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"motion-late.png").u8string());
             if(!screenshot && elapsed>=std::min(5.,duration*.5)) screenshot=wi::helper::saveTextureToFile(renderPath.GetRenderResult3D(),(output/"draft-host.png").u8string());
         }
-        if (!saveState.empty()) {
+        if(connectedPersistence && !saveState.empty()){try{checkpoint();persistenceEvents.push_back({{"exit_saved",true}});}catch(const std::exception& e){persistenceEvents.push_back({{"exit_saved",false},{"reason",e.what()}});}}
+        if(connectedPersistence)WriteJson(output/"connected-persistence.json",{{"partial_profile",true},{"events",persistenceEvents},{"message",persistenceMessage},{"unsupported","social links, courtship/nests/offspring, automatic hero behavior; in-flight goals/contact/recall refused"}});
+        if (!connectedPersistence && !saveState.empty()) {
             stalthos::persistence::HostPose pose{{x,Ground(x,z),z},yaw,static_cast<std::uint8_t>(cameraMode)};
             auto data=stalthos::persistence::captureSave(clock, world, pose);
             if(data.hero) data.heroLifecycle=stalthos::persistence::captureHeroLifecycle(*lifecycle,data.hero->id);
@@ -2542,7 +2585,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             streaming["connected_route_max_sampled_grade"]=connectedMaxGrade;
             streaming["connected_route_max_vertical_step_m"]=connectedMaxStep;
             streaming["connected_route_body_reached_meadow"]=connectedRouteWalk && x>=connectedLayout.meadowX;
-            streaming["connected_preview_save_supported"]=false;
+            streaming["connected_preview_save_supported"]=false;streaming["connected_partial_profile_save_supported"]=connectedPersistence;
             if(connectedRouteWalk) WriteJson(output/"connected-route-trajectory.json",connectedTrajectory);
             streaming["max_body_x"]=populatedMaxX;
             streaming["max_root_ground_error_m"]=populatedRootError;
@@ -2591,7 +2634,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 {"resource_history_used",resourceHistoryCapacity().used},{"resource_history_limit",resourceHistoryCapacity().limit},
                 {"resource_history_available",resourceHistoryCapacity().available},
                 {"resource_history_rejections",faunaPopulation->historyRejections()},{"needs_relief_requires_accepted_contact",true},
-                {"population_persistence_supported",true},{"population_persisted",!saveState.empty()},
+                {"population_persistence_supported",true},{"population_persisted",connectedPersistence?connectedWritten:!saveState.empty()},
                 {"population_restored",faunaPopulationRestored},
                 {"meshes_best_effort",true},{"frame_time_measured",false}});
         }
@@ -2813,8 +2856,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"landscape_candidate_placements",landscape.placements().size()},
             {"calendar_seconds",clock.calendarSeconds()},{"domain_world_seed",world.worldSeed()},
             {"physical_seconds",clock.physicalSeconds()},{"loaded_calendar_seconds",loadedCalendar},{"loaded_physical_seconds",loadedPhysical},
-            {"native_saved_format",saveState.empty()?"none":(faunaPopulation?"STL9":"STL8")},{"individual_admission_provenance",loadedSaveData && loadedSaveData->faunaPopulation?"validated_save_declared":"generated"},{"resource_admission_provenance",loadedSaveData && loadedSaveData->resourceLedger?"validated_save_declared":"native_defaults"},{"historical_identity_authenticated",false},{"native_save_loaded_generation",loadedHostSave?loadedHostSave->generation:0},{"native_save_saved_generation",!saveState.empty() && faunaPopulation?(loadedHostSave?loadedHostSave->generation:0)+1:0},{"state_loaded",!loadState.empty()},{"state_saved",!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",!saveState.empty()},
-            {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",!saveState.empty() && world.snapshot().hero.has_value()},
+            {"native_saved_format",saveState.empty()?"none":connectedPersistence?"STLC1-partial":(faunaPopulation?"STL9":"STL8")},{"individual_admission_provenance",loadedSaveData && loadedSaveData->faunaPopulation?"validated_save_declared":"generated"},{"resource_admission_provenance",loadedSaveData && loadedSaveData->resourceLedger?"validated_save_declared":"native_defaults"},{"historical_identity_authenticated",false},{"native_save_loaded_generation",loadedHostSave?loadedHostSave->generation:0},{"native_save_saved_generation",connectedPersistence?(connectedWritten?checkpointGeneration:0):!saveState.empty() && faunaPopulation?(loadedHostSave?loadedHostSave->generation:0)+1:0},{"state_loaded",!loadState.empty()},{"state_saved",connectedPersistence?connectedWritten:!saveState.empty()},{"camera_state_loaded",loadedSaveData && loadedSaveData->cameraState.has_value()},{"camera_state_saved",connectedPersistence?connectedWritten:!saveState.empty()},
+            {"needs_snapshot_loaded",loadedNeeds.has_value()},{"needs_snapshot_saved",(connectedPersistence?connectedWritten:!saveState.empty()) && world.snapshot().hero.has_value()},
             {"diagnostic_walk",diagnosticWalk},{"diagnostic_needs",diagnosticNeeds},{"foot_terrain_diagnostic",footDiagnosticJson},{"native_sole_diagnostic",nativeSoleDiagnosticJson},{"diagnostic_transition",diagnosticTransition},{"calendar_scale",calendarScale},
             {"diagnostic_transition_phases", transitionPhasesJson},
             {"transition_captures", transitionCapturesJson},

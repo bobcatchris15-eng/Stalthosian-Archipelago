@@ -94,3 +94,35 @@ approach and quiet readiness precede clutch admission; no mate or interrupted
 response means no clutch. Direct input, a player destination or ordinary needs
 cancel the temporary courtship. This is a speculative paired-readiness draft,
 not complete reproductive biology or other-species breeding.
+
+
+### Partial connected persistence profile (separate STLC1 entry)
+
+Normal connected Play remains a fresh session. Opt in explicitly to a deliberately
+limited persistent profile:
+
+```powershell
+pwsh -File .\Play.ps1 -PartialPersistence -HeroSpecies Longstride -ConnectedSave 'E:/Stalthosian Archipelago/var/saves/my-partial.stlc'
+pwsh -File .\Play.ps1 -ConnectedLoad 'E:/Stalthosian Archipelago/var/saves/my-partial.stlc' -ConnectedSave 'E:/Stalthosian Archipelago/var/saves/my-next-partial.stlc'
+```
+
+Read the entry banner: this profile keeps WASD movement, E body-local feeding/drinking,
+R toggle rest, nearby ground destinations, camera controls, actual needs/lifecycle,
+real NPC simulation and N after death. It disables automatic hero needs/exploration,
+peer learning, protection and courtship from entry. Those behaviors remain in normal
+Play. It cannot import an ordinary connected session or its nests/bonds.
+
+F5 writes a checkpoint to the selected ConnectedSave path. Release movement/E and
+finish or cancel a destination/recall first. A refusal appears in the HUD and keeps
+the running world and existing save. Exit also attempts a checkpoint; check its
+report if exiting during an unsupported action. Reload by restarting with
+ConnectedLoad. Loading selects the saved species and calendar scale; an explicit
+conflicting species is refused. Saves need a living hero; after death use N first.
+
+STLC1 preserves clocks, live body species/identity/pose/needs/lifecycle, live and dead
+NPC snapshots and bindings, prior hero death truth, resource quantities and full
+contact histories, current/next sessions, wetness, camera focus/anchor/orbit and tree
+exceptions. It validates the generated roster, resource configuration, seed, habitat,
+asset bytes and configured motion values. Changed imports/stride/sole offset and
+other incompatible configurations refuse. It never overwrites an original STL8/9
+save. This is partial persistence, not full connected-save or reproduction coverage.

@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
+param([switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
       [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe)
 $ErrorActionPreference='Stop'
 if($CarrionProbe -or $CarrionOverrideProbe -or $CarrionCameraProbe){$HeroSpecies='Longstride'}
@@ -15,6 +15,10 @@ if($WoodlandProbe -and ($AutonomyProbe -or $ExteriorProbe -or $Interactive)){thr
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 if($AutonomyProbe -and $ExteriorProbe) {throw 'Select one embodied diagnostic at a time'}
 $options=@{ConnectedWorld=$true;Duration=$Duration;CameraDistance=$CameraDistance;CalendarScale=$CalendarScale;HeroSpecies=$HeroSpecies}
+if($ConnectedPersistence){$options.ConnectedPersistence=$true}
+if($ConnectedPersistenceProbe){$options.ConnectedPersistenceProbe=$true}
+if($ConnectedLoad){$options.ConnectedLoad=$ConnectedLoad;if(-not $PSBoundParameters.ContainsKey('HeroSpecies')){$options.Remove('HeroSpecies')}}
+if($ConnectedSave){$options.ConnectedSave=$ConnectedSave}
 if($ShoreStillProbe){$options.ShoreStillProbe=$true}
 if($ShoreRouteProbe){$options.ShoreRouteProbe=$true}
 if($ShoreEntryProbe){$options.ShoreEntryProbe=$true}

@@ -1,11 +1,13 @@
 [CmdletBinding()]
-param([ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
+param([switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
       [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe, [switch]$DestinationProbe, [switch]$DestinationOverrideProbe, [switch]$DestinationBoundaryProbe, [switch]$ExteriorBrowseProbe, [switch]$ExteriorBrowseCameraProbe, [switch]$ExteriorWaterProbe, [switch]$ExteriorWaterCameraProbe, [switch]$ExteriorWaterOverrideProbe, [switch]$DayNightPreview, [switch]$NightControlsProbe, [switch]$ExteriorWoodlandProbe, [switch]$PeerProbe, [switch]$PeerCameraProbe, [switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$CarnivoreProbe,[switch]$CarnivoreCancelProbe,[switch]$CarnivoreCameraProbe)
 $ErrorActionPreference = 'Stop'
+if($ConnectedLoad -or $ConnectedSave -or $ConnectedPersistenceProbe){$ConnectedPersistence=$true}
+if($ConnectedPersistence){$ConnectedWorld=$true;Write-Host 'PARTIAL PERSISTENCE PROFILE: manual WASD/E/R/N and camera/destinations; no social, courtship or automatic hero behavior. Release controls before F5. Reload by restarting with ConnectedLoad.'}
 if($CourtshipProbe -or $CourtshipOverrideProbe -or $CourtshipCameraProbe -or $CourtshipRefusalProbe){if(@($CourtshipProbe,$CourtshipOverrideProbe,$CourtshipCameraProbe,$CourtshipRefusalProbe).Where({$_}).Count -ne 1){throw 'Choose one courtship diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Smalltrotter'}
 if($CarrionProbe -or $CarrionOverrideProbe -or $CarrionCameraProbe){if(@($CarrionProbe,$CarrionOverrideProbe,$CarrionCameraProbe).Where({$_}).Count -ne 1){throw 'Choose one carrion diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Longstride'}
 if($ReedPeerProbe -or $ReedLeadingProbe -or $ReedCameraProbe -or $ReedNeedProbe -or $ReedSeparationProbe){if(@($ReedPeerProbe,$ReedLeadingProbe,$ReedCameraProbe,$ReedNeedProbe,$ReedSeparationProbe).Where({$_}).Count -ne 1){throw 'Choose one Reedcrest diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Reedcrest'}
@@ -116,7 +118,9 @@ if ($HeroAutonomyCameraProbe) { $start.ArgumentList.Add('--hero-autonomy-camera-
 if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment-probe') }
 if ($ExteriorResidentsProbe) { $start.ArgumentList.Add('--exterior-residents-probe') }
 if ($WildlifeAwarenessProbe) { $start.ArgumentList.Add('--wildlife-awareness-probe') }
-if($ConnectedWorld -or $ConnectedRouteWalk){$start.ArgumentList.Add('--hero-species');$start.ArgumentList.Add($HeroSpecies)}
+if(($ConnectedWorld -or $ConnectedRouteWalk) -and (-not $ConnectedLoad -or $PSBoundParameters.ContainsKey('HeroSpecies'))){$start.ArgumentList.Add('--hero-species');$start.ArgumentList.Add($HeroSpecies)}
+if($ConnectedPersistence){$start.ArgumentList.Add('--connected-persistence')}
+if($ConnectedPersistenceProbe){$start.ArgumentList.Add('--connected-persistence-probe')}
 if($CourtshipProbe){$start.ArgumentList.Add('--courtship-probe')}
 if($CourtshipOverrideProbe){$start.ArgumentList.Add('--courtship-override-probe')}
 if($CourtshipCameraProbe){$start.ArgumentList.Add('--courtship-camera-probe')}
@@ -184,17 +188,17 @@ if ($TerrainStreamProbe) { $start.ArgumentList.Add('--terrain-stream-probe') }
 if ($WatershedJoinProbe) { $start.ArgumentList.Add('--watershed-join-probe') }
 if ($DiagnosticCamera) { $start.ArgumentList.Add('--diagnostic-camera') }
 if ($SuccessorId) { $start.ArgumentList.Add('--successor-id'); $start.ArgumentList.Add($SuccessorId) }
-foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState))) {
+foreach ($stateOption in @(@('--load-state', $LoadState), @('--save-state', $SaveState), @('--connected-load',$ConnectedLoad), @('--connected-save',$ConnectedSave))) {
     if (-not $stateOption[1]) { continue }
     $statePath = [IO.Path]::GetFullPath($stateOption[1])
     $stateRoot = [IO.Path]::GetFullPath((Join-Path $root 'var')).TrimEnd('\') + '\'
     if (-not $statePath.StartsWith($stateRoot, [StringComparison]::OrdinalIgnoreCase)) {
         throw 'Diagnostic save/load paths must stay inside this project var directory'
     }
-    if ($stateOption[0] -eq '--load-state' -and -not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
+    if ($stateOption[0] -in @('--load-state','--connected-load') -and -not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
         throw "Load state is absent: $statePath"
     }
-    if ($stateOption[0] -eq '--save-state') {
+    if ($stateOption[0] -in @('--save-state','--connected-save')) {
         New-Item -ItemType Directory -Force (Split-Path $statePath) | Out-Null
     }
     $start.ArgumentList.Add($stateOption[0]); $start.ArgumentList.Add($statePath)
