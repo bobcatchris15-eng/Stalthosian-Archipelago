@@ -6,7 +6,7 @@
 using namespace stalthos;
 static void require(bool b,const char* why){if(!b)throw std::runtime_error(why);}
 int main(){try{
- require(domain::playableSpecies("Smalltrotter")==HeroSpecies::Smalltrotter,"default remains selectable");require(domain::playableSpecies("Thistletail")==HeroSpecies::Thistletail,"real contrasting enum selected");bool rejected=false;try{domain::playableSpecies("Longstride");}catch(const std::invalid_argument&){rejected=true;}require(rejected,"unimplemented choices refused");
+ require(domain::playableSpecies("Smalltrotter")==HeroSpecies::Smalltrotter,"default remains selectable");require(domain::playableSpecies("Thistletail")==HeroSpecies::Thistletail,"real contrasting enum selected");bool rejected=false;try{domain::playableSpecies("Unimplemented");}catch(const std::invalid_argument&){rejected=true;}require(rejected,"unimplemented choices refused");
  const auto species=domain::playableSpecies("Thistletail");needs::NeedsCore need(species);Lifecycle life(species);need.restoreState(.8,0,0,0,false);life.advance({1,800});require(life.stage()==LifeStage::Juvenile && need.species()==species,"selected lifecycle and needs own life");
  domain::MicroforagePatch patch;const Vec3 groundFood{patch.x,2,patch.z};HeroSim hero;domain::HeroDrinkAutonomy forage;
  auto update=[&](Vec3 body,bool direct,bool eligible,double remain){const bool sensed=patch.sensed(body,2,remain);return forage.update(hero,need,body,1.5707963267948966,.1,direct,sensed?std::optional<Vec3>(groundFood):std::nullopt,sensed,eligible,needs::SuggestedActivity::Eat,patch.resource);};

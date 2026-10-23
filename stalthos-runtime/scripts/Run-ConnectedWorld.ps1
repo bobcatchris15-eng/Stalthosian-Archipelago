@@ -1,7 +1,8 @@
 [CmdletBinding()]
-param([ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest")][string]$HeroSpecies="Smalltrotter",[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
+param([ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
       [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe)
 $ErrorActionPreference='Stop'
+if($CarrionProbe -or $CarrionOverrideProbe -or $CarrionCameraProbe){$HeroSpecies='Longstride'}
 if($ReedPeerProbe -or $ReedLeadingProbe -or $ReedCameraProbe -or $ReedNeedProbe -or $ReedSeparationProbe){$HeroSpecies='Reedcrest'}
 if($ProtectionProbe -or $ProtectionOverrideProbe -or $ProtectionCameraProbe){$HeroSpecies='Brackenback'}
 if($BirdProbe -or $BirdOverrideProbe -or $BirdCameraProbe){$HeroSpecies='Thistletail'}
@@ -21,6 +22,9 @@ if($ShoreCameraProbe){$options.ShoreCameraProbe=$true}
 if($NpcPeerProbe){$options.NpcPeerProbe=$true}
 if($NpcPeerCameraProbe){$options.NpcPeerCameraProbe=$true}
 if($NpcPeerNeedProbe){$options.NpcPeerNeedProbe=$true}
+if($CarrionProbe){$options.CarrionProbe=$true}
+if($CarrionOverrideProbe){$options.CarrionOverrideProbe=$true}
+if($CarrionCameraProbe){$options.CarrionCameraProbe=$true}
 if($ReedPeerProbe){$options.ReedPeerProbe=$true}
 if($ReedLeadingProbe){$options.ReedLeadingProbe=$true}
 if($ReedCameraProbe){$options.ReedCameraProbe=$true}

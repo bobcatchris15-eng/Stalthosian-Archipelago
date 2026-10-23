@@ -11,7 +11,7 @@ Choose the contrasting implemented bird life with:
 pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Thistletail
 ```
 
-The default remains `Smalltrotter`. The four implemented choices are `Smalltrotter`, `Thistletail`, `Brackenback` and `Reedcrest`.
+The default remains `Smalltrotter`. The five implemented choices are `Smalltrotter`, `Thistletail`, `Brackenback`, `Reedcrest` and `Longstride`.
 Thistletail uses a replaceable feather-layered procedural biped with its own
 selected needs/lifecycle, ordinary controls and next life. It can forage a finite
 litter/seed cohort near24,24 through the same food ledger and ordinary needs
@@ -33,6 +33,13 @@ Reedcrest. Either body may lead; the other follows or waits as ordinary needs
 permit. The pair does not teleport. This is one reciprocal pair, not a full
 kindergarten/cohort or connected-save implementation. Hero geometry is replaceable;
 NPC species art remains provisional.
+
+Choose the bipedal carnivore with `pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Longstride`.
+Its separate theropod body owns ordinary needs/lifecycle/control and same-species
+next life. One finite authored carrion cohort near24,30 offers real body-local
+scavenging and visible depletion. The prop is not an actual dead NPC; hunting,
+NPC carrion feeding and dependent-young care remain missing. Five selectable
+working lives do not establish complete species histories or the full game.
 
 | Input | Action |
 |---|---|

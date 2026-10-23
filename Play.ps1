@@ -1,7 +1,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [ValidateRange(0, 3600)][double]$Duration = 0,
-    [ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest")][string]$HeroSpecies = "Smalltrotter",
+    [ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies = "Smalltrotter",
     [switch]$Proxy
 )
 $ErrorActionPreference = 'Stop'
@@ -18,7 +18,7 @@ Write-Host 'W/S move; A/D turn. F1 detach/return; detached WASD pans the camera.
 Write-Host 'Left-drag orbit; wheel zoom; V inspect; right-click nearby ground to travel.'
 Write-Host 'E interact; F disturb a nearby eligible sapling; N next life after death; Esc exit.'
 Write-Host 'Adult Smalltrotter: B attempts a clutch on dry clear ground; one independent young can hatch.'
-Write-Host "Selected hero: $HeroSpecies. Thistletail is a feathered biped; Brackenback is armored; Reedcrest is a beaked hadrosauroid with reciprocal peers."
+Write-Host "Selected hero: $HeroSpecies. Thistletail is a feathered biped; Brackenback is armored; Reedcrest has reciprocal peers; Longstride is a biped carnivore with finite authored carrion."
 Write-Host 'Left alone, the animal follows its ordinary needs and explores.'
 Write-Host 'Connected sessions currently start fresh and do not save. See PLAY.md for draft limits.'
 $options = @{ Proxy = [bool]$Proxy; HeroSpecies=$HeroSpecies }
