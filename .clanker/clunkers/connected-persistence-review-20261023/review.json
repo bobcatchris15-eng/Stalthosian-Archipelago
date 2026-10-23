@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task": "connected-persistence-review-20261023",
+  "reviewer": "gameplay_review",
+  "source_commit": "fff41eb",
+  "integrated_commit": "c4cfda4",
+  "scope": {
+    "graph_digest": "not computed; bounded direct ownership/serialization review",
+    "base_digest": "7a52e9a",
+    "artifacts": [
+      "contract-inventory.md",
+      "probe.cpp",
+      "probe-output.txt",
+      "source-hashes.json"
+    ],
+    "owned_output": ".clanker/clunkers/connected-persistence-review-20261023",
+    "implementation_read_only": true
+  },
+  "goal_alignment": {
+    "verdict": "pass for explicitly partial manual-profile source/domain scope; native acceptance pending root",
+    "reason": "Separate STLC1 entry excludes unsupported social/autonomy/family state from entry. Complete supported state is detached-validated and recaptured before first tick; original STL8/9 authority is unchanged."
+  },
+  "findings": [],
+  "resolved_findings": [
+    "Physical wetness integrated into consequential exposure fatigue was missing; validated wetness now serializes and resumes exactly.",
+    "Before-first-tick evidence echoed decoded input; final source recaptures actual reconstructed live owner and requires exact STLC bytes.",
+    "Configuration only distinguished plants; exact asset-byte and configured motion fingerprint now binds embodiment and tree geometry.",
+    "Legacy save-declared resource/roster admission could hide missing211; separate profile independently validates generated identities/species and authored resource set/kinds/initial quantities.",
+    "Allocator checks now cover every admitted region binding/history, including current physical-session uniqueness; held contact refuses and next press allocates fresh session.",
+    "Receipt save-success flags now depend on actual write completion."
+  ],
+  "effort": {
+    "attempted": [
+      "Preserved previous review branch and exact dirty source copies before advancing to7a52e9a.",
+      "Reviewed all source/entry/docs changes through settled fff41eb without editing implementation.",
+      "Audited profile-created consequential state owners, admission, preflight and detached reconstruction.",
+      "Recompiled and ran independent adversarial C++17 probe on settled header copies.",
+      "Computed raw SHA256, canonicalLF SHA256, CRLF counts and Git blobs for all11 tracked changes; independently compared root c4cfda4 bytes after CRLF normalization and Git blobs.",
+      "Parsed all3 changed PowerShell entry scripts; verified original archive/registry contracts unchanged."
+    ],
+    "probes_run": [
+      "MSVC C++17 own focused probe: PASS.",
+      "Five selected species; exact envelope/camera/pose/clock/world/oldHero death/deadNPC/tree revision/bindings/full exhausted210+211 history roundtrip.",
+      "Current/next physical sessions preserved; boundNPC alias and invalid allocator rejected.",
+      "Restored wetness produces exact next wetness/comfort/Needs fatigue; invalid wetness rejected.",
+      "Independent missing211 and changed-species admission rejected; asset bytes and stride change fingerprint.",
+      "Config mismatch/NaN/truncation/checksum failures rejected; original-format sentinel destination preserved.",
+      "Injected Write/Close/Readback/Replace failures preserve exact existing destination.",
+      "All11 integrated canonicalLF byte digests and Git blobs equal reviewed source; script parsing passes."
+    ],
+    "test_output": "CONNECTED_REVIEW_OK in probe-output.txt",
+    "native_build_performed": false
+  },
+  "limitations": [
+    "No reviewer native build, process restart, GPU capture or performance claim. Root owns actual native integration/proof.",
+    "This does not implement normal connected-save persistence of autonomous goals, learned relationships, courtship/nests/offspring or dynamic habitat. Their exclusion is explicit at separate profile entry.",
+    "Current fixture has no detached-camera synthetic action; DiagnosticCamera remains explicitly incompatible with connectedWorld, so source/body-local activation checks are not detached-camera native evidence.",
+    "Acoustic/animation/render/capture cadence is ephemeral presentation state and excluded from exact simulation preservation claim."
+  ],
+  "source_hashes_file": "source-hashes.json"
+}

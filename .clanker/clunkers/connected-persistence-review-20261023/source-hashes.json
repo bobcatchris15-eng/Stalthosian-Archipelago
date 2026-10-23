@@ -1,0 +1,123 @@
+[
+  {
+    "crlf_count": 90,
+    "canonical_lf_equal": true,
+    "path": ".clanker/tasks/connected-persistence-20261023/worker-receipt.json",
+    "raw_sha256": "996dcd3ee7b4ff74869c7f19ea984ad091f3b0f8a81301aeee2e3434a339f639",
+    "git_blob": "e2921647e29ae823efe0d5c076291d30547bb1ae",
+    "integrated_raw_sha256": "996dcd3ee7b4ff74869c7f19ea984ad091f3b0f8a81301aeee2e3434a339f639",
+    "canonical_lf_sha256": "8c8177d87fa0e8705dae6cc5fa51c4117178109819744a9718c494c86921d44b",
+    "integrated_crlf_count": 90,
+    "integrated_git_blob": "e2921647e29ae823efe0d5c076291d30547bb1ae"
+  },
+  {
+    "crlf_count": 128,
+    "canonical_lf_equal": true,
+    "path": "PLAY.md",
+    "raw_sha256": "1d179eb9d5bcb978bda079ecce553926dffac5a7f9fd5cf94f7368279c2a34fb",
+    "git_blob": "1e34d486026553b115cbdf3763567b0179adc372",
+    "integrated_raw_sha256": "1d179eb9d5bcb978bda079ecce553926dffac5a7f9fd5cf94f7368279c2a34fb",
+    "canonical_lf_sha256": "b7f900e94fd3f092bbbe9a36cda4a0c2e9f8749cbb4a1c348a92ddeadd600d7a",
+    "integrated_crlf_count": 128,
+    "integrated_git_blob": "1e34d486026553b115cbdf3763567b0179adc372"
+  },
+  {
+    "crlf_count": 30,
+    "canonical_lf_equal": true,
+    "path": "Play.ps1",
+    "raw_sha256": "f3c757cfcbfe66f205ee24e17997103617b532311ee216110ccc8b4010f23f6c",
+    "git_blob": "a213d51916238a5c8c90e85bdfc69554a0d513d2",
+    "integrated_raw_sha256": "f3c757cfcbfe66f205ee24e17997103617b532311ee216110ccc8b4010f23f6c",
+    "canonical_lf_sha256": "dba01ed23c3ce52537504a5fc516a4dd1c214326133b371c1207deaf81827220",
+    "integrated_crlf_count": 30,
+    "integrated_git_blob": "a213d51916238a5c8c90e85bdfc69554a0d513d2"
+  },
+  {
+    "crlf_count": 89,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/CMakeLists.txt",
+    "raw_sha256": "6a4dfa29790dc2abecdbc854ce8c5947e6a092cb3917b107c3fceb1708441bf4",
+    "git_blob": "75de8a07246c3442302c441e37f5805991074b96",
+    "integrated_raw_sha256": "6a4dfa29790dc2abecdbc854ce8c5947e6a092cb3917b107c3fceb1708441bf4",
+    "canonical_lf_sha256": "058c744aa83425b7faf949b44d229d0df3162631e8ca041b87fcb7cb3cc40efd",
+    "integrated_crlf_count": 89,
+    "integrated_git_blob": "75de8a07246c3442302c441e37f5805991074b96"
+  },
+  {
+    "crlf_count": 53,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/docs/connected-persistence.md",
+    "raw_sha256": "7c25e041cc2ccf1cc407187eeee242112ef2455a766b6fda6644534e35194d68",
+    "git_blob": "e343fc8c08b38c9e626f6650d96c61f4f84c5e6c",
+    "integrated_raw_sha256": "7c25e041cc2ccf1cc407187eeee242112ef2455a766b6fda6644534e35194d68",
+    "canonical_lf_sha256": "800d646a5015d9f517a947872a190eb25339943b7e4c577f01c8b804e27e2b28",
+    "integrated_crlf_count": 53,
+    "integrated_git_blob": "e343fc8c08b38c9e626f6650d96c61f4f84c5e6c"
+  },
+  {
+    "crlf_count": 42,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/domain/weather_response.hpp",
+    "raw_sha256": "3a708fa2423cb11bb31029f84d9b0dacc9683b8105e0c002ee7ee93d3d2bdb09",
+    "git_blob": "ca71ea5e4ca924cb5c64851ff24ce5f5a4ca7568",
+    "integrated_raw_sha256": "3a708fa2423cb11bb31029f84d9b0dacc9683b8105e0c002ee7ee93d3d2bdb09",
+    "canonical_lf_sha256": "3fca2dbf01b61538fc40c6292a808b7e381a0d5eb8cc49fe12c3298a275cd02b",
+    "integrated_crlf_count": 42,
+    "integrated_git_blob": "ca71ea5e4ca924cb5c64851ff24ce5f5a4ca7568"
+  },
+  {
+    "crlf_count": 93,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/engine/connected_save.hpp",
+    "raw_sha256": "6ff5d409d940d6f4c04338f5f532673fb985324ea9b0028f7240bf6fc80d0788",
+    "git_blob": "284196c93331a9247993edb133fce820e74ecbfc",
+    "integrated_raw_sha256": "6ff5d409d940d6f4c04338f5f532673fb985324ea9b0028f7240bf6fc80d0788",
+    "canonical_lf_sha256": "185fbc9e7855f4ff89f3236e989830eef70296c27ad33b7f800bd6629c404f7f",
+    "integrated_crlf_count": 93,
+    "integrated_git_blob": "284196c93331a9247993edb133fce820e74ecbfc"
+  },
+  {
+    "crlf_count": 2990,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/engine/main.cpp",
+    "raw_sha256": "220ca42c413137aa724fd81898a389ba0a06633542119c78c8564bd906ccd0ec",
+    "git_blob": "e2387d81ca321982b3e726d59883e14d68adc53e",
+    "integrated_raw_sha256": "220ca42c413137aa724fd81898a389ba0a06633542119c78c8564bd906ccd0ec",
+    "canonical_lf_sha256": "dd0477d13efeff1e714e567181908768da686a600748f8c3bdb70ecbea6fb09d",
+    "integrated_crlf_count": 2990,
+    "integrated_git_blob": "e2387d81ca321982b3e726d59883e14d68adc53e"
+  },
+  {
+    "crlf_count": 92,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "raw_sha256": "25666e492f8e5de9d48cf74e002af871e8348f2a596e2ffe253e41e9629146c7",
+    "git_blob": "a50a0bb0760333b840b1909360e9215fdef9d700",
+    "integrated_raw_sha256": "25666e492f8e5de9d48cf74e002af871e8348f2a596e2ffe253e41e9629146c7",
+    "canonical_lf_sha256": "a93a5bd9b4b16a738f5ccfa8c22781b6f9063890fefc86abab0b6ac9286653de",
+    "integrated_crlf_count": 92,
+    "integrated_git_blob": "a50a0bb0760333b840b1909360e9215fdef9d700"
+  },
+  {
+    "crlf_count": 213,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/scripts/Run.ps1",
+    "raw_sha256": "fd0f0e2d10474d41ef16e68abb7ba35315e592895fb49d3ac5491a5f90180597",
+    "git_blob": "043b0fddbec205136b10505023b39a8e5a0d9ee7",
+    "integrated_raw_sha256": "fd0f0e2d10474d41ef16e68abb7ba35315e592895fb49d3ac5491a5f90180597",
+    "canonical_lf_sha256": "abaf3f118769d6d12959407caa6ab6ca552d6d1177295bdc11a23ddf27dc8473",
+    "integrated_crlf_count": 213,
+    "integrated_git_blob": "043b0fddbec205136b10505023b39a8e5a0d9ee7"
+  },
+  {
+    "crlf_count": 0,
+    "canonical_lf_equal": true,
+    "path": "stalthos-runtime/tests/connected_save.cpp",
+    "raw_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+    "git_blob": "522b4f1fe45122d99a0ed6e7eacb71c30ef87094",
+    "integrated_raw_sha256": "3161a4750beeca7357f98bb8aa39329dc18c1cb48cb211ff96059c81247c9461",
+    "canonical_lf_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+    "integrated_crlf_count": 34,
+    "integrated_git_blob": "522b4f1fe45122d99a0ed6e7eacb71c30ef87094"
+  }
+]
