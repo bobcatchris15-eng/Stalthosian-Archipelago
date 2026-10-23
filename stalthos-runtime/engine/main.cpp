@@ -955,7 +955,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         unsigned previousInteractionOwner=0;
         double nextAutonomySample=0;
         bool syntheticDirect=false;
-        const bool heroAutonomyEnabled=connectedWorld && !npcCarrionProbe && !connectedPersistence && !connectedRouteWalk && !weatherPreview;
+        const bool heroAutonomyEnabled=connectedWorld && npcCarrionProbe!=1 && !connectedPersistence && !connectedRouteWalk && !weatherPreview;
         uint64_t runCalls=0; bool screenshot=false, userClosed=false, earlyScreenshot=false, lateScreenshot=false;
         std::vector<std::string> lifecycleTransitions;
         std::map<std::pair<wi::ecs::Entity, uint8_t>, XMFLOAT4> channelPoseBaseline; float localBoneDelta=0, minimumAnimationTimer=std::numeric_limits<float>::infinity(), maximumAnimationTimer=0; uint64_t animationPlayingFrames=0;
