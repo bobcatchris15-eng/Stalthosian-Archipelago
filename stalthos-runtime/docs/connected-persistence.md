@@ -51,3 +51,19 @@ physical session, wetness and scale exactly. The runtime refuses if actual rebui
 owner differs. Reports label failures; state_saved is true only after a real write.
 
 The same F5 path is requested during actual injected movement at10.2s. Its event records refusal, exact destination-byte equality and exact current-world candidate equality across the call; simulation continues to N and the final save.
+
+
+Separate camera-only native fixture (new timed profile, no load or body input):
+
+```powershell
+pwsh -File stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -ConnectedPersistenceCameraProbe -ConnectedSave 'E:/Stalthosian Archipelago/var/test-saves/connected-persistence-20261023/camera.stlc' -Duration 12 -AssetRoot 'E:/Stalthosian Archipelago'
+pwsh -File stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -ConnectedLoad 'E:/Stalthosian Archipelago/var/test-saves/connected-persistence-20261023/camera.stlc' -ConnectedSave 'E:/Stalthosian Archipelago/var/test-saves/connected-persistence-20261023/camera-restarted.stlc' -Duration 8 -AssetRoot 'E:/Stalthosian Archipelago'
+```
+
+This explicitly labelled fixture invokes ordinary detachment/orbit at physical2s,
+ordinary detached pan3..5s and the same checkpoint path at6s while still detached.
+It never issues body movement, attention or activation commands. The ordinary
+single NPC tick continues. The partial report records body/camera/attention/physical
+activation samples and three composed-frame captures. Compare actual recaptured
+pre-first-tick canonical bytes and focus/anchor/orbit to the saved camera candidate.
+Native execution/acceptance remains root-owned.
