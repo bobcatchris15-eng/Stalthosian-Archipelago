@@ -1,13 +1,14 @@
 [CmdletBinding()]
-param([ValidateSet("Smalltrotter","Thistletail")][string]$HeroSpecies="Smalltrotter",[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
+param([ValidateSet("Smalltrotter","Thistletail","Brackenback")][string]$HeroSpecies="Smalltrotter",[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration = 15, [string]$Plant = '', [string]$Creature = '', [double]$CalendarScale = 1, [switch]$Interactive,
       [string]$LoadState = '', [string]$SaveState = '', [switch]$DiagnosticWalk, [switch]$DiagnosticNeeds, [string]$SuccessorId = '',
       [double]$CreatureSoleOffset = .652438, [string]$CreatureAnimationMetadata = '', [switch]$DiagnosticReverseWalk,
       [switch]$InspectionCamera, [double]$CameraDistance = 8, [switch]$DiagnosticCamera, [switch]$DisableTerrainSupport,
       [switch]$DiagnosticTransition, [string]$WoodlandAdultTree = '', [string]$WoodlandSaplingTree = '', [switch]$PopulatedWorld,
       [switch]$TerrainStreamProbe, [switch]$WatershedJoinProbe, [switch]$PopulatedTraversal, [switch]$PopulatedDeparture, [switch]$PopulatedResourceProbe, [switch]$ConnectedWorld, [switch]$ConnectedRouteWalk, [switch]$WeatherPreview, [switch]$HeroAutonomyProbe, [switch]$HeroAutonomyOverrideProbe, [switch]$HeroAutonomyCameraProbe, [switch]$ConnectedEmbodimentProbe, [switch]$WildlifeAwarenessProbe, [switch]$WildlifeCameraProbe, [switch]$ExteriorResidentsProbe, [switch]$HeroForagingProbe, [switch]$HeroForagingOverrideProbe, [switch]$HeroForagingCameraProbe, [switch]$HeroRestProbe, [switch]$HeroRestOverrideProbe, [switch]$ExposureProbe, [switch]$DestinationProbe, [switch]$DestinationOverrideProbe, [switch]$DestinationBoundaryProbe, [switch]$ExteriorBrowseProbe, [switch]$ExteriorBrowseCameraProbe, [switch]$ExteriorWaterProbe, [switch]$ExteriorWaterCameraProbe, [switch]$ExteriorWaterOverrideProbe, [switch]$DayNightPreview, [switch]$NightControlsProbe, [switch]$ExteriorWoodlandProbe, [switch]$PeerProbe, [switch]$PeerCameraProbe, [switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$CarnivoreProbe,[switch]$CarnivoreCancelProbe,[switch]$CarnivoreCameraProbe)
 $ErrorActionPreference = 'Stop'
+if($ProtectionProbe -or $ProtectionOverrideProbe -or $ProtectionCameraProbe){if(@($ProtectionProbe,$ProtectionOverrideProbe,$ProtectionCameraProbe).Where({$_}).Count -ne 1){throw 'Choose one protection diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Brackenback'}
 if($BirdProbe -or $BirdOverrideProbe -or $BirdCameraProbe){if(@($BirdProbe,$BirdOverrideProbe,$BirdCameraProbe).Where({$_}).Count -ne 1){throw 'Choose one bird diagnostic'};$ConnectedWorld=$true;$HeroSpecies='Thistletail'}
-if($HeroSpecies -eq 'Thistletail' -and -not ($ConnectedWorld -or $ConnectedRouteWalk)){throw 'Thistletail is implemented in connected mode only'}
+if($HeroSpecies -ne 'Smalltrotter' -and -not ($ConnectedWorld -or $ConnectedRouteWalk)){throw 'Selected nondefault hero is implemented in connected mode only'}
 if($HatchProbe -or $HatchCameraProbe){if($HatchProbe -and $HatchCameraProbe){throw 'Choose one hatch diagnostic'};$ConnectedWorld=$true}
 if($CarnivoreProbe -or $CarnivoreCancelProbe -or $CarnivoreCameraProbe){$ConnectedWorld=$true}
 if($NestProbe){$ConnectedWorld=$true;if($Interactive){throw 'Nest probe requires standalone timed mode'}}
@@ -113,6 +114,9 @@ if ($ConnectedEmbodimentProbe) { $start.ArgumentList.Add('--connected-embodiment
 if ($ExteriorResidentsProbe) { $start.ArgumentList.Add('--exterior-residents-probe') }
 if ($WildlifeAwarenessProbe) { $start.ArgumentList.Add('--wildlife-awareness-probe') }
 if($ConnectedWorld -or $ConnectedRouteWalk){$start.ArgumentList.Add('--hero-species');$start.ArgumentList.Add($HeroSpecies)}
+if($ProtectionProbe){$start.ArgumentList.Add('--protection-probe')}
+if($ProtectionOverrideProbe){$start.ArgumentList.Add('--protection-override-probe')}
+if($ProtectionCameraProbe){$start.ArgumentList.Add('--protection-camera-probe')}
 if($BirdProbe){$start.ArgumentList.Add('--bird-probe')}
 if($BirdOverrideProbe){$start.ArgumentList.Add('--bird-override-probe')}
 if($BirdCameraProbe){$start.ArgumentList.Add('--bird-camera-probe')}

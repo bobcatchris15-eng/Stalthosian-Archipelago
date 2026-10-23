@@ -11,13 +11,21 @@ Choose the contrasting implemented bird life with:
 pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Thistletail
 ```
 
-The default remains `Smalltrotter`. These are the two implemented choices.
+The default remains `Smalltrotter`. The three implemented choices are `Smalltrotter`, `Thistletail` and `Brackenback`.
 Thistletail uses a replaceable feather-layered procedural biped with its own
 selected needs/lifecycle, ordinary controls and next life. It can forage a finite
 litter/seed cohort near24,24 through the same food ledger and ordinary needs
 intention. No individual insects, bird breeding/parenting or finished plumage art
 is claimed. Imported Smalltrotter meshes, when available, remain NPC presentation.
 
+
+Choose the armored quadruped with `pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Brackenback`.
+Its actual needs/lifecycle and ordinary controls use the same world. Mature
+Brackenback may briefly interpose for a nearby critically hungry/thirsty small
+animal when a live adult Longstride is close. A visible condition cue identifies
+the distress approximation; no attack intent, damage or adoption is implied.
+Only the hero response is integrated; adult NPC protection remains missing.
+The tail club appears at adult/old stages. Geometry and gait are replaceable draft art.
 
 | Input | Action |
 |---|---|

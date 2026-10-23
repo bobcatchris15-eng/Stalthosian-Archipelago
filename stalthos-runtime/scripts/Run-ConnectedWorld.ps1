@@ -1,7 +1,8 @@
 [CmdletBinding()]
-param([ValidateSet("Smalltrotter","Thistletail")][string]$HeroSpecies="Smalltrotter",[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
+param([ValidateSet("Smalltrotter","Thistletail","Brackenback")][string]$HeroSpecies="Smalltrotter",[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
       [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe)
 $ErrorActionPreference='Stop'
+if($ProtectionProbe -or $ProtectionOverrideProbe -or $ProtectionCameraProbe){$HeroSpecies='Brackenback'}
 if($BirdProbe -or $BirdOverrideProbe -or $BirdCameraProbe){$HeroSpecies='Thistletail'}
 if(($BodyAudioProbe -or $BodyAudioCameraProbe) -and ($Interactive -or $SaplingProbe -or $SaplingCameraProbe -or $ExplorationProbe -or $ExplorationOverrideProbe -or $ExplorationCameraProbe -or $DeathNextLifeProbe -or $LifeStageProbe -or $WoodlandProbe -or $AutonomyProbe -or $ExteriorProbe -or ($BodyAudioProbe -and $BodyAudioCameraProbe))){throw 'Audio probe requires standalone timed mode'}
 if($SaplingProbe -or $SaplingCameraProbe){if($Interactive -or $LifeStageProbe -or $DeathNextLifeProbe -or $AutonomyProbe -or $ExteriorProbe -or $WoodlandProbe -or $ExplorationProbe -or $ExplorationOverrideProbe -or $ExplorationCameraProbe -or ($SaplingProbe -and $SaplingCameraProbe)){throw 'Sapling probe requires standalone timed mode'}}
@@ -19,6 +20,9 @@ if($ShoreCameraProbe){$options.ShoreCameraProbe=$true}
 if($NpcPeerProbe){$options.NpcPeerProbe=$true}
 if($NpcPeerCameraProbe){$options.NpcPeerCameraProbe=$true}
 if($NpcPeerNeedProbe){$options.NpcPeerNeedProbe=$true}
+if($ProtectionProbe){$options.ProtectionProbe=$true}
+if($ProtectionOverrideProbe){$options.ProtectionOverrideProbe=$true}
+if($ProtectionCameraProbe){$options.ProtectionCameraProbe=$true}
 if($BirdProbe){$options.BirdProbe=$true}
 if($BirdOverrideProbe){$options.BirdOverrideProbe=$true}
 if($BirdCameraProbe){$options.BirdCameraProbe=$true}
@@ -50,7 +54,7 @@ if(-not $Proxy) {
             throw 'Reviewed connected creature artifact changed; verify provenance or use -Proxy explicitly'
         }
         $options.Creature=$creature;$options.CreatureAnimationMetadata=$metadata;$options.CreatureSoleOffset=[double]$pin.sole_offset_m
-        if($HeroSpecies -eq 'Thistletail'){Write-Output 'Hero: procedural Thistletail biped. Pinned Smalltrotter asset retained for NPC replicas only.'}else{Write-Output 'Connected embodiment: pinned reviewed Smalltrotter draft, existing metadata/pace, sole offset0'}
+        if($HeroSpecies -ne 'Smalltrotter'){Write-Output "Hero: procedural $HeroSpecies. Pinned Smalltrotter asset retained for NPC replicas only."}else{Write-Output 'Connected embodiment: pinned reviewed Smalltrotter draft, existing metadata/pace, sole offset0'}
     } else {
         Write-Warning 'Reviewed local Smalltrotter/metadata unavailable; using explicit announced proxy fallback. Pass -AssetRoot for the repository holding reviewed var artifacts.'
     }
