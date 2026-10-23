@@ -1,0 +1,67 @@
+{
+  "task_id": "longstride-parent-care-20261023",
+  "base": "1e381a4",
+  "outcome": "bounded_source_pending_native",
+  "scope": "actual wild caregiver for fresh Longstride young hero; asymmetrical existing destination owner; Smalltrotter independent unchanged",
+  "verification": [
+    "Release Stalthos_longstride_care compiled",
+    "domain-longstride_care passed0.04s",
+    "Run scripts parsed",
+    "git diff --check"
+  ],
+  "native_run": false,
+  "native_commands": [
+    "Run-ConnectedWorld.ps1 -ParentCareProbe -Duration28 -AssetRoot E:/Stalthosian Archipelago",
+    "Run-ConnectedWorld.ps1 -ParentCareCameraProbe -Duration12 -AssetRoot E:/Stalthosian Archipelago"
+  ],
+  "gaps": [
+    "wild caregiver not proven biological parent",
+    "no adult-player parenting/egg laying/feeding/hunting dependency",
+    "newlife clears old association and no new caregiver bind yet",
+    "normalfamily persistence unsupported; partial profile excludes it",
+    "native parentdeath/follow distance/reunion/visual acceptance pending root"
+  ],
+  "birth_support": "3.5m along actual parent existing graph edge; 8 dry terrain/grade samples; parent renderer ignored at birth only to avoid self-ray; ordinary following retains existing terrain+scene-ray checks",
+  "hashes": {
+    "PLAY.md": {
+      "raw_sha256": "82ced60349aeb0291489b7df8b85d58896ae524d0313277c7be3d4ed15375bf0",
+      "canonical_lf_sha256": "30b4f8d1d20e31d513eccb5ec9db342030d4c33eb0a9024893a84c65c0fee57b",
+      "git_blob": "f7afb539ff1343984595a749ba3c330fa2603312"
+    },
+    "stalthos-runtime/CMakeLists.txt": {
+      "raw_sha256": "1a625d0d87d36a5bd74ce4b7cb7a9494d8d675911be13ce7931369f1c2312167",
+      "canonical_lf_sha256": "8e3fa117a9ae91dd3afcd682d8cc1b1f0cad10c45211c6375156bed17cdf52a7",
+      "git_blob": "bba224aec3250b43049944e2b8e65c5ec6a13f5c"
+    },
+    "stalthos-runtime/engine/main.cpp": {
+      "raw_sha256": "034c4565cb825b84cde6422b1fe0fbe49bf55c71d4144a0b6db630f113f93b6c",
+      "canonical_lf_sha256": "8660d37875f716b63ca64726dcc91deebbf0cc57c47353ccd39ecad9055afd58",
+      "git_blob": "9d6e45725f1dd1459ceae19ebc2d6997e337fa0e"
+    },
+    "stalthos-runtime/domain/longstride_care.hpp": {
+      "raw_sha256": "aef26440307c98f7920c3c1aa3f318b2fe09942ec8d17a77d91eada0b5591248",
+      "canonical_lf_sha256": "aef26440307c98f7920c3c1aa3f318b2fe09942ec8d17a77d91eada0b5591248",
+      "git_blob": "171c7082dd993c94a4d806a4276ba04b3952d79c"
+    },
+    "stalthos-runtime/tests/longstride_care.cpp": {
+      "raw_sha256": "25a06bcf9f8b7a722079ae3fe8fc6a9dbacbc746c54f06d272820434080999d7",
+      "canonical_lf_sha256": "d780671bb61a053fb6b0628afb6337fa638e8025b2248da53b947d61dcf355c7",
+      "git_blob": "4f8cc8b3150cab16a7fb972b592dc69a96604dd2"
+    },
+    "stalthos-runtime/scripts/Run.ps1": {
+      "raw_sha256": "973480168787b08fb3ab4476362f8d4f2660ee6958adc6d59f6eb0e5c80526ae",
+      "canonical_lf_sha256": "8909c25367d1ff3ff22d43389ba416a38f0181acf19b8c5abbb51a642b0e9e4f",
+      "git_blob": "f2ab708bd53f984efe62ffdcebaf9a54d9fdad82"
+    },
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": {
+      "raw_sha256": "08daf472d0eedf1d7291178ce3bfb59eac3518f4288c20edb489892059627ab3",
+      "canonical_lf_sha256": "ca25ede60ff9a99a9e4d97c5bcfc019fe0c8392b0ce078c4f63fda4415cddcb2",
+      "git_blob": "fe2475502432904f7d1ef2ec9156ec3ece02084a"
+    },
+    "stalthos-runtime/docs/longstride-care.md": {
+      "raw_sha256": "ec03482582176b66ddf9cef8345fe2d80596c8d4d50e438e460e42e7f2d73e7c",
+      "canonical_lf_sha256": "6dea256e89f74d5419d2b9fce7018174cf0ac9d47a739fd5bff8a05995198df1",
+      "git_blob": "e5badd8aafef96eaa8f463e591af295cde1fd4ad"
+    }
+  }
+}

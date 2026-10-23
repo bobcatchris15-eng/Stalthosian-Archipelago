@@ -126,3 +126,12 @@ exceptions. It validates the generated roster, resource configuration, seed, hab
 asset bytes and configured motion values. Changed imports/stride/sole offset and
 other incompatible configurations refuse. It never overwrites an original STL8/9
 save. This is partial persistence, not full connected-save or reproduction coverage.
+
+
+Young Longstride normal fresh lives now begin at a supported local birth position
+near one actual retained adult wild caregiver. This is a bounded wild-care association,
+not proven biological lineage. Idle young follow that caregiver's actual body when
+nearby; WASD, a player destination and own needs override. The adult keeps its own
+NPC route and needs. Separation never selects a replacement; caregiver death/loss or
+maturity ends care. N discards the prior young life's association. Smalltrotter young
+remain independent. Partial persistence excludes this normal-mode family state.
