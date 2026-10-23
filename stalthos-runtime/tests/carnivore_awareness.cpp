@@ -34,5 +34,17 @@ int main(){try{
     try{camera.update({.1,.1},{0,0,0},0,[](double,double)->double{throw std::runtime_error("fixture terrain failure");});}catch(const std::runtime_error&){}
     check(camera.dangerRecallActive() && camera.getState().detachedAnchor.x==20,"failed camera update rolls recall back");
     camera.toggleDetachedMode({0,0,0});check(!camera.dangerRecallActive(),"mode action immediately cancels");
+    for(double speed : {.16128,2.0}) {
+        HeroViewController moving;moving.toggleDetachedMode({0,0,0});moving.setDetachedAnchor({-20,0,0});moving.requestDangerRecall();
+        double residual=20;bool finished=false;
+        for(int i=1;i<=60;++i) {
+            const Vec3 body{speed*i*.1,0,0};
+            const auto frame=moving.update({.1,.1},body,0);
+            const double next=std::hypot(frame.cameraState.target.x-body.x,frame.cameraState.target.z-body.z);
+            check(next<=residual+1e-8,"moving-body recall closes residual monotonically");residual=next;
+            if(!moving.dangerRecallActive()){finished=true;break;}
+        }
+        check(finished && moving.getState().mode==CameraMode::TetheredFollow,"animated and proxy moving-body recall completes");
+    }
     std::cout<<"CARNIVORE_OK retained adult body-only awareness separation recall input cancellation rollback\n";return 0;
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

@@ -3,11 +3,12 @@
   "task_id": "carnivore-awareness-20261022",
   "status": "running",
   "base_revision": "6454531",
-  "current_step": "native fixture bounds correction build and execution",
+  "current_step": "ready for root integration and native acceptance",
   "completed_steps": [
     "inspected existing actor and camera ownership",
     "implemented body cue and interruptible controller recall",
-    "focused domain tests pass 2/2"
+    "focused domain tests pass 2/2",
+    "independent-review moving-body recall blocker fixed with animated and proxy speed regression"
   ],
   "touched_artifacts": [
     "stalthos-runtime/domain/carnivore_awareness.hpp",
@@ -17,8 +18,8 @@
     "stalthos-runtime/CMakeLists.txt",
     "stalthos-runtime/scripts/Run.ps1"
   ],
-  "updated": "2026-10-23T00:33:12.811319+00:00",
-  "resume_instructions": "Source implementation is in this worktree. Focused domain build var/build/domain passes. Native compile session may still run; compile Stalthos target in var/build/host with shared E drive Wicked dependencies. Root will run native fixture acceptance after cherry-pick.",
+  "updated": "2026-10-23T00:34:37.158602+00:00",
+  "resume_instructions": "Cherry-pick61a2d52 then followup moving-body recall fix. Root runs native CarnivoreProbe/CarnivoreCancelProbe/CarnivoreCameraProbe25seconds and inspects composed captures. Focused domain2/2pass. Final header change not native rebuilt in worker; root owns combined native integration build.",
   "validation": {
     "passed": false,
     "command": "focused ctest 2/2 passed; native acceptance pending"

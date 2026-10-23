@@ -20,7 +20,7 @@
     {
       "condition": "native encounter/cancel/camera composed screenshots and traces",
       "met": false,
-      "how_checked": "initial fixture failed original-watershed bounds check on actual exterior residents; corrected fixture rebuilding for native execution"
+      "how_checked": "Native source compile after diagnostic bounds correction passed. Earlier startup failure retained as evidence. Final moving-body recall change passes focused tests; root integration native runs pending."
     }
   ],
   "artifacts_changed": [
@@ -35,12 +35,14 @@
   "evidence": [
     "MSVC native Stalthos compiled successfully before diagnostic bounds correction",
     "ctest --test-dir var/build/domain -C Release -R domain-(carnivore_awareness|hero_view_controller)$: 2/2 passed",
-    "var/carnivore-body/failure.json: no retained eligible adult Longstride for diagnostic encounter"
+    "var/carnivore-body/failure.json: no retained eligible adult Longstride for diagnostic encounter",
+    "Moving-body recall regression at .16128 and2m/s plus existing controller tests: 2/2 ctest passed,0.33seconds"
   ],
   "findings": [
     "Longstride adults exist in connected exterior132/144m, outside original landscape bounds. Startup diagnostic selection now uses actual connected terrain samples.",
     "No toolkit changes; full toolkit tests not repeated.",
-    "No natural attack/hunt/human-input claim; all startup/input fixtures labelled synthetic."
+    "No natural attack/hunt/human-input claim; all startup/input fixtures labelled synthetic.",
+    "Independent review found fixed-target exponential recall could never finish for moving bodies. Fixed by carrying the anchor with actual body displacement before closing residual; regression tests pass for animated and proxy speeds."
   ],
   "assumptions_made": [
     "adult or old Longstride bodies qualify for conservative potential-danger presence cue",

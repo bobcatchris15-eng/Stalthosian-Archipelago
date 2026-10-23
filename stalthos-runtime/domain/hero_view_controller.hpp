@@ -65,6 +65,7 @@ public:
 private:
     State state_;
     bool dangerRecall_ = false; // Session-only; no additional camera authority or save schema.
+    std::optional<Vec3> previousRecallBody_;
 
     static bool isFiniteVec3(const Vec3& v) {
         return std::isfinite(v.x) && std::isfinite(v.y) && std::isfinite(v.z);
@@ -108,9 +109,12 @@ public:
     HeroViewController() = default;
 
     bool dangerRecallActive() const { return dangerRecall_; }
-    void cancelDangerRecall() { dangerRecall_ = false; }
+    void cancelDangerRecall() { dangerRecall_ = false; previousRecallBody_.reset(); }
     void requestDangerRecall() {
-        if (state_.mode == CameraMode::LocallyDetached) dangerRecall_ = true;
+        if (state_.mode == CameraMode::LocallyDetached && !dangerRecall_) {
+            dangerRecall_ = true;
+            previousRecallBody_.reset();
+        }
     }
 
     // Direct access to state for testing and serialization
@@ -118,7 +122,7 @@ public:
     void setState(const State& s) {
         validateState(s);
         state_ = s;
-        dangerRecall_ = false;
+        cancelDangerRecall();
     }
 
     // Explicit independent setters
@@ -336,6 +340,7 @@ public:
 
         State rollback = state_;
         const bool recallRollback = dangerRecall_;
+        const auto recallBodyRollback = previousRecallBody_;
 
         try {
             if (state_.focus == InputFocus::BodySteering) {
@@ -345,13 +350,21 @@ public:
             double cappedDt = std::min(dt.physicalSeconds, kMaxTimeStep);
 
             if (dangerRecall_ && state_.mode == CameraMode::LocallyDetached) {
+                // Carry the anchor with actual body displacement before closing the
+                // residual. Otherwise a moving body creates an asymptotic lag and
+                // even ordinary walking can prevent recall from ever completing.
+                if (previousRecallBody_) {
+                    state_.detachedAnchor.x += bodyPosition.x-previousRecallBody_->x;
+                    state_.detachedAnchor.z += bodyPosition.z-previousRecallBody_->z;
+                }
+                previousRecallBody_=bodyPosition;
                 const double alpha = 1-std::exp(-2*cappedDt);
                 state_.detachedAnchor.x += (bodyPosition.x-state_.detachedAnchor.x)*alpha;
                 state_.detachedAnchor.z += (bodyPosition.z-state_.detachedAnchor.z)*alpha;
                 if (std::hypot(state_.detachedAnchor.x-bodyPosition.x,state_.detachedAnchor.z-bodyPosition.z)<.03) {
                     state_.mode = CameraMode::TetheredFollow;
                     state_.focus = InputFocus::BodySteering;
-                    dangerRecall_ = false;
+                    cancelDangerRecall();
                 }
             }
 
@@ -521,6 +534,7 @@ public:
         } catch (...) {
             state_ = rollback;
             dangerRecall_ = recallRollback;
+            previousRecallBody_ = recallBodyRollback;
             throw;
         }
     }

@@ -9,7 +9,7 @@ This proximity approximation does not model occlusion or hearing.
 
 The composed UI says `Longstride nearby - potential danger`. If the camera is
 already detached when the encounter starts, the existing HeroViewController
-smoothly recalls its anchor to the body and switches to ordinary follow within
+carries its anchor with actual body displacement while smoothly closing its offset to the body and switches to ordinary follow within
 0.03 metres. The camera keeps its orbit and framing/tether/terrain checks.
 Camera pan, orbit, wheel, F1, or V inspection action immediately cancels recall.
 An encounter requests recall once; cancellation remains effective until genuine
@@ -22,7 +22,8 @@ and recall do not change saves or HeroSim resource knowledge.
 `domain-carnivore_awareness` covers retained identity, adult eligibility,
 herbivore/dead/self exclusion, vertical and horizontal separation, remote body,
 inactive population, recall completion, explicit input cancellation and camera
-transaction rollback. Existing `domain-hero_view_controller` also passes.
+transaction rollback, and completion while the body moves at both animated
+0.16128 m/s and proxy 2 m/s. Existing `domain-hero_view_controller` also passes.
 
 From the main checkout after integration/build, run:
 
