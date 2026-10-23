@@ -1,0 +1,16 @@
+{
+  "all_raw_hashes_and_git_blobs_unchanged": true,
+  "all_worker_root_bytecanonical_hashes_match": true,
+  "review_commit": "501e07d",
+  "corrections": [
+    {
+      "corrected": "fef439f1069a66f4ede0b5c33e3fbc247173118178d393875054c082657863c8",
+      "path": "PLAY.md",
+      "previous": "1702f1489f96dd4dc8a5798dce23b0caca33a5ea657876730d043e17563adb73"
+    }
+  ],
+  "source_commit": "a39157b",
+  "integrated_commit": "eda1135",
+  "cause": "Text conversion did not preserve actual raw BOM bytes in PLAY.md. Recomputed all entries through direct byte CRLF removal. Prior manifest preserved in Git501e07d.",
+  "recomputed_entries": 14
+}
