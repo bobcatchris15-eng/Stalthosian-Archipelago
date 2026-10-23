@@ -73,7 +73,7 @@ if(-not $Proxy) {
             throw 'Reviewed connected creature artifact changed; verify provenance or use -Proxy explicitly'
         }
         $options.Creature=$creature;$options.CreatureAnimationMetadata=$metadata;$options.CreatureSoleOffset=[double]$pin.sole_offset_m
-        if($HeroSpecies -ne 'Smalltrotter'){Write-Output "Hero: procedural $HeroSpecies. Pinned Smalltrotter asset retained for NPC replicas only."}else{Write-Output 'Connected embodiment: pinned reviewed Smalltrotter draft, existing metadata/pace, sole offset0'}
+        if($ConnectedLoad){Write-Output 'Hero species/embodiment: restored from checkpoint; pinned Smalltrotter asset remains available to NPC replicas.'}elseif($HeroSpecies -ne 'Smalltrotter'){Write-Output "Hero: procedural $HeroSpecies. Pinned Smalltrotter asset retained for NPC replicas only."}else{Write-Output 'Connected embodiment: pinned reviewed Smalltrotter draft, existing metadata/pace, sole offset0'}
     } else {
         Write-Warning 'Reviewed local Smalltrotter/metadata unavailable; using explicit announced proxy fallback. Pass -AssetRoot for the repository holding reviewed var artifacts.'
     }
