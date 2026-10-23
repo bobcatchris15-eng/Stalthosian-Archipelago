@@ -25,7 +25,8 @@ public:
         if(direct||playerGoal)return {{},true,"Wild caregiver nearby - your movement takes priority"};
         if(needsPriority)return {{},true,"Tending own needs before following caregiver"};
         if(d<=3.5)return {{},true,"Waiting near wild caregiver"};
-        return {Vec3{at->position.x+dx/d*3,at->position.y,at->position.z+dz/d*3},true,"Following actual wild caregiver - WASD overrides"};
+        const double step=std::min(d-3.0,8.0);
+        return {Vec3{body.x-dx/d*step,body.y+(at->position.y-body.y)*step/d,body.z-dz/d*step},true,"Following actual wild caregiver - WASD overrides"};
     }
 };
 }
