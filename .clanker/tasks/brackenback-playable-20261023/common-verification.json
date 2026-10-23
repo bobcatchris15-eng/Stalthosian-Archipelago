@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "executable_sha256": "3699dccf264d4b7d2d099462f16c1d347706af922fdef3c11fb9c01f9b86e247",
+  "native_runs": {
+    "bird-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015751-32ec98d4",
+      "physical_seconds": 6.730495001815143,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015656-7c2a1bc4",
+      "physical_seconds": 15.362422907099244,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "destination": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015911-92d65dd3",
+      "physical_seconds": 8.002300506908796,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "drink": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015840-af9fb375",
+      "physical_seconds": 27.73343551212747,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "next-life": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015716-67e4deaa",
+      "physical_seconds": 21.252562409223174,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015741-94202856",
+      "physical_seconds": 6.715125502363662,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015811-e8af11a9",
+      "physical_seconds": 6.573612203559605,
+      "actors": 8,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "override": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015636-59636ead",
+      "physical_seconds": 15.297526925904094,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "protect": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015616-982cebbf",
+      "physical_seconds": 15.365447515185224,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "rest": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015820-779f14d2",
+      "physical_seconds": 15.543877804419026,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "small-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-015801-b087e5de",
+      "physical_seconds": 6.713619903617655,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    }
+  },
+  "unrelated_untracked_preserved": 195,
+  "pinned_asset_hashes_unchanged": true
+}

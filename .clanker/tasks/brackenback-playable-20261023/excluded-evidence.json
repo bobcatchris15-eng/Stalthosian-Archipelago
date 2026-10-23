@@ -1,0 +1,14 @@
+{
+  "native": [
+    {
+      "path": "var/reports/runtime/20261023-015143-311935c1",
+      "reason": "Startup fixture requires naturally close pair absent in actual baseline; exited1 before runtime report; excluded from acceptance"
+    }
+  ],
+  "builds": [
+    {
+      "source": "1f1b8b3",
+      "reason": "Compile failed Windows small macro; no native acceptance"
+    }
+  ]
+}

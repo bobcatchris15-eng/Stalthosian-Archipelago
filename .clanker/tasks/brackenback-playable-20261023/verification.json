@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "ctest": "63/63 pass",
+  "same_executable_native_runs": 11,
+  "source_hashes_match_independent_review": true,
+  "interposition_approach_m": 2.519778442388472,
+  "camera_body_separation_m": 34.47402480468498,
+  "native_bracing_samples": 0,
+  "next_life": {
+    "calendar_seconds": 10.00095470850647,
+    "event": "explicit_next_life",
+    "fresh_session": 14,
+    "hero_id": 2,
+    "input": "labelled synthetic N action",
+    "ledger_unchanged_at_handoff": true,
+    "new_age": 0.0,
+    "new_stage": "hatchling",
+    "npc_count": 12,
+    "npc_snapshot_unchanged_at_handoff": true,
+    "old_death_known": true,
+    "old_hero": 1,
+    "old_id_excluded": true,
+    "physical_seconds": 10.00095470850647
+  },
+  "limits": [
+    "Injected existing actor edge position, age and critical needs, adult defender and input/noon fixtures; not naturally occurring encounter",
+    "Approach/direct override/stimulus loss proven; complete brace and deterrence outcome not demonstrated",
+    "NPC defensive movement unimplemented; generic imported NPC body does not establish protected species/juvenile appearance",
+    "Procedural fixed-sized body/simple gait, adult-only club; no anatomy/contact/growth art acceptance",
+    "Three selectable species; complete families, four-island traversal, connected saves and target hardware30FPS remain missing"
+  ]
+}

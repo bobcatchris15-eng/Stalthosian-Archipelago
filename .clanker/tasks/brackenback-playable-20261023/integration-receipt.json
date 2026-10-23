@@ -1,0 +1,98 @@
+{
+  "status": "accepted_bounded_partial_species_role",
+  "task": "brackenback-playable-20261023",
+  "source_commits": [
+    "1f1b8b3",
+    "4132409",
+    "ea7aafc"
+  ],
+  "independent_review_commits": [
+    "52e61c2",
+    "82b18ed",
+    "c98f1f5"
+  ],
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "fccdc500072f9d38b0cde350268acfa5767bf0e82b9775d65ea821570e4b8e79",
+      "git_blob": "f302a5e3d6d8e084944f905f450e557ff8a57d17"
+    },
+    {
+      "path": "Play.ps1",
+      "sha256": "62f76642d848790dfa4627c32479a8f08ddc8123dc763c60739aa73bfe5edff9",
+      "git_blob": "a3a8a014a5eec709e35a9df41996c6cb02d529c4"
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "d13f0cd4d52d3bfe326b283a07e6b2ecf23c8cb7f4991ad7b395bdf30425a21b",
+      "git_blob": "32ad75361224add1b6aa200af13fcb39e5e7375e"
+    },
+    {
+      "path": "stalthos-runtime/docs/brackenback.md",
+      "sha256": "3c9410fd9d0b139c2fa0837bc6beae6590b8b4b6d00c906ba0f4090987adfc23",
+      "git_blob": "be3dd849378e0fa6981567e4fdcad64c9931dd1e"
+    },
+    {
+      "path": "stalthos-runtime/domain/brackenback.hpp",
+      "sha256": "c1f832dbf49917aa3a56c68c9da759eff15b54b623d9b528050e801f133f744b",
+      "git_blob": "968de79fd6cbb6f16cd103ef3d85477ecc228bdc"
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "592e819a42b693bad1481d4c5bd27b2c5c6354aad721b7f902c56d5a76d78612",
+      "git_blob": "2efcdf37fd90121b1e7b978a741278928450acf8"
+    },
+    {
+      "path": "stalthos-runtime/engine/brackenback_scene.hpp",
+      "sha256": "435f73aa4af2793841c0d56ed4023700e1f92a2a76ece88d5194e9e83338494a",
+      "git_blob": "f934254be4d958970b2a5715913090ff78d04cf7"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "b2db15fb61ff2613e4143b54360bdeee606d7f3bd4a13fb8ac008e1e36240f1c",
+      "git_blob": "e8ebe145d8281f66b279310f0f60c066df0d72d3"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "c507091bf3ebaa0732117cbf31d0fffe9dbffa5358409c35a6e3f52fb29dc6c2",
+      "git_blob": "d94ff36cde139dca69b56f156860d41932bd93fb"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "4fd11a31f7c49dc6203699d537cc2ec65f983517d756c8eef2c60174ea4328c4",
+      "git_blob": "0203dc7342ce6e5be64486fb195e3ff9241c78f1"
+    },
+    {
+      "path": "stalthos-runtime/tests/brackenback.cpp",
+      "sha256": "27e7c3d6c904d8819ac6bb89c18253924ad1f6dbe5ead71c036e7aaff7fcbde0",
+      "git_blob": "421007917365247c8cfdd95ef695c4772b5c8681"
+    }
+  ],
+  "verification": "verification.json",
+  "common_verification": "common-verification.json",
+  "native_runs": "native-runs.json",
+  "excluded_evidence": "excluded-evidence.json",
+  "executable_sha256": "3699dccf264d4b7d2d099462f16c1d347706af922fdef3c11fb9c01f9b86e247",
+  "visual_inspection": [
+    "var/reports/runtime/20261023-015616-982cebbf/protection-1.png",
+    "var/reports/runtime/20261023-015716-67e4deaa/death-next-life-3.png"
+  ],
+  "limitations": [
+    "Injected existing actor edge position, age and critical needs, adult defender and input/noon fixtures; not naturally occurring encounter",
+    "Approach/direct override/stimulus loss proven; complete brace and deterrence outcome not demonstrated",
+    "NPC defensive movement unimplemented; generic imported NPC body does not establish protected species/juvenile appearance",
+    "Procedural fixed-sized body/simple gait, adult-only club; no anatomy/contact/growth art acceptance",
+    "Three selectable species; complete families, four-island traversal, connected saves and target hardware30FPS remain missing"
+  ],
+  "next_task": "next-task.md",
+  "graph": {
+    "base_digest": "2ea32970c451471f",
+    "current_digest": "41384114fbd292f5",
+    "nodes_added": 1412,
+    "nodes_removed": 75,
+    "edges_added": 2681,
+    "edges_removed": 1116,
+    "scope": "Project-wide existing baseline delta, not only this unit; refreshed with640 zero-node artifacts and stale community labels warned; exact-source independent review supplements graph"
+  },
+  "secret_scan": "secret-scan.json"
+}

@@ -25,6 +25,8 @@ records demonstrated native scope, not full-game completion or final acceptance.
 | Observable hero life-stage progression | Working draft:actual juvenile-to-adult calendar threshold, milestone and tunable horizontal bulk, native before/after bounds/captures, continued controls and once-only needs | Shared anatomy/abrupt bulk, other-stage forms/gait/contact and full life-history not accepted |
 | Body-local carnivore awareness and alarm recall | Working draft: actual retained adult Longstride body cue, smooth once-per-encounter recall, camera cancellation/separation and camera-only native proof | Conservative proximity only, no attack/hunting/occlusion; synthetic proxy diagnostics |
 | Smalltrotter nesting/incubation/one actual young | Working bounded native draft: supported adult clutch, one real unique child/session, ordinary needs/age/local motion, retained across actual nextlife | Two inactive eggs; coarse near-nest crowding/fixed procedural body; mating/other-species care and connected saves missing; regional retention domain only |
+| Thistletail selectable life/microforage | Working bounded native draft: species lifecycle/needs, separate feathered biped, finite body-local food, controls/rest/drink/destination/N | Fixed stage/generic gait; single patch/no insects; breeding/parenting missing |
+| Brackenback selectable life/protection approach | Working bounded native draft: actual selected components, separate armored quadruped/adult-only club, controls/rest/drink/destination/N and2.52m local interposition approach/direct/camera boundaries | Injected existing actor encounter; no demonstrated brace/deterrence or NPC defense; fixed body/gait; breeding/parenting missing |
 | Complete life/family/all-five-species/four-island experience | Full planned coverage not yet demonstrated | Continue missing native subsystems after autonomy; do not confuse foundation contracts with complete gameplay |
 
 Known roughness stays in task docs/receipts. A gap becomes current work only when
@@ -82,3 +84,5 @@ Latest accepted: continuation-20261022/integration-receipt.json. Play entry, bod
 Latest accepted: hatchling-admission-20261022/integration-receipt.json. Real child/ownership/needs/localmotion/nextlife,61CTest and four native runs. NEXT selectable contrasting Thistletail with finite ground microforage; no hatch polish.
 
 Latest accepted: thistletail-playable-20261022/integration-receipt.json. Two playable species, finite microforage,62CTest/nine native runs. Full families/four-island traversal/connected saves/FPS remain gaps. NEXT Brackenback with bounded situational protection; park bird polish.
+
+Latest accepted: brackenback-playable-20261023/integration-receipt.json;63CTest/eleven final-executable native runs. Three selectable species. NEXT Reedcrest and bounded reciprocal peer behavior; full families/four islands/connected saves remain gaps.

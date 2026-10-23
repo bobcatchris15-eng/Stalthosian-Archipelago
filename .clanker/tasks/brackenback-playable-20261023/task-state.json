@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "brackenback-playable-20261023",
+  "status": "complete",
+  "base_revision": "adacbe2",
+  "current_step": "Bounded third species and protection approach accepted; reviewed native checkpoint",
+  "completed_steps": [
+    "Collected all prior workers; Thistletail source/native accepted and main synced",
+    "Dispatched bounded source ownership to existing implementation worker and independent reviewer",
+    "Integrated source, Windows macro correction and labelled feasible actor-edge fixture",
+    "Independent exact11source review and two compiled probes pass",
+    "63CTest and eleven same-final-executable native runs; verification.json passed",
+    "195prior untracked files and all pinned asset hashes preserved; composed adult/hatchling captures inspected"
+  ],
+  "touched_artifacts": [
+    "PLAY.md",
+    "Play.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/brackenback.md",
+    "stalthos-runtime/domain/brackenback.hpp",
+    "stalthos-runtime/domain/thistletail.hpp",
+    "stalthos-runtime/engine/brackenback_scene.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/brackenback.cpp"
+  ],
+  "updated": "2026-10-23T07:01:15.315011+00:00",
+  "resume_instructions": "Accepted bounded Brackenback role; collect workers then next-task.md Reedcrest missing breadth. Brace/deterrence and NPC defense remain explicitly unproven/unimplemented.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/brackenback-playable-20261023/verify.py"
+  },
+  "receipt_path": ".clanker/tasks/brackenback-playable-20261023/integration-receipt.json"
+}
