@@ -48,10 +48,13 @@ stalthos-runtime/scripts/Run-ConnectedWorld.ps1 -HeroSpecies Longstride -DeathNe
 All carrion diagnostics restore hunger0.8 and labelled starting pose and noon.
 Primary starts6m from food and uses ordinary Eat movement/contact; at9physical
 seconds only it reinjects labelled hunger0.8 to exercise a second fresh accepted
-session and full finite depletion. This is not natural repeated hunger. Override
+session and full finite depletion. At17s only it injects a labelled terminal/death state, then reuses the existing
+ordinary N transition at18s so the same packet can verify depleted211 and bones
+retain across selected-species succession. This is not natural repeated hunger
+or lifespan/death-cause evidence. Override
 reverses ordinarily1-3s then releases. Camera body starts32m to the positive-X side
 and views/pans2-10s while outside body sense. No post-startup teleport or NPC reset.
-Composed captures occur0.5/5/11/16s. `longstride.json` records actual components,
+Composed captures occur0.5/5/11/20s. `longstride.json` records actual components,
 identity/session, pose/motion/needs, goal attention/contact, finite remaining/flesh,
 NPC counts/sessions, support and camera. Its contacts distinguish real relief and
 session amounts; authored/noNPCdeath/noNPCfeeding scope is explicit.
