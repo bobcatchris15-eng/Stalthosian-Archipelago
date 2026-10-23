@@ -64,6 +64,7 @@ public:
 
 private:
     State state_;
+    bool dangerRecall_ = false; // Session-only; no additional camera authority or save schema.
 
     static bool isFiniteVec3(const Vec3& v) {
         return std::isfinite(v.x) && std::isfinite(v.y) && std::isfinite(v.z);
@@ -106,11 +107,18 @@ private:
 public:
     HeroViewController() = default;
 
+    bool dangerRecallActive() const { return dangerRecall_; }
+    void cancelDangerRecall() { dangerRecall_ = false; }
+    void requestDangerRecall() {
+        if (state_.mode == CameraMode::LocallyDetached) dangerRecall_ = true;
+    }
+
     // Direct access to state for testing and serialization
     State getState() const { return state_; }
     void setState(const State& s) {
         validateState(s);
         state_ = s;
+        dangerRecall_ = false;
     }
 
     // Explicit independent setters
@@ -150,6 +158,7 @@ public:
 
     // Return to animal helper
     void returnToAnimal() {
+        cancelDangerRecall();
         state_.mode = CameraMode::TetheredFollow;
         state_.focus = InputFocus::BodySteering;
         state_.pendingDestination = std::nullopt;
@@ -160,6 +169,7 @@ public:
         if (!isFiniteVec3(currentBodyPosition) || !isCoordWithinCap(currentBodyPosition)) {
             throw std::invalid_argument("body position must be finite and within coordinate bounds");
         }
+        cancelDangerRecall();
         if (state_.mode == CameraMode::TetheredFollow) {
             state_.mode = CameraMode::LocallyDetached;
             state_.focus = InputFocus::FreeCamera;
@@ -183,6 +193,7 @@ public:
         if (!std::isfinite(nextAz) || !std::isfinite(nextEl)) {
             throw std::overflow_error("orbit delta calculation overflowed");
         }
+        if (deltaX != 0 || deltaY != 0) cancelDangerRecall();
         state_.orbit.azimuth = CameraFraming::wrapAngle(nextAz);
         state_.orbit.elevation = CameraFraming::clampElevation(nextEl);
     }
@@ -195,6 +206,7 @@ public:
         if (std::abs(wheelDelta) > CameraFraming::kMaxCoordinateMagnitude) {
             throw std::overflow_error("zoom delta exceeds coordinate safety magnitude");
         }
+        if (wheelDelta != 0) cancelDangerRecall();
         state_.orbit.distance = CameraFraming::updateZoom(state_.orbit.distance, wheelDelta, kZoomSpeed);
     }
 
@@ -229,6 +241,7 @@ public:
         if (state_.mode != CameraMode::LocallyDetached || state_.focus != InputFocus::FreeCamera) {
             return;
         }
+        if (input_x != 0 || input_z != 0) cancelDangerRecall();
 
         double mag = std::hypot(input_x, input_z);
         if (!std::isfinite(mag)) {
@@ -322,6 +335,7 @@ public:
         }
 
         State rollback = state_;
+        const bool recallRollback = dangerRecall_;
 
         try {
             if (state_.focus == InputFocus::BodySteering) {
@@ -329,6 +343,17 @@ public:
             }
 
             double cappedDt = std::min(dt.physicalSeconds, kMaxTimeStep);
+
+            if (dangerRecall_ && state_.mode == CameraMode::LocallyDetached) {
+                const double alpha = 1-std::exp(-2*cappedDt);
+                state_.detachedAnchor.x += (bodyPosition.x-state_.detachedAnchor.x)*alpha;
+                state_.detachedAnchor.z += (bodyPosition.z-state_.detachedAnchor.z)*alpha;
+                if (std::hypot(state_.detachedAnchor.x-bodyPosition.x,state_.detachedAnchor.z-bodyPosition.z)<.03) {
+                    state_.mode = CameraMode::TetheredFollow;
+                    state_.focus = InputFocus::BodySteering;
+                    dangerRecall_ = false;
+                }
+            }
 
             if (state_.mode == CameraMode::LocallyDetached) {
                 // Smooth bounded follow of the moving current body
@@ -495,6 +520,7 @@ public:
 
         } catch (...) {
             state_ = rollback;
+            dangerRecall_ = recallRollback;
             throw;
         }
     }

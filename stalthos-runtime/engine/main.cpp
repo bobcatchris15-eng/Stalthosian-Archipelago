@@ -3,6 +3,7 @@
 #include "domain/next_life.hpp"
 #include "domain/life_stage_presentation.hpp"
 #include "domain/peer_companionship.hpp"
+#include "domain/carnivore_awareness.hpp"
 #include "domain/exterior_woodland.hpp"
 #include "day_night_scene.hpp"
 #include "exterior_water_scene.hpp"
@@ -202,7 +203,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
     bool populatedWorld = false, populatedTraversal = false, populatedDeparture = false, populatedResourceProbe = false;
     bool terrainStreamProbe = false, watershedJoinProbe = false;
     bool connectedWorld=false,connectedRouteWalk=false,weatherPreview=false;
-    unsigned shoreProbe=0;unsigned npcPeerProbe=0;unsigned audioProbe=0;unsigned saplingProbe=0;unsigned explorationProbe=0;bool deathNextLifeProbe=false;bool lifeStageProbe=false;unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
+    unsigned carnivoreProbe=0;unsigned shoreProbe=0;unsigned npcPeerProbe=0;unsigned audioProbe=0;unsigned saplingProbe=0;unsigned explorationProbe=0;bool deathNextLifeProbe=false;bool lifeStageProbe=false;unsigned peerProbe=0;bool woodlandProbe=false;unsigned dayNightProbe=0;unsigned exteriorWaterProbe=0;unsigned exteriorBrowseProbe=0;unsigned destinationProbe=0;bool exposureProbe=false;
     unsigned autonomyProbe=0,wildlifeProbe=0,foragingProbe=0,restProbe=0;
     bool connectedEmbodimentProbe=false,exteriorResidentsProbe=false;
     int argumentCount = 0;
@@ -213,6 +214,9 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if (key == L"--interactive") interactive = true;
             else if (key == L"--populated-world") populatedWorld = true;
             else if (key == L"--exterior-residents-probe") {exteriorResidentsProbe=true;connectedWorld=true;populatedWorld=true;connectedRouteWalk=true;}
+            else if(key==L"--carnivore-probe"){carnivoreProbe=1;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--carnivore-cancel-probe"){carnivoreProbe=2;connectedWorld=true;populatedWorld=true;}
+            else if(key==L"--carnivore-camera-probe"){carnivoreProbe=3;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-awareness-probe") {wildlifeProbe=1;connectedWorld=true;populatedWorld=true;}
             else if (key == L"--wildlife-camera-probe") {wildlifeProbe=2;connectedWorld=true;populatedWorld=true;}
             else if(key==L"--body-audio-probe"){audioProbe=1;connectedWorld=true;populatedWorld=true;}
@@ -300,6 +304,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         }
         if(connectedWorld && (!loadState.empty() || !saveState.empty())) throw std::runtime_error("connected world preview has no save support; use original populated world for existing saves");
         if(connectedWorld && (populatedTraversal || populatedResourceProbe || terrainStreamProbe || diagnosticCamera)) throw std::runtime_error("connected preview uses ordinary body controls; incompatible diagnostic mode");
+        if(carnivoreProbe && (diagCount || interactive || shoreProbe || npcPeerProbe || audioProbe || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("carnivore probe requires standalone timed connected mode");
         if(shoreProbe && (diagCount || interactive || npcPeerProbe || audioProbe || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("shore probe requires standalone timed connected mode");
         if(npcPeerProbe && (diagCount || interactive || audioProbe || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("NPC peer probe requires standalone timed connected mode");
         if(audioProbe && (diagCount || interactive || saplingProbe || explorationProbe || deathNextLifeProbe || lifeStageProbe || peerProbe || woodlandProbe || dayNightProbe || exteriorWaterProbe || exteriorBrowseProbe || destinationProbe || exposureProbe || restProbe || foragingProbe || autonomyProbe || wildlifeProbe || connectedRouteWalk || weatherPreview))throw std::runtime_error("audio probe requires standalone timed connected mode");
@@ -817,6 +822,11 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         renderPath.setEyeAdaptionEnabled(false); renderPath.setMotionBlurEnabled(false); renderPath.setDepthOfFieldEnabled(false);
         renderPath.setShadowsEnabled(true); app.ActivatePath(&renderPath);
         wi::scene::GetCamera().CreatePerspective(width,height,.1f,1000,pi/3);
+        stalthos::fauna::CarnivoreAwareness carnivoreAwareness;
+        stalthos::Identity carnivoreWatched=0;stalthos::Vec3 carnivoreAnchor{};
+        json carnivoreSamples=json::array(),carnivoreCaptures=json::array();double nextCarnivoreSample=0;bool carnivoreCancelled=false;std::array<bool,3> carnivoreCaptured{};
+        uint64_t carnivoreRecallRequests=0;
+        wi::SpriteFont carnivoreCue("Longstride nearby - potential danger");carnivoreCue.params.size=24;carnivoreCue.params.h_align=wi::font::WIFALIGN_CENTER;carnivoreCue.params.color=wi::Color(255,205,135,255);carnivoreCue.params.shadowColor=wi::Color(0,0,0,255);carnivoreCue.SetHidden(true);renderPath.AddFont(&carnivoreCue);
         stalthos::fauna::AwarenessTuning wildlifeTuning;
         json wildlifeSamples=json::array(),wildlifeCaptures=json::array();
         std::array<bool,3> wildlifeCaptured{};
@@ -829,7 +839,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         stalthos::HeroSim heroIntent;
         stalthos::domain::HeroDrinkAutonomy heroAutonomy;
         stalthos::domain::HeroExploration heroExploration;
-        const bool explorationEnabled=connectedWorld && !shoreProbe && !npcPeerProbe && !audioProbe && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
+        const bool explorationEnabled=connectedWorld && !carnivoreProbe && !shoreProbe && !npcPeerProbe && !audioProbe && !saplingProbe && !diagCount && !deathNextLifeProbe && !lifeStageProbe && !peerProbe && !woodlandProbe && !dayNightProbe && !exteriorWaterProbe && !exteriorBrowseProbe && !destinationProbe && !exposureProbe && !restProbe && !foragingProbe && !autonomyProbe && !wildlifeProbe && !connectedRouteWalk && !weatherPreview;
         wi::SpriteFont explorationCue("Exploring nearby ground - WASD takes control");explorationCue.params.size=22;explorationCue.params.h_align=wi::font::WIFALIGN_CENTER;explorationCue.params.color=wi::Color(220,240,210,255);explorationCue.params.shadowColor=wi::Color(0,0,0,255);explorationCue.SetHidden(true);renderPath.AddFont(&explorationCue);
         json explorationSamples=json::array(),explorationCaptures=json::array(),explorationEvents=json::array();double nextExplorationSample=0;std::array<bool,3> explorationCaptured{};bool explorationNeedInjected=false,explorationDestinationInjected=false;
         wi::SpriteFont phasePreviewCue(shoreProbe?"Shore test - synthetic local start/input/noon, authored cove":npcPeerProbe?"NPC pair test - synthetic body/actor/needs/noon fixtures":audioProbe?"Body audio test - synthetic body or camera input":saplingProbe?"Sapling test - synthetic body/camera start, input and noon":explorationProbe?"Exploration test - bank start/input/need/destination/noon fixtures":deathNextLifeProbe?"Death test - near-terminal age, thirst, input and noon fixtures":lifeStageProbe?"Growth test - near-adult age, fatigue/input/noon fixtures":peerProbe?"Peer test - synthetic start/satisfied NPC/input/noon light":woodlandProbe?"Woodland entry test - synthetic start/input/noon light":dayNightProbe==1?"Synthetic lighting preview - clocks run normally":"Night controls test - synthetic fatigue/input");phasePreviewCue.params.size=22;phasePreviewCue.params.color=wi::Color(255,240,180,255);phasePreviewCue.params.shadowColor=wi::Color(0,0,0,255);phasePreviewCue.SetHidden(!dayNightProbe && !woodlandProbe && !peerProbe && !lifeStageProbe && !deathNextLifeProbe && !explorationProbe && !saplingProbe && !audioProbe && !npcPeerProbe && !shoreProbe);renderPath.AddFont(&phasePreviewCue);
@@ -1075,6 +1085,22 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 // after complete persisted restoration; it must not be overwritten.
                 if(successorId) world.setHero(heroId,world.snapshot().deadHeroes.back().second);
             }
+            if(carnivoreProbe) {
+                const auto initial=faunaPopulation->snapshot();
+                for(const auto& a:initial.actors) if(!carnivoreWatched && a.species==stalthos::HeroSpecies::Longstride && (a.stage==stalthos::LifeStage::Adult || a.stage==stalthos::LifeStage::Old)) {
+                    // Labelled body startup only: retained population actor is never moved or duplicated.
+                    for(int angle=0;angle<24;++angle){const double heading=angle*6.283185307179586/24,dx=std::sin(heading),dz=std::cos(heading),offset=carnivoreProbe==3?28:8;
+                        bool dry=true;double previous=Ground(float(a.position.x-dx*offset),float(a.position.z-dz*offset));
+                        for(int step=0;step<=56;++step){const double d=offset+step*.5,gx=a.position.x-dx*d,gz=a.position.z-dz*d,gy=Ground(float(gx),float(gz));if((landscape.inBounds(gx,gz) && landscape.waterContains(gx,gz))||!std::isfinite(gy)||std::abs(gy-previous)>.3){dry=false;break;}previous=gy;}
+                        if(!dry)continue;
+                        const double gx=a.position.x-dx*offset,gz=a.position.z-dz*offset;
+                        if(carnivoreProbe==3){bool remote=true;for(const auto& other:initial.actors)if(other.species==stalthos::HeroSpecies::Longstride && std::hypot(other.position.x-gx,other.position.z-gz)<18)remote=false;if(!remote)continue;}
+                        carnivoreWatched=a.id;carnivoreAnchor=a.position;x=float(gx);z=float(gz);yaw=float(heading);break;
+                    }
+                }
+                if(!carnivoreWatched) throw std::runtime_error("no retained eligible adult Longstride for diagnostic encounter");
+                populatedTerrain->update(scene,x,z);
+            }
             if(wildlifeProbe) {
                 bool selected=false;
                 const auto initial=faunaPopulation->snapshot();
@@ -1152,6 +1178,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             return landscape.height(cx, cz);
         };
         stalthos::domain::ControllerOutput cameraOut;
+        if(carnivoreProbe){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor=carnivoreProbe==3?carnivoreAnchor:stalthos::Vec3{x+20,Ground(x+20,z),z};viewController.setState(state);}
         if(shoreProbe==3){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={224,Ground(224,24),24};viewController.setState(state);}
         if(npcPeerProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={132,Ground(132,30),30};viewController.setState(state);}
         if(audioProbe==2){auto state=viewController.getState();state.mode=stalthos::domain::CameraMode::LocallyDetached;state.focus=stalthos::domain::InputFocus::FreeCamera;state.detachedAnchor={x,Ground(x,z),z};viewController.setState(state);}
@@ -1341,7 +1368,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             syntheticDirect=(audioProbe==1 && clock.physicalSeconds()>=8 && clock.physicalSeconds()<10) || (saplingProbe==1 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<(creatureLoaded?18:7)) || ((autonomyProbe==2 || foragingProbe==2) && elapsed>=2 && elapsed<4) || (restProbe==2 && elapsed>=4 && elapsed<6) || (destinationProbe==2 && clock.physicalSeconds()>=2.5 && clock.physicalSeconds()<3.5) || (exteriorWaterProbe==3 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (dayNightProbe==2 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<4) || (explorationProbe==2 && clock.physicalSeconds()>=4 && clock.physicalSeconds()<5) || (lifeStageProbe && clock.physicalSeconds()>=9 && clock.physicalSeconds()<11) || (deathNextLifeProbe && ((clock.physicalSeconds()>=7 && clock.physicalSeconds()<9) || (clock.physicalSeconds()>=12 && clock.physicalSeconds()<14)));
             const bool wildlifeForward=wildlifeProbe==1 && elapsed<6,wildlifeReverse=wildlifeProbe==1 && elapsed>=10 && elapsed<18;
             bool userWalk = ((shoreProbe==1 || shoreProbe==2) && x<258) || (audioProbe==1 && clock.physicalSeconds()>=2 && clock.physicalSeconds()<6) || (saplingProbe==1 && clock.physicalSeconds()>=(creatureLoaded?18:7) && clock.physicalSeconds()<(creatureLoaded?32:10)) || (peerProbe==1 && clock.physicalSeconds()>=10 && clock.physicalSeconds()<24) || (woodlandProbe && x<184) || (userSteering && down('W')) || wildlifeForward || (exposureProbe && clock.physicalSeconds()>=11 && clock.physicalSeconds()<12);
-            bool userReverse = (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
+            bool userReverse = ((carnivoreProbe==1 || carnivoreProbe==2) && clock.physicalSeconds()>=6 && clock.physicalSeconds()<20) || (peerProbe==1 && clock.physicalSeconds()>=24 && clock.physicalSeconds()<38) || (userSteering && down('S')) || syntheticDirect || wildlifeReverse;
             bool walking = diagnosticWalk || diagnosticReverseWalk || (diagnosticTransition && (activeTransitionPhaseIndex == 1 || activeTransitionPhaseIndex == 3)) || userWalk || (connectedRouteWalk && x<connectedLayout.meadowX+2);
             if (diagnosticNeeds && heroAlive && (diagnosticSequenceStage == 0 || diagnosticSequenceStage == 2)) {
                 walking = true;
@@ -1362,7 +1389,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             bool userSteerDirect = userSteering && (down('S') || down('A') || down('D') || down('W'));
             const bool syntheticSaplingAction=saplingProbe && ((clock.physicalSeconds()>=3 && clock.physicalSeconds()<3.5) || (clock.physicalSeconds()>=(creatureLoaded?33:11) && clock.physicalSeconds()<(creatureLoaded?33.5:11.5)));
-            const bool directInput=syntheticSaplingAction || (userSteering && down('F')) || walking || userSteerDirect || syntheticDirect || wildlifeReverse || down('E');
+            const bool directInput=((carnivoreProbe==1 || carnivoreProbe==2) && userReverse) || syntheticSaplingAction || (userSteering && down('F')) || walking || userSteerDirect || syntheticDirect || wildlifeReverse || down('E');
             heroIntent.setDirect(directInput);
             const stalthos::Vec3 destinationBody{x,Ground(x,z),z};
             if(connectedWorld && pendingDestinationClick){const auto click=*pendingDestinationClick;pendingDestinationClick.reset();RECT client{};GetClientRect(window,&client);const auto ray=wi::renderer::GetPickRay(long(click.first*app.canvas.GetLogicalWidth()/std::max(1L,client.right)),long(click.second*app.canvas.GetLogicalHeight()/std::max(1L,client.bottom)),app.canvas);const auto hit=scene.Intersects(ray);const stalthos::Vec3 target{hit.position.x,hit.position.y,hit.position.z};const bool accepted=heroAlive && hit.entity!=wi::ecs::INVALID_ENTITY && stalthos::domain::HeroDestination::submit(heroIntent,destinationBody,target,supportedDestination(destinationBody,target));if(accepted)heroAutonomy.yieldToDestination();destinationStatus=accepted?"moving":"rejected";destinationEvents.push_back({{"event",destinationStatus},{"physical_seconds",clock.physicalSeconds()},{"target_x",target.x},{"target_z",target.z},{"pixel_x",click.first},{"pixel_y",click.second},{"source","native WM_RBUTTONDOWN -> scene raycast"}});if(destinationProbe==1 && accepted)needs->restoreState(0,.8,0,0,false);}
@@ -1828,8 +1855,22 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                     cameraDistance = viewController.getState().orbit.distance;
                 }
                 if (mouseState.left_button_press) {
+                    viewController.cancelDangerRecall();
                     viewController.applyOrbitInput(-mouseState.delta_position.x, mouseState.delta_position.y);
                 }
+            }
+
+            if(connectedWorld && faunaPopulation) {
+                const auto body=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();
+                static const std::vector<stalthos::fauna::ActorView> noPhysicalActors;
+                carnivoreAwareness.update(heroId,{body.x,body.y,body.z},heroAlive,faunaPhysical?faunaPopulation->actors():noPhysicalActors);
+                if(carnivoreAwareness.began() && !down('V') && !toggleKey && !down('W') && !down('A') && !down('S') && !down('D') && wi::input::GetMouseState().delta_wheel==0 && !wi::input::GetMouseState().left_button_press && viewController.getState().mode==stalthos::domain::CameraMode::LocallyDetached){viewController.requestDangerRecall();++carnivoreRecallRequests;}
+                if(!carnivoreAwareness.actor())viewController.cancelDangerRecall();
+                // This injected orbit is a diagnostic action through the same explicit-input API.
+                if(carnivoreProbe==2 && !carnivoreCancelled && clock.physicalSeconds()>=.5){viewController.applyOrbitInput(40,0);carnivoreCancelled=true;}
+                carnivoreCue.SetHidden(!carnivoreAwareness.actor());
+                carnivoreCue.SetText(viewController.dangerRecallActive()?"Longstride nearby - returning view (camera input cancels)":"Longstride nearby - potential danger");
+                carnivoreCue.params.posX=app.canvas.GetLogicalWidth()*.5f;carnivoreCue.params.posY=app.canvas.GetLogicalHeight()*.67f;
             }
 
             try {
@@ -2205,6 +2246,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             if(exteriorBrowseEnabled && elapsed>=nextExteriorBrowseSample){exteriorBrowseSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",x},{"body_z",z},{"hunger",needs->hunger()},{"body_food_awareness",heroIntent.perception.attention().has_value()},{"selected_resource",autonomyResource},{"remaining",getResourceRemaining(208)},{"foliage_fraction",shrubVisualInstances.at(8).appliedFraction},{"hero_contacts",appliedBrowseContacts},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z}});nextExteriorBrowseSample=elapsed+.1;}
             previousInteractDown = interactDown;previousInteractionOwner=interactionOwner;
             if(explorationEnabled && elapsed>=nextExplorationSample){explorationSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",x},{"body_z",z},{"yaw",yaw},{"phase",unsigned(heroExploration.phase())},{"target_x",heroExploration.target().x},{"target_z",heroExploration.target().z},{"direct",directInput},{"speed",speed},{"thirst",needs->thirst()},{"resting",resting},{"destination",destinationActive},{"goal_contextual",heroIntent.goal()?heroIntent.goal()->contextual:false},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"cue_visible",!explorationCue.IsHidden()},{"need",unsigned(needs->suggestActivity())}});nextExplorationSample=elapsed+.1;}
+            if(connectedWorld && elapsed>=nextCarnivoreSample && carnivoreSamples.size()<2400){const auto b=scene.transforms.GetComponent(heroMotionRoot)->GetPosition();json actors=json::array();for(const auto&a:faunaPopulation->actors())if(a.species==stalthos::HeroSpecies::Longstride)actors.push_back({{"id",a.id},{"age",a.calendarAge},{"alive",a.alive},{"x",a.position.x},{"y",a.position.y},{"z",a.position.z}});carnivoreSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"body_x",b.x},{"body_y",b.y},{"body_z",b.z},{"actor",carnivoreAwareness.actor()},{"distance",carnivoreAwareness.distance()},{"cue_visible",!carnivoreCue.IsHidden()},{"recall",viewController.dangerRecallActive()},{"recall_requests",carnivoreRecallRequests},{"detached",viewController.getState().mode==stalthos::domain::CameraMode::LocallyDetached},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"direct",directInput},{"thirst",needs->thirst()},{"hunger",needs->hunger()},{"actors",actors}});nextCarnivoreSample=elapsed+.1;}
+            if(carnivoreProbe)for(size_t i=0;i<3;++i)if(!carnivoreCaptured[i] && clock.physicalSeconds()>=(i==0?.25:i==1?3:22)){const auto name="carnivore-"+std::to_string(i)+".png";carnivoreCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/name).u8string());carnivoreCaptures.push_back({{"filename",name},{"saved",carnivoreCaptured[i]}});}
             if(connectedWorld && elapsed>=nextLifeSampleAt){json actors=json::array();for(const auto& a:faunaPopulation->actors())actors.push_back({{"id",a.id},{"x",a.position.x},{"z",a.position.z},{"distance",a.distanceTravelledMeters}});nextLifeSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"hero_id",heroId},{"alive",heroAlive},{"age",lifecycle->calendarAge()},{"body_x",x},{"body_z",z},{"speed",speed},{"direct",directInput},{"thirst",needs->thirst()},{"session",physicalInteractionSession},{"old_death_known",priorDeadHero && world.heroDeathKnown(priorDeadHero)},{"actors",actors},{"ledger",ledgerJson(ledgerSnapshot())}});nextLifeSampleAt=elapsed+.25;}
 
             if(autonomyProbe || foragingProbe) for(std::size_t phase=0;phase<3;++phase) if(!autonomyCaptured[phase] && (phase==0?elapsed>=1:phase==1?elapsed>=5:!autonomyContacts.empty())) {
@@ -2260,6 +2303,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             last.end_animation_timer_s = idleAnim ? idleAnim->timer : 0.0f;
             last.bone_pose_changed = (last.local_bone_delta > 1e-5f);
         }
+        if(connectedWorld)WriteJson(output/"carnivore-awareness.json",{{"probe_mode",carnivoreProbe},{"synthetic_body_startup",carnivoreProbe!=0},{"synthetic_reverse_input",carnivoreProbe==1 || carnivoreProbe==2},{"synthetic_camera_cancel",carnivoreProbe==2},{"watched_actor",carnivoreWatched},{"notice_m",stalthos::fauna::CarnivoreAwareness::noticeMeters},{"release_m",stalthos::fauna::CarnivoreAwareness::releaseMeters},{"samples",carnivoreSamples},{"captures",carnivoreCaptures},{"scope","actual physical adult Longstride proximity only; no attack intent, damage or hunting AI; no camera sensing"}});
         if(connectedWorld) WriteJson(output/"wildlife-awareness.json",{{"probe_mode",wildlifeProbe},{"synthetic_hero_startup_and_input",wildlifeProbe!=0},{"watched_actor",wildlifeWatched},{"notice_m",wildlifeTuning.noticeMeters},{"comfort_m",wildlifeTuning.comfortMeters},{"avoid_speed_m_s",wildlifeTuning.avoidanceSpeedMetersPerSecond},{"samples",wildlifeSamples},{"captures",wildlifeCaptures},{"source","actual hero motion root only; camera never context"},{"mid_edge_policy","finish existing graph hop; ordinary behavior resumes on next arrival"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-rest.json",{{"synthetic_fatigue",restProbe!=0},{"probe_mode",restProbe},{"direct_override_interval",restProbe==2},{"samples",restSamples},{"captures",restCaptures},{"cue_changes",restCueChanges},{"exit_fatigue",stalthos::domain::HeroRestAutonomy::recoveredFatigue},{"recovery_driver","existing NeedsCore physicalSeconds only"},{"scope","idle rest activity; no sleeping pose or anatomical claim"}});
         if(heroAutonomyEnabled) WriteJson(output/"hero-autonomy.json",{{"enabled",true},{"probe_mode",autonomyProbe},{"foraging_probe",foragingProbe},{"synthetic_need",autonomyProbe!=0 || foragingProbe!=0},{"synthetic_direct_interval",autonomyProbe==2 || foragingProbe==2},{"synthetic_camera_initialization",autonomyProbe==3 || foragingProbe==3},{"samples",autonomySamples},{"contacts",autonomyContacts},{"captures",autonomyCaptures},{"ledger_authority","existing native regional registry"},{"scope","ordinary local drink/browse; no pathfinding or anatomical reach acceptance"}});

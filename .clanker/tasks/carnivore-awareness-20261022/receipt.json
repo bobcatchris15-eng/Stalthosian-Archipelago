@@ -1,0 +1,50 @@
+{
+  "task_id": "carnivore-awareness-20261022",
+  "outcome": "partial",
+  "acceptance": [
+    {
+      "condition": "existing adult Longstride body-local identity cue and separation",
+      "met": true,
+      "how_checked": "focused domain-carnivore_awareness passed; native startup fixture path correction pending execution"
+    },
+    {
+      "condition": "interruptible recall through existing controller with immediate explicit camera cancellation",
+      "met": true,
+      "how_checked": "domain-carnivore_awareness and existing domain-hero_view_controller passed; native UI gates pending"
+    },
+    {
+      "condition": "normal body controls and needs responsive, no camera knowledge",
+      "met": true,
+      "how_checked": "source uses existing actor views and actual hero motion root; does not write HeroSim or needs; focused remote-body/no-actor checks passed"
+    },
+    {
+      "condition": "native encounter/cancel/camera composed screenshots and traces",
+      "met": false,
+      "how_checked": "initial fixture failed original-watershed bounds check on actual exterior residents; corrected fixture rebuilding for native execution"
+    }
+  ],
+  "artifacts_changed": [
+    "stalthos-runtime/domain/carnivore_awareness.hpp",
+    "stalthos-runtime/domain/hero_view_controller.hpp",
+    "stalthos-runtime/tests/carnivore_awareness.cpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/docs/carnivore-awareness.md"
+  ],
+  "evidence": [
+    "MSVC native Stalthos compiled successfully before diagnostic bounds correction",
+    "ctest --test-dir var/build/domain -C Release -R domain-(carnivore_awareness|hero_view_controller)$: 2/2 passed",
+    "var/carnivore-body/failure.json: no retained eligible adult Longstride for diagnostic encounter"
+  ],
+  "findings": [
+    "Longstride adults exist in connected exterior132/144m, outside original landscape bounds. Startup diagnostic selection now uses actual connected terrain samples.",
+    "No toolkit changes; full toolkit tests not repeated.",
+    "No natural attack/hunt/human-input claim; all startup/input fixtures labelled synthetic."
+  ],
+  "assumptions_made": [
+    "adult or old Longstride bodies qualify for conservative potential-danger presence cue",
+    "12m notice16m release and2/s recall are provisional draft tuning; no occlusion/hearing simulation"
+  ],
+  "blockers": []
+}
