@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task": "npc-carrion-diet-review-20261023",
+  "reviewer": "gameplay_review",
+  "base_commit": "64a177e",
+  "source_commits": [
+    "754cd48",
+    "f58ee6d"
+  ],
+  "integrated_commit": "55c403d",
+  "scope": {
+    "graph_digest": "not computed; bounded direct ownership/diet/save review",
+    "implementation_read_only": true,
+    "base_digest": "64a177e",
+    "owned_output": ".clanker/clunkers/npc-carrion-diet-review-20261023",
+    "artifacts": [
+      "contract-inventory.md",
+      "probe.cpp",
+      "probe-output.txt",
+      "source-hashes.json"
+    ]
+  },
+  "goal_alignment": {
+    "verdict": "pass final source/domain scope; native movement/contact/capture acceptance remains root-owned",
+    "reason": "Connected-only diet is enforced at route/local relief and authoritative shared contact. One finite world211 is shared by hero/NPC, with strict old-profile configuration refusal and original default-off behavior preserved."
+  },
+  "findings": [],
+  "resolved_findings": [
+    {
+      "boundary": "tagged211 admission",
+      "evidence": "Initial new configure guard checked only Shrub-kind resources, so a constructed freshwater carrion site and211 Creek could bypass food guard at domain boundary. Native expected-kind validation already rejected it.",
+      "resolution": "Final configureContacts explicitly requires tagged site211 Shrub; independent malformed freshwater/Creek admission probe rejects.",
+      "severity": "P2"
+    },
+    {
+      "boundary": "camera diagnostic validity",
+      "evidence": "Initial camera body40m/long pan risked tether/food composition ambiguity, and disabling ordinary hero autonomy for both diagnostics made attention=false inconclusive.",
+      "resolution": "Final camera body160,27 is24m from food136,27, pan.02 keeps target nearfood, named distances/contact counts are recorded, andf58ee6d enables real ordinary body sensing for camera2 while primary1 automatic contacts remain disabled.",
+      "severity": "P2"
+    }
+  ],
+  "effort": {
+    "attempted": [
+      "Preserved prior review2b0b225 branch and exact dirty care header/hash before safely detaching64a177e; no reset/clean or unrelated cleanup.",
+      "Reviewed connected population policy/tag, supported graph leaf append, route/local relief and authoritative contact admission, single registry clock, allchoice world resource/prop and source save compatibility.",
+      "Compiled own independent MSVC C++17 probe against final candidate core headers; all cases passed.",
+      "Independently computed rawSHA256/canonicalLF SHA256/CRLF/Git blobs for all12 changed tracked paths; separately read integrated root55c403d bytes and confirmed canonicalLF and blobs identical.",
+      "Parsed both changed PowerShell launch scripts; verified persistence/host_save/regional_archive/native_save schemas and native_population_registry implementation unchanged."
+    ],
+    "probes_run": [
+      "Wrong-diet Longstride plant and herbivore carrion direct contact deny without resource/history/needs relief; wrong-diet Population/local advance grants no relief.",
+      "Actual hero0.6 then real NPC shared contact exhausts exact same211 total1.0; hunger relief, one clock, unchanged bindings and old cumulative history.",
+      "Cumulative replay, alien NPC session, camera-origin and dormant contact denial.",
+      "Depletion keeps immutable habitat signature/tag and accepted continuation restore; no new actor/session.",
+      "Depleted connected-diet STLC encode/decode/restore retains signature/ledger/bindings.",
+      "Valid-checksum earlier configuration checkpoint rejected; actual attempted new-profile write to owned earlier-profile file refuses and preserves exact bytes.",
+      "Malformed211 Creek/freshwater-tag anchor rejected.",
+      "Original policy default-off and signature independent of mutable availability; final12source root canonicalLF/blob comparisons pass; both entry scripts parse."
+    ],
+    "native_build_performed": false
+  },
+  "source_audit": [
+    "appendCarrionBranch copies existing Population, adds one supported half-meter leaf and immutable carrion site. Existing actor state/indices remain intact, and leaf cannot shorten old-to-old routes.",
+    "Population policy is absent by default. Old eligible-site and local food behavior remains identical without policy; connected policy chooses Longstride carrion and nonLongstride plants.",
+    "Authoritative RegionalPopulationRegistry.contact checks species/site/resource before ledger write; only accepted cumulative deltas apply actual needs relief. Native adapter remains same sole tick/contact owner.",
+    "Resource211 stays existing Shrub-kind generic food; no resource enum/archive schema extension. Mutable refreshAvailability changes browse availability without erasing immutable carrion tag/signature.",
+    "All connected selected hero choices admit/render/update same211; hero manual/automatic food eligibility remains species-specific. Prop relocates24,30->136,27 with explicit root authorization; no NPC relocation.",
+    "STLC immutable configuration revision202610230200 fails old connected files closed; no migration/reset or overwrite of old profile claimed. Original STL8/9 mode and original connected LoadState/SaveState refusal remain intact.",
+    "Primary diagnostic uses labelled actual adult startup needs only, unchanged ID/species/position/site/target/session, automatic hero contacts disabled and ordinary E2 input competes for first0.5. Primary hunger remains0.8 to prevent care-goal movement before E2. Discarded hunger0.2 branch is not finalsource.",
+    "Camera diagnostic runs ordinary hero sensing at body24m from food, with camera-only input and explicit distance/hero-contact telemetry. NPC group remains body-active and may feed independently; no dormant-region activation claim."
+  ],
+  "limitations": [
+    "No reviewer native build/launch/GPU capture, route-distance/contact composition or performance proof. Root owns actual native existing-caregiver journey, hunger/contact quantities, competition, allchoice/default/original regressions and process restart evidence.",
+    "Authored carrion is not an actual killed/dead retained NPC. No hunting, prey capture, carcass generation, provisioned offspring, renewable food web or full family claim.",
+    "The primary diagnostic deliberately disables hero automatic needs behavior to isolate manual competition; it does not prove ordinary automatic hero feeding in that run. Camera2 ordinary sensing is enabled.",
+    "Connected-only policy scope is explicit; original legacy/default-off diet behavior remains historical rather than being silently reinterpreted.",
+    "Full connected family/social persistence and30FPS remain open."
+  ],
+  "source_hashes_file": "source-hashes.json"
+}
