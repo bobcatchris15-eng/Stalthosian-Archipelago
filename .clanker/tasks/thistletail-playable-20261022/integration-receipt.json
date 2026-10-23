@@ -1,0 +1,59 @@
+{
+  "status": "accepted_bounded_working_draft",
+  "task": "thistletail-playable-20261022",
+  "source_commits": [
+    "1259da9",
+    "60711ac",
+    "058816e"
+  ],
+  "source_hashes": [
+    {
+      "path": "Play.ps1",
+      "sha256": "3d5b1d61e3c159055659399d463b2a77ee7923c812fa87bc1a357faca1172020"
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "edacfd9380ac3e65b365c580149fd07585ebb6cfc2097dfd1b407d11cf6f4392"
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "09d0be92ea904136de9501ffa9b9e5b3380ab2531e13c8361082cf10b6eb8e0b"
+    },
+    {
+      "path": "stalthos-runtime/engine/thistletail_scene.hpp",
+      "sha256": "33e95aec4287d69dc13df4bb502abba967a36f6ecb4b9bd9ef3e7a626e0a0116"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "36da4a83f7ded07d9a747e36660043d5d842b2f8251154ae0955ca78ef15c881"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "3cd9a56a1ee5c29506e62de96ab0bb1cb4f5cedd9be3d16466c2eadc26dfbbe6"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "5abaab45de1931feccaf9db3e6354653fa3d921936813339c872e669e04d7f88"
+    },
+    {
+      "path": "stalthos-runtime/tests/thistletail.cpp",
+      "sha256": "58dd927acc17f5dfe4c2d4919d7e622390bddbb3b59a6278b733eef833a1fb17"
+    }
+  ],
+  "verification": "verification.json",
+  "native_runs": "native-runs.json",
+  "executable_sha256": "7a92ad598dbb7cec241ea6f4bdd87b4506d1c0a5b10f899837031ad11318135a",
+  "visual_inspection": [
+    "20261023-004034-7c9dd2e7/bird-0.png",
+    "20261023-004034-7c9dd2e7/bird-2.png"
+  ],
+  "limitations": [
+    "Procedural fixed-stage bird; no anatomical beak-ground contact acceptance, IK or final plumage",
+    "One finite litter patch; no individual insect simulation or bird breeding/parenting",
+    "Generic 2 m/s and provisional shared metabolism",
+    "Two playable species only; four islands, complete families and connected persistence remain gaps",
+    "No target-hardware 30 FPS acceptance; build includes existing wchar-to-char C4244 warning",
+    "Existing Smalltrotter-only nesting hint appears on bird HUD"
+  ],
+  "next_task": "next-task.md"
+}

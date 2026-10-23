@@ -1,0 +1,95 @@
+{
+  "ok": true,
+  "executable_sha256": "7a92ad598dbb7cec241ea6f4bdd87b4506d1c0a5b10f899837031ad11318135a",
+  "native_runs": {
+    "bird-destination": {
+      "physical_seconds": 6.100446106982417,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "bird-drink": {
+      "physical_seconds": 19.837852108699735,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "bird-normal": {
+      "physical_seconds": 6.77964550696197,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "bird-rest": {
+      "physical_seconds": 15.636528710223502,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "camera": {
+      "physical_seconds": 15.638004599983105,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "max_camera_body_distance": 34.84955968814418
+    },
+    "feed-life": {
+      "physical_seconds": 32.02027830136649,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "food_contact": {
+        "amount": 0.5,
+        "body_x": 23.153661727905273,
+        "body_z": 24.0,
+        "elapsed": 3.8241885,
+        "eligible": true,
+        "foliage_fraction": 0.5,
+        "hunger_after": 0.3002581067107666,
+        "hunger_before": 0.8002581067107666,
+        "resource": 210,
+        "session": 13
+      }
+    },
+    "original": {
+      "physical_seconds": 6.625455801127828,
+      "actors": 8,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    },
+    "override": {
+      "physical_seconds": 21.086937807762297,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0,
+      "food_contact": {
+        "amount": 0.5,
+        "body_x": 23.157466888427734,
+        "body_z": 24.0,
+        "elapsed": 8.6525274,
+        "eligible": true,
+        "foliage_fraction": 0.5,
+        "hunger_after": 0.3006584615908813,
+        "hunger_before": 0.8006584615908813,
+        "resource": 210,
+        "session": 13
+      }
+    },
+    "small-normal": {
+      "physical_seconds": 6.764534302812535,
+      "actors": 12,
+      "support_failures": 0,
+      "support_fallbacks": 0
+    }
+  },
+  "preserved_untracked": 180,
+  "independently_reviewed_source_hashes_match": true,
+  "ctest": "62/62 passed",
+  "limitations": [
+    "Procedural fixed-stage bird; no anatomical beak-ground contact acceptance, IK or final plumage",
+    "One finite litter patch; no individual insect simulation or bird breeding/parenting",
+    "Generic 2 m/s and provisional shared metabolism",
+    "Two playable species only; four islands, complete families and connected persistence remain gaps",
+    "No target-hardware 30 FPS acceptance; build includes existing wchar-to-char C4244 warning"
+  ]
+}

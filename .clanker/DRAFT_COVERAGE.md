@@ -80,3 +80,5 @@ Latest accepted: exterior-shore-20261020. Authored cove/74m proxy descent/local4
 Latest accepted: continuation-20261022/integration-receipt.json. Play entry, body-local potential-danger/interruptible recall and partial nest/incubation. NEXT actual independent hatchling admission; no polish detour.
 
 Latest accepted: hatchling-admission-20261022/integration-receipt.json. Real child/ownership/needs/localmotion/nextlife,61CTest and four native runs. NEXT selectable contrasting Thistletail with finite ground microforage; no hatch polish.
+
+Latest accepted: thistletail-playable-20261022/integration-receipt.json. Two playable species, finite microforage,62CTest/nine native runs. Full families/four-island traversal/connected saves/FPS remain gaps. NEXT Brackenback with bounded situational protection; park bird polish.

@@ -1,32 +1,26 @@
-# Accepted native hatchling working draft - 2026-10-22 evening
+# Accepted selectable Thistletail working draft - 2026-10-23
 
-Latest receipt: .clanker/tasks/hatchling-admission-20261022/integration-receipt.json.
-One real independent Smalltrotter now hatches from the existing clutch. Actual
-registry transaction appends child2/fresh session13 and one procedural long-necked
-quadruped replica, preserving all old actors/bindings/ledger/history. Birth at
-physical11.0026s in labelled adult/calendar100 fixture. One egg becomes a shell;
-two eggs remain inactive/unmodelled. No mating or generalized family framework.
+Receipt: .clanker/tasks/thistletail-playable-20261022/integration-receipt.json.
+Normal Play now offers Smalltrotter (default) and Thistletail explicitly through
+-HeroSpecies Thistletail. Actual species-owned lifecycle/needs, procedural feathered
+biped, shared controls and one finite body-local litter/seed food cohort are wired.
+62/62 CTest; independent boundary/source review; nine same-final-executable native
+runs pass (feed/override/camera/normal bird/Small/original/rest/drink/destination).
+Native food contact consumes0.5 and relieves hunger0.5, direct override resumes,
+34.85m camera separation grants no food attention/contact, rest recovers, exterior
+water209 drink and clicked destination arrival work. N retains species and ledger/
+NPC snapshots with fresh hero2/session14. All runs0supportfailure/0fallback.
+180 non-graph untracked paths and pinned asset hashes preserved; graph baseline
+is intentionally refreshed separately. Composed native bird capture inspected.
 
-Settled Releaseb43988e and61/61CTest pass. Four same-executable native runs pass:
-primary animated parent, retained-young moving camera, normal connected12 and
-original populated8. All0supportfailures/0fallbacks; old12/8 initial actor/resource
-baselines exact. Child age/needs advance once; maximum sampled ground error<9e-16.
-Actual existing N transition gives successor3/session14 and retains child2, all
-NPCs and shared history.175prior untracked files/pinned assets preserved. Exact
-source independently reviewed/compiled adversarial probes; no blocking finding.
+Park this working role: fixed-stage replaceable body, simple leg swing/no IK,
+no anatomical beak-ground/peck acceptance, generic2m/s and provisional metabolism,
+one finite patch/no insects, no bird breeding/parenting. Existing Smalltrotter nest
+hint still appears on bird HUD. No final art or target-hardware30FPS acceptance.
+All-five-species, complete family life, four-island physical travel and connected
+persistence remain real gaps; original saves and connected-save refusal preserved.
 
-Evidence narrow: parent leaves/returns only0.776m. Child6.135m cumulative motion
-has0.453m sampled position span; inherited peer/avoidance/crowding yields near-nest
-back-and-forth, not6m exploration. Procedural body/limb motion/feet/fixed size are
-replaceable; no gait/contact/growth-art acceptance. Camera pans33.74m AFTER birth,
-body autonomy continues; no zeroattention or native inactive-birth refusal claim.
-Camera-origin/inactive/capacity/duplicate/session and dormant retention boundaries
-have independent source/domain proof. No child resource-contact/native regional
-roundtrip, mating/parentcare, connected saves, full-game or30FPS acceptance.
-
-Working role met; park hatch/nest/creature/peer polish. NEXT missing breadth:
-selectable contrasting Thistletail with actual biped controls/body, species-owned
-needs/lifecycle and one finite body-local ground microforage affordance. Read
-.clanker/tasks/hatchling-admission-20261022/next-task.md. Preserve all-five-species,
-four-island/family/connected persistence gaps. Play.cmd entry remains; existing
-hourly continuation active in this chat. No user ask blocks ordinary construction.
+NEXT missing breadth: selectable Brackenback with recognizable armored quadruped,
+actual species lifecycle/needs/normal controls and one bounded body-local alert/
+protective interposition response shared with an adult NPC. Read next-task.md.
+No Thistletail polish or infrastructure prerequisites.
