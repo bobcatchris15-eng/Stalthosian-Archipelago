@@ -3,7 +3,7 @@
 
 namespace stalthos::engine::connected_save {
 // Deliberately separate, partial connected profile. No legacy-format fallback.
-inline constexpr std::uint64_t configuration(bool importedPlants) {return 202610230300ull+(importedPlants?1:0);}
+inline constexpr std::uint64_t configuration(bool importedPlants) {return 202610230400ull+(importedPlants?1:0);}
 // Asset paths are not identities: hash their exact bytes plus the configured motion numbers.
 inline std::uint64_t fingerprint(bool plants,const std::vector<std::filesystem::path>& assets,const std::vector<double>& motion) {
     std::ostringstream options;options.precision(17);options<<configuration(plants);for(auto v:motion){if(!std::isfinite(v))throw std::runtime_error("invalid persistence motion configuration");options<<":"<<v;}

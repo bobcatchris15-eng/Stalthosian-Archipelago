@@ -397,7 +397,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
         if (diagnosticTransition && (!std::isfinite(duration) || duration < 10.0)) throw std::runtime_error("transition probe requires at least ten seconds");
         if(inspectionCamera && !cameraDistanceSpecified) cameraDistance=3;
         if(!std::isfinite(cameraDistance) || cameraDistance<2 || cameraDistance>18) throw std::runtime_error("camera distance must be 2..18 meters");
-        if (!std::isfinite(duration) || duration <= 0 || duration > (islandProbe==1?180:120)) throw std::runtime_error("diagnostic duration must be 0..120 seconds");
+        if (!std::isfinite(duration) || duration <= 0 || duration > (islandProbe==1?300:120)) throw std::runtime_error("diagnostic duration exceeds its bounded mode limit");
         if (!std::isfinite(calendarScale) || calendarScale < 0 || calendarScale > 10000) throw std::runtime_error("calendar scale must be 0..10000");
         if (!std::isfinite(creatureSoleOffset) || creatureSoleOffset < 0 || creatureSoleOffset > 5) throw std::runtime_error("creature sole offset must be 0..5 meters");
         if (!creature.empty() && (!std::isfinite(creatureClipDuration) || creatureClipDuration <= 0 ||
@@ -1212,7 +1212,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 // after complete persisted restoration; it must not be overwritten.
                 if(successorId) world.setHero(heroId,world.snapshot().deadHeroes.back().second);
             }
-            if(longstrideLife && !connectedPersistence && !loadedSaveData && !carrionProbe && lifecycle->stage()==stalthos::LifeStage::Hatchling){
+            if(longstrideLife && !connectedPersistence && !loadedSaveData && !islandProbe && !carrionProbe && lifecycle->stage()==stalthos::LifeStage::Hatchling){
                 const auto habitat=faunaPopulation->habitat();const auto snapshot=faunaPopulation->snapshot();bool born=false;
                 for(const auto& parent:faunaPopulation->actors()){if(!stalthos::domain::LongstrideCare::adult(parent))continue;const auto actor=std::find_if(snapshot.actors.begin(),snapshot.actors.end(),[&](const auto& a){return a.id==parent.id;});if(actor==snapshot.actors.end())continue;
                     for(auto neighbor:habitat.at(actor->site).neighbors){const auto node=habitat.at(neighbor).position;const double dx=node.x-parent.position.x,dz=node.z-parent.position.z,d=std::hypot(dx,dz);if(d<3.5)continue;stalthos::Vec3 birth{parent.position.x+dx/d*3.5,0,parent.position.z+dz/d*3.5};birth.y=Ground(float(birth.x),float(birth.z));bool supportedBirth=true;double priorGround=parent.position.y;for(int sample=1;sample<=8;++sample){const double f=double(sample)/8,gx=parent.position.x+(birth.x-parent.position.x)*f,gz=parent.position.z+(birth.z-parent.position.z)*f,gy=Ground(float(gx),float(gz));if(!std::isfinite(gy)||std::abs(gy-priorGround)>.6*3.5/8+.02||(landscape.inBounds(gx,gz)&&landscape.waterContains(gx,gz)))supportedBirth=false;priorGround=gy;}if(!supportedBirth)continue;
@@ -1388,7 +1388,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
 
         constexpr double kCreatureLongitudinalHalfspan = 0.5;
         constexpr double kCreatureLateralHalfspan = 0.25;
-        uint64_t supportFailureCount = 0;
+        uint64_t supportFailureCount = 0,drySupportFailureCount=0,wadeSupportFailureCount=0,swimmingStanceFrames=0,drySupportedFrames=0,wadeSupportedFrames=0;
         std::string latestSupportMode = disableTerrainSupport ? "disabled" : "terrain_supported";
         double latestSlopeRadians = 0.0;
         stalthos::domain::Vector3 latestNormal{0.0, 1.0, 0.0};
@@ -1785,13 +1785,16 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 }
             }
 
-            if (disableTerrainSupport) {
+            const auto stanceWater=stalthos::domain::waterMotion(renderedRootY,connectedWorld&&!landscape.inBounds(x,z),needs->fatigue());
+            const double seabedSlopeRadians=latestSlopeRadians;
+            if(connectedWorld && stanceWater.mode==stalthos::domain::WaterMode::Swimming){latestSupportMode="water_buoyancy";++swimmingStanceFrames;latestSlopeRadians=0;latestNormal={0,1,0};}
+            else if (disableTerrainSupport) {
                 latestSupportMode = "disabled";
             } else if (!supportCalculated || !support.supported) {
                 latestSupportMode = "unsupported_yaw_fallback";
-                ++supportFailureCount;
+                ++supportFailureCount;if(stanceWater.mode==stalthos::domain::WaterMode::Wading)++wadeSupportFailureCount;else ++drySupportFailureCount;
             } else {
-                latestSupportMode = "terrain_supported";
+                latestSupportMode = "terrain_supported";if(stanceWater.mode==stalthos::domain::WaterMode::Wading)++wadeSupportedFrames;else ++drySupportedFrames;
             }
 
             float y = static_cast<float>(analyticalRootY);
@@ -1811,7 +1814,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
                 latestCreatureRootSource = populatedTerrain ? "rendered_triangles" : "analytical_fallback";
             }
 
-            const auto currentWater=stalthos::domain::waterMotion(renderedRootY,connectedWorld&&!landscape.inBounds(x,z),needs->fatigue());if(connectedWorld && currentWater.mode!=stalthos::domain::WaterMode::Land){needs->setResting(false);resting=false;restCue.SetHidden(true);y=float(currentWater.bodyDatum);latestSupportMode=currentWater.mode==stalthos::domain::WaterMode::Swimming?"water_buoyancy":"wading_ground";}
+            const auto currentWater=stalthos::domain::waterMotion(renderedRootY,connectedWorld&&!landscape.inBounds(x,z),needs->fatigue());if(connectedWorld && currentWater.mode!=stalthos::domain::WaterMode::Land){needs->setResting(false);resting=false;restCue.SetHidden(true);y=float(currentWater.bodyDatum);if(currentWater.mode==stalthos::domain::WaterMode::Swimming)latestSupportMode="water_buoyancy";}
             latestGroundSampleSource = rootUsesRendered && frameFallbackReason.empty() ? "rendered_triangles" : "analytical_fallback";
             latestCreatureRootGroundY = static_cast<double>(y);
             latestCreatureRootAnalyticalGroundY = analyticalRootY;
@@ -2187,8 +2190,8 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             }
             if(connectedWorld){const double bed=Ground(x,z);const auto location=nativeIslands.landRegion(x,z,bed);const char* name="Sea - no island arrival";for(const auto& region:nativeIslands.field().regions())if(region.id==location)name=region.name;islandCue.SetText(std::string(islandProbe?"Synthetic shore-start/input fixture | ":"")+"Draft scale0.1 | "+name+" | "+(currentWater.mode==stalthos::domain::WaterMode::Swimming?"Swimming - fatigue rises":currentWater.mode==stalthos::domain::WaterMode::Wading?"Wading":"On land"));
                 if(currentWater.mode==stalthos::domain::WaterMode::Swimming)islandEnteredWater=true;if(islandEnteredWater && location==1003 && bed>.4 && islandCrossing && std::hypot(x-islandCrossing->end.x,z-islandCrossing->end.z)<8)islandLanded=true;
-                if(islandProbe && clock.physicalSeconds()>=nextIslandSample){islandSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"x",x},{"z",z},{"body_y",y},{"seabed_y",bed},{"sea_level",0},{"water_mode",unsigned(currentWater.mode)},{"water_depth",currentWater.depth},{"physical_island",location},{"landed",islandLanded},{"fatigue",needs->fatigue()},{"resting",needs->isResting()},{"speed",speed},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"camera_y",cameraOut.cameraState.eye.y},{"npc_physical_active",faunaPhysical},{"actor_count",faunaPopulation->actors().size()},{"ledger",ledgerJson(ledgerSnapshot())}});nextIslandSample=clock.physicalSeconds()+.25;}
-                if(islandProbe)for(std::size_t i=0;i<4;++i)if(!islandCaptured[i]&&(i==0?clock.physicalSeconds()>=1:i==1?islandEnteredWater:i==2?currentWater.depth>2&&clock.physicalSeconds()>12:islandLanded)){const auto name="island-crossing-"+std::to_string(i)+".png";islandCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/name).u8string());islandCaptures.push_back({{"filename",name},{"saved",islandCaptured[i]}});}}
+                if(islandProbe && clock.physicalSeconds()>=nextIslandSample){islandSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"x",x},{"z",z},{"body_y",y},{"seabed_y",bed},{"sea_level",0},{"water_mode",unsigned(currentWater.mode)},{"water_depth",currentWater.depth},{"stance",latestSupportMode},{"actual_seabed_slope_radians",seabedSlopeRadians},{"dry_support_failures",drySupportFailureCount},{"wade_support_failures",wadeSupportFailureCount},{"swimming_stance_frames",swimmingStanceFrames},{"physical_island",location},{"landed",islandLanded},{"fatigue",needs->fatigue()},{"resting",needs->isResting()},{"speed",speed},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"camera_y",cameraOut.cameraState.eye.y},{"npc_physical_active",faunaPhysical},{"actor_count",faunaPopulation->actors().size()},{"ledger",ledgerJson(ledgerSnapshot())}});nextIslandSample=clock.physicalSeconds()+.25;}
+                if(islandProbe)for(std::size_t i=0;i<4;++i)if(!islandCaptured[i]&&(i==0?clock.physicalSeconds()>=1:i==1?(islandProbe==2?clock.physicalSeconds()>=5:islandEnteredWater):i==2?currentWater.depth>2&&clock.physicalSeconds()>12:islandLanded)){const auto name="island-crossing-"+std::to_string(i)+".png";islandCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/name).u8string());islandCaptures.push_back({{"filename",name},{"saved",islandCaptured[i]}});}}
             if(npcCarrionProbe){if(clock.physicalSeconds()>=nextNpcCarrionSample){json watched=nullptr;for(const auto& a:faunaPopulation->actors())if(a.id==npcCarrionActor)watched={{"id",a.id},{"x",a.position.x},{"y",a.position.y},{"z",a.position.z},{"age",a.calendarAge},{"distance",a.distanceTravelledMeters},{"hunger",a.hunger},{"thirst",a.thirst},{"fatigue",a.fatigue},{"activity",unsigned(a.activity)},{"alive",a.alive}};json contacts=json::array();for(const auto& event:faunaPopulation->events())contacts.push_back({{"actor",event.actor},{"resource",event.resource},{"amount",event.amount}});npcCarrionSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"actor",watched},{"actor_count",faunaPopulation->actors().size()},{"remaining",getResourceRemaining(211)},{"hero",heroId},{"hero_hunger",needs->hunger()},{"hero_session",physicalInteractionSession},{"body_x",x},{"body_z",z},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"food_sensed",heroIntent.perception.attention().has_value()},{"body_food_distance_xz",std::hypot(x-carrion.x,z-carrion.z)},{"camera_food_distance_xz",std::hypot(cameraOut.cameraState.target.x-carrion.x,cameraOut.cameraState.target.z-carrion.z)},{"hero_food_contacts",appliedBrowseContacts},{"physical_active",faunaPhysical},{"contacts",contacts},{"ledger",ledgerJson(ledgerSnapshot())}});nextNpcCarrionSample=clock.physicalSeconds()+.2;}
                 for(std::size_t i=0;i<4;++i)if(!npcCarrionCaptured[i]&&clock.physicalSeconds()>=(i==0?1:i==1?12:i==2?35:58)){const auto name="npc-carrion-"+std::to_string(i)+".png";npcCarrionCaptured[i]=wi::helper::saveTextureToFile(wi::graphics::GetDevice()->GetBackBuffer(&app.swapChain),(output/name).u8string());npcCarrionCaptures.push_back({{"filename",name},{"saved",npcCarrionCaptured[i]}});}}
             if(longCare.young() || parentCareProbe){if(clock.physicalSeconds()>=nextCareSample){json parent=nullptr;for(const auto& a:faunaPopulation->actors())if(a.id==longCare.parent())parent={{"id",a.id},{"x",a.position.x},{"y",a.position.y},{"z",a.position.z},{"age",a.calendarAge},{"distance",a.distanceTravelledMeters},{"hunger",a.hunger},{"thirst",a.thirst},{"fatigue",a.fatigue},{"alive",a.alive},{"activity",unsigned(a.activity)}};careSamples.push_back({{"physical_seconds",clock.physicalSeconds()},{"calendar_seconds",clock.calendarSeconds()},{"hero",heroId},{"young",longCare.young()},{"caregiver",longCare.parent()},{"present",careDecision.present},{"terminated",longCare.terminated()},{"following_goal",careGoalOwned},{"direct",directInput},{"status",careDecision.status},{"body_x",x},{"body_y",y},{"body_z",z},{"age",lifecycle->calendarAge()},{"hunger",needs->hunger()},{"thirst",needs->thirst()},{"fatigue",needs->fatigue()},{"body_supported",latestSupportMode=="terrain_supported"},{"physical_active",faunaPhysical},{"parent",parent},{"ledger",ledgerJson(ledgerSnapshot())},{"camera_x",cameraOut.cameraState.target.x},{"camera_z",cameraOut.cameraState.target.z},{"actor_count",faunaPopulation->actors().size()}});nextCareSample=clock.physicalSeconds()+.2;}
@@ -2990,7 +2993,7 @@ int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR commandLine, int) {
             {"normal", {{"x", latestNormal.x}, {"y", latestNormal.y}, {"z", latestNormal.z}}},
             {"support_normal", {{"x", latestNormal.x}, {"y", latestNormal.y}, {"z", latestNormal.z}}},
             {"supportfailure", supportFailureCount},
-            {"support_failure_count", supportFailureCount},
+            {"support_failure_count", supportFailureCount},{"dry_support_failure_count",drySupportFailureCount},{"wade_support_failure_count",wadeSupportFailureCount},{"swimming_stance_not_footing_frames",swimmingStanceFrames},{"dry_supported_frames",drySupportedFrames},{"wade_supported_frames",wadeSupportedFrames},
             {"disable_terrain_support", disableTerrainSupport},
             {"terrain_support_longitudinal_halfspan_m", kCreatureLongitudinalHalfspan*heroStageBulk},
             {"terrain_support_lateral_halfspan_m", kCreatureLateralHalfspan*heroStageBulk},

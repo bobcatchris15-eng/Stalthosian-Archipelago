@@ -1,0 +1,65 @@
+{
+  "task_id": "native-island-crossing-repair-20261023",
+  "base": "bc48b8f",
+  "outcome": "coherent_repair_source_pending_native",
+  "baseline": "native160 failed; genuine dryshore34.45deg and swim seabed counted as footfailure; fatigue1 slowdown ordinary owner retained",
+  "changes": [
+    "protected-origin blend192m, old protected heights exact",
+    "search actual shore route meeting unchanged20deg cap for young/adultdry+wade",
+    "separate dry/wade failure vs buoyant-swim not-applicable stance, preserve rawseabedslope",
+    "supported wading keeps terrain rotation",
+    "cross-onlycap300 recommended240, Longstridefixturebirthguard, camera-postpan capture",
+    "STLCconfig400 failclosed oldfilesretained"
+  ],
+  "verification": [
+    "Release native_archipelago compiled",
+    "domain-native_archipelago passes0.77s including real pinnedpace/weather/wetness/exposure/Needs/swim integration",
+    "route195.5m sea191.5 maxdrywadeslope.342815rad, zero realdry/wade failures",
+    "ownfullowner endpoint197.29s fatigue1; independent reviewer firstlanding194.02s",
+    "Run scriptsparse/diffcheck"
+  ],
+  "ordinary_policy_unchanged": [
+    "pinned stride/pace",
+    "swimming2.2/.4 fatiguefactor",
+    "Needs .005 fatigue",
+    "weather/wetness/exposure",
+    "physical clock and single needs owner"
+  ],
+  "native_run": false,
+  "gaps": [
+    "native landing/support/camera verification root-owned pending",
+    "region migration/new island ecology/all-four traversal/full persistence/FPS remain open"
+  ],
+  "hashes": {
+    "PLAY.md": {
+      "raw_sha256": "221bbe8e0ba3f1861042ba299682fa0414b9fcf898eac5410e6f5c29f2df5665",
+      "canonical_lf_sha256": "fef439f1069a66f4ede0b5c33e3fbc247173118178d393875054c082657863c8",
+      "git_blob": "e983c77c5a7561c18ae25ae06f4d3eae3650806c"
+    },
+    "stalthos-runtime/docs/native-islands.md": {
+      "raw_sha256": "1b6a5fef579b1b5293f695d88c1696b9d0350e559179c7bfa59ad153b7cfa874",
+      "canonical_lf_sha256": "d86ace8960b4a6daefb83de89ec4e6a949545c311fde3b706e1930abeb0f1fcf",
+      "git_blob": "5a065f59bdff4e444872c13935a1e68a21283b7d"
+    },
+    "stalthos-runtime/domain/native_archipelago.hpp": {
+      "raw_sha256": "5f410a0c3593650deca7ac493722920fea90950eea2b995351dc2c45be5c3f31",
+      "canonical_lf_sha256": "82b2705a2506ea2bbcedae4d194582c88a8bf07244d5b8c7c377295414754a0a",
+      "git_blob": "c557e858cd7289386b371da43d155ec0c496fb38"
+    },
+    "stalthos-runtime/engine/connected_save.hpp": {
+      "raw_sha256": "4005016feb59c54ed70535fa67f90458df8290e1f56963b2310c6103bfd8376f",
+      "canonical_lf_sha256": "a9e7764bfbd9605696c0ab5965c78a25280adde3d39cf2c79aad2368ba3fb7a3",
+      "git_blob": "d39b972b0d353c190235af4c9d4608bda7fc23ad"
+    },
+    "stalthos-runtime/engine/main.cpp": {
+      "raw_sha256": "9d72bc0e0750f6e7177af4770073bf93b3c83893426a1185d0ed3274ca4a7dab",
+      "canonical_lf_sha256": "fd166eb1d8f4a33fe4b0a5c8e05e0da2a29ee9cbccb6e62d16e62596852b5647",
+      "git_blob": "f55c8eafece1a5cee25cae2d89b5785dc4f0eb4f"
+    },
+    "stalthos-runtime/tests/native_archipelago.cpp": {
+      "raw_sha256": "8e8d67de63c6dc602b17572711730aeca6ce0a60db783e7aa968f3cdce57d7f7",
+      "canonical_lf_sha256": "3955e38180e615256a4d02d6cdcfe5f2699f9e946c4b4be5f8972365139530b3",
+      "git_blob": "fbaab7b7f7a80d90fbc30979e214f0ff5e96032e"
+    }
+  }
+}

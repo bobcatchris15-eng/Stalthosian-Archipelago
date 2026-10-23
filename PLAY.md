@@ -149,3 +149,11 @@ save filename for this world revision rather than overwriting them.
 
 
 Connected terrain now extends into the shared four-island draft field at provisional scale0.1. WASD can wade/swim through actual marine water; swimming adds fatigue and prevents resting recovery. The location cue follows the body and reports sea without island arrival. No new island ecology or full region/save coverage is claimed; see stalthos-runtime/docs/native-islands.md.
+
+
+Island crossing repair: the shared-field origin transition is now192m and the selected
+real Main-to-Stone shore route has supported dry/wading footing. Ordinary pinned pace,
+needs/exposure and swim fatigue remain unchanged. Use IslandCrossingProbe Duration240
+(cap300) for native proof; the approximately194–197s domain prediction is not native
+acceptance. Partial-save configuration400 intentionally refuses prior world layouts
+without modifying their files.
