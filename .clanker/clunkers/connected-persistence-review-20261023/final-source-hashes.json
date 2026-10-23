@@ -1,0 +1,123 @@
+[
+  {
+    "integrated_crlf_count": 90,
+    "integrated_git_blob": "e2921647e29ae823efe0d5c076291d30547bb1ae",
+    "canonical_lf_sha256": "8c8177d87fa0e8705dae6cc5fa51c4117178109819744a9718c494c86921d44b",
+    "git_blob": "e2921647e29ae823efe0d5c076291d30547bb1ae",
+    "integrated_raw_sha256": "996dcd3ee7b4ff74869c7f19ea984ad091f3b0f8a81301aeee2e3434a339f639",
+    "crlf_count": 90,
+    "path": ".clanker/tasks/connected-persistence-20261023/worker-receipt.json",
+    "raw_sha256": "996dcd3ee7b4ff74869c7f19ea984ad091f3b0f8a81301aeee2e3434a339f639",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 128,
+    "integrated_git_blob": "1e34d486026553b115cbdf3763567b0179adc372",
+    "canonical_lf_sha256": "b7f900e94fd3f092bbbe9a36cda4a0c2e9f8749cbb4a1c348a92ddeadd600d7a",
+    "git_blob": "1e34d486026553b115cbdf3763567b0179adc372",
+    "integrated_raw_sha256": "1d179eb9d5bcb978bda079ecce553926dffac5a7f9fd5cf94f7368279c2a34fb",
+    "crlf_count": 128,
+    "path": "PLAY.md",
+    "raw_sha256": "1d179eb9d5bcb978bda079ecce553926dffac5a7f9fd5cf94f7368279c2a34fb",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 30,
+    "integrated_git_blob": "8281af1ba9f89a58b4f3ade8f99f288379add41f",
+    "canonical_lf_sha256": "e4ffeb851ee398d443c5ba1047869ee013fbfcc3231d9f170cc7ce9f2d7b71a3",
+    "git_blob": "8281af1ba9f89a58b4f3ade8f99f288379add41f",
+    "integrated_raw_sha256": "c927f8f90e050f16f8b873931bb3319d35d2ec1bbf654b1d7527d6a11d889219",
+    "crlf_count": 30,
+    "path": "Play.ps1",
+    "raw_sha256": "c927f8f90e050f16f8b873931bb3319d35d2ec1bbf654b1d7527d6a11d889219",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 89,
+    "integrated_git_blob": "75de8a07246c3442302c441e37f5805991074b96",
+    "canonical_lf_sha256": "058c744aa83425b7faf949b44d229d0df3162631e8ca041b87fcb7cb3cc40efd",
+    "git_blob": "75de8a07246c3442302c441e37f5805991074b96",
+    "integrated_raw_sha256": "6a4dfa29790dc2abecdbc854ce8c5947e6a092cb3917b107c3fceb1708441bf4",
+    "crlf_count": 89,
+    "path": "stalthos-runtime/CMakeLists.txt",
+    "raw_sha256": "6a4dfa29790dc2abecdbc854ce8c5947e6a092cb3917b107c3fceb1708441bf4",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 69,
+    "integrated_git_blob": "a9842a3970d120cbd3173ad5a21a5fc267b3ff33",
+    "canonical_lf_sha256": "670944803dd3ac207789ce4b504907cf993d33d1b3208b81019a160333a8f953",
+    "git_blob": "a9842a3970d120cbd3173ad5a21a5fc267b3ff33",
+    "integrated_raw_sha256": "8232d97bf36ed95ec5e3b7bd4b87835340228e29883b91757e82a725793af738",
+    "crlf_count": 69,
+    "path": "stalthos-runtime/docs/connected-persistence.md",
+    "raw_sha256": "8232d97bf36ed95ec5e3b7bd4b87835340228e29883b91757e82a725793af738",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 42,
+    "integrated_git_blob": "ca71ea5e4ca924cb5c64851ff24ce5f5a4ca7568",
+    "canonical_lf_sha256": "3fca2dbf01b61538fc40c6292a808b7e381a0d5eb8cc49fe12c3298a275cd02b",
+    "git_blob": "ca71ea5e4ca924cb5c64851ff24ce5f5a4ca7568",
+    "integrated_raw_sha256": "3a708fa2423cb11bb31029f84d9b0dacc9683b8105e0c002ee7ee93d3d2bdb09",
+    "crlf_count": 42,
+    "path": "stalthos-runtime/domain/weather_response.hpp",
+    "raw_sha256": "3a708fa2423cb11bb31029f84d9b0dacc9683b8105e0c002ee7ee93d3d2bdb09",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 93,
+    "integrated_git_blob": "284196c93331a9247993edb133fce820e74ecbfc",
+    "canonical_lf_sha256": "185fbc9e7855f4ff89f3236e989830eef70296c27ad33b7f800bd6629c404f7f",
+    "git_blob": "284196c93331a9247993edb133fce820e74ecbfc",
+    "integrated_raw_sha256": "6ff5d409d940d6f4c04338f5f532673fb985324ea9b0028f7240bf6fc80d0788",
+    "crlf_count": 93,
+    "path": "stalthos-runtime/engine/connected_save.hpp",
+    "raw_sha256": "6ff5d409d940d6f4c04338f5f532673fb985324ea9b0028f7240bf6fc80d0788",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 2997,
+    "integrated_git_blob": "68ea7c14cf69e6ee18e11eadb66fc30d109d71ad",
+    "canonical_lf_sha256": "7e8cb794215c0f0e12924c899eb0caf792ca43e1a6489e38e8e45ebec44595b0",
+    "git_blob": "68ea7c14cf69e6ee18e11eadb66fc30d109d71ad",
+    "integrated_raw_sha256": "bd12e9bc62028b8dfdfc00fee4e14af97f1a63678926bc6b5858fe6e08b1c2f4",
+    "crlf_count": 2997,
+    "path": "stalthos-runtime/engine/main.cpp",
+    "raw_sha256": "bd12e9bc62028b8dfdfc00fee4e14af97f1a63678926bc6b5858fe6e08b1c2f4",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 93,
+    "integrated_git_blob": "8bf5f2d907f1f4d9857d75df22727efff3654bec",
+    "canonical_lf_sha256": "cacf87ec49454b038b500b6e21a45c6c45b0183e6a03e264312dbfad14330855",
+    "git_blob": "8bf5f2d907f1f4d9857d75df22727efff3654bec",
+    "integrated_raw_sha256": "f8c25a3423c72791fe39efcd686bda30b85d1619ff9347b4278aaa7a43d64cca",
+    "crlf_count": 93,
+    "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "raw_sha256": "f8c25a3423c72791fe39efcd686bda30b85d1619ff9347b4278aaa7a43d64cca",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 214,
+    "integrated_git_blob": "d81012fd0e0cc891d8f58ca7fc4ea5c27d41d219",
+    "canonical_lf_sha256": "5fc272eedf3d1e62377a7aea4db01a20bfa3c0c15ffa653b5f44cd91983d90b4",
+    "git_blob": "d81012fd0e0cc891d8f58ca7fc4ea5c27d41d219",
+    "integrated_raw_sha256": "6b22d113ae7cf8042cd0baab9f86c47c4b6ab514dce5ee3c7e2dd8a4fd68fc18",
+    "crlf_count": 214,
+    "path": "stalthos-runtime/scripts/Run.ps1",
+    "raw_sha256": "6b22d113ae7cf8042cd0baab9f86c47c4b6ab514dce5ee3c7e2dd8a4fd68fc18",
+    "canonical_lf_equal": true
+  },
+  {
+    "integrated_crlf_count": 34,
+    "integrated_git_blob": "522b4f1fe45122d99a0ed6e7eacb71c30ef87094",
+    "canonical_lf_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+    "git_blob": "522b4f1fe45122d99a0ed6e7eacb71c30ef87094",
+    "integrated_raw_sha256": "3161a4750beeca7357f98bb8aa39329dc18c1cb48cb211ff96059c81247c9461",
+    "crlf_count": 0,
+    "path": "stalthos-runtime/tests/connected_save.cpp",
+    "raw_sha256": "e21ef8f35687a5c134399684ccc2e5cf1c0b48556a9f022b004a58c80f11a136",
+    "canonical_lf_equal": true
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task": "connected-persistence-review-20261023",
+  "source_commits": [
+    "fff41eb",
+    "4032a9b",
+    "74b550c"
+  ],
+  "integrated_commit": "33e4aad",
+  "supersedes": "Base review.json/source-hashes.json remain historical evidence for fff41eb/c4cfda4; this receipt/final-source-hashes.json describes final source.",
+  "scope": {
+    "artifacts": [
+      "final-source-hashes.json",
+      "final-review.json",
+      "probe-output.txt"
+    ],
+    "base_digest": "fff41eb",
+    "graph_digest": "not computed; bounded direct diff review"
+  },
+  "goal_alignment": {
+    "verdict": "pass for final source/domain scope; native execution and acceptance pending root",
+    "reason": "Camera follow-up is an isolated diagnostic using the existing sole controller; banner follow-up reports saved species honestly."
+  },
+  "findings": [],
+  "effort": {
+    "attempted": [
+      "Read all4 paths in camera4032a9b and both banner74b550c hunks.",
+      "Verified camera fixture explicitly requires a new timed partial profile and refuses loaded, interactive or combined body-contact fixture.",
+      "Verified actual toggleDetachedMode/applyOrbitInput at2s and applyDetachedPan3..5s; no body position, attention or physical activation writes.",
+      "Verified F5 uses same checkpoint at6s while detached; body distance, attention, activation, focus, anchor and orbit recorded; three composed captures scheduled0.5/5.5/6.5s.",
+      "Verified banner patch changes only text and leaves saved-species admission/default handling untouched.",
+      "All11 final changed tracked files independently hashed; root33e4aad canonicalLF and Git blobs match worker74b550c.",
+      "All3 changed PowerShell scripts parse.",
+      "Confirmed connected_save.hpp and weather_response.hpp unchanged from fff41eb, against which expanded independent MSVC probe was rebuilt and passed."
+    ],
+    "probes_run": [
+      "Prior settled fff41eb full expanded independent probe remains applicable: no archive/domain changes in follow-up.",
+      "Final canonicalLF/rawSHA/CRLF/Git blob verification:11/11 pass.",
+      "Final entry script parsing:3/3 pass."
+    ],
+    "native_build_performed": false
+  },
+  "limitations": [
+    "Camera fixture source is reviewed, but no reviewer native runtime was built/launched or captures examined. Root must verify detached save/restart and zero body displacement/attention/activation change from actual telemetry.",
+    "Default initial body remains physically within active watershed; camera fixture can establish no activation transition but is not proof of a dormant population kept dormant.",
+    "Root-reported preliminary base native primary/restart/refusal/depletion passes are not independently claimed here and must be rerun or explicitly retained according to final executable evidence.",
+    "Separate partial manual profile only; full ordinary connected persistence including autonomous/social/family state remains open."
+  ],
+  "source_hashes_file": "final-source-hashes.json"
+}
