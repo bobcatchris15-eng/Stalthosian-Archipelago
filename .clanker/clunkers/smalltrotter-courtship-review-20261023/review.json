@@ -16,7 +16,7 @@
       "stalthos-runtime/tests/nesting.cpp"
     ]
   },
-  "implementation_revision": "f14926b",
+  "implementation_revision": "2ded089",
   "source_hashes": [
     {
       "path": "PLAY.md",
@@ -34,10 +34,10 @@
     },
     {
       "path": "stalthos-runtime/docs/courtship.md",
-      "sha256": "125bd995d9844815c83ccdfb4361ebc6f186818cc0e27c4221f1b9ed35bd7623",
-      "canonical_lf_sha256": "863b9466467dd399c3a2e6aaba67e437a91e2a02130fb98ccdbd0763cfe3037f",
-      "git_blob": "adca83b3130d00d0e0f9ec99fadb636e7e5cf017",
-      "crlf": 48
+      "sha256": "66b1ae5ee26d1b97afb23781c7dacb04c6ff215aac5af3e1e46447e832acf909",
+      "canonical_lf_sha256": "709645d2cb5971eb5a692cc66e4e18e73b6cc01b96edb60702b4847dcceafeac",
+      "git_blob": "a684eaa8282996a1ff856e72126808f0d98e2176",
+      "crlf": 49
     },
     {
       "path": "stalthos-runtime/domain/courtship.hpp",
@@ -55,10 +55,10 @@
     },
     {
       "path": "stalthos-runtime/engine/main.cpp",
-      "sha256": "f6450b270181b5e2be684d663efd121d97eeb2150df0b9a44f5880d7e4503c42",
-      "canonical_lf_sha256": "c5df2f0dae79621aad5fa6cd10a29d82019e4e05bee2a2095133cf8cd226bd8b",
-      "git_blob": "d9284800911ba1bc61dda2898c017fa316e0c34c",
-      "crlf": 2946
+      "sha256": "bc44f71cc8cf3d562a8ac6b534e37721ae1677d8330c21b3e33bc1ae6d5ec110",
+      "canonical_lf_sha256": "05e4b97230edafd52e94f9fe6aee4d145d924e0e0d44a25220f5f85b7fd332a4",
+      "git_blob": "b9c26b9e4cb01d44afa83debb70e42c362c37142",
+      "crlf": 2947
     },
     {
       "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
@@ -117,7 +117,7 @@
   "asks": [],
   "effort": {
     "probes_run": 1,
-    "attempted": "Independently MSVC17 compiled actual NativePopulationRegistry response probe against final Courtship/Nesting headers. Existing actual adult Smalltrotter moves>4.7m through sole normal registry tick with reciprocal3.25m wait, then quiet2physicalseconds permits readiness; ID unchanged, exact lifecycle once perframe, old resource100/200 consumption and90/91 keys/bindings retained. Mate-less Nesting.lay refuses; accepted actual mateID stored. Tests mature/living/local/available mate requirements, missing/remote/dead/urgent/immature refusal, direct/hero needs/lost mate/new hero cancellation. Late currentMateReady rejects a mate that departed after earlier readiness. Source traces normal B request only, actual fresh postNPCtick mate recheck, only acceptedMate(heroId) capability into Nesting.lay, same gate for old nest/hatch fixtures with actual retained identity/startupneeds and no ready injection. Courtship active suppresses incidental exploration/autonomy but ordinary needs/direct/playerdestination advance cancels before next NPC override; active mateID passed existing BodyAwareness owner with reciprocal waiting and social exclusion. Past canceled mate motion suppression explicit. No extra advance or new actors/resource/session/reset, no connected-save/schema expansion. N resets transient courtship; existing world/clutch/hatch retain ownership. Reviewed request/ready/timeout qualitative refusal cues and labelled diagnostic startup. Final fixture guard stage field corrected; root native compiler remains gate."
+    "attempted": "Independently MSVC17 compiled actual NativePopulationRegistry response probe against final Courtship/Nesting headers. Existing actual adult Smalltrotter moves>4.7m through sole normal registry tick with reciprocal3.25m wait, then quiet2physicalseconds permits readiness; ID unchanged, exact lifecycle once perframe, old resource100/200 consumption and90/91 keys/bindings retained. Mate-less Nesting.lay refuses; accepted actual mateID stored. Tests mature/living/local/available mate requirements, missing/remote/dead/urgent/immature refusal, direct/hero needs/lost mate/new hero cancellation. Late currentMateReady rejects a mate that departed after earlier readiness. Source traces normal B request only, actual fresh postNPCtick mate recheck, only acceptedMate(heroId) capability into Nesting.lay, same gate for old nest/hatch fixtures with actual retained identity/startupneeds and no ready injection. Courtship active suppresses incidental exploration/autonomy but ordinary needs/direct/playerdestination advance cancels before next NPC override; active mateID passed existing BodyAwareness owner with reciprocal waiting and social exclusion. Past canceled mate motion suppression explicit. No extra advance or new actors/resource/session/reset, no connected-save/schema expansion. N resets transient courtship; existing world/clutch/hatch retain ownership. Reviewed request/ready/timeout qualitative refusal cues and labelled diagnostic startup. Final fixture guard stage field corrected; root native compiler remains gate. Final diagnostic-only2ded089 camera fix independently reviewed: known previously supported startup body24,24/yaw0; checks every actual live/calm/adult Smalltrotter ActorView beyond12m3D and throws if any local candidate; separately gates camera out of far-neighbor/clear-nest route search, adds synthetic startup event and docs. No ordinary predicate/core/clock/courtship response change. Existing compiled boundary result continues to apply, native corrected camera startup/knowledge gate remains root validation."
   },
   "probe_output": "COURTSHIP_REVIEW_OK actual_registry_response_onceclock_history_local_refusals_priority_mate_gated_clutch",
   "line_endings": "Independent raw worker SHA256, canonical CRLF-to-LF SHA256 and Git blob recorded for every changed source file; root normalization must still be verified if raw differs.",
