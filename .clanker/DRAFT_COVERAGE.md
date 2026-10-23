@@ -94,3 +94,5 @@ Latest accepted: reedcrest-playable-20261023/integration-receipt.json;64CTest/14
 Latestaccepted: longstride-playable-20261023/integration-receipt.json;65CTest/13same-executable native runs, allfive startupchoices withboundedroles. Fullspecieslife/reproduction/parenting/fourislands/connectedsaves remain gaps. NEXT actualSmalltrottercourtship/materesponse (isolatedworkactive).
 
 Smalltrotter courtship additional accepted bounded scope: actual existing mate approach/wait/readiness gates normalB clutch; direct/refusal/camera separation; onehatch/nextlife retention. Receipt tasks/smalltrotter-courtship-20261023/integration-receipt.json. Fullparenting/otherspecies/fourislands/persistence remain open.
+
+| Separate manual connected persistence profile | Working bounded native draft: all five species save/restart, exact live-owner/camera/clock/ledger/identity/session/wetness retention; guarded F5, original mode unchanged | Normal automatic/social/family persistence unsupported; no dormant-region camera transition proof. Receipt tasks/connected-persistence-20261023/integration-receipt.json. NEXT actual Smalltrotter parent care/following young. |

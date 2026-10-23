@@ -1,3 +1,21 @@
+# Accepted partial manual connected persistence - 2026-10-23
+
+Receipt: .clanker/tasks/connected-persistence-20261023/integration-receipt.json.
+67 tests and 20 same-executable native runs passed, including all five species
+save/restart pairs, actual depleted carrion history, next-life/dead hero retention,
+unsafe checkpoint refusal preserving destination and live world, detached-camera
+restart, original STL9 restart and ordinary courtship regression. All six actual
+reconstructed owners match saved canonical state exactly before first tick.
+Five native/entry refusals preserve destinations. Independent review covers exact
+source blobs and archive failure atomicity. No target FPS or final visual claim.
+
+This is a separate visibly limited manual profile: automatic/social/courtship
+features are unavailable from entry. Normal connected sessions are unchanged.
+Full automatic/social/family connected persistence, all-species life/parenting
+and four-island travel remain gaps. NEXT: actual Smalltrotter parent/young care.
+
+Earlier active/pending headings below are historical and superseded by this receipt.
+
 # Active connected persistence construction - 2026-10-23
 
 Task: .clanker/tasks/connected-persistence-20261023/task-state.json. Existingworkers collected beforedispatch: nesting_draft owns isolated implementation; gameplay_review independent state-loss/atomicity review. Root owns integratedbuild/nativeGPU/state. Source target12:03UTC; wakeend12:15UTC. No connected-save acceptance yet. Preserve original saved mode/refusal; quiescent partial subset must preserve or explicitly refuse ALL live state before writing/discarding.

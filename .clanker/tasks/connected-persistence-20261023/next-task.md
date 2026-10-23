@@ -1,0 +1,9 @@
+# Next missing gameplay after bounded persistence acceptance: parent care and following young
+
+Once the deliberately limited manual persistence profile has integrated native proof, record its unsupported normal/social/family states and move to missing gameplay. Do not spend the next wake polishing accepted save plumbing or creature meshes. Full normal connected persistence stays an explicit gap.
+
+Implement bounded actual Smalltrotter parent/offspring care around the existing real hatchling admission. Preserve actual child and parent identity; the child must remain in the existing single registry simulation/contact owner, not a second clock or duplicate actor. Actual living parent departure should yield supported child following with sensible separation and observable reunion. Child needs must retain priority; actual shared-resource contact uses existing ledger/session ownership. Parent death/next-life must not secretly reparent the same child to the new player hero. Preserve supported nest/offspring identity and dynamic habitat history; do not reset resources or actors.
+
+Use independently reviewed domain rules plus integrated native birth, parent-body movement, child following/separation/reunion, needs/contact priority and parent-death/next-life checks. Camera-only movement must not direct child behavior or grant perception/activation. Compose actual UI/animal/nest captures. A fixed first-draft child body may remain; gait/anatomy polish is not this task. Keep other species parenting, complete reproduction, four-island travel, unrestricted connected-save coverage and30FPS open.
+
+If current persistence candidate is incomplete, finish its source/native review first. Never skip integration to dispatch this task. Preserve all current workers/worktrees, user saves, immutable assets and unrelated paths.

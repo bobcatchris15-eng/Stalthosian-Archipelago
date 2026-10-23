@@ -1,14 +1,22 @@
 {
   "schema_version": 1,
   "task_id": "connected-persistence-20261023",
-  "status": "running",
+  "status": "complete",
   "base_revision": "7a52e9a",
-  "current_step": "Isolated implementation and independent state-loss/atomicity review; root finishes courtship acceptance",
+  "current_step": "Accepted partial manual persistence; move to actual parent/offspring care",
   "completed_steps": [
     "Collected completed existing workers before two bounded dispatches",
-    "Preserved unrelated untracked paths before new root owned state"
+    "Preserved unrelated untracked paths before new root owned state",
+    "Courtship accepted/published32e1e2c;66tests11native runs",
+    "Usage-limit interruption preserved uncommitted source and independentreview; resumed existingworkers afterreset withnopaidfallback"
   ],
   "touched_artifacts": [],
-  "updated": "2026-10-23T11:42:00Z",
-  "resume_instructions": "Collect nesting_draft and gameplay_review; do not dispatch before checking existing integration. Never silently discard connected state. Source target12:03UTC, wakeend12:15UTC. Root nativeGPU ownership."
+  "updated": "2026-10-23T16:02:00Z",
+  "resume_instructions": "Bounded profile accepted; do not polish plumbing. Full ordinary social/family persistence still missing. Read next-task.md and collect current workers before parent-care dispatch.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/connected-persistence-20261023/verify.py",
+    "evidence_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\connected-persistence-20261023\\verification.json"
+  },
+  "receipt_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\connected-persistence-20261023\\integration-receipt.json"
 }

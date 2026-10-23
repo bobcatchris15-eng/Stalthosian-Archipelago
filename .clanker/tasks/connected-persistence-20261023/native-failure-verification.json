@@ -1,0 +1,27 @@
+[
+  {
+    "refused": true,
+    "destination_preserved": true,
+    "case": "corrupt"
+  },
+  {
+    "refused": true,
+    "destination_preserved": true,
+    "case": "asset-mismatch"
+  },
+  {
+    "refused": true,
+    "destination_preserved": true,
+    "case": "species-mismatch"
+  },
+  {
+    "refused": true,
+    "destination_preserved": true,
+    "case": "original-in-connected"
+  },
+  {
+    "no_destination_created": true,
+    "refused": true,
+    "case": "old-connected-flags"
+  }
+]

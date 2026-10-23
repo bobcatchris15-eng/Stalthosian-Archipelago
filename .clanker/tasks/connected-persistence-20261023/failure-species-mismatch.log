@@ -1,0 +1,10 @@
+Hero species/embodiment: restored from checkpoint; pinned Smalltrotter asset remains available to NPC replicas.
+Connected foraging: pinned provisional Basketfern browse plant
+Process 37212; evidence E:\Stalthosian Archipelago\var\reports\runtime\20261023-110056-6d602f6d
+Exception: E:\Stalthosian Archipelago\stalthos-runtime\scripts\Run.ps1:212
+Line |
+ 212 |  … de -ne 0) { throw "Runtime exited $($process.ExitCode); evidence reta …
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Runtime exited 1; evidence retained at E:\Stalthosian Archipelago\var\reports\runtime\20261023-110056-6d602f6d
+
+

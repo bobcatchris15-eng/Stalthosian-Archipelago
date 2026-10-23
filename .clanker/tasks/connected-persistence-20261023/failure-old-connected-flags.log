@@ -1,0 +1,7 @@
+Exception: E:\Stalthosian Archipelago\stalthos-runtime\scripts\Run.ps1:42
+Line |
+  42 |  … aveState)) {throw 'Connected world preview does not support save/load …
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Connected world preview does not support save/load; existing saves use original populated mode
+
+

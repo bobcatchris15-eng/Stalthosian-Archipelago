@@ -1,0 +1,243 @@
+{
+  "status": "accepted_bounded_partial_manual_connected_persistence",
+  "source_commits": [
+    "c4cfda4",
+    "5e29902",
+    "33e4aad"
+  ],
+  "worker_source_commits": [
+    "fff41eb",
+    "4032a9b",
+    "74b550c"
+  ],
+  "independent_review_commits": [
+    "87ed25b",
+    "2a5f759"
+  ],
+  "verification": {
+    "ok": true,
+    "scope": "bounded manual persistence profile only",
+    "ctest": "67/67",
+    "executable_sha256": "ee4a72ceec6ab94e50951fd41e9747abc36781bb5a45b320a4ee4da6ece4e7a6",
+    "same_executable_successful_native_runs": 20,
+    "native_runs": {
+      "Brackenback-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105918-af1e35e4",
+        "physical_seconds": 8.476847813522909,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Brackenback-normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105953-a06b1ebe",
+        "physical_seconds": 3.76286830578465,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Brackenback-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105911-796b5b9c",
+        "physical_seconds": 4.744421607872937,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "camera-restart": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105832-c4954ffe",
+        "physical_seconds": 16.633701123471837,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "camera": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105818-58276886",
+        "physical_seconds": 9.73957391930162,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "courtship": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-110013-73ff26e8",
+        "physical_seconds": 13.363796212244779,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Longstride-normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-110006-fae39060",
+        "physical_seconds": 3.7675032034458127,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "original-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-110038-3da9e31b",
+        "physical_seconds": 8.213266709062736,
+        "actors": 8,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "original-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-110031-1c6ccfc4",
+        "physical_seconds": 4.607722607644973,
+        "actors": 8,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "primary": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105744-2ac87881",
+        "physical_seconds": 20.800468208326492,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Reedcrest-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105933-3ada9f17",
+        "physical_seconds": 8.504118605516851,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Reedcrest-normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-110000-2682692f",
+        "physical_seconds": 3.760112698946614,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Reedcrest-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105925-a131bc61",
+        "physical_seconds": 4.749297501984984,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "restart": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105808-7ae5eff4",
+        "physical_seconds": 27.613734209444374,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Smalltrotter-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105849-ff448705",
+        "physical_seconds": 8.509836510987952,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Smalltrotter-normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105940-89f5545f",
+        "physical_seconds": 3.749475003714906,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Smalltrotter-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105842-266cfd6a",
+        "physical_seconds": 4.755488504655659,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Thistletail-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105904-f9ff2b5f",
+        "physical_seconds": 8.534453910804586,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Thistletail-normal": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105946-3e6d65dd",
+        "physical_seconds": 3.761579107667785,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      },
+      "Thistletail-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-105856-f5fad6ce",
+        "physical_seconds": 4.760245303623378,
+        "actors": 12,
+        "support_failures": 0,
+        "rendered_ground_fallbacks": 0
+      }
+    },
+    "exact_actual_live_owner_restart_pairs": [
+      [
+        "primary",
+        "restart"
+      ],
+      [
+        "camera",
+        "camera-restart"
+      ],
+      [
+        "Smalltrotter-save",
+        "Smalltrotter-load"
+      ],
+      [
+        "Thistletail-save",
+        "Thistletail-load"
+      ],
+      [
+        "Brackenback-save",
+        "Brackenback-load"
+      ],
+      [
+        "Reedcrest-save",
+        "Reedcrest-load"
+      ]
+    ],
+    "unsafe_refusal": {
+      "destination_bytes_preserved": true,
+      "destination_checksum_after": 7355307417843897195,
+      "destination_checksum_before": 7355307417843897195,
+      "live_world_bytes_preserved": true,
+      "physical_seconds": 10.202111502934713,
+      "reason": "Finish or cancel movement/destination/contact/camera recall before saving",
+      "saved": false,
+      "unsafe_diagnostic": true
+    },
+    "five_failure_refusals": [
+      {
+        "refused": true,
+        "destination_preserved": true,
+        "case": "corrupt"
+      },
+      {
+        "refused": true,
+        "destination_preserved": true,
+        "case": "asset-mismatch"
+      },
+      {
+        "refused": true,
+        "destination_preserved": true,
+        "case": "species-mismatch"
+      },
+      {
+        "refused": true,
+        "destination_preserved": true,
+        "case": "original-in-connected"
+      },
+      {
+        "no_destination_created": true,
+        "refused": true,
+        "case": "old-connected-flags"
+      }
+    ],
+    "preserved_unrelated_paths": 247,
+    "source_canonical_lf_and_blobs_match": true,
+    "pins_unchanged": true,
+    "limits": [
+      "Normal connected social/family/automatic state is unsupported; profile excludes it at entry",
+      "Camera native run starts alreadyactive watershed; no dormant-region transition proof",
+      "No full life/parenting/fourisland/finalvisual/target30FPS acceptance"
+    ]
+  },
+  "visuals": "Inspected composed connected-camera-2.png: labelled PARTIAL PROFILE save success and actual scene/body remain readable at night. Provisional terrain/body and nest cue clutter are deferred; no final visual acceptance.",
+  "excluded_evidence": [
+    "Preliminary executable primary20261023-105459-1bad84c7 and restart20261023-105523-7f3de80d are historical only; not in20 final-executable successful runs."
+  ],
+  "failure_proof_levels": "Native unsafe movement checkpoint preserves exact destination/live world bytes. Four startup mode/config/corruption refusals preserve destination; old connected flags refuse before writing. Independent compiled archive probe injects four file-publication failure stages; those are domain/disk evidence, not four native failure injections.",
+  "next_task": "Actual Smalltrotter parent care and following young; next-task.md. Full ordinary connected persistence remains open."
+}
