@@ -1,0 +1,129 @@
+{
+  "status": "accepted_bounded_connected_npc_carrion_diet",
+  "source_commits": [
+    "405f954",
+    "55c403d"
+  ],
+  "worker_source": [
+    "754cd48",
+    "f58ee6d"
+  ],
+  "independent_review": "01d4174/ad22d40; all12 source paths exact canonicalLF/Gitblob matched",
+  "verification": {
+    "ok": true,
+    "ctest": "69/69",
+    "same_executable_successful_native_runs": 14,
+    "executable_sha256": "c6d398c7fe7d228981bdc18e83fb43dba41d36ffaa0d1dd97234c590d0f8d3b3",
+    "native_runs": {
+      "Brackenback": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125712-3b10cd73",
+        "physical_seconds": 3.7331693045271095,
+        "actors": 12
+      },
+      "camera": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-120653-c4586429",
+        "physical_seconds": 15.711038807989098,
+        "actors": 12
+      },
+      "competition": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-120526-c52ad423",
+        "physical_seconds": 81.96865671960404,
+        "actors": 12
+      },
+      "drain": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125912-32439905",
+        "physical_seconds": 127.14051262874273,
+        "actors": 12
+      },
+      "drained-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125922-df3f61a5",
+        "physical_seconds": 130.87114713492338,
+        "actors": 12
+      },
+      "ordinary-long": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125654-8210a91f",
+        "physical_seconds": 8.753221397550078,
+        "actors": 12
+      },
+      "ordinary-small": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-120713-136e6108",
+        "physical_seconds": 73.7292737091775,
+        "actors": 12
+      },
+      "original-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125733-39ea0deb",
+        "physical_seconds": 8.15114171046298,
+        "actors": 8
+      },
+      "original-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125726-8a3d4d97",
+        "physical_seconds": 4.578253905143356,
+        "actors": 8
+      },
+      "partial-load": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125644-baeabb93",
+        "physical_seconds": 120.41463662526803,
+        "actors": 12
+      },
+      "partial-save": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125447-7bd66ea5",
+        "physical_seconds": 113.68325451796409,
+        "actors": 12
+      },
+      "Reedcrest": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125719-d8071a95",
+        "physical_seconds": 3.7282541029853746,
+        "actors": 12
+      },
+      "small-hatch": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125740-870e579d",
+        "physical_seconds": 30.428026696899906,
+        "actors": 13
+      },
+      "Thistletail": {
+        "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-125706-f9f538a1",
+        "physical_seconds": 3.718442706624046,
+        "actors": 12
+      }
+    },
+    "actual_npc": 14296929078188075222,
+    "actual_npc_travel_meters": 12.272009969227792,
+    "hero_food": 0.5,
+    "npc_food": 0.5,
+    "camera_closest_food": 0.02198989996685441,
+    "actual_live_restart_pairs": [
+      [
+        "partial-save",
+        "partial-load"
+      ],
+      [
+        "partial-load",
+        "drain"
+      ],
+      [
+        "drain",
+        "drained-load"
+      ]
+    ],
+    "full_depletion_retained_after_restart": true,
+    "old_profiles_refused_preserved": {
+      "old_original_and_owned_copy_preserved": true,
+      "new_destination_preserved": true,
+      "old_load_refused": true,
+      "old_connected_flags_refused": true
+    },
+    "preserved_unrelated_paths": 253,
+    "source_canonical_lf_blobs_match": true,
+    "pins_unchanged": true,
+    "limits": [
+      "Authored finite carcass, no real kill/provisioning/renewable food",
+      "NPC generic art/body overlap, crude feeding/contact/route and dark scene remain",
+      "Camera test alreadyactive population; no dormant-population activation claim",
+      "Fullspecieslife/families, fourphysicalislands, unrestrictedconnectedpersistence and30FPS remain unaccepted"
+    ]
+  },
+  "visuals": "Inspected composed npc-carrion-3.png after depletion and camera npc-carrion-1.png near intact food. Flesh removal/bones and actual animals/UI visible; generic NPC art and body clipping/overlap, crude feeding and dark terrain remain limitations, not visual acceptance.",
+  "compatibility": "Changed connected authored211 position/graph/diet intentionally changes STLC immutable configuration202610230200. Prior files retained and explicitly refused for load/write; no migration/reset. Original STL9 mode and old connected flags refusal unchanged.",
+  "historical_exclusions": "One root-requested125s run exceeded native120s cap and refused before world; corrected115s packet. See excluded-evidence.json. Discarded hunger.2 worker experiment not integrated, preserved on worker branch.",
+  "next_task": "Native four-island terrain/physical crossing gameplay; next-task.md. Fullfamily/hunting/provisioning/renewableecosystem/unrestrictedpersistence remain open."
+}

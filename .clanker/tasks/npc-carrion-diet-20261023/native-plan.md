@@ -1,0 +1,12 @@
+# Root native proof packet — connected NPC carrion diet
+
+Build settled reviewed source once. Run focused relevant domain tests plus full short CTest gate; record executable SHA256. All accepted native runs must use same final executable. No toolkit suite needed for native-only source. Preserve old source/tests/captures as historical exclusions if fixes need rebuilds.
+
+- Labelled actual existing Longstride caregiver hungry-needs fixture: unchanged ID/position/graph session; real supported graph movement to211, actual authoritative contact/history and matching hunger relief. No food quantity injection, local fake relief or duplicate ticks. Capture approach/contact/depletion with composed UI and actual species/ID/positions.
+- Competing actual hero/NPC use same finite211: sum contacts equals originalquantity-consumed; quantities nevernegative, old histories preserved; no replayed relief. Herbal NPC neverreceives211 relief; Longstride NPC neverreceives plant relief (authoritative negative probes as well as route selection).
+- Normal unmodified connected session shows NPC diet in ordinary world; authored211 exists/rendered for allfive choices, not just Longstride. Position136,27 and topologychange explicit. World actor roster/session bindings retained except designed progression; age delta matches exactly one sharedcalendar advance.
+- Camera-only fixture: body beyond local hero food range; camera movement grants no herofood attention/contact or activation. Independently physically active NPC may continue feeding; do not assert dormant-population proof from an alreadyactive watershed.
+- Manual-profile actual save/exit/restart retains depleted211/fullNPC ledger/history/resource sessions/clocks/needs; old STLC configuration rejects before destination replacement. Original STL9 save/restart and old connectedLoadState/SaveState refusal unchanged.
+- Allfive ordinary entries, Smalltrotter nesting/hatching independence, Longstride caregiver entry regression where source affected. Log coarse proxy art/route/contact oddities and move once bounded draft works; no finalvisual/fullfamily/fourisland/30FPS claim.
+
+Only task-owned paths in var/test-saves/npc-carrion-diet-20261023 may be written. Never overwrite user saves. Inspect actual relevant composed backbuffer images. CanonicalLF andGitblob/source review, preservation hashes/pinnedassets, graph refresh/delta, secret scan and explicitowned checkpoint required before ordinary main publication.

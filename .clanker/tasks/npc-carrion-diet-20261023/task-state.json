@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "task_id": "npc-carrion-diet-20261023",
+  "status": "complete",
+  "base_revision": "64a177e",
+  "current_step": "Accepted bounded connected NPC carrion role; move to physical island world/traversal",
+  "completed_steps": [
+    "Collected completed existing workers and accepted previous integration before two dispatches",
+    "Preserved unrelated paths; root owns integrated build/native GPU"
+  ],
+  "touched_artifacts": [],
+  "updated": "2026-10-23T18:01:00Z",
+  "resume_instructions": "Working NPC diet draft accepted. Do not polish assets/acceptedfeeding; collectexistingworkers before next-task nativeislandworld. OldSTLC files preserved/refused; originalsavedmode unchanged. Four-island/fullfamily/unrestrictedpersistence remain gaps.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/npc-carrion-diet-20261023/verify.py",
+    "evidence_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\npc-carrion-diet-20261023\\verification.json"
+  },
+  "receipt_path": "E:\\Stalthosian Archipelago\\.clanker\\tasks\\npc-carrion-diet-20261023\\integration-receipt.json"
+}

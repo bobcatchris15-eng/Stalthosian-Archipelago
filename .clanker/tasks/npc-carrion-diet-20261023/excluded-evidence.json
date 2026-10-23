@@ -1,0 +1,4 @@
+{
+  "path": "var/reports/runtime/20261023-120830-897b0e6d",
+  "reason": "root matrix requested125s beyond native120s cap; startup refused before world. Correct bounded duration115; no implementation defect."
+}

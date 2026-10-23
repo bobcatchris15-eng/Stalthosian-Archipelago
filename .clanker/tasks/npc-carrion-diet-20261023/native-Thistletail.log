@@ -1,0 +1,744 @@
+Hero: procedural Thistletail. Pinned Smalltrotter asset retained for NPC replicas only.
+Connected foraging: pinned provisional Basketfern browse plant
+Process 22408; evidence E:\Stalthosian Archipelago\var\reports\runtime\20261023-125706-f9f538a1
+{
+  "actor_root_translation_channels_removed": 0,
+  "actor_root_translation_target_is_skin_bone": false,
+  "actor_root_translation_target_name": "",
+  "animated_channel_local_pose_delta": 0.0,
+  "animated_channel_pose_changed": false,
+  "animated_target_channel_count": 0,
+  "animation_blend_final_idle_weight": 1.0,
+  "animation_blend_final_walk_weight": 0.0,
+  "animation_crossfade_blend_frames_total": 0,
+  "animation_crossfade_duration_s": 0.25,
+  "animation_phase_actual_s": 0.0,
+  "animation_phase_expected_s": 0.0,
+  "animation_playing_frames": 0,
+  "animation_timer_max": 0.0,
+  "animation_timer_min": 0.0,
+  "autonomous_population_count": 12,
+  "body_distance_accumulated_signed_m": 0.0,
+  "body_distance_while_camera_detached_m": 0.0,
+  "body_signed_distance_last_m": 0.0,
+  "both_clips_nonzero_weights_only_during_blend": true,
+  "browse_contacts_applied": 0,
+  "calendar_scale": 1.0,
+  "calendar_seconds": 3.718442706624046,
+  "camera_distance_m": 5.0,
+  "camera_eye": {
+    "x": 20.425199508666992,
+    "y": 4.190403461456299,
+    "z": 24.000003814697266
+  },
+  "camera_mode": "TetheredFollow",
+  "camera_orbit_distance": 5.0,
+  "camera_requested_eye": {
+    "x": 20.425200275292944,
+    "y": 4.190403218447784,
+    "z": 24.000000211109803
+  },
+  "camera_state_loaded": false,
+  "camera_state_saved": false,
+  "camera_target": {
+    "x": 25.25482940673828,
+    "y": 2.8963079929351805,
+    "z": 24.0
+  },
+  "camera_tether_comfort_radius": 30.0,
+  "camera_tether_hard_radius": 50.0,
+  "clip_selection_policy": "bounded explicit-duration crossfade with sequential evaluation amount correction (first clip overwrites amount 1.0, second clip nominal weight); inactive clip paused and skipped after blend",
+  "connected_embodiment_mode": "proxy",
+  "creature_animation_count": 0,
+  "creature_host_forward_axis": "+Z",
+  "creature_loaded": false,
+  "creature_mesh_objects": 0,
+  "creature_parent_yaw_offset_radians": 0.0,
+  "creature_path": "E:\\Stalthosian Archipelago\\var\\bristle-coherence-parent-verified-20261013\\runtime\\creatures\\creature.smalltrotter.st1\\creature.smalltrotter.st1.independent_juvenile.walk_cycle.glb",
+  "creature_root_analytical_ground_y": 2.064678774232759,
+  "creature_root_ground_delta_m": 0.03162922587560635,
+  "creature_root_ground_source": "rendered_triangles",
+  "creature_root_ground_y": 2.0963079929351807,
+  "creature_root_rendered_ground_y": 2.0963080001083654,
+  "creature_skin_count": 0,
+  "creature_sole_offset_m": 0.0,
+  "creature_source_front_axis": "+X",
+  "creature_tail_ground_clearance_accepted": false,
+  "creature_transform_channels": 0,
+  "detached_camera_frames": 0,
+  "diagnostic_camera": false,
+  "diagnostic_camera_stage": 0,
+  "diagnostic_needs": false,
+  "diagnostic_needs_stage": 0,
+  "diagnostic_transition": false,
+  "diagnostic_transition_phases": [],
+  "diagnostic_walk": false,
+  "disable_terrain_support": false,
+  "domain_world_seed": 42,
+  "drink_contacts_applied": 0,
+  "eligibility_shrub": false,
+  "eligibility_water": false,
+  "engine_revision": "df44c3db4c4927492bc9c791eac715d98d7ed091",
+  "foot_terrain_diagnostic": {
+    "assumed_vertical_sole_offset_m": 0.02,
+    "foot_contact_accepted": false,
+    "method": "bone_proxy",
+    "resolved": false
+  },
+  "frame_time_measured": false,
+  "full_draft_complete": false,
+  "hero_alive": true,
+  "hero_death_known": false,
+  "historical_identity_authenticated": false,
+  "host_pose": {
+    "camera_mode": 0,
+    "heading_radians": 1.5707966089248657,
+    "x": 25.25482940673828,
+    "z": 24.0
+  },
+  "idle_crossfade_settled": true,
+  "idle_reset_to_neutral_retired": "explicit neutral snap retired in favor of continuous crossfade with sequential evaluation correction",
+  "imported_animation_length_s": 0.0,
+  "imported_wet_material_response_supported": false,
+  "inactive_clip_state_guarded": true,
+  "individual_admission_provenance": "generated",
+  "input_focus": "BodySteering",
+  "inspection_camera": false,
+  "landscape_candidate_placements": 240,
+  "landscape_extent_meters": 192,
+  "lifecycle_age_seconds": 3.718442706624046,
+  "lifecycle_snapshot_loaded": false,
+  "lifecycle_stage": 0,
+  "lifecycle_transitions": [],
+  "limits": [
+    "proxy fallback remains diagnostic; imported creature playback is feasibility only, foot contact not accepted because low-tail clearance and foot skate during blend remain unresolved",
+    "no external frame-time measurement; 30 FPS floor not accepted",
+    "visual acceptance and full draft completion strictly unaccepted",
+    "resource ledger capped at 256 interaction sessions; cap exhaustion rejects further consumption without history eviction; production game requires unbounded or tiered epoch persistence",
+    "camera mode/focus/anchor/orbit persisted; tether configuration/travel intent, audio pending; bounded connected right-click ground destination implemented",
+    "bounded crossfade blend with sequential evaluation amount correction replaces exclusive binary clip selection for idle/walk/reverse transitions; unblended one-frame pose snap eliminated across transition boundaries; foot sliding during linear crossfade and low-tail clearance remain unresolved limitations",
+    "woodland imported geometry and placement counts describe only the supplied assets; biological stage and visual quality remain provisional; plant LOD quality is unverified; missing or rejected stages are reported by actual loaded and skipped fields"
+  ],
+  "load_path": "",
+  "loaded_calendar_seconds": 0.0,
+  "loaded_lifecycle_age_seconds": 0.0,
+  "loaded_lifecycle_stage": -1,
+  "loaded_physical_seconds": 0.0,
+  "locomotion_pace_policy": "proposed one cycle per second, maximum one meter per second; proxy fallback two meters per second",
+  "meadow_batch_objects": 3,
+  "meadow_rejected_wet_samples": 292,
+  "meadow_triangles": 33285,
+  "meadow_tufts": 2443,
+  "meadow_vertices": 57755,
+  "motion_early_saved": true,
+  "motion_late_saved": true,
+  "native_save_loaded_generation": 0,
+  "native_save_saved_generation": 0,
+  "native_saved_format": "none",
+  "native_sole_diagnostic": {
+    "foot_contact_accepted": false,
+    "initialization_issue": "",
+    "method": "native_body_proxy_skinned_surface",
+    "resolved": false
+  },
+  "near_water_creature_startup_fixture": false,
+  "needs_final": {
+    "fatigue": 0.018592213533120246,
+    "hunger": 0.00037184427066240484,
+    "thirst": 0.0007436885413248097
+  },
+  "needs_initial": {
+    "fatigue": 0.0,
+    "hunger": 0.0,
+    "thirst": 0.0
+  },
+  "needs_snapshot_loaded": false,
+  "needs_snapshot_saved": false,
+  "normal": {
+    "x": -0.05922236182257771,
+    "y": 0.9974665010164955,
+    "z": 0.039411815614927556
+  },
+  "ok": true,
+  "organic_rock_objects": 14,
+  "organic_rock_triangles": 1120,
+  "pending_audio": "none",
+  "pending_raycast": "connected right-click nearby supported ground implemented",
+  "pending_travel_to": false,
+  "physical_seconds": 3.718442706624046,
+  "plant_import_instances": 9,
+  "plant_import_objects": 18,
+  "populated_resource_probe": false,
+  "populated_world": true,
+  "pose_vertical_policy": "analytical ground projection; no saved vertical body dynamics",
+  "process_id": 22408,
+  "remaining_discontinuity_documented": true,
+  "render_size": [
+    1920,
+    1080
+  ],
+  "rendered_ground_sample_source": "rendered_triangles",
+  "rendered_ground_support_active": true,
+  "rendered_ground_support_fallback_reason": "",
+  "rendered_ground_support_fallbacks": 0,
+  "rendered_ground_support_samples": 5150,
+  "resource_admission_provenance": "native_defaults",
+  "resource_ledger_cap_exhaustions": 0,
+  "resources_final": {
+    "creek": 999999.9256311458,
+    "shrub0": 2.0
+  },
+  "resources_finite": true,
+  "resources_initial": {
+    "creek": 999999.999989556,
+    "shrub0": 2.0
+  },
+  "run_calls": 1030,
+  "save_path": "",
+  "save_scope": "foundation state, clocks, diagnostic pose, current hero lifecycle and needs; populated watershed uses one STL9 host/registry transaction, other modes retain STL8; bonds not connected; camera mode, focus, anchor and orbit stored when present; tether configuration and travel intent not persisted",
+  "saved_dead_hero_count": 0,
+  "scenery_bank_clumps": 48,
+  "scenery_bluff_accents": 28,
+  "scenery_logs": 23,
+  "scenery_objects": 163,
+  "scenery_pebbles": 64,
+  "scenery_triangles": 6708,
+  "scenery_vertices": 6410,
+  "schema_version": 1,
+  "screenshot_saved": true,
+  "sequential_evaluation_crossfade": {
+    "evaluated": false
+  },
+  "shore_bank_triangles": 0,
+  "shore_bed_triangles": 0,
+  "shore_objects": 1,
+  "shore_surface_triangles": 1796,
+  "shore_triangles": 1796,
+  "shore_vertices": 1107,
+  "shrub_contact_applied": false,
+  "shrub_eligible_frames": 938,
+  "shrub_presentation_active": true,
+  "shrub_presentation_instances": [
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 310,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 0,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 1.6859021837215193,
+        "scale": 1.3347163103838884,
+        "x": 22.77001125296695,
+        "y": 2.2258209242804554,
+        "z": 22.755840838177125
+      },
+      "resource_id": 200,
+      "structure_entities": [
+        {
+          "entity_id": 311,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 317,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 1,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 1.0783433114692051,
+        "scale": 0.8740016102809403,
+        "x": 31.768035595176237,
+        "y": 4.975974060681519,
+        "z": 8.269819801310737
+      },
+      "resource_id": 201,
+      "structure_entities": [
+        {
+          "entity_id": 318,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 0.9721116797003196,
+      "foliage_entities": [
+        {
+          "entity_id": 324,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 0.9721116797003196,
+      "foliage_renderable": true,
+      "instance_index": 2,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 1.64091455366052,
+        "scale": 1.1894291252965434,
+        "x": 24.680075646466765,
+        "y": 4.692322754608077,
+        "z": -9.21755226456785
+      },
+      "resource_id": 202,
+      "structure_entities": [
+        {
+          "entity_id": 325,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 331,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 3,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 3.899483715038632,
+        "scale": 0.9279407018174497,
+        "x": 24.111867719346147,
+        "y": 2.1508844391764312,
+        "z": 40.50909808887746
+      },
+      "resource_id": 203,
+      "structure_entities": [
+        {
+          "entity_id": 332,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 338,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 4,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 3.855688343188685,
+        "scale": 0.8616191981075856,
+        "x": 24.98218691654206,
+        "y": 2.1806086994446607,
+        "z": 48.45199208262937
+      },
+      "resource_id": 204,
+      "structure_entities": [
+        {
+          "entity_id": 339,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 0.9721116797003196,
+      "foliage_entities": [
+        {
+          "entity_id": 345,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 0.9721116797003196,
+      "foliage_renderable": true,
+      "instance_index": 5,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 5.100384891666834,
+        "scale": 1.3931532879583126,
+        "x": 31.006753117486355,
+        "y": 7.358457994706762,
+        "z": -16.470171399727477
+      },
+      "resource_id": 205,
+      "structure_entities": [
+        {
+          "entity_id": 346,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 352,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 6,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 3.3403451695304063,
+        "scale": 1.0913363662519504,
+        "x": 48.85506631837311,
+        "y": 5.4840407036921,
+        "z": 22.896128516608
+      },
+      "resource_id": 206,
+      "structure_entities": [
+        {
+          "entity_id": 353,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 359,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 7,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 5.44541868247823,
+        "scale": 1.0777625567042481,
+        "x": 47.57710608674499,
+        "y": 5.759631372836461,
+        "z": 0.7020948308221642
+      },
+      "resource_id": 207,
+      "structure_entities": [
+        {
+          "entity_id": 360,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    },
+    {
+      "applied_scale_factor": 1.0,
+      "foliage_entities": [
+        {
+          "entity_id": 366,
+          "mesh_name": "fern_foliage",
+          "object_name": "fern_foliage",
+          "original_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "foliage_fraction": 1.0,
+      "foliage_renderable": true,
+      "instance_index": 8,
+      "leaf_cluster_count": 4,
+      "placement": {
+        "heading_radians": 0.0,
+        "scale": 0.7,
+        "x": 144.0,
+        "y": 10.722671508789063,
+        "z": 20.0
+      },
+      "resource_id": 208,
+      "structure_entities": [
+        {
+          "entity_id": 367,
+          "mesh_name": "fern_structure",
+          "object_name": "fern_structure"
+        }
+      ],
+      "visual_valid": true,
+      "woody_stem_visible": true
+    }
+  ],
+  "slope": 0.07119788587235117,
+  "stage": "engine-host feasibility",
+  "state_loaded": false,
+  "state_saved": false,
+  "successor_id": 0,
+  "successor_prior_dead_hero_id": 0,
+  "successor_prior_death_truth_preserved": false,
+  "successor_saved_prior_death_truth_preserved": false,
+  "successor_selected": false,
+  "support_failure_count": 0,
+  "support_mode": "terrain_supported",
+  "support_normal": {
+    "x": -0.05922236182257771,
+    "y": 0.9974665010164955,
+    "z": 0.039411815614927556
+  },
+  "support_slope_radians": 0.07119788587235117,
+  "supportfailure": 0,
+  "supportmode": "terrain_supported",
+  "terrain_support_lateral_halfspan_m": 0.25,
+  "terrain_support_longitudinal_halfspan_m": 0.5,
+  "terrain_support_policy": "proposed approximate visual body plane alignment only; per-foot IK and terrain foot locking not claimed",
+  "terrain_surface_applied": true,
+  "terrain_surface_status": 0,
+  "terrain_texture_bytes": 1398100,
+  "terrain_texture_width": 512,
+  "terrain_uv_vertices": 9409,
+  "tether_terrain_conflicts": 0,
+  "transition_captures": {},
+  "user_closed": false,
+  "visual_accepted": false,
+  "walk_duration_s": 2.0,
+  "walk_phase_follows_signed_distance": true,
+  "walk_stride_length_m": 0.16128,
+  "water_contact_applied": false,
+  "water_eligible_frames": 0,
+  "woodland_active": true,
+  "woodland_adult_actual_crown_width_m": 6.372291564941406,
+  "woodland_adult_actual_trunk_height_m": 14.000714302062988,
+  "woodland_adult_actual_whole_height_m": 15.176377296447754,
+  "woodland_adult_asset_path": "E:\\Stalthosian Archipelago\\var\\splitcrown-crown-parent-young_adult-20261013\\exports\\plant.splitcrown.ar1.young_adult.baked.glb",
+  "woodland_adult_authored_mismatch": false,
+  "woodland_adult_authored_mismatch_description": "Geometry measured; biological stage suitability remains provisional and is not inferred from height tolerance. Whole height measured: 15.176377 m; named structure height: 14.000714 m. Derived base datum correction applied to instance roots: 0.000050 m (source geometry minimum Y aligned to rendered ground sample).",
+  "woodland_adult_authored_target_crown_width_m": 6.5,
+  "woodland_adult_authored_target_height_m": 14.0,
+  "woodland_adult_loaded": true,
+  "woodland_adult_placed": 6,
+  "woodland_adult_quality_label": "provisional_unverified",
+  "woodland_adult_skipped": 0,
+  "woodland_adult_stage_correct": false,
+  "woodland_budget_exhausted": false,
+  "woodland_candidate_attempts": 0,
+  "woodland_cluster_attempts": 0,
+  "woodland_drawn_triangles": 36840,
+  "woodland_ground_cache_available": true,
+  "woodland_ground_fallbacks": 0,
+  "woodland_ground_sample_source": "resident_streamed_rendered_triangles",
+  "woodland_hard_cap": 32,
+  "woodland_max_trees_limit": 20,
+  "woodland_placed_instances": [
+    {
+      "analytical_y": 11.043427467346191,
+      "ground_delta_m": 0.0,
+      "heading_radians": 0.0,
+      "id": 9000,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 154.0,
+      "y": 11.043427467346191,
+      "z": 38.0
+    },
+    {
+      "analytical_y": 11.253334045410156,
+      "ground_delta_m": 0.0,
+      "heading_radians": 0.7,
+      "id": 9001,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 166.0,
+      "y": 11.253334045410156,
+      "z": 38.0
+    },
+    {
+      "analytical_y": 11.435835838317871,
+      "ground_delta_m": 0.0,
+      "heading_radians": 1.4,
+      "id": 9002,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 178.0,
+      "y": 11.435835838317871,
+      "z": 38.0
+    },
+    {
+      "analytical_y": 11.352972030639648,
+      "ground_delta_m": 0.0,
+      "heading_radians": 2.0999999999999996,
+      "id": 9003,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 154.0,
+      "y": 11.352972030639648,
+      "z": 56.0
+    },
+    {
+      "analytical_y": 11.572942733764648,
+      "ground_delta_m": 0.0,
+      "heading_radians": 2.8,
+      "id": 9004,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 166.0,
+      "y": 11.572942733764648,
+      "z": 56.0
+    },
+    {
+      "analytical_y": 11.75998592376709,
+      "ground_delta_m": 0.0,
+      "heading_radians": 3.5,
+      "id": 9005,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "adult",
+      "x": 178.0,
+      "y": 11.75998592376709,
+      "z": 56.0
+    },
+    {
+      "analytical_y": 10.956342697143555,
+      "ground_delta_m": 0.0,
+      "heading_radians": 4.199999999999999,
+      "id": 9006,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "sapling",
+      "x": 148.0,
+      "y": 10.956342697143555,
+      "z": 40.0
+    },
+    {
+      "analytical_y": 11.554311752319336,
+      "ground_delta_m": 0.0,
+      "heading_radians": 4.8999999999999995,
+      "id": 9007,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "sapling",
+      "x": 184.0,
+      "y": 11.554311752319336,
+      "z": 40.0
+    },
+    {
+      "analytical_y": 11.203008651733398,
+      "ground_delta_m": 0.0,
+      "heading_radians": 5.6,
+      "id": 9008,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "sapling",
+      "x": 148.0,
+      "y": 11.203008651733398,
+      "z": 54.0
+    },
+    {
+      "analytical_y": 11.81771183013916,
+      "ground_delta_m": 0.0,
+      "heading_radians": 6.3,
+      "id": 9009,
+      "rendered_ground_sampled": true,
+      "scale": 1.0,
+      "stage": "sapling",
+      "x": 184.0,
+      "y": 11.81771183013916,
+      "z": 54.0
+    }
+  ],
+  "woodland_proposals_placed": 10,
+  "woodland_proposals_skipped": 0,
+  "woodland_proposals_total": 10,
+  "woodland_sapling_actual_crown_width_m": 2.516655445098877,
+  "woodland_sapling_actual_trunk_height_m": 4.212207794189453,
+  "woodland_sapling_actual_whole_height_m": 4.572319030761719,
+  "woodland_sapling_asset_path": "E:\\Stalthosian Archipelago\\var\\splitcrown-crown-parent-sapling-20261013\\exports\\plant.splitcrown.ar1.sapling.baked.glb",
+  "woodland_sapling_authored_target_height_m": 4.2,
+  "woodland_sapling_loaded": true,
+  "woodland_sapling_placed": 4,
+  "woodland_sapling_skipped": 0,
+  "woodland_sapling_stage_correct": false,
+  "woodland_skipped_instances": [],
+  "woodland_unique_objects": 4,
+  "woodland_unique_triangles": 7616,
+  "woodland_unique_vertices": 12939
+}

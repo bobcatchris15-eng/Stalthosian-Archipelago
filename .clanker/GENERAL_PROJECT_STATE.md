@@ -1,3 +1,25 @@
+# Accepted connected NPC finite carrion diet - 2026-10-23
+
+Receipt .clanker/tasks/npc-carrion-diet-20261023/integration-receipt.json.
+69 tests and 14 final-executable successful native runs pass, plus old-config/entry
+refusal checks. Real adult14296929078188075222 travels12.272m, consumes0.5 of shared211
+while hero manualE consumes0.5; quantity reaches0 with real hunger relief and history.
+Unmodified ordinary session also has actual NPC211 consumption. Three process
+restarts recapture exact live owners and preserve actual NPC cumulative history
+through full depletion. Allfive connected choices now share authored211 at136,27.
+Longstride cannot get plant relief; otherNPCs cannot get carrion. Original mode
+keeps its legacy policy/format. Camera24m/body vs0.022m/food gives no heroattention
+or contact; alreadyactive NPC group, no dormant activation claim.
+
+Earlier partial STLC files are retained but refused after explicit connected
+layout/diet configuration revision202610230200. No silent migration/reset. Generic
+NPC art/body overlap, crude contact and dark scene remain; carcass is authored,
+not an actual kill. Full hunting/provisioning/renewal/families, fourphysicalislands,
+unrestricted connected saves and target30FPS remain gaps. NEXT: native island
+terrain and physical crossing from existing shared archipelago field.
+
+Earlier active/pending headings below are historical and superseded.
+
 # Accepted bounded Longstride wild caregiver association - 2026-10-23
 
 Receipt .clanker/tasks/longstride-parent-care-20261023/integration-receipt.json.
