@@ -1,0 +1,82 @@
+{
+  "implementation_revision": "6ff9968d873ffdfcd8dae7f03db468255f183230",
+  "root_integration_revision": "59c72d5",
+  "verdict": "No new blocking source finding",
+  "scope": "Narrow final source confirmation only. No native execution or rebuild.",
+  "artifacts": [
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "9eb04465a3f47efef624ab68e487f34105bde66b7efc4c4b73f4e9484264e78c",
+      "git_blob": "1c5486a7031da015c400e2eaf2d25f8fb60638c8"
+    },
+    {
+      "path": "stalthos-runtime/docs/nesting.md",
+      "sha256": "1e7d95631f563342aa9c0d66fbf3f241618b24b8b2c38f1ce8f2d86929e597b3",
+      "git_blob": "0b3e0feeb1c4a5f8b65c571b91ef9ddc936abe27"
+    },
+    {
+      "path": "stalthos-runtime/domain/fauna_population.hpp",
+      "sha256": "e781eff8e82cbbbf959c6cb1c700d4fb0da2850d8e943c253f42100cd1530a32",
+      "git_blob": "e4a0925bbb7c5dba2df6c883b1a20b4d4c1af8ed"
+    },
+    {
+      "path": "stalthos-runtime/domain/hatchling_path.hpp",
+      "sha256": "afa8ad2187ee099c6bf0697b9524bd0fe2ab55d66018c185273457a03bb6ece8",
+      "git_blob": "b053ef98a9125303f9ef397f5378e37118314926"
+    },
+    {
+      "path": "stalthos-runtime/domain/nesting.hpp",
+      "sha256": "7572515ebc5915935b3167410def8166f400669a82048ba3b6b45d901b8106ca",
+      "git_blob": "798938762c4def5c6b69d70945a8056c213cf62e"
+    },
+    {
+      "path": "stalthos-runtime/domain/regional_population.hpp",
+      "sha256": "144c7754cd794229fc8f4113185652261d7af10e8caccc4c7fef47b0b6ebe4f2",
+      "git_blob": "4f9f1d7ad7ae6b1cd795cbefd42478464a310ebc"
+    },
+    {
+      "path": "stalthos-runtime/engine/fauna_scene.hpp",
+      "sha256": "4af8325f058feb58c1f9bece6b1233d0b6864af4f12832037dda40e6db76b283",
+      "git_blob": "5f78afd94b7d03682c084f99d7d1cab3e4ba38d2"
+    },
+    {
+      "path": "stalthos-runtime/engine/hatchling_scene.hpp",
+      "sha256": "6ab555f0905cd39b97592a5f219285105ef03d1b4ffab308f12132dbc0c9d15c",
+      "git_blob": "937f4fa3f0ca8b9f5f0b866ca60bbbef92651db5"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "13433e17c4c6fb474b6949cae5332d461af6ff2ea1c8c0d846d33685149add6e",
+      "git_blob": "95d9b379a98b7792d0f18b3cdc07ce6417de34d4"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "44f6eca046f51032daaab89076c12c8a6b18aea1b8426ad86b12f580b075a357",
+      "git_blob": "10ace73685aec638ed73faeb48def6c9941ae31e"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "adf2f12eb14647eb91c7adb413546af6fa9804efed6fd654c8a7bca9568a9a12",
+      "git_blob": "9ecdd32adf516eb4545bf0cb618ba771ed7a9bf7"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "f50e7f46a49af7f6904261ea29347a6085e46be51ce82cce2f574f80fb1cb7ca",
+      "git_blob": "bbb152c00ea64ed107756248c2d3769629903389"
+    },
+    {
+      "path": "stalthos-runtime/tests/hatchling_admission.cpp",
+      "sha256": "f8f2924e21d37f3281bf23449fa3d8147554865dac9a94f47348e22cf7a94f1d",
+      "git_blob": "a1a8ecacfaaaed059ece957d2941dfc96181b6fc"
+    }
+  ],
+  "unchanged_boundary_files": [
+    "domain/fauna_population.hpp",
+    "domain/regional_population.hpp",
+    "domain/nesting.hpp",
+    "domain/hatchling_path.hpp",
+    "engine/native_population_registry.hpp",
+    "engine/fauna_scene.hpp"
+  ],
+  "confirmation": "All six previously reviewed boundary/controller files retain identical SHA256. Existing independently compiled admission/path/session/identity/capacity/dormancy probes therefore still apply. Main final change flattens only first egg baked world-position vertices relative to sampled ground after accepted authoritative admission; no shared-resource or old-replica change. Hatchling presentation adds its direct foundation include. Final scripts expose hatch diagnostics and forward explicit CalendarScale with normal default1. Host telemetry still bounds samples/events, reports birth and child support independently, and immediate new replica update remains intact. Docs correctly distinguish post-birth camera observation from inactive-birth prevention. Native appearance, actual support/movement, retention and ordinary controls remain root acceptance debt."
+}
