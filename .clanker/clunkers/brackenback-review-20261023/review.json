@@ -16,7 +16,7 @@
     "graph_digest": "not computed; bounded direct decision and host ownership review",
     "base_digest": "adacbe2"
   },
-  "implementation_revision": "4112c1b",
+  "implementation_revision": "a748e160a41c9f653dd7d059ac234a9123f04412",
   "source_hashes": [
     {
       "path": "PLAY.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "stalthos-runtime/domain/brackenback.hpp",
-      "sha256": "d3b02f89eb3381618cabfd5578d3bc544b7151156501f8b2370ba6ee821cdbbe",
-      "git_blob": "cb93dba6672bea396a89945236a4176229345e63"
+      "sha256": "c1f832dbf49917aa3a56c68c9da759eff15b54b623d9b528050e801f133f744b",
+      "git_blob": "968de79fd6cbb6f16cd103ef3d85477ecc228bdc"
     },
     {
       "path": "stalthos-runtime/domain/thistletail.hpp",
@@ -55,8 +55,8 @@
     },
     {
       "path": "stalthos-runtime/engine/main.cpp",
-      "sha256": "9fed1aa82d40007e1a8f48a2b6e50683532d75e9b8c5e952623aaec7e394df15",
-      "git_blob": "9998c0c93cc2d90333abd2dc7c0de5a1eb0bb7bc"
+      "sha256": "f47fdf93cc5536d70e907a7635a50b2ec460ddeb15497aa2281ba66c1e10acf5",
+      "git_blob": "9144ad272fa0b229bee700acf16024dd611a3ff0"
     },
     {
       "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
@@ -70,8 +70,8 @@
     },
     {
       "path": "stalthos-runtime/tests/brackenback.cpp",
-      "sha256": "42280d7ce16098a683022e8335881a8173c816ad6c8e42e560ce88695813e50a",
-      "git_blob": "30b14264b7704f60291d27cccc6e54728bf3a8a7"
+      "sha256": "27e7c3d6c904d8819ac6bb89c18253924ad1f6dbe5ead71c036e7aaff7fcbde0",
+      "git_blob": "421007917365247c8cfdd95ef695c4772b5c8681"
     }
   ],
   "goal_alignment": {
@@ -90,8 +90,8 @@
   ],
   "asks": [],
   "effort": {
-    "attempted": "Independently MSVC17 compiled/reran boundary-probe.cpp against final helper exact SHA256. Probes local actual living adult Brackenback, distinct actual critical-condition adult Thistletail or immature Smalltrotter, real adult Longstride3..6m away, safe1m interpose, absent/calm/dead/self/remote/vertical/juvenile threat/unsafe too-close refusal. Checks third actual selection, Brackenback lifecycle threshold/NeedsCore, same HeroDestination forward intention and immediate direct cancellation/player contextual route, ordinary successor selected component. Source-reviewed connected-only selection/original save refusal, unchanged implicit original load authority/defaultSmall, same-species N clears transient state, separate procedural grounddatum0/+Z root independent NPCGLB, supportedDestination and sole intention controller. Direct/playerclick/urgentneeds/stimulus loss cancel only owned defense, player contextual route prevents takeover; arrival brace established before exploration and guarded against direct/destination/needs. No world actors, ledger, resources, IDs, sessions or persistence schema changed by response. New samples/events bounded4096/256. Projected camera used only after body-local observation for display. Fixture changes existing ages/needs only explicitly labelled; no position/newactor admission.",
-    "probes_run": 1
+    "attempted": "Independently MSVC17 compiled/reran boundary-probe.cpp against final helper exact SHA256. Probes local actual living adult Brackenback, distinct actual critical-condition adult Thistletail or immature Smalltrotter, real adult Longstride3..6m away, safe1m interpose, absent/calm/dead/self/remote/vertical/juvenile threat/unsafe too-close refusal. Checks third actual selection, Brackenback lifecycle threshold/NeedsCore, same HeroDestination forward intention and immediate direct cancellation/player contextual route, ordinary successor selected component. Source-reviewed connected-only selection/original save refusal, unchanged implicit original load authority/defaultSmall, same-species N clears transient state, separate procedural grounddatum0/+Z root independent NPCGLB, supportedDestination and sole intention controller. Direct/playerclick/urgentneeds/stimulus loss cancel only owned defense, player contextual route prevents takeover; arrival brace established before exploration and guarded against direct/destination/needs. No world actors, ledger, resources, IDs, sessions or persistence schema changed by response. New samples/events bounded4096/256. Projected camera used only after body-local observation for display. Fixture changes existing ages/needs only explicitly labelled; no position/newactor admission. Followup a748e16 is identifier-only small-to-distressedActor rename in helper/native fixture/test after root native compiler found Windows small macro collision. Independently inspected diff and reran original boundary probe, then compiled Windows.h-first plus explicit small macro compatibility probe; both pass. Native rebuild success remains root gate.",
+    "probes_run": 2
   },
   "probe_output": "BRACKEN_REVIEW_OK local_condition_distress_distinct_live_adult_threat_safe_interpose_remote_no_threat_calm_dead_vertical_juvenile_refusals",
   "preservation": "Prior untracked thistletail header preserved byte-exact at ignored var/review-brackenback-preserved with hash receipt, prior reviewcommit54b7bf3 preserved on codex/preserved-thistletail-review-20261023. Review tree advanced cleanly detachedadacbe2 without reset/cleanup. Candidate copied headers uncommitted; integrate only this review directory."
