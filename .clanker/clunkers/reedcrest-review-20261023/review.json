@@ -1,0 +1,122 @@
+{
+  "scope": {
+    "graph_digest": "not computed; bounded direct role and movement ownership review",
+    "base_digest": "9646e40",
+    "artifacts": [
+      "PLAY.md",
+      "Play.ps1",
+      "stalthos-runtime/CMakeLists.txt",
+      "stalthos-runtime/docs/reedcrest.md",
+      "stalthos-runtime/domain/fauna_population.hpp",
+      "stalthos-runtime/domain/reedcrest.hpp",
+      "stalthos-runtime/domain/thistletail.hpp",
+      "stalthos-runtime/domain/wildlife_awareness.hpp",
+      "stalthos-runtime/engine/main.cpp",
+      "stalthos-runtime/engine/native_population_registry.hpp",
+      "stalthos-runtime/engine/reedcrest_scene.hpp",
+      "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "stalthos-runtime/scripts/Run.ps1",
+      "stalthos-runtime/tests/reedcrest.cpp"
+    ]
+  },
+  "implementation_revision": "39953777df160ae51228352c5a813e7c1837df28",
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "ccb22353d94458ad684e5e404e57492ae7a6b34c87b2e9694482e5a78dcf80b9",
+      "git_blob": "e33290dbc9a4c038d5ce788aa77ef64c134fe998"
+    },
+    {
+      "path": "Play.ps1",
+      "sha256": "1ba5875b5162e6e8928e4606f267a5424fb4d1cd939d91ab2bee2cafd886bd44",
+      "git_blob": "ccd983ea8a11f4eae18be7cee2c45da6a8c19b76"
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "d02ff8ce0df3d45561811e68dd3bd50702ee03cb62ca29fe8f390775eb950a00",
+      "git_blob": "0e89a7d442b2677e78b11666c2ab00ccefba34b0"
+    },
+    {
+      "path": "stalthos-runtime/docs/reedcrest.md",
+      "sha256": "6576e5ffbd76a7da39e364871bfee30086b25dc2609fb12c7ee397403e1baf77",
+      "git_blob": "e6da01a94931380ee82c3771caa83fdbdb794e46"
+    },
+    {
+      "path": "stalthos-runtime/domain/fauna_population.hpp",
+      "sha256": "c370bfc0a719fbd605bfe3bf9e6a632662fd784b03a918b5c8f480d65cceb8db",
+      "git_blob": "f5fd245959af23231d56bf8f5bd5ef2fea02628c"
+    },
+    {
+      "path": "stalthos-runtime/domain/reedcrest.hpp",
+      "sha256": "ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc",
+      "git_blob": "f00101177dd5f6cf0eab6c08852af4f6836b9a01"
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "83b6bcc70e812de9573636de97de736b3c7aa51489b9e7aed697cae02833b5d6",
+      "git_blob": "e425fec3eac551c162d31782ea1790cbf12c1dd9"
+    },
+    {
+      "path": "stalthos-runtime/domain/wildlife_awareness.hpp",
+      "sha256": "cd50d582acdff3322ac69592d6f84c4ea26ffeee8b8ddb2891800545d1977968",
+      "git_blob": "264b00278368848371a59b3549f1a7d79b999cc3"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "d3d7034485ef330874d2d79c998b615baa3f29672fa6a26cb4e7569c0eacddbd",
+      "git_blob": "a9362c263c1f8bc152910c31f7780f07b16ea9b0"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "4dc6e289c0249d16d965d609e1207d7961f130572e4576d37f9997432804d17a",
+      "git_blob": "eddeeb4383efaf2d5151b3c1c86f1e7d43d6b553"
+    },
+    {
+      "path": "stalthos-runtime/engine/reedcrest_scene.hpp",
+      "sha256": "f6ae8876d89214085be90424332558200867786ff7ee5e4fbc2813335291da84",
+      "git_blob": "0680606269b89975674d5167f8dabc5ec8396754"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "4faffc92ac25f902e3fc8d7a6f643d50eeea4c6e0b479cb77bbeed41a1780780",
+      "git_blob": "ad68f4b5e7c2e4b8890298cfde6939e5567d6c02"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "64e8ea2e12f42c55fd2e28031fdafbbfb868487fca9a341b565afb785d0f31dd",
+      "git_blob": "4dc7ecd1fb935f5ee4843694ce9aa9199a0f8fbd"
+    },
+    {
+      "path": "stalthos-runtime/tests/reedcrest.cpp",
+      "sha256": "70e11aebed7fadd0b41f925803b7b7fd5799b0adef643fce91c6c4d5b932c4d5",
+      "git_blob": "56d0200553f193df325d45eac50e9c3bca9bcd85"
+    }
+  ],
+  "goal_alignment": {
+    "drift": [],
+    "verdict": "advances_partially"
+  },
+  "findings": [],
+  "resolved_findings": [
+    "Original reciprocal in-flight endpoint swap accepted a nonexistent reverse directed edge, creating invalid snapshot route. Independent directed3nodecycle probe reproduced failure. 3995377 requires actual reverse adjacency; independent same probe now passes."
+  ],
+  "unproven_claims": [
+    "No native build/execution/composed visual or performance acceptance performed by reviewer.",
+    "Actual normal-entry body and native both-direction reciprocal behavior/separation/reunion remain root gate."
+  ],
+  "validation_debt": [
+    "Native actual peer leading, hero leading, priority/camera and ordinary selected-life/N must be demonstrated; source and domain checks do not establish native gameplay acceptance.",
+    "Inherited peer learning remains coarse horizontal calm encounter; this does not establish occlusion, kindergarten origin, natural multi-animal cohort, connected persistence or individual NPC species art.",
+    "Partner urgent accepted resource contact proven through actual native-registry domain wrapper; do not describe hero thirst fixture as native partner-contact proof."
+  ],
+  "asks": [],
+  "effort": {
+    "attempted": "Independently MSVC17 compiled boundary-probe and directed-edge-probe against final3995377 copied candidate headers. Checks helper roles under direct/playerdestination/hero needs/partner urgent needs, remote/vertical refusal, same HeroDestination directcancel, existing actual local peer learning/separation/reunion/reset. Actual Population actor follows towardhero or keeps opposite normal route whenpeerLeads, once-only calendar. Exact-edge in-flight reversal preserves position/no teleport; snapshot restores afterturn and after3mwait. Actual NativePopulationRegistry reversal/wait preserves identities/bindings/oldledger/history, exact age+51 and accumulateddistance+2m. Actual nearhero urgent partner consumes .01 creek with accepted event+needsrelief through sharedregistry, not only activityflag; oldhistory/bindings retained. Dormant does notmove/contact and agesonce. Defaultsfalse retains original mid-edgefinish direction/speed. Stronglyconnected directedcycle snapshot restore failure falsified originalcandidate; finalguard fixes it. Source traces physical-only views, same retained peer, no camera knowledge, sole hero/NPC motionowners, no extra advancetick, association exclusion, same-species N clears oldlink/role, connected-only startup/originalsave guard, distinct procedural +Z/ground0body and unchanged otherselected species defaults.",
+    "probes_run": 2
+  },
+  "probe_outputs": [
+    "REED_REVIEW_OK reciprocal_registry_motion_onceclock_urgentcontact_history_roles_sense_separation_reunion_newlife_direct",
+    "DIRECTED_EDGE_RESTORE_OK"
+  ],
+  "preservation": "Prior reviewbranch7f39517 preserved; oldcandidate copies+patch+hashes under ignored var/review-reedcrest-preserved. Current copied candidate headers uncommitted; integrate only review-directory commit."
+}
