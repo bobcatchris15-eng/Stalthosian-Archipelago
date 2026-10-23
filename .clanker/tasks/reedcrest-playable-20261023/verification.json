@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "scope": "Bounded reciprocal motion/knowledge/needs and fourth selected life; yaw-only body pose exceptions explicitly retained",
+  "ctest": "64/64 pass",
+  "same_executable_native_runs": 14,
+  "independent_source_hashes_match": true,
+  "peer": 1618853389043787304,
+  "partner_led_hero_displacement_m": 9.477724075317383,
+  "partner_led_npc_distance_m": 6.571548597204492,
+  "hero_led_npc_away_projection_m": -3.3433665387412947,
+  "hero_led_npc_return_projection_m": 2.3121608249925956,
+  "camera_body_separation_m": 30.613792366342064,
+  "wide_separation_max_m": 23.457060045845193,
+  "reunion_final_m": 6.74497182374089,
+  "same_peer_separation_reunion": true,
+  "pose_failures": {
+    "bird-normal": 0,
+    "bracken-normal": 0,
+    "camera": 3713,
+    "destination": 0,
+    "drink": 0,
+    "leading": 758,
+    "need": 503,
+    "next-life": 0,
+    "normal": 0,
+    "original": 0,
+    "partner": 0,
+    "rest": 0,
+    "separation": 2298,
+    "small-normal": 0
+  },
+  "limits": [
+    "One calm proximity-learned session pair; no kindergarten origin or2-4companion cohort",
+    "Steep leading/camera/need/separation routes trigger inherited20deg yaw-only posing; no all-supported/foot-contact acceptance. Rendered-ground sampling fallbacks0 in all runs",
+    "NPC partner still uses imported Smalltrotter stand-in; no NPC species/growth art acceptance",
+    "Fixed-stage hero geometry/simple gait, no final anatomy/IK acceptance",
+    "Urgent partner contact and dormant once-clock have independent registry proof; native need fixture instead proves HERO need override/contact",
+    "N native proves selected components/world retention; clearing an already linked old hero is source/domain evidence",
+    "Longstride life, full reproduction/parenting, four islands and connected saves remain gaps; no target30FPS acceptance"
+  ]
+}

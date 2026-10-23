@@ -1,0 +1,106 @@
+{
+  "ok": true,
+  "executable_sha256": "20f7b62d12e4b7efd101c70094591f1fa9b277c9a734e901cb6c16413caec576",
+  "native_runs": {
+    "bird-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025946-6fed77ca",
+      "physical_seconds": 6.740847102206317,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "bracken-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025956-de6d84f0",
+      "physical_seconds": 6.736678005283466,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "camera": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025718-44cac10f",
+      "physical_seconds": 17.380708203592803,
+      "actors": 12,
+      "yaw_only_pose_frames": 3713,
+      "rendered_ground_fallbacks": 0
+    },
+    "destination": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-030111-914d2827",
+      "physical_seconds": 8.00119380891556,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "drink": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-030044-82e22d0b",
+      "physical_seconds": 23.783538214018336,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "leading": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025650-8433963e",
+      "physical_seconds": 23.09756811677653,
+      "actors": 12,
+      "yaw_only_pose_frames": 758,
+      "rendered_ground_fallbacks": 0
+    },
+    "need": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025740-2e98b819",
+      "physical_seconds": 21.041741303706658,
+      "actors": 12,
+      "yaw_only_pose_frames": 503,
+      "rendered_ground_fallbacks": 0
+    },
+    "next-life": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025910-75f81951",
+      "physical_seconds": 21.191532918601297,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025936-fc260364",
+      "physical_seconds": 6.727574304008158,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "original": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-030015-0903c7ee",
+      "physical_seconds": 6.548869205580559,
+      "actors": 8,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "partner": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025626-4855727a",
+      "physical_seconds": 19.033638495508058,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "rest": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-030025-d6c62722",
+      "physical_seconds": 15.581467002004501,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    },
+    "separation": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-025806-a3205b8d",
+      "physical_seconds": 58.69081021370948,
+      "actors": 12,
+      "yaw_only_pose_frames": 2298,
+      "rendered_ground_fallbacks": 0
+    },
+    "small-normal": {
+      "path": "E:\\Stalthosian Archipelago\\var\\reports\\runtime\\20261023-030006-39fcd992",
+      "physical_seconds": 6.702281006015255,
+      "actors": 12,
+      "yaw_only_pose_frames": 0,
+      "rendered_ground_fallbacks": 0
+    }
+  },
+  "unrelated_untracked_preserved": 212,
+  "pinned_asset_hashes_unchanged": true
+}

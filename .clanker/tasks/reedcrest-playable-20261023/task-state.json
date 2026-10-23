@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "reedcrest-playable-20261023",
+  "status": "complete",
+  "base_revision": "9646e40",
+  "current_step": "Fourth playable species and bounded reciprocal pair accepted; native checkpoint publication",
+  "completed_steps": [
+    "Collected prior workers and accepted Brackenback checkpoint; no unfinished source integration",
+    "Dispatched existing bounded source worker and independent reviewer with explicit ownership",
+    "Integrated fourth-species source and directed reverse-edge guard",
+    "Independent exact14source hashes, registry once-clock/contact/reversal/wait/directedgraph probes pass",
+    "64CTest and14same-final-executable native runs; primary following, actual NPC reverse/return,23.457m same-ID separation/reunion, camera and hero need override verified",
+    "212prior untracked files and pinned assets preserved; steep-route yaw-only pose exceptions logged"
+  ],
+  "touched_artifacts": [
+    "PLAY.md",
+    "Play.ps1",
+    "stalthos-runtime/CMakeLists.txt",
+    "stalthos-runtime/docs/reedcrest.md",
+    "stalthos-runtime/domain/fauna_population.hpp",
+    "stalthos-runtime/domain/reedcrest.hpp",
+    "stalthos-runtime/domain/thistletail.hpp",
+    "stalthos-runtime/domain/wildlife_awareness.hpp",
+    "stalthos-runtime/engine/main.cpp",
+    "stalthos-runtime/engine/native_population_registry.hpp",
+    "stalthos-runtime/engine/reedcrest_scene.hpp",
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+    "stalthos-runtime/scripts/Run.ps1",
+    "stalthos-runtime/tests/reedcrest.cpp"
+  ],
+  "updated": "2026-10-23T08:06:22.890065+00:00",
+  "resume_instructions": "Accepted bounded Reedcrest role. Collect workers, then next-task.md Longstride life/carrion. Keep pose/cohort/family/persistence gaps explicit; no polish prerequisite.",
+  "validation": {
+    "passed": true,
+    "command": "C:/Python314/python.exe .clanker/tasks/reedcrest-playable-20261023/verify.py"
+  },
+  "receipt_path": ".clanker/tasks/reedcrest-playable-20261023/integration-receipt.json"
+}

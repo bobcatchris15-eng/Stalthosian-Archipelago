@@ -1,0 +1,129 @@
+{
+  "status": "accepted_bounded_partial_species_role",
+  "task": "reedcrest-playable-20261023",
+  "source_commits": [
+    "b3b7cda",
+    "add4588"
+  ],
+  "review_commits": [
+    "a6c07ef",
+    "916e4dd"
+  ],
+  "source_hashes": [
+    {
+      "path": "PLAY.md",
+      "sha256": "ccb22353d94458ad684e5e404e57492ae7a6b34c87b2e9694482e5a78dcf80b9",
+      "git_blob": "e33290dbc9a4c038d5ce788aa77ef64c134fe998"
+    },
+    {
+      "path": "Play.ps1",
+      "sha256": "1ba5875b5162e6e8928e4606f267a5424fb4d1cd939d91ab2bee2cafd886bd44",
+      "git_blob": "ccd983ea8a11f4eae18be7cee2c45da6a8c19b76"
+    },
+    {
+      "path": "stalthos-runtime/CMakeLists.txt",
+      "sha256": "d02ff8ce0df3d45561811e68dd3bd50702ee03cb62ca29fe8f390775eb950a00",
+      "git_blob": "0e89a7d442b2677e78b11666c2ab00ccefba34b0"
+    },
+    {
+      "path": "stalthos-runtime/docs/reedcrest.md",
+      "sha256": "6576e5ffbd76a7da39e364871bfee30086b25dc2609fb12c7ee397403e1baf77",
+      "git_blob": "e6da01a94931380ee82c3771caa83fdbdb794e46"
+    },
+    {
+      "path": "stalthos-runtime/domain/fauna_population.hpp",
+      "sha256": "c370bfc0a719fbd605bfe3bf9e6a632662fd784b03a918b5c8f480d65cceb8db",
+      "git_blob": "f5fd245959af23231d56bf8f5bd5ef2fea02628c"
+    },
+    {
+      "path": "stalthos-runtime/domain/reedcrest.hpp",
+      "sha256": "dd697a44720c82eb8edc3c2d6e50322297ca20bc1e68a7cecddd90c29c85bce9",
+      "git_blob": "f00101177dd5f6cf0eab6c08852af4f6836b9a01",
+      "canonical_review_lf_sha256": "ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc",
+      "line_ending_equivalence": "Independently read integrated root header. Exactly14CRLF and0loneLF; replacing CRLF with LF gives byte-identical reviewed canonical source SHA256 ed06b1aa7576bde2e1d18964285dfae3efa9967ca43e82a5879644df974dfddc. Both git hash-object canonical blobs f00101177dd5f6cf0eab6c08852af4f6836b9a01. No source behavior change, root edit or rebuild."
+    },
+    {
+      "path": "stalthos-runtime/domain/thistletail.hpp",
+      "sha256": "83b6bcc70e812de9573636de97de736b3c7aa51489b9e7aed697cae02833b5d6",
+      "git_blob": "e425fec3eac551c162d31782ea1790cbf12c1dd9"
+    },
+    {
+      "path": "stalthos-runtime/domain/wildlife_awareness.hpp",
+      "sha256": "cd50d582acdff3322ac69592d6f84c4ea26ffeee8b8ddb2891800545d1977968",
+      "git_blob": "264b00278368848371a59b3549f1a7d79b999cc3"
+    },
+    {
+      "path": "stalthos-runtime/engine/main.cpp",
+      "sha256": "d3d7034485ef330874d2d79c998b615baa3f29672fa6a26cb4e7569c0eacddbd",
+      "git_blob": "a9362c263c1f8bc152910c31f7780f07b16ea9b0"
+    },
+    {
+      "path": "stalthos-runtime/engine/native_population_registry.hpp",
+      "sha256": "4dc6e289c0249d16d965d609e1207d7961f130572e4576d37f9997432804d17a",
+      "git_blob": "eddeeb4383efaf2d5151b3c1c86f1e7d43d6b553"
+    },
+    {
+      "path": "stalthos-runtime/engine/reedcrest_scene.hpp",
+      "sha256": "f6ae8876d89214085be90424332558200867786ff7ee5e4fbc2813335291da84",
+      "git_blob": "0680606269b89975674d5167f8dabc5ec8396754"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run-ConnectedWorld.ps1",
+      "sha256": "4faffc92ac25f902e3fc8d7a6f643d50eeea4c6e0b479cb77bbeed41a1780780",
+      "git_blob": "ad68f4b5e7c2e4b8890298cfde6939e5567d6c02"
+    },
+    {
+      "path": "stalthos-runtime/scripts/Run.ps1",
+      "sha256": "64e8ea2e12f42c55fd2e28031fdafbbfb868487fca9a341b565afb785d0f31dd",
+      "git_blob": "4dc7ecd1fb935f5ee4843694ce9aa9199a0f8fbd"
+    },
+    {
+      "path": "stalthos-runtime/tests/reedcrest.cpp",
+      "sha256": "70e11aebed7fadd0b41f925803b7b7fd5799b0adef643fce91c6c4d5b932c4d5",
+      "git_blob": "56d0200553f193df325d45eac50e9c3bca9bcd85"
+    }
+  ],
+  "verification": "verification.json",
+  "common_verification": "common-verification.json",
+  "native_runs": "native-runs.json",
+  "executable_sha256": "20f7b62d12e4b7efd101c70094591f1fa9b277c9a734e901cb6c16413caec576",
+  "visual_inspection": [
+    "var/reports/runtime/20261023-025626-4855727a/reed-2.png"
+  ],
+  "pose_exceptions": {
+    "bird-normal": 0,
+    "bracken-normal": 0,
+    "camera": 3713,
+    "destination": 0,
+    "drink": 0,
+    "leading": 758,
+    "need": 503,
+    "next-life": 0,
+    "normal": 0,
+    "original": 0,
+    "partner": 0,
+    "rest": 0,
+    "separation": 2298,
+    "small-normal": 0
+  },
+  "limitations": [
+    "One calm proximity-learned session pair; no kindergarten origin or2-4companion cohort",
+    "Steep leading/camera/need/separation routes trigger inherited20deg yaw-only posing; no all-supported/foot-contact acceptance. Rendered-ground sampling fallbacks0 in all runs",
+    "NPC partner still uses imported Smalltrotter stand-in; no NPC species/growth art acceptance",
+    "Fixed-stage hero geometry/simple gait, no final anatomy/IK acceptance",
+    "Urgent partner contact and dormant once-clock have independent registry proof; native need fixture instead proves HERO need override/contact",
+    "N native proves selected components/world retention; clearing an already linked old hero is source/domain evidence",
+    "Longstride life, full reproduction/parenting, four islands and connected saves remain gaps; no target30FPS acceptance"
+  ],
+  "next_task": "next-task.md",
+  "graph": {
+    "base_digest": "2ea32970c451471f",
+    "current_digest": "8f9098213fd2d77a",
+    "nodes_added": 1446,
+    "nodes_removed": 75,
+    "edges_added": 2751,
+    "edges_removed": 1116,
+    "scope": "Project-wide existing-baseline delta, not unit-only. Refresh warns649zero-node artifacts/stalecommunitylabels; exact-source independent review and full64CTest supplement graph."
+  },
+  "secret_scan": "secret-scan.json"
+}
