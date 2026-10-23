@@ -1,7 +1,8 @@
 [CmdletBinding()]
-param([switch]$ParentCareProbe,[switch]$ParentCareCameraProbe,[switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[switch]$ConnectedPersistenceCameraProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
+param([switch]$NpcCarrionProbe,[switch]$NpcCarrionCameraProbe,[switch]$ParentCareProbe,[switch]$ParentCareCameraProbe,[switch]$ConnectedPersistence,[switch]$ConnectedPersistenceProbe,[switch]$ConnectedPersistenceCameraProbe,[string]$ConnectedLoad='',[string]$ConnectedSave='',[ValidateSet("Smalltrotter","Thistletail","Brackenback","Reedcrest","Longstride")][string]$HeroSpecies="Smalltrotter",[switch]$CourtshipProbe,[switch]$CourtshipOverrideProbe,[switch]$CourtshipCameraProbe,[switch]$CourtshipRefusalProbe,[switch]$CarrionProbe,[switch]$CarrionOverrideProbe,[switch]$CarrionCameraProbe,[switch]$ReedPeerProbe,[switch]$ReedLeadingProbe,[switch]$ReedCameraProbe,[switch]$ReedNeedProbe,[switch]$ReedSeparationProbe,[switch]$ProtectionProbe,[switch]$ProtectionOverrideProbe,[switch]$ProtectionCameraProbe,[switch]$BirdProbe,[switch]$BirdOverrideProbe,[switch]$BirdCameraProbe,[double]$Duration=30,[double]$CalendarScale=1,[switch]$Interactive,[switch]$Proxy,[double]$CameraDistance=5,
       [string]$AssetRoot='', [switch]$AutonomyProbe,[switch]$ExteriorProbe,[switch]$WoodlandProbe,[switch]$HatchProbe,[switch]$HatchCameraProbe,[switch]$NestProbe,[switch]$LifeStageProbe,[switch]$DeathNextLifeProbe,[switch]$ExplorationProbe,[switch]$ExplorationOverrideProbe,[switch]$ExplorationCameraProbe,[switch]$SaplingProbe,[switch]$SaplingCameraProbe,[switch]$BodyAudioProbe,[switch]$BodyAudioCameraProbe,[switch]$NpcPeerProbe,[switch]$NpcPeerCameraProbe,[switch]$NpcPeerNeedProbe,[switch]$ShoreRouteProbe,[switch]$ShoreEntryProbe,[switch]$ShoreCameraProbe,[switch]$ShoreStillProbe)
 $ErrorActionPreference='Stop'
+if($NpcCarrionProbe -or $NpcCarrionCameraProbe){$HeroSpecies='Longstride'}
 if($ParentCareProbe -or $ParentCareCameraProbe){$HeroSpecies='Longstride'}
 if($CarrionProbe -or $CarrionOverrideProbe -or $CarrionCameraProbe){$HeroSpecies='Longstride'}
 if($ReedPeerProbe -or $ReedLeadingProbe -or $ReedCameraProbe -or $ReedNeedProbe -or $ReedSeparationProbe){$HeroSpecies='Reedcrest'}
@@ -28,6 +29,8 @@ if($ShoreCameraProbe){$options.ShoreCameraProbe=$true}
 if($NpcPeerProbe){$options.NpcPeerProbe=$true}
 if($NpcPeerCameraProbe){$options.NpcPeerCameraProbe=$true}
 if($NpcPeerNeedProbe){$options.NpcPeerNeedProbe=$true}
+if($NpcCarrionProbe){$options.NpcCarrionProbe=$true}
+if($NpcCarrionCameraProbe){$options.NpcCarrionCameraProbe=$true}
 if($ParentCareProbe){$options.ParentCareProbe=$true}
 if($ParentCareCameraProbe){$options.ParentCareCameraProbe=$true}
 if($CourtshipProbe){$options.CourtshipProbe=$true}

@@ -135,3 +135,14 @@ nearby; WASD, a player destination and own needs override. The adult keeps its o
 NPC route and needs. Separation never selects a replacement; caregiver death/loss or
 maturity ends care. N discards the prior young life's association. Smalltrotter young
 remain independent. Partial persistence excludes this normal-mode family state.
+
+
+Connected NPC food now distinguishes Longstride carrion from plant food. One finite
+world-authored carcass (resource211, one shared unit) sits at136,27 on a sampled dry
+branch of the existing caregiver habitat. The same visible flesh/ledger is available
+to NPCs and a Longstride hero; herbivorous NPCs do not eat it and Longstride NPCs do
+not gain hunger relief from plants. This rule is connected-only: original saved-mode
+policy is unchanged. Authored carrion is not a killed retained NPC and there is no
+hunting/provisioning claim. The manual persistent profile's configuration revision
+has changed; old partial files refuse without modification. Keep them and use a new
+save filename for this world revision rather than overwriting them.

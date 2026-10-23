@@ -86,11 +86,12 @@ class Population {
     std::vector<HabitatSite> sites_;
     std::vector<Actor> actors_;
     std::vector<ActorView> views_;
+    std::optional<std::size_t> carrionSite_;
 
     std::uint64_t habitatSignature() const noexcept {
         std::uint64_t h = UINT64_C(1469598103934665603);
         auto add = [&h](std::uint64_t v) { for (int i=0;i<8;++i) { h ^= (v >> (i*8)) & 0xff; h *= UINT64_C(1099511628211); } };
-        add(sites_.size());
+        add(sites_.size());if(carrionSite_){add(0x63617272696f6eULL);add(*carrionSite_);}
         for (const auto& site : sites_) {
             std::uint64_t bits=0; std::memcpy(&bits,&site.position.x,8); add(bits);
             std::memcpy(&bits,&site.position.y,8); add(bits); std::memcpy(&bits,&site.position.z,8); add(bits);
@@ -112,10 +113,10 @@ class Population {
         const double x = b.x-a.x, y=b.y-a.y, z=b.z-a.z;
         return std::sqrt(x*x+y*y+z*z);
     }
-    std::size_t eligibleSite(std::size_t from, bool browse) const {
+    std::size_t eligibleSite(std::size_t from, bool browse,HeroSpecies species) const {
         std::size_t best = sites_.size(); double bestDistance = std::numeric_limits<double>::infinity();
         for (std::size_t i=0; i<sites_.size(); ++i) {
-            if (browse ? !sites_[i].browse : !sites_[i].freshwater) continue;
+            if (browse ? (!sites_[i].browse || !foodSiteAllowed(species,i)) : !sites_[i].freshwater) continue;
             const auto d = distance(sites_[from].position, sites_[i].position);
             if (d < bestDistance) { bestDistance=d; best=i; }
         }
@@ -140,11 +141,11 @@ class Population {
     void chooseActivity(Actor& a) const {
         if (a.life.stage()==LifeStage::Dead) return;
         if (a.needs.thirst() > 0.48) {
-            auto site=eligibleSite(a.site, false);
+            auto site=eligibleSite(a.site, false,a.species);
             if (site != sites_.size()) { a.target=site; a.activity=(a.site==site ? Activity::Drink : Activity::Travel); return; }
         }
         if (a.needs.hunger() > 0.42) {
-            auto site=eligibleSite(a.site, true);
+            auto site=eligibleSite(a.site, true,a.species);
             if (site != sites_.size()) { a.target=site; a.activity=(a.site==site ? Activity::Browse : Activity::Travel); return; }
         }
         if (a.needs.fatigue() > 0.62) { a.target=a.site; a.activity=Activity::Rest; return; }
@@ -159,6 +160,18 @@ class Population {
 public:
     static constexpr std::size_t maxActors = 16;
     static constexpr std::size_t maxSites = 5000;
+    bool connectedDiet()const{return carrionSite_.has_value();}
+    std::optional<std::size_t> carrionSite()const{return carrionSite_;}
+    bool foodSiteAllowed(HeroSpecies species,std::size_t site)const{return !carrionSite_ || ((species==HeroSpecies::Longstride)==(site==*carrionSite_));}
+    bool foodContactAllowed(HeroSpecies species,std::size_t site,Identity resource)const{return !carrionSite_ || (foodSiteAllowed(species,site) && ((site==*carrionSite_)==(resource==211)));}
+    // Immutable connected-only policy/tag. Existing node indices and all actor fields
+    // remain intact; the new leaf cannot shorten an old route between old sites.
+    bool appendCarrionBranch(const std::vector<Vec3>& path,std::size_t attach){
+        if(carrionSite_||attach>=sites_.size()||path.empty()||path.size()>256||sites_.size()+path.size()>maxSites)return false;
+        Vec3 previous=sites_[attach].position;for(auto i=path.rbegin();i!=path.rend();++i){if(!finite(*i)||distance(previous,*i)<1e-5||distance(previous,*i)>.8)return false;previous=*i;}
+        auto next=*this;const auto first=next.sites_.size();for(std::size_t i=0;i<path.size();++i){std::vector<std::size_t> links;if(i)links.push_back(first+i-1);links.push_back(i+1<path.size()?first+i+1:attach);next.sites_.push_back({path[i],i==0,false,std::move(links)});}next.sites_[attach].neighbors.push_back(first+path.size()-1);next.carrionSite_=first;*this=std::move(next);return true;
+    }
+
     Population(std::uint64_t worldSeed, RegionId region, const std::vector<HabitatSite>& sites,
                std::size_t count, const std::set<Identity>& excludedIds = {})
         : seed_(worldSeed), region_(region), sites_(sites) {
@@ -239,6 +252,7 @@ public:
             life.advance(dt); needsState.advance(dt);
             if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
             a.life=life; a.needs=needsState;
+            if(carrionSite_ && a.activity==Activity::Browse && !foodSiteAllowed(a.species,a.site))chooseActivity(a);
             auto response=bodyAwareness?awareness(a.position,*bodyAwareness):AwarenessDecision{};
             if(bodyAwareness && bodyAwareness->reciprocalPeer && bodyAwareness->peer==a.id && response.distance<18)response.avoid=false;
             const bool peer=bodyAwareness && bodyAwareness->peer==a.id && response.distance<18 && a.needs.hunger()<=.42 && a.needs.thirst()<=.48 && a.needs.fatigue()<=.62;
@@ -278,7 +292,7 @@ public:
                 if(escape!=a.site) {a.target=escape;a.activity=Activity::Travel;}
             }
             if ((peerFollowing && bodyAwareness->reciprocalPeer && response.distance<=bodyAwareness->peerWaitMeters) || a.activity==Activity::Rest || (social && a.id==npcPair->follower && std::hypot(a.position.x-npcPair->leaderBody.x,a.position.z-npcPair->leaderBody.z)<=npcPair->waitMeters+1e-6)) a.needs.setResting(true); else a.needs.setResting(false);
-            if (localResourceRelief && !response.avoid && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
+            if (localResourceRelief && foodSiteAllowed(a.species,a.site) && !response.avoid && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
             if (localResourceRelief && !response.avoid && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
             if (!peerFollowing && !social && a.activity!=Activity::Travel) chooseActivity(a);
             if (a.activity==Activity::Travel && a.target!=a.site && dt.physicalSeconds>0) {

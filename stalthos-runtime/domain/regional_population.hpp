@@ -260,6 +260,8 @@ public:
                     contactRadiusMeters*contactRadiusMeters) return false;
             const auto resource=std::find_if(resources.begin(),resources.end(),[&](const ResourceDto& r) { return r.id==anchor.resource; });
             if (resource==resources.end()) return false;
+            if(entry.population.connectedDiet() && (anchor.resource==211 || anchor.site==*entry.population.carrionSite()) && (resource->kind!=ResourceKind::Shrub || anchor.resource!=211 || anchor.site!=*entry.population.carrionSite()))return false;
+            if(resource->kind==ResourceKind::Shrub && entry.population.connectedDiet() && !entry.population.foodContactAllowed(anchor.resource==211?HeroSpecies::Longstride:HeroSpecies::Smalltrotter,anchor.site,anchor.resource))return false;
             const auto& site=entry.population.sites()[anchor.site];
             if ((resource->kind==ResourceKind::Shrub ? !site.browse : !site.freshwater) ||
                 !slots.emplace(anchor.site,resource->kind).second) return false;
@@ -314,6 +316,7 @@ public:
             [&](const ResourceDto& r) { return r.id==resource; });
         if (record==history.resources.end() ||
             actual->activity!=(record->kind==ResourceKind::Shrub ? Activity::Browse : Activity::Drink)) return out;
+        if(record->kind==ResourceKind::Shrub && !entry.population.foodContactAllowed(actual->species,site,resource))return out;
         double prior=0;
         for (const auto& key:history.sessions) if (key.sessionId==session && key.resourceId==resource) prior=key.amount;
         out.admission=entry.ledger.tryConsumeCumulative(session,resource,cumulativeTotal);

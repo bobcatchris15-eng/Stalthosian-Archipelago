@@ -1,0 +1,83 @@
+{
+  "task_id": "npc-carrion-diet-20261023",
+  "base": "64a177e",
+  "outcome": "implemented_source_pending_native",
+  "checks": [
+    "5 focused Release targets built",
+    "domain npc_carrion/connected_save/native_save/longstride/longstride_care 5/5 passed0.38s",
+    "Run scripts parse",
+    "git diff --check"
+  ],
+  "native_run": false,
+  "core_contract": "default-off connected carrion site immutable tag; route/local relief/direct authoritative contact diet gates; original STL behavior unchanged",
+  "world_change": "root-authorized authored211 relocation136,27; same1unit ledger resource across all connected species; half-meter supported graph leaf no actor/session/tick duplication",
+  "save_change": "STLC configuration202610230200 intentional incompatible old partial-file refusal; original STL admission unchanged",
+  "native_commands": [
+    "Run-ConnectedWorld.ps1 -NpcCarrionProbe -Duration85 -AssetRoot E:/Stalthosian Archipelago",
+    "Run-ConnectedWorld.ps1 -NpcCarrionCameraProbe -Duration18 -AssetRoot E:/Stalthosian Archipelago"
+  ],
+  "fixture": "actual unchanged nearestadultLongstride needs.8/0/.1, hero authoredfoodposition/E2 contact forcompetition; camera body160,27 24maway, nearfoodanchor tiny.02pan; no NPCposition/site/target/session change",
+  "gaps": [
+    "native build/route/contact/depletion/near-foodcamera/visual acceptance root-owned pending",
+    "authored carcass not actual dead retainedNPC; no hunt/kill/provisioning",
+    "connected-only diet; original legacy NPC policy intentionally unchanged",
+    "new config requires new partialsave path; no old partialfile migration/reset"
+  ],
+  "hashes": {
+    "PLAY.md": {
+      "raw_sha256": "c84f0d21bee98cc752f1b3ccdd39a4c5d1632b3b22bf934f83fd8f548efb854a",
+      "canonical_lf_sha256": "d237e22e39ac9ebf4ff116332d6319e88cde12af797602b81684c8cc8b78d153",
+      "git_blob": "d9f339c654e60e86b9da06a4f6bf5a11b7c7cb6a"
+    },
+    "stalthos-runtime/CMakeLists.txt": {
+      "raw_sha256": "b5cf1a4fb797cc7933838b667cb37243f167bed991bf8edb806148473822db9c",
+      "canonical_lf_sha256": "8c4bd60ebeed541561ad63392386983942073251747e37213de893a7a460fab6",
+      "git_blob": "403d6847373c50b813ade6387c3c4ede5c85def4"
+    },
+    "stalthos-runtime/domain/fauna_population.hpp": {
+      "raw_sha256": "29d6f2307c476d37ccfdafb89b7c3fc5b06b14daf700c89b46ccbe43a8885951",
+      "canonical_lf_sha256": "f1012369a6f79130111f4955746c1a807dead98b494af1e79b99a9d2e1288cdc",
+      "git_blob": "47ab45ddef912cb68366b5239bd450375a858728"
+    },
+    "stalthos-runtime/domain/regional_population.hpp": {
+      "raw_sha256": "327c30b63a7b81997c6c37c47032f74c554131ff2082f9c5970e7661b438088f",
+      "canonical_lf_sha256": "fb8e630ca03b4a425486e54d3b052c33457eddd730b05fdf3bedbc42d929c5a6",
+      "git_blob": "7df4a2580efc552978362ad4c1c326320c924a4f"
+    },
+    "stalthos-runtime/domain/longstride.hpp": {
+      "raw_sha256": "3d02529eed71de9eeb5ea41694c9fc2731a62c1917ff9160a151140d314e4ca6",
+      "canonical_lf_sha256": "bf0c663e9b078f730069861fd61c660dd50ee5500622e60635797e88c86fc3ac",
+      "git_blob": "abbcbd42650ea14f59ca834d2acd1df435d4910a"
+    },
+    "stalthos-runtime/engine/connected_save.hpp": {
+      "raw_sha256": "0df0a674f29babf1f06c35e1199ac05957bd01abe4bbec2a45b043e22ba7a246",
+      "canonical_lf_sha256": "851e0e289dc88deef92ef9b31eac63101d08c61e3d1826f30915ea241d6280bc",
+      "git_blob": "8a8564d72ff6d2855711efe09bb4d0ffe08861a7"
+    },
+    "stalthos-runtime/engine/main.cpp": {
+      "raw_sha256": "2f170c41ec98c8ba4903c602e716bc6dd75ab53e0edd3a8ce7ec523966b8ee02",
+      "canonical_lf_sha256": "99b2bef4f1c8668c2295a6b4217fce20a67fa517fb88b501ce47b37822d1e7d2",
+      "git_blob": "9559c9342478c680caff70a3c8746a7788db5892"
+    },
+    "stalthos-runtime/scripts/Run.ps1": {
+      "raw_sha256": "5bdeefd7563f44a96a488d0280b73c058f67df54448ba7da80cc538f30551a6c",
+      "canonical_lf_sha256": "e50112386e4ad32a077dee1818c1a06e8d26d61abdc0a775e56cbdfdaddcfd1f",
+      "git_blob": "718f78a31e6f81caf939163ec48fb585dff3f74f"
+    },
+    "stalthos-runtime/scripts/Run-ConnectedWorld.ps1": {
+      "raw_sha256": "989ff9aef45c57252eacb1955bccd569dc8a4f6d2837f81feaa658c57783d6a7",
+      "canonical_lf_sha256": "63c31d9921007f8b6158baf71d50af404aee68deea6e1c364db57ceeec8fa1eb",
+      "git_blob": "b5d453eec99107e8235f342652ac4e092017a15d"
+    },
+    "stalthos-runtime/tests/npc_carrion.cpp": {
+      "raw_sha256": "c903ab355a1a651b436f55411e3a79f06dd6a908bcd12fe022f296f2e82ad385",
+      "canonical_lf_sha256": "c903ab355a1a651b436f55411e3a79f06dd6a908bcd12fe022f296f2e82ad385",
+      "git_blob": "5e8e80bce2491936ea8fb7a9163c3430dbebe93e"
+    },
+    "stalthos-runtime/docs/npc-carrion.md": {
+      "raw_sha256": "707ff9d6a4d48697b28f4a4f06a0959268539bbab91b839ea721461eee359c5e",
+      "canonical_lf_sha256": "182b5e89d69a3fc1f71058a1473104ae76b21ef5febd93530549ccb25fc76f02",
+      "git_blob": "be02573ca8636447d787b3f7f9f4af517e106b40"
+    }
+  }
+}
