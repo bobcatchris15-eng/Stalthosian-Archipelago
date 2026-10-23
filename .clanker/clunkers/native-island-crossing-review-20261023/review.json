@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task": "native-island-crossing-review-20261023",
+  "reviewer": "gameplay_review",
+  "base_commit": "e73f6a1",
+  "source_commits": [
+    "8e52d2f"
+  ],
+  "integrated_commit": "e55ffe4",
+  "scope": {
+    "graph_digest": "not computed; bounded direct terrain/water/save ownership review",
+    "implementation_read_only": true,
+    "base_digest": "e73f6a1",
+    "owned_output": ".clanker/clunkers/native-island-crossing-review-20261023",
+    "artifacts": [
+      "probe.cpp",
+      "probe-output.txt",
+      "source-hashes.json",
+      "review.json"
+    ]
+  },
+  "goal_alignment": {
+    "reason": "Continuous shared geology drives actual exterior triangles and body queries, with buoyant root datum and sole existing Needs/controller owners. Physical body-derived island status and explicit legacy region owner remain distinct. Extended-water profile refusal precedes capture/write.",
+    "verdict": "pass bounded default-Smalltrotter source/domain scope; native proof remains root-owned"
+  },
+  "findings": [
+    {
+      "disposition": "Reported to root and worker. Root explicitly selected default Smalltrotter proof and requested this documented unsupported diagnostic combination; do not claim Longstride island-fixture proof.",
+      "evidence": "main.cpp610 island shore fixture precedes main.cpp1215 ordinary Longstride hatchling caregiver birth, which can replace x/z/yaw. Island guard permits HeroSpecies Longstride. Default Smalltrotter diagnostic is unaffected.",
+      "boundary": "nondefault diagnostic species",
+      "blocking_default_scope": false,
+      "severity": "P2"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "evidence": "Initial native fixed1400 bound and canonical unclamped conversion could throw for valid smaller scale and reachable body neighborhood vertices/normals.",
+      "resolution": "Final scale-derived bounds,384m sampling padding and canonical13999 clamp;432 independent playable-corner tile/normal samples across .05/.1/.2 pass.",
+      "boundary": "streaming/field bounds"
+    },
+    {
+      "evidence": "Initial bed<=0 check classified preserved negative reference creek as sea.",
+      "resolution": "Reference square exemption preserves Main; actual negative outer cove still sea.",
+      "boundary": "reference freshwater identity"
+    },
+    {
+      "evidence": "Original120s cap was shorter than independent actual default body progression.",
+      "resolution": "Crossing-only180s cap and documented160s run; independent walking/swimming integration reaches actual Stone dry landing122.46s including2s delay.",
+      "boundary": "native crossing time budget"
+    }
+  ],
+  "source_review": [
+    "Protected origin heights unchanged at8645 deterministic points; original actor/habitat/resource/ledger/session implementation files not changed. Shared geological field retains four actual landforms; no ecology estimate promoted to native actors.",
+    "PopulatedTerrain samples same shared field on existing2m triangle diagonal and actual resident surface. Four terrain neighborhoods are pinned; ordinary streaming follows body. Sea sheet excludes original reference freshwater square.",
+    "Water speed applied through existing horizontal integrator, root=max(actual rendered seabed,-.55); resting cleared before sole Needs.advance. Camera clearance uses sea max0 outside reference. No separate simulation tick or fabricated region owner added.",
+    "Island status uses body x/z/actual bed only. At sea0; reference creek Main. Source camera fixture changes only existing view controller; native no-authority proof pending.",
+    "Partial STLC config202610230300 fails old layout fingerprint. Save marine/extended-position guard runs before capture/write; load validates pose before complete owner assignment. Original saved-mode format/default branch untouched.",
+    "Script parse checks pass for both changed wrappers; thirteen changed files independently hashed with raw SHA256,canonicalLF SHA256,CRLF count and git blob. Integrated root canonical bytes and blobs all match."
+  ],
+  "effort": {
+    "probes_run": [
+      "MSVC cl /nologo /EHsc /std:c++17 /I stalthos-runtime .clanker/clunkers/native-island-crossing-review-20261023/probe.cpp /Fe:var/review-island-crossing/probe.exe /Fo:var/review-island-crossing/probe.obj",
+      "probe.exe:8645 origin comparisons;432 padded streaming corner queries;5545 swimming steps; actual triangle path land-water-Stone at122.46s; fatigue.814484; dead/no-marine/nonfinite boundaries",
+      "Two PowerShell AST parse checks",
+      "13 integrated canonicalLF+gitblob matches"
+    ],
+    "attempted": [
+      "Read final thirteen-file change set and relevant existing ownership/contract code",
+      "Copied only two candidate headers into isolated review tree",
+      "Compiled independent MSVC C++17 probe; no native build/application"
+    ]
+  },
+  "limits": [
+    "No native launch/build/GPU performed by reviewer; rendered crossing/camera/controls/visual acceptance and performance remain root-owned.",
+    "Only source/domain proof for first Main-to-Stone path. All-four native traversal, ecology, currents,drowning and anatomical swimming remain missing.",
+    "Foundation hero.region and population registry remain legacy owner; physical island UI is geography only. Full multiregion lifecycle/persistence remains missing.",
+    "Clamped peripheral geological samples bound farfield at canonical13999; draft scales are provisional.",
+    "Longstride-selected island diagnostic unsupported due startup ordering, as recorded finding."
+  ]
+}

@@ -1,0 +1,1 @@
+INDEPENDENT_ISLAND_OK exact_origin=8645 streaming_corners=432 swim_steps=5545 landing_seconds=122.46 fatigue=0.814484 distance=260.316
