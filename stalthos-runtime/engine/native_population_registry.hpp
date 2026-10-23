@@ -62,7 +62,7 @@ public:
         if(active && dt.physicalSeconds>0) {
             const auto state=*registry_.snapshot(region_);
             for(const auto& actor:state.population.actors) {
-                if(bodyAwareness && fauna::awareness(actor.position,*bodyAwareness).avoid) continue;
+                if(bodyAwareness){const auto response=fauna::awareness(actor.position,*bodyAwareness);if(response.avoid && !(bodyAwareness->reciprocalPeer && bodyAwareness->peer==actor.id && response.distance<18))continue;}
                 if(actor.stage==LifeStage::Dead || (actor.activity!=fauna::Activity::Browse && actor.activity!=fauna::Activity::Drink)) continue;
                 const auto kind=actor.activity==fauna::Activity::Browse?ResourceKind::Shrub:ResourceKind::Creek;
                 const auto binding=std::find_if(state.bindings.begin(),state.bindings.end(),[&](const auto& b){return b.actor==actor.id;});

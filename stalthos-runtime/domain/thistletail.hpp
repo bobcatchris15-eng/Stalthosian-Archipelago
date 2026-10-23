@@ -3,7 +3,7 @@
 #include <string>
 #include <algorithm>
 namespace stalthos::domain {
-inline HeroSpecies playableSpecies(const std::string& name){if(name=="Smalltrotter")return HeroSpecies::Smalltrotter;if(name=="Thistletail")return HeroSpecies::Thistletail;if(name=="Brackenback")return HeroSpecies::Brackenback;throw std::invalid_argument("implemented connected heroes: Smalltrotter, Thistletail or Brackenback");}
+inline HeroSpecies playableSpecies(const std::string& name){if(name=="Smalltrotter")return HeroSpecies::Smalltrotter;if(name=="Thistletail")return HeroSpecies::Thistletail;if(name=="Brackenback")return HeroSpecies::Brackenback;if(name=="Reedcrest")return HeroSpecies::Reedcrest;throw std::invalid_argument("implemented connected heroes: Smalltrotter, Thistletail, Brackenback or Reedcrest");}
 // Fictional litter-organism/seed cohort, not individual simulated insects.
 struct MicroforagePatch {
  static constexpr Identity resource=210;

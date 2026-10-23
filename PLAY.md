@@ -11,7 +11,7 @@ Choose the contrasting implemented bird life with:
 pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Thistletail
 ```
 
-The default remains `Smalltrotter`. The three implemented choices are `Smalltrotter`, `Thistletail` and `Brackenback`.
+The default remains `Smalltrotter`. The four implemented choices are `Smalltrotter`, `Thistletail`, `Brackenback` and `Reedcrest`.
 Thistletail uses a replaceable feather-layered procedural biped with its own
 selected needs/lifecycle, ordinary controls and next life. It can forage a finite
 litter/seed cohort near24,24 through the same food ledger and ordinary needs
@@ -26,6 +26,13 @@ animal when a live adult Longstride is close. A visible condition cue identifies
 the distress approximation; no attack intent, damage or adoption is implied.
 Only the hero response is integrated; adult NPC protection remains missing.
 The tail club appears at adult/old stages. Geometry and gait are replaceable draft art.
+
+Choose the beaked basal hadrosauroid with `pwsh -NoProfile -File .\Play.ps1 -HeroSpecies Reedcrest`.
+A calm local encounter can form one session peer link with an actual retained
+Reedcrest. Either body may lead; the other follows or waits as ordinary needs
+permit. The pair does not teleport. This is one reciprocal pair, not a full
+kindergarten/cohort or connected-save implementation. Hero geometry is replaceable;
+NPC species art remains provisional.
 
 | Input | Action |
 |---|---|

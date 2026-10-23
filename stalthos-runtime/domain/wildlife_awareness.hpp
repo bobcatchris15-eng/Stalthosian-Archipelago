@@ -2,7 +2,7 @@
 #include "foundation.hpp"
 namespace stalthos::fauna {
 struct AwarenessTuning {double noticeMeters=12,comfortMeters=6,avoidanceSpeedMetersPerSecond=.7;};
-struct BodyAwareness {Vec3 body;AwarenessTuning tuning;Identity peer=0;double peerWaitMeters=3;};
+struct BodyAwareness {Vec3 body;AwarenessTuning tuning;Identity peer=0;double peerWaitMeters=3;bool peerLeads=false;bool reciprocalPeer=false;};
 // One session-only NPC pair; actual-body target, never a camera destination.
 struct NpcPeerMotion {Identity leader=0,follower=0;Vec3 leaderBody{};double waitMeters=3,speed=.7;};
 struct AwarenessDecision {bool noticed=false,avoid=false;double distance=0,headingToBody=0;};

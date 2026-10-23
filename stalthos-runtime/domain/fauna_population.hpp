@@ -240,8 +240,14 @@ public:
             if (life.stage()==LifeStage::Dead) { a.life=life; a.activity=Activity::Rest; continue; }
             a.life=life; a.needs=needsState;
             auto response=bodyAwareness?awareness(a.position,*bodyAwareness):AwarenessDecision{};
+            if(bodyAwareness && bodyAwareness->reciprocalPeer && bodyAwareness->peer==a.id && response.distance<18)response.avoid=false;
             const bool peer=bodyAwareness && bodyAwareness->peer==a.id && response.distance<18 && a.needs.hunger()<=.42 && a.needs.thirst()<=.48 && a.needs.fatigue()<=.62;
-            if(peer){response.avoid=false;if(distance(a.position,sites_[a.site].position)<1e-6){
+            const bool peerFollowing=peer && !bodyAwareness->peerLeads;
+            // A reciprocal partner may turn back on its current real edge. Swap
+            // endpoint ownership while retaining exact position, rather than
+            // finishing a long outward hop before noticing its departing peer.
+            if(peerFollowing && bodyAwareness->reciprocalPeer && a.site!=a.target && distance(a.position,sites_[a.site].position)>1e-6){const auto hop=nextHop(a.site,a.target);if(std::hypot(sites_[a.site].position.x-bodyAwareness->body.x,sites_[a.site].position.z-bodyAwareness->body.z)+.01<std::hypot(sites_[hop].position.x-bodyAwareness->body.x,sites_[hop].position.z-bodyAwareness->body.z)){const auto prior=a.site;a.site=hop;a.target=prior;}}
+            if(peer){response.avoid=false;if(peerFollowing && distance(a.position,sites_[a.site].position)<1e-6){
                 auto target=a.site;double nearest=response.distance;
                 if(nearest>bodyAwareness->peerWaitMeters)for(auto n:sites_[a.site].neighbors){const double d=std::hypot(sites_[n].position.x-bodyAwareness->body.x,sites_[n].position.z-bodyAwareness->body.z);if(d<nearest-.01){target=n;nearest=d;}}
                 a.target=target;a.activity=target==a.site?Activity::Rest:Activity::Travel;
@@ -271,16 +277,17 @@ public:
                 }
                 if(escape!=a.site) {a.target=escape;a.activity=Activity::Travel;}
             }
-            if (a.activity==Activity::Rest || (social && a.id==npcPair->follower && std::hypot(a.position.x-npcPair->leaderBody.x,a.position.z-npcPair->leaderBody.z)<=npcPair->waitMeters+1e-6)) a.needs.setResting(true); else a.needs.setResting(false);
+            if ((peerFollowing && bodyAwareness->reciprocalPeer && response.distance<=bodyAwareness->peerWaitMeters) || a.activity==Activity::Rest || (social && a.id==npcPair->follower && std::hypot(a.position.x-npcPair->leaderBody.x,a.position.z-npcPair->leaderBody.z)<=npcPair->waitMeters+1e-6)) a.needs.setResting(true); else a.needs.setResting(false);
             if (localResourceRelief && !response.avoid && a.activity==Activity::Browse && sites_[a.site].browse) a.needs.feed(std::min(0.0015*dt.physicalSeconds,0.08));
             if (localResourceRelief && !response.avoid && a.activity==Activity::Drink && sites_[a.site].freshwater) a.needs.drink(std::min(0.002*dt.physicalSeconds,0.10));
-            if (!peer && !social && a.activity!=Activity::Travel) chooseActivity(a);
+            if (!peerFollowing && !social && a.activity!=Activity::Travel) chooseActivity(a);
             if (a.activity==Activity::Travel && a.target!=a.site && dt.physicalSeconds>0) {
                 const auto hop=nextHop(a.site,a.target);
                 if (hop!=a.site) {
                     const auto length=distance(a.position,sites_[hop].position);
-                    const double speed=social?npcPair->speed:(response.avoid || peer)?bodyAwareness->tuning.avoidanceSpeedMetersPerSecond:0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
+                    const double speed=social?npcPair->speed:(response.avoid || peerFollowing)?bodyAwareness->tuning.avoidanceSpeedMetersPerSecond:0.18+static_cast<double>(scoped(0x7370656564ULL,static_cast<std::size_t>(a.id))%2700)/10000.0;
                     double step=std::min(length,speed*dt.physicalSeconds);
+                    if(peerFollowing && bodyAwareness->reciprocalPeer)step=std::min(step,std::max(0.0,response.distance-bodyAwareness->peerWaitMeters));
                     if(social && a.id==npcPair->follower)step=std::min(step,std::max(0.0,std::hypot(a.position.x-npcPair->leaderBody.x,a.position.z-npcPair->leaderBody.z)-npcPair->waitMeters));
                     if (length>0) {
                         const double f=step/length; const Vec3 old=a.position, dest=sites_[hop].position;
@@ -291,7 +298,7 @@ public:
                 }
             }
             if (!std::isfinite(a.distance)||!finite(a.position)||!std::isfinite(a.heading)) throw std::overflow_error("fauna motion overflow");
-            if (!peer && !social && a.activity==Activity::Travel && a.site==a.target) chooseActivity(a);
+            if (!peerFollowing && !social && a.activity==Activity::Travel && a.site==a.target) chooseActivity(a);
             else if (a.activity==Activity::Browse && !sites_[a.site].browse) chooseActivity(a);
             else if (a.activity==Activity::Drink && !sites_[a.site].freshwater) chooseActivity(a);
             if(response.noticed && a.activity!=Activity::Travel) a.heading=response.headingToBody;
